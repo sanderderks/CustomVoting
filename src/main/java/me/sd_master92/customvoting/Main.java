@@ -23,6 +23,7 @@ public class Main extends JavaPlugin
     public final int SPIGOT = 28103;
 
     public CustomFile config;
+    public CustomFile messages;
     public PlayerFile players;
 
     @Override
@@ -126,12 +127,18 @@ public class Main extends JavaPlugin
     private void registerFiles()
     {
         config = new CustomFile("config.yml", this);
+        messages = new CustomFile("messages.yml", this);
         players = new PlayerFile("players.yml", this);
     }
 
     public CustomFile getSettings()
     {
         return config;
+    }
+
+    public CustomFile getMessages()
+    {
+        return messages;
     }
 
     public PlayerFile getPlayers()
