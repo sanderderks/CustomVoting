@@ -1,11 +1,14 @@
 package me.sd_master92.customvoting;
 
-import com.vexsoftware.votifier.model.Vote;
-import com.vexsoftware.votifier.model.VotifierEvent;
 import me.sd_master92.customfile.CustomFile;
 import me.sd_master92.customfile.PlayerFile;
+import me.sd_master92.customvoting.commands.FakeVoteCommand;
+import me.sd_master92.customvoting.commands.VoteCommand;
+import me.sd_master92.customvoting.commands.VotesCommand;
 import me.sd_master92.customvoting.listeners.VotifierListener;
 import org.bukkit.ChatColor;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -13,7 +16,7 @@ import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.util.Date;
+import java.util.Objects;
 
 public class Main extends JavaPlugin
 {
@@ -24,7 +27,7 @@ public class Main extends JavaPlugin
 
     public CustomFile config;
     public CustomFile messages;
-    public PlayerFile players;
+    public CustomFile data;
 
     @Override
     public void onEnable()
@@ -42,14 +45,6 @@ public class Main extends JavaPlugin
         registerFiles();
         registerListeners();
         registerCommands();
-
-        Vote vote = new Vote();
-        vote.setUsername("test");
-        vote.setServiceName("fakevote.com");
-        vote.setAddress("0.0.0.0");
-        Date date = new Date();
-        vote.setTimeStamp(String.valueOf(date.getTime()));
-        getServer().getPluginManager().callEvent(new VotifierEvent(vote));
 
         print("");
         print(ChatColor.GREEN + "v" + VERSION + " has been enabled.");
@@ -106,29 +101,49 @@ public class Main extends JavaPlugin
         Plugin votifier = getServer().getPluginManager().getPlugin("Votifier");
         if (votifier == null)
         {
-            error("|___Dependency 'Votifier' not found. Disabling...");
+            error("|___dependency 'Votifier' not found, disabling...");
             setEnabled(false);
             return false;
         }
-        print("|___Dependency 'Votifier' found!");
+        print("|___dependency 'Votifier' found!");
         return true;
     }
 
     private void registerListeners()
     {
-        getServer().getPluginManager().registerEvents(new VotifierListener(this, getPlayers()), this);
+        registerListener(new VotifierListener(this));
+    }
+
+    private void registerListener(Listener listener)
+    {
+        getServer().getPluginManager().registerEvents(listener,this);
     }
 
     private void registerCommands()
     {
-        // register commands
+        registerCommand("vote", new VoteCommand(this));
+        registerCommand("votes", new VotesCommand(this));
+        registerCommand("fakevote", new FakeVoteCommand(this));
+    }
+
+    private void registerCommand(String name, CommandExecutor executor)
+    {
+        try
+        {
+            Objects.requireNonNull(getCommand(name.toLowerCase())).setExecutor(executor);
+        } catch (Exception e)
+        {
+            print("");
+            print("|");
+            error("|___could not register command '" + name.toLowerCase() + "'!");
+        }
     }
 
     private void registerFiles()
     {
         config = new CustomFile("config.yml", this);
         messages = new CustomFile("messages.yml", this);
-        players = new PlayerFile("players.yml", this);
+        data = new CustomFile("data.yml", this);
     }
 
     public CustomFile getSettings()
@@ -141,9 +156,9 @@ public class Main extends JavaPlugin
         return messages;
     }
 
-    public PlayerFile getPlayers()
+    public CustomFile getData()
     {
-        return players;
+        return data;
     }
 
     public void print(String message)

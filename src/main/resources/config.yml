@@ -1,12 +1,1 @@
 # Custom Voting by sd_master92
-
-links:
-  header: '&bVote for &5ServerName &b!'
-  links:
-    - '&dVote for SomeWebsite'
-    - '&avotelink1.com'
-    - '&dVote for AnotherWebsite'
-    - '&avotelink2.com'
-    - '&dVote for AnotherWebsite'
-    - '&avotelink3.com'
-  footer: '&b---------------'

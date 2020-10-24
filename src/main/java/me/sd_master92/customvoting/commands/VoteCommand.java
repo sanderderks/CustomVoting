@@ -7,26 +7,22 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
-import java.util.List;
-
-public class CommandVoteLinks implements CommandExecutor
+public class VoteCommand implements CommandExecutor
 {
-    private Main plugin;
+    private final Main plugin;
 
-    public CommandVoteLinks(Main plugin)
+    public VoteCommand(Main plugin)
     {
         this.plugin = plugin;
     }
+
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
     {
-        if(command.getName().equalsIgnoreCase("vote"))
+        for (String message : API.getMessages("links", null, plugin))
         {
-            for(String line : API.getVoteLinks(plugin))
-            {
-                sender.sendMessage(line);
-            }
+            sender.sendMessage(message);
         }
-        return false;
+        return true;
     }
 }

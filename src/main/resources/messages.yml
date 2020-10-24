@@ -1,0 +1,16 @@
+# CustomVoting by sd_master92
+
+vote_command:
+  - '&bVote for &dServerName &b!'
+  - '&b---------------'
+  - '&dVote for SomeWebsite'
+  - '&avotelink1.com'
+  - '&dVote for AnotherWebsite'
+  - '&avotelink2.com'
+  - '&dVote for AnotherWebsite'
+  - '&avotelink3.com'
+  - '&b---------------'
+votes_command: '&aYou currently have &b%VOTES% &avotes!'
+votes_command_others: '&b%PLAYER% currently has &b%VOTES% &avotes!'
+
+broadcast: '&d%PLAYER% &7just voted at &d%SERVICE%&7!'
