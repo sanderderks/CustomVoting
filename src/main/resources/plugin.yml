@@ -5,3 +5,13 @@ author: ${author}
 description: ${description}
 api-version: 1.16
 softdepend: [Votifier]
+
+commands:
+  vote:
+    description: vote
+  votes:
+    description: votes
+  votetop:
+    description: vote top
+  fakevote:
+    description: fakevote

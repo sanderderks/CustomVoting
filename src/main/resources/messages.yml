@@ -1,0 +1,24 @@
+# CustomVoting by sd_master92
+
+vote_command:
+  - '&bVote for &dServerName &b!'
+  - '&b---------------'
+  - '&dVote for SomeWebsite'
+  - '&avotelink1.com'
+  - '&dVote for AnotherWebsite'
+  - '&avotelink2.com'
+  - '&dVote for AnotherWebsite'
+  - '&avotelink3.com'
+  - '&b---------------'
+vote_top_command:
+  format:
+    - '&aTop Voters'
+    - '&b---------------'
+    - '%PLAYERS%'
+    - '&b---------------'
+  players: '&d%PLAYER%&7: &b%VOTES%'
+  no_players: '&cThere are no players to show'
+votes_command: '&aYou currently have &b%VOTES% &avotes!'
+votes_command_others: '&b%PLAYER% currently has &b%VOTES% &avotes!'
+
+broadcast: '&d%PLAYER% &7just voted at &d%SERVICE%&7!'
