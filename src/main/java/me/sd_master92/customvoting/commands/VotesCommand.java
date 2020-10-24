@@ -28,7 +28,7 @@ public class VotesCommand implements CommandExecutor
             {
                 Player player = (Player) sender;
                 HashMap<String, String> placeholders = new HashMap<>();
-                placeholders.put("%VOTES%", "" + new VoteFile(player.getUniqueId(), plugin).getVotes());
+                placeholders.put("%VOTES%", "" + new VoteFile(player, plugin).getVotes());
                 player.sendMessage(API.getMessage("votes_command", placeholders, plugin));
             }
         }

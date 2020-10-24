@@ -4,7 +4,9 @@ import me.sd_master92.customfile.CustomFile;
 import me.sd_master92.customfile.PlayerFile;
 import me.sd_master92.customvoting.commands.FakeVoteCommand;
 import me.sd_master92.customvoting.commands.VoteCommand;
+import me.sd_master92.customvoting.commands.VoteTopCommand;
 import me.sd_master92.customvoting.commands.VotesCommand;
+import me.sd_master92.customvoting.listeners.PlayerListener;
 import me.sd_master92.customvoting.listeners.VotifierListener;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandExecutor;
@@ -112,6 +114,7 @@ public class Main extends JavaPlugin
     private void registerListeners()
     {
         registerListener(new VotifierListener(this));
+        registerListener(new PlayerListener(this));
     }
 
     private void registerListener(Listener listener)
@@ -123,6 +126,7 @@ public class Main extends JavaPlugin
     {
         registerCommand("vote", new VoteCommand(this));
         registerCommand("votes", new VotesCommand(this));
+        registerCommand("votetop", new VoteTopCommand(this));
         registerCommand("fakevote", new FakeVoteCommand(this));
     }
 

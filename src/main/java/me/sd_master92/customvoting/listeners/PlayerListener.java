@@ -18,6 +18,6 @@ public class PlayerListener implements Listener
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event)
     {
-        new VoteFile(event.getPlayer().getUniqueId(), plugin);
+        new VoteFile(event.getPlayer(), plugin);
     }
 }

@@ -1,21 +1,26 @@
 package me.sd_master92.customvoting;
 
 import me.sd_master92.customfile.PlayerFile;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
-
-import java.util.UUID;
 
 public class VoteFile extends PlayerFile
 {
-    public VoteFile(UUID uuid, Plugin plugin)
+    public VoteFile(String uuid, Plugin plugin)
     {
-        super(uuid.toString(), plugin);
+        super(uuid, plugin);
+        register();
+    }
+
+    public VoteFile(Player player, Plugin plugin)
+    {
+        super(player, plugin);
         register();
     }
 
     public boolean register()
     {
-        if(getVotes() == 0)
+        if (getVotes() == 0)
         {
             return setVotes(0);
         }

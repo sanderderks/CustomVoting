@@ -11,5 +11,7 @@ commands:
     description: vote
   votes:
     description: votes
+  votetop:
+    description: vote top
   fakevote:
     description: fakevote

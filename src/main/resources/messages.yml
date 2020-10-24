@@ -10,6 +10,14 @@ vote_command:
   - '&dVote for AnotherWebsite'
   - '&avotelink3.com'
   - '&b---------------'
+vote_top_command:
+  format:
+    - '&aTop Voters'
+    - '&b---------------'
+    - '%PLAYERS%'
+    - '&b---------------'
+  players: '&d%PLAYER%&7: &b%VOTES%'
+  no_players: '&cThere are no players to show'
 votes_command: '&aYou currently have &b%VOTES% &avotes!'
 votes_command_others: '&b%PLAYER% currently has &b%VOTES% &avotes!'
 
