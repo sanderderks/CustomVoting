@@ -19,9 +19,8 @@ public class API
 {
     public static void forwardVote(String uuid, Vote vote, Main plugin)
     {
-        new VoteFile(uuid, plugin).addVote();
+        new VoteFile(uuid, plugin).addVote(true);
         broadcastVote(vote, plugin);
-        updateSigns(plugin);
     }
 
     public static void broadcastVote(Vote vote, Main plugin)
@@ -54,15 +53,37 @@ public class API
     public static void updateSign(Location loc, int top, Main plugin)
     {
         VoteFile topVoter = getTopVoter(top - 1, plugin);
-        if (topVoter != null && loc.getBlock().getState() instanceof Sign)
+        if (loc.getBlock().getState() instanceof Sign)
         {
-            plugin.getData().setLocation("vote_top." + "" + top, loc);
             Sign sign = (Sign) loc.getBlock().getState();
-            sign.setLine(0, ChatColor.translateAlternateColorCodes('&', "&4&lTop " + top + ":"));
-            sign.setLine(1, ChatColor.translateAlternateColorCodes('&', "&b" + topVoter.getName()));
-            sign.setLine(2, ChatColor.translateAlternateColorCodes('&', "&d" + topVoter.getVotes() + " votes"));
+            if (topVoter != null)
+            {
+                Location oldLoc = plugin.getData().getLocation("vote_top." + top);
+                if (oldLoc != null)
+                {
+                    if (oldLoc.getBlock().getState() instanceof Sign)
+                    {
+                        Sign oldSign = (Sign) oldLoc.getBlock().getState();
+                        oldSign.setLine(0, getMessage("vote_top_signs.outdated", null, plugin));
+                        oldSign.update(true);
+                    }
+                }
+                plugin.getData().setLocation("vote_top." + "" + top, loc);
+                Map<String, String> placeholders = new HashMap<>();
+                placeholders.put("%NUMBER%", "" + top);
+                placeholders.put("%PLAYER%", topVoter.getName());
+                placeholders.put("%VOTES%", "" + topVoter.getVotes());
+                List<String> messages = getMessages("vote_top_signs.format", placeholders, plugin);
+                for (int i = 0; i < messages.size(); i++)
+                {
+                    sign.setLine(i, messages.get(i));
+                }
+                updateSkulls(loc, topVoter.getUuid(), plugin);
+            } else
+            {
+                sign.setLine(0, getMessage("vote_top_signs.not_found", null, plugin));
+            }
             sign.update(true);
-            updateSkulls(loc, topVoter.getUuid(), plugin);
         }
     }
 
@@ -85,7 +106,7 @@ public class API
                         skull.update(true);
                     } catch (Exception e)
                     {
-                        if(skull.hasOwner())
+                        if (skull.hasOwner())
                         {
                             Material material = block.getType();
                             block.setType(Material.AIR);
@@ -109,25 +130,20 @@ public class API
 
     public static List<VoteFile> getTopVoters(Main plugin)
     {
-        List<VoteFile> voteFiles = new ArrayList<>();
+        List<VoteFile> topVoters = new ArrayList<>();
         for (PlayerFile playerFile : PlayerFile.getAll(plugin))
         {
-            voteFiles.add(new VoteFile(playerFile.getUuid(), plugin));
+            topVoters.add(new VoteFile(playerFile.getUuid(), plugin));
         }
-        voteFiles.sort((x, y) ->
+        topVoters.sort((x, y) ->
         {
             int compare = Integer.compare(y.getVotes(), x.getVotes());
-            if(compare == 0)
+            if (compare == 0)
             {
-                compare = Long.compare(x.getTimeStamp("last"), y.getTimeStamp("last"));
+                compare = Long.compare(y.getTimeStamp("last"), x.getTimeStamp("last"));
             }
             return compare;
         });
-        List<VoteFile> topVoters = new ArrayList<>();
-        for (int i = 0; i < plugin.getSettings().getNumber("votetop_command") && i < voteFiles.size(); i++)
-        {
-            topVoters.add(voteFiles.get(i));
-        }
         return topVoters;
     }
 

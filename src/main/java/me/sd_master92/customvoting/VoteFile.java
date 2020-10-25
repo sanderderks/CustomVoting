@@ -2,29 +2,32 @@ package me.sd_master92.customvoting;
 
 import me.sd_master92.customfile.PlayerFile;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 
 public class VoteFile extends PlayerFile
 {
-    public VoteFile(String uuid, Plugin plugin)
+    private Main plugin;
+
+    public VoteFile(String uuid, Main plugin)
     {
         super(uuid, plugin);
+        this.plugin = plugin;
         register();
     }
 
-    public VoteFile(Player player, Plugin plugin)
+    public VoteFile(Player player, Main plugin)
     {
         super(player, plugin);
+        this.plugin = plugin;
         register();
     }
 
-    public boolean register()
+    private void register()
     {
         if (getVotes() == 0)
         {
-            return setVotes(0);
+            setVotes(0, false);
         }
-        return false;
+        setTimeStamp("last");
     }
 
     public int getVotes()
@@ -32,13 +35,23 @@ public class VoteFile extends PlayerFile
         return getNumber("votes");
     }
 
-    public boolean setVotes(int n)
+    public void setVotes(int n, boolean updateSigns)
     {
-        return setNumber("votes", n);
+        setTimeStamp("last");
+        setNumber("votes", n);
+        if(updateSigns)
+        {
+            API.updateSigns(plugin);
+        }
     }
 
-    public boolean addVote()
+    public void addVote(boolean updateSigns)
     {
-        return setTimeStamp("last") && addNumber("votes", 1);
+        setTimeStamp("last");
+        addNumber("votes", 1);
+        if(updateSigns)
+        {
+            API.updateSigns(plugin);
+        }
     }
 }

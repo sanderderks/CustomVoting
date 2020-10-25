@@ -1,5 +1,6 @@
 package me.sd_master92.customvoting.commands;
 
+import me.sd_master92.customfile.PlayerFile;
 import me.sd_master92.customvoting.API;
 import me.sd_master92.customvoting.Main;
 import me.sd_master92.customvoting.VoteFile;
@@ -29,7 +30,21 @@ public class VotesCommand implements CommandExecutor
                 Player player = (Player) sender;
                 HashMap<String, String> placeholders = new HashMap<>();
                 placeholders.put("%VOTES%", "" + new VoteFile(player, plugin).getVotes());
-                player.sendMessage(API.getMessage("votes_command", placeholders, plugin));
+                player.sendMessage(API.getMessage("votes_command.self", placeholders, plugin));
+            }
+        } else
+        {
+            String name = args[0];
+            PlayerFile playerFile = PlayerFile.getByName(name, plugin);
+            if(playerFile != null)
+            {
+                HashMap<String, String> placeholders = new HashMap<>();
+                placeholders.put("%PLAYER%", "" + new VoteFile(playerFile.getUuid(), plugin).getName());
+                placeholders.put("%VOTES%", "" + new VoteFile(playerFile.getUuid(), plugin).getVotes());
+                sender.sendMessage(API.getMessage("votes_command.others", placeholders, plugin));
+            } else
+            {
+                sender.sendMessage(API.getMessage("votes_command.not_found", null, plugin));
             }
         }
         return true;
