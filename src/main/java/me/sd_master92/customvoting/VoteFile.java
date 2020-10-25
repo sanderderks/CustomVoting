@@ -39,6 +39,6 @@ public class VoteFile extends PlayerFile
 
     public boolean addVote()
     {
-        return addNumber("votes", 1);
+        return setTimeStamp("last") && addNumber("votes", 1);
     }
 }
