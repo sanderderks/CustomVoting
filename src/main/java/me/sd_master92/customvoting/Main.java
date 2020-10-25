@@ -2,10 +2,7 @@ package me.sd_master92.customvoting;
 
 import me.sd_master92.customfile.CustomFile;
 import me.sd_master92.customfile.PlayerFile;
-import me.sd_master92.customvoting.commands.FakeVoteCommand;
-import me.sd_master92.customvoting.commands.VoteCommand;
-import me.sd_master92.customvoting.commands.VoteTopCommand;
-import me.sd_master92.customvoting.commands.VotesCommand;
+import me.sd_master92.customvoting.commands.*;
 import me.sd_master92.customvoting.listeners.PlayerListener;
 import me.sd_master92.customvoting.listeners.VoteTopListener;
 import me.sd_master92.customvoting.listeners.VotifierListener;
@@ -130,6 +127,8 @@ public class Main extends JavaPlugin
         registerCommand("votes", new VotesCommand(this));
         registerCommand("votetop", new VoteTopCommand(this));
         registerCommand("fakevote", new FakeVoteCommand(this));
+        registerCommand("votereload", new ReloadCommand(this));
+        registerCommand("setvotes", new SetVotesCommand(this));
     }
 
     private void registerCommand(String name, CommandExecutor executor)

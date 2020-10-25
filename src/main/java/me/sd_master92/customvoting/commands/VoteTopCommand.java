@@ -10,6 +10,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class VoteTopCommand implements CommandExecutor
 {
@@ -24,7 +25,7 @@ public class VoteTopCommand implements CommandExecutor
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
     {
         List<VoteFile> topVoters = API.getTopVoters(plugin);
-        if(topVoters.size() > 0)
+        if (topVoters.size() > 0)
         {
             List<String> messages = new ArrayList<>();
             for (String message : API.getMessages("vote_top_command.format", null, plugin))
@@ -35,19 +36,9 @@ public class VoteTopCommand implements CommandExecutor
                 } else
                 {
                     Map<String, String> placeholders = new HashMap<>();
-                    for (int i = 0; i < topVoters.size(); i++)
+                    for (VoteFile topVoter : topVoters.stream().limit(plugin.getSettings().getNumber("vote_top_command")).collect(Collectors.toList()))
                     {
-                        VoteFile topVoter = topVoters.get(i);
-                        String name = topVoter.getName();
-                        if(name == null)
-                        {
-                            Player player = Bukkit.getPlayer(UUID.fromString(topVoter.getUuid()));
-                            if(player != null)
-                            {
-                                name = player.getName();
-                            }
-                        }
-                        placeholders.put("%PLAYER%", name != null ? name : "unknown");
+                        placeholders.put("%PLAYER%", topVoter.getName());
                         placeholders.put("%VOTES%", "" + topVoter.getVotes());
                         message = API.getMessage("vote_top_command.players", placeholders, plugin);
                         messages.add(message);
@@ -60,7 +51,7 @@ public class VoteTopCommand implements CommandExecutor
             }
         } else
         {
-            sender.sendMessage(API.getMessage("vote_top_command.no_players", null, plugin));
+            sender.sendMessage(API.getMessage("vote_top_command.not_found", null, plugin));
         }
         return true;
     }

@@ -1,5 +1,7 @@
 # CustomVoting by sd_master92
 
+broadcast: '&d%PLAYER% &7just voted at &d%SERVICE%&7!'
+
 vote_command:
   - '&bVote for &dServerName &b!'
   - '&b---------------'
@@ -10,6 +12,12 @@ vote_command:
   - '&dVote for AnotherWebsite'
   - '&avotelink3.com'
   - '&b---------------'
+
+votes_command:
+  self: '&aYou currently have &b%VOTES% &avotes!'
+  others: '&b%PLAYER% &acurrently has &b%VOTES% &avotes!'
+  not_found: '&cThat player does not exist.'
+
 vote_top_command:
   format:
     - '&aTop Voters'
@@ -17,8 +25,12 @@ vote_top_command:
     - '%PLAYERS%'
     - '&b---------------'
   players: '&d%PLAYER%&7: &b%VOTES%'
-  no_players: '&cThere are no players to show'
-votes_command: '&aYou currently have &b%VOTES% &avotes!'
-votes_command_others: '&b%PLAYER% currently has &b%VOTES% &avotes!'
+  not_found: '&cThere are no players to show'
 
-broadcast: '&d%PLAYER% &7just voted at &d%SERVICE%&7!'
+vote_top_signs:
+  format:
+    - '&4&lTop %NUMBER%:'
+    - '&b%PLAYER%'
+    - '&d%VOTES% votes'
+  not_found: '&cNot found'
+  outdated: '&cOUTDATED'
