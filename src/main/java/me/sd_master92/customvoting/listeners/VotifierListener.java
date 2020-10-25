@@ -27,8 +27,7 @@ public class VotifierListener implements Listener
         Player player = Bukkit.getPlayer(vote.getUsername());
         if(player != null)
         {
-            new VoteFile(player.getUniqueId().toString(), plugin).addVote();
-            API.broadcastVote(vote, plugin);
+            API.forwardVote(player.getUniqueId().toString(), vote, plugin);
         } else
         {
             // offline vote

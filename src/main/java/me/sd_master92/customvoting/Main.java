@@ -7,6 +7,7 @@ import me.sd_master92.customvoting.commands.VoteCommand;
 import me.sd_master92.customvoting.commands.VoteTopCommand;
 import me.sd_master92.customvoting.commands.VotesCommand;
 import me.sd_master92.customvoting.listeners.PlayerListener;
+import me.sd_master92.customvoting.listeners.VoteTopListener;
 import me.sd_master92.customvoting.listeners.VotifierListener;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandExecutor;
@@ -113,8 +114,9 @@ public class Main extends JavaPlugin
 
     private void registerListeners()
     {
-        registerListener(new VotifierListener(this));
         registerListener(new PlayerListener(this));
+        registerListener(new VotifierListener(this));
+        registerListener(new VoteTopListener(this));
     }
 
     private void registerListener(Listener listener)

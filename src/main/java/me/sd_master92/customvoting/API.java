@@ -2,15 +2,28 @@ package me.sd_master92.customvoting;
 
 import com.vexsoftware.votifier.model.Vote;
 import me.sd_master92.customfile.PlayerFile;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
+import org.bukkit.block.Skull;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.type.WallSign;
+import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class API
 {
+    public static void forwardVote(String uuid, Vote vote, Main plugin)
+    {
+        new VoteFile(uuid, plugin).addVote();
+        broadcastVote(vote, plugin);
+        updateSigns(plugin);
+    }
+
     public static void broadcastVote(Vote vote, Main plugin)
     {
         HashMap<String, String> placeholders = new HashMap<>();
@@ -20,6 +33,80 @@ public class API
         plugin.getServer().broadcastMessage(message);
     }
 
+    public static void updateSigns(Main plugin)
+    {
+        new BukkitRunnable()
+        {
+            @Override
+            public void run()
+            {
+                Map<String, Location> locations = plugin.getData().getLocations("vote_top");
+                for (String key : locations.keySet())
+                {
+                    Location loc = locations.get(key);
+                    int top = Integer.parseInt(key);
+                    updateSign(loc, top, plugin);
+                }
+            }
+        }.runTaskLater(plugin, 40L);
+    }
+
+    public static void updateSign(Location loc, int top, Main plugin)
+    {
+        VoteFile topVoter = getTopVoter(top - 1, plugin);
+        if (topVoter != null && loc.getBlock().getState() instanceof Sign)
+        {
+            plugin.getData().setLocation("vote_top." + "" + top, loc);
+            Sign sign = (Sign) loc.getBlock().getState();
+            sign.setLine(0, ChatColor.translateAlternateColorCodes('&', "&4&lTop " + top + ":"));
+            sign.setLine(1, ChatColor.translateAlternateColorCodes('&', "&b" + topVoter.getName()));
+            sign.setLine(2, ChatColor.translateAlternateColorCodes('&', "&d" + topVoter.getVotes() + " votes"));
+            sign.update(true);
+            updateSkulls(loc, topVoter.getUuid(), plugin);
+        }
+    }
+
+    public static void updateSkulls(Location loc, String uuid, Main plugin)
+    {
+        BlockData blockData = loc.getBlock().getBlockData();
+        if (blockData instanceof WallSign)
+        {
+            WallSign sign = (WallSign) blockData;
+            Block block1 = loc.add(0, 1, 0).getBlock();
+            Block block2 = loc.add(0, 1, 0).getBlock().getRelative(sign.getFacing().getOppositeFace());
+            for (Block block : new Block[]{block1, block2})
+            {
+                if (block.getState() instanceof Skull)
+                {
+                    Skull skull = (Skull) block.getState();
+                    try
+                    {
+                        skull.setOwningPlayer(Bukkit.getOfflinePlayer(UUID.fromString(uuid)));
+                        skull.update(true);
+                    } catch (Exception e)
+                    {
+                        if(skull.hasOwner())
+                        {
+                            Material material = block.getType();
+                            block.setType(Material.AIR);
+                            new BukkitRunnable()
+                            {
+                                @Override
+                                public void run()
+                                {
+                                    block.setType(material);
+                                    Skull skull = (Skull) block.getState();
+                                    skull.setRotation(sign.getFacing());
+                                    skull.update(true);
+                                }
+                            }.runTaskLater(plugin, 1L);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     public static List<VoteFile> getTopVoters(Main plugin)
     {
         List<VoteFile> voteFiles = new ArrayList<>();
@@ -27,11 +114,14 @@ public class API
         {
             voteFiles.add(new VoteFile(playerFile.getUuid(), plugin));
         }
-        voteFiles.sort((a, b) ->
+        voteFiles.sort((x, y) ->
         {
-            int votesA = b.getVotes();
-            int votesB = a.getVotes();
-            return Integer.compare(votesA, votesB);
+            int compare = Integer.compare(y.getVotes(), x.getVotes());
+            if(compare == 0)
+            {
+                compare = Long.compare(x.getTimeStamp("last"), y.getTimeStamp("last"));
+            }
+            return compare;
         });
         List<VoteFile> topVoters = new ArrayList<>();
         for (int i = 0; i < plugin.getSettings().getNumber("votetop_command") && i < voteFiles.size(); i++)
@@ -39,6 +129,16 @@ public class API
             topVoters.add(voteFiles.get(i));
         }
         return topVoters;
+    }
+
+    public static VoteFile getTopVoter(int n, Main plugin)
+    {
+        List<VoteFile> topVoters = getTopVoters(plugin);
+        if (n >= 0 && n < topVoters.size())
+        {
+            return topVoters.get(n);
+        }
+        return null;
     }
 
     public static String getMessage(String path, Map<String, String> placeholders, Main plugin)
