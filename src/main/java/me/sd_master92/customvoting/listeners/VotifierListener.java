@@ -2,9 +2,7 @@ package me.sd_master92.customvoting.listeners;
 
 import com.vexsoftware.votifier.model.Vote;
 import com.vexsoftware.votifier.model.VotifierEvent;
-import me.sd_master92.customvoting.API;
 import me.sd_master92.customvoting.Main;
-import me.sd_master92.customvoting.VoteFile;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -27,7 +25,7 @@ public class VotifierListener implements Listener
         Player player = Bukkit.getPlayer(vote.getUsername());
         if(player != null)
         {
-            API.forwardVote(player.getUniqueId().toString(), vote, plugin);
+            plugin.getVoteService().forwardVote(player.getUniqueId().toString(), vote);
         } else
         {
             // offline vote

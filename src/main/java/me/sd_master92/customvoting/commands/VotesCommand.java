@@ -1,7 +1,6 @@
 package me.sd_master92.customvoting.commands;
 
 import me.sd_master92.customfile.PlayerFile;
-import me.sd_master92.customvoting.API;
 import me.sd_master92.customvoting.Main;
 import me.sd_master92.customvoting.VoteFile;
 import org.bukkit.command.Command;
@@ -30,7 +29,7 @@ public class VotesCommand implements CommandExecutor
                 Player player = (Player) sender;
                 HashMap<String, String> placeholders = new HashMap<>();
                 placeholders.put("%VOTES%", "" + new VoteFile(player, plugin).getVotes());
-                player.sendMessage(API.getMessage("votes_command.self", placeholders, plugin));
+                player.sendMessage(plugin.getMessages().getMessage("votes_command.self", placeholders));
             }
         } else
         {
@@ -41,10 +40,10 @@ public class VotesCommand implements CommandExecutor
                 HashMap<String, String> placeholders = new HashMap<>();
                 placeholders.put("%PLAYER%", "" + new VoteFile(playerFile.getUuid(), plugin).getName());
                 placeholders.put("%VOTES%", "" + new VoteFile(playerFile.getUuid(), plugin).getVotes());
-                sender.sendMessage(API.getMessage("votes_command.others", placeholders, plugin));
+                sender.sendMessage(plugin.getMessages().getMessage("votes_command.others", placeholders));
             } else
             {
-                sender.sendMessage(API.getMessage("votes_command.not_found", null, plugin));
+                sender.sendMessage(plugin.getMessages().getMessage("votes_command.not_found", null));
             }
         }
         return true;

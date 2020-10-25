@@ -1,9 +1,9 @@
-package me.sd_master92.customvoting;
+package me.sd_master92.customvoting.services;
 
-import com.vexsoftware.votifier.model.Vote;
 import me.sd_master92.customfile.PlayerFile;
+import me.sd_master92.customvoting.Main;
+import me.sd_master92.customvoting.VoteFile;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -15,25 +15,18 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
 
-public class API
+public class VoteTopService
 {
-    public static void forwardVote(String uuid, Vote vote, Main plugin)
+    private final Main plugin;
+
+    public VoteTopService(Main plugin)
     {
-        new VoteFile(uuid, plugin).addVote(true);
-        broadcastVote(vote, plugin);
+        this.plugin = plugin;
     }
 
-    public static void broadcastVote(Vote vote, Main plugin)
+    public void updateSigns()
     {
-        HashMap<String, String> placeholders = new HashMap<>();
-        placeholders.put("%PLAYER%", vote.getUsername());
-        placeholders.put("%SERVICE%", vote.getServiceName());
-        String message = getMessage("broadcast", placeholders, plugin);
-        plugin.getServer().broadcastMessage(message);
-    }
-
-    public static void updateSigns(Main plugin)
-    {
+        System.out.println("----");
         new BukkitRunnable()
         {
             @Override
@@ -44,27 +37,28 @@ public class API
                 {
                     Location loc = locations.get(key);
                     int top = Integer.parseInt(key);
-                    updateSign(loc, top, plugin);
+                    updateSign(loc, top);
                 }
             }
         }.runTaskLater(plugin, 40L);
     }
 
-    public static void updateSign(Location loc, int top, Main plugin)
+    public void updateSign(Location loc, int top)
     {
-        VoteFile topVoter = getTopVoter(top - 1, plugin);
+        VoteFile topVoter = getTopVoter(top - 1);
         if (loc.getBlock().getState() instanceof Sign)
         {
             Sign sign = (Sign) loc.getBlock().getState();
             if (topVoter != null)
             {
+                System.out.println(topVoter.getName());
                 Location oldLoc = plugin.getData().getLocation("vote_top." + top);
                 if (oldLoc != null)
                 {
                     if (oldLoc.getBlock().getState() instanceof Sign)
                     {
                         Sign oldSign = (Sign) oldLoc.getBlock().getState();
-                        oldSign.setLine(0, getMessage("vote_top_signs.outdated", null, plugin));
+                        oldSign.setLine(0, plugin.getMessages().getMessage("vote_top_signs.outdated", null));
                         oldSign.update(true);
                     }
                 }
@@ -73,21 +67,21 @@ public class API
                 placeholders.put("%NUMBER%", "" + top);
                 placeholders.put("%PLAYER%", topVoter.getName());
                 placeholders.put("%VOTES%", "" + topVoter.getVotes());
-                List<String> messages = getMessages("vote_top_signs.format", placeholders, plugin);
+                List<String> messages = plugin.getMessages().getMessages("vote_top_signs.format", placeholders);
                 for (int i = 0; i < messages.size(); i++)
                 {
                     sign.setLine(i, messages.get(i));
                 }
-                updateSkulls(loc, topVoter.getUuid(), plugin);
+                updateSkulls(loc, topVoter.getUuid());
             } else
             {
-                sign.setLine(0, getMessage("vote_top_signs.not_found", null, plugin));
+                sign.setLine(0, plugin.getMessages().getMessage("vote_top_signs.not_found", null));
             }
             sign.update(true);
         }
     }
 
-    public static void updateSkulls(Location loc, String uuid, Main plugin)
+    public void updateSkulls(Location loc, String uuid)
     {
         BlockData blockData = loc.getBlock().getBlockData();
         if (blockData instanceof WallSign)
@@ -128,7 +122,7 @@ public class API
         }
     }
 
-    public static List<VoteFile> getTopVoters(Main plugin)
+    public List<VoteFile> getTopVoters()
     {
         List<VoteFile> topVoters = new ArrayList<>();
         for (PlayerFile playerFile : PlayerFile.getAll(plugin))
@@ -140,67 +134,20 @@ public class API
             int compare = Integer.compare(y.getVotes(), x.getVotes());
             if (compare == 0)
             {
-                compare = Long.compare(y.getTimeStamp("last"), x.getTimeStamp("last"));
+                compare = Long.compare(x.getTimeStamp("last"), y.getTimeStamp("last"));
             }
             return compare;
         });
         return topVoters;
     }
 
-    public static VoteFile getTopVoter(int n, Main plugin)
+    public VoteFile getTopVoter(int n)
     {
-        List<VoteFile> topVoters = getTopVoters(plugin);
+        List<VoteFile> topVoters = getTopVoters();
         if (n >= 0 && n < topVoters.size())
         {
             return topVoters.get(n);
         }
         return null;
-    }
-
-    public static String getMessage(String path, Map<String, String> placeholders, Main plugin)
-    {
-        String message = plugin.getMessages().getConfig().getString(path.toLowerCase());
-        if (message != null)
-        {
-            message = ChatColor.translateAlternateColorCodes('&', message);
-            if (placeholders != null)
-            {
-                for (String placeholder : placeholders.keySet())
-                {
-                    message = message.replace(placeholder, placeholders.get(placeholder));
-                }
-            }
-            return message;
-        }
-        return "";
-    }
-
-    public static List<String> getMessages(String path, Map<String, String> placeholders, boolean replaceFirst, Main plugin)
-    {
-        List<String> messages = plugin.getMessages().getConfig().getStringList(path.toLowerCase());
-        for (int i = 0; i < messages.size(); i++)
-        {
-            String message = ChatColor.translateAlternateColorCodes('&', messages.get(i));
-            if (placeholders != null)
-            {
-                for (String placeholder : placeholders.keySet())
-                {
-                    if (replaceFirst)
-                    {
-                        message = message.replaceFirst(placeholder, placeholders.get(placeholder));
-                    } else
-                    {
-                        message = message.replace(placeholder, placeholders.get(placeholder));
-                    }
-                }
-            }
-            messages.set(i, message);
-        }
-        return messages;
-    }
-
-    public static List<String> getMessages(String path, Map<String, String> placeholders, Main plugin)
-    {
-        return getMessages(path.toLowerCase(), placeholders, false, plugin);
     }
 }

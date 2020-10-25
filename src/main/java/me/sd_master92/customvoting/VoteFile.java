@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 
 public class VoteFile extends PlayerFile
 {
-    private Main plugin;
+    private final Main plugin;
 
     public VoteFile(String uuid, Main plugin)
     {
@@ -27,7 +27,6 @@ public class VoteFile extends PlayerFile
         {
             setVotes(0, false);
         }
-        setTimeStamp("last");
     }
 
     public int getVotes()
@@ -37,11 +36,10 @@ public class VoteFile extends PlayerFile
 
     public void setVotes(int n, boolean updateSigns)
     {
-        setTimeStamp("last");
         setNumber("votes", n);
         if(updateSigns)
         {
-            API.updateSigns(plugin);
+            plugin.getVoteTopService().updateSigns();
         }
     }
 
@@ -51,7 +49,7 @@ public class VoteFile extends PlayerFile
         addNumber("votes", 1);
         if(updateSigns)
         {
-            API.updateSigns(plugin);
+            plugin.getVoteTopService().updateSigns();
         }
     }
 }
