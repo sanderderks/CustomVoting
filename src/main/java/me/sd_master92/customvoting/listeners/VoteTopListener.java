@@ -1,8 +1,6 @@
 package me.sd_master92.customvoting.listeners;
 
-import me.sd_master92.customvoting.API;
 import me.sd_master92.customvoting.Main;
-import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -31,7 +29,7 @@ public class VoteTopListener implements Listener
                 {
                     line1 = line1.trim().replace("top", "");
                     int top = Integer.parseInt(line1);
-                    API.updateSign(event.getBlock().getLocation(), top, plugin);
+                    plugin.getVoteTopService().updateSign(event.getBlock().getLocation(), top);
                 } catch (Exception ignored)
                 {
                 }

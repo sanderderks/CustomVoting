@@ -1,11 +1,12 @@
 package me.sd_master92.customvoting;
 
 import me.sd_master92.customfile.CustomFile;
-import me.sd_master92.customfile.PlayerFile;
 import me.sd_master92.customvoting.commands.*;
 import me.sd_master92.customvoting.listeners.PlayerListener;
 import me.sd_master92.customvoting.listeners.VoteTopListener;
 import me.sd_master92.customvoting.listeners.VotifierListener;
+import me.sd_master92.customvoting.services.VoteService;
+import me.sd_master92.customvoting.services.VoteTopService;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.event.Listener;
@@ -20,14 +21,16 @@ import java.util.Objects;
 
 public class Main extends JavaPlugin
 {
-    public final String NAME = getDescription().getName();
-    public final String VERSION = getDescription().getVersion();
-    public final String AUTHOR = getDescription().getAuthors().get(0);
-    public final int SPIGOT = 28103;
+    private final String NAME = getDescription().getName();
+    private final String VERSION = getDescription().getVersion();
+    private final String AUTHOR = getDescription().getAuthors().get(0);
 
-    public CustomFile config;
-    public CustomFile messages;
-    public CustomFile data;
+    private CustomFile config;
+    private CustomFile messages;
+    private CustomFile data;
+
+    private VoteService voteService;
+    private VoteTopService voteTopService;
 
     @Override
     public void onEnable()
@@ -45,6 +48,7 @@ public class Main extends JavaPlugin
         registerFiles();
         registerListeners();
         registerCommands();
+        registerServices();
 
         print("");
         print(ChatColor.GREEN + "v" + VERSION + " has been enabled.");
@@ -66,6 +70,7 @@ public class Main extends JavaPlugin
         print("");
         print("| checking for updates");
         print("|");
+        int SPIGOT = 28103;
         String version;
         try
         {
@@ -109,6 +114,28 @@ public class Main extends JavaPlugin
         return true;
     }
 
+    private void registerFiles()
+    {
+        config = new CustomFile("config.yml", this);
+        messages = new CustomFile("messages.yml", this);
+        data = new CustomFile("data.yml", this);
+    }
+
+    public CustomFile getSettings()
+    {
+        return config;
+    }
+
+    public CustomFile getMessages()
+    {
+        return messages;
+    }
+
+    public CustomFile getData()
+    {
+        return data;
+    }
+
     private void registerListeners()
     {
         registerListener(new PlayerListener(this));
@@ -144,26 +171,20 @@ public class Main extends JavaPlugin
         }
     }
 
-    private void registerFiles()
+    private void registerServices()
     {
-        config = new CustomFile("config.yml", this);
-        messages = new CustomFile("messages.yml", this);
-        data = new CustomFile("data.yml", this);
+        voteService = new VoteService(this);
+        voteTopService = new VoteTopService(this);
     }
 
-    public CustomFile getSettings()
+    public VoteService getVoteService()
     {
-        return config;
+        return voteService;
     }
 
-    public CustomFile getMessages()
+    public VoteTopService getVoteTopService()
     {
-        return messages;
-    }
-
-    public CustomFile getData()
-    {
-        return data;
+        return voteTopService;
     }
 
     public void print(String message)

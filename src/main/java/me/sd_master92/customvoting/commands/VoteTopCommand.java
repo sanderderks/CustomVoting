@@ -1,13 +1,10 @@
 package me.sd_master92.customvoting.commands;
 
-import me.sd_master92.customvoting.API;
 import me.sd_master92.customvoting.Main;
 import me.sd_master92.customvoting.VoteFile;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -24,11 +21,11 @@ public class VoteTopCommand implements CommandExecutor
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
     {
-        List<VoteFile> topVoters = API.getTopVoters(plugin);
+        List<VoteFile> topVoters = plugin.getVoteTopService().getTopVoters();
         if (topVoters.size() > 0)
         {
             List<String> messages = new ArrayList<>();
-            for (String message : API.getMessages("vote_top_command.format", null, plugin))
+            for (String message : plugin.getMessages().getMessages("vote_top_command.format", null))
             {
                 if (!message.contains("%PLAYERS%"))
                 {
@@ -40,7 +37,7 @@ public class VoteTopCommand implements CommandExecutor
                     {
                         placeholders.put("%PLAYER%", topVoter.getName());
                         placeholders.put("%VOTES%", "" + topVoter.getVotes());
-                        message = API.getMessage("vote_top_command.players", placeholders, plugin);
+                        message = plugin.getMessages().getMessage("vote_top_command.players", placeholders);
                         messages.add(message);
                     }
                 }
@@ -51,7 +48,7 @@ public class VoteTopCommand implements CommandExecutor
             }
         } else
         {
-            sender.sendMessage(API.getMessage("vote_top_command.not_found", null, plugin));
+            sender.sendMessage(plugin.getMessages().getMessage("vote_top_command.not_found", null));
         }
         return true;
     }
