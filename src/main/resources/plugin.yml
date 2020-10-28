@@ -4,18 +4,63 @@ version: ${version}
 author: ${author}
 description: ${description}
 api-version: 1.16
-softdepend: [Votifier]
+softdepend: [ Votifier ]
 
 commands:
   vote:
     description: vote
+    permission: customvoting.vote
   votes:
     description: votes
+    permission: customvoting.vote
   votetop:
     description: vote top
+    permission: customvoting.votetop
   fakevote:
     description: fakevote
-  votereload:
-    description: reload
+    permission: customvoting.fakevote
   setvotes:
     description: set votes
+    permission: customvoting.setvotes
+  votereload:
+    description: reload
+    permission: customvoting.reload
+  votesettings:
+    description: vote settings
+    permission: customvoting.settings
+    aliases: [ vsettings ]
+
+permissions:
+  customvoting.*:
+    default: op
+    children:
+      customvoting.vote: true
+      customvoting.votes.*: true
+      customvoting.votetop: true
+      customvoting.fakevote: true
+      customvoting.reload: true
+      customvoting.settings: true
+  customvoting.vote:
+    default: op
+  customvoting.votes.*:
+    default: op
+    children:
+      customvoting.votes: true
+      customvoting.votes.others: true
+      customvoting.votes.set: true
+  customvoting.votes:
+    default: op
+  customvoting.votes.others:
+    default: op
+  customvoting.votes.set:
+    default: op
+  customvoting.votetop:
+    default: op
+  customvoting.votetop.signs:
+    default: op
+  customvoting.fakevote:
+    default: op
+  customvoting.reload:
+    default: op
+  customvoting.settings:
+    default: op

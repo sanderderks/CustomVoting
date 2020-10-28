@@ -33,4 +33,4 @@ vote_top_signs:
     - '&b%PLAYER%'
     - '&d%VOTES% votes'
   not_found: '&cNot found'
-  outdated: '&cOUTDATED'
+  outdated: '&Outdated'

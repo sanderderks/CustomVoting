@@ -4,6 +4,7 @@ import com.vexsoftware.votifier.model.Vote;
 import com.vexsoftware.votifier.model.VotifierEvent;
 import me.sd_master92.customfile.PlayerFile;
 import me.sd_master92.customvoting.Main;
+import me.sd_master92.customvoting.constants.Messages;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -23,23 +24,29 @@ public class ReloadCommand implements CommandExecutor
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
     {
-        if(plugin.getSettings().reloadConfig() && plugin.getData().reloadConfig() && plugin.getMessages().reloadConfig())
+        if(command.getPermission() != null && sender.hasPermission(command.getPermission()))
         {
-            boolean success = true;
-            for(PlayerFile playerFile : PlayerFile.getAll(plugin))
+            if (plugin.getSettings().reloadConfig() && plugin.getData().reloadConfig() && plugin.getMessages().reloadConfig())
             {
-                if(!playerFile.reloadConfig())
+                boolean success = true;
+                for (PlayerFile playerFile : PlayerFile.getAll(plugin))
                 {
-                    success = false;
+                    if (!playerFile.reloadConfig())
+                    {
+                        success = false;
+                    }
+                }
+                if (success)
+                {
+                    sender.sendMessage(ChatColor.GREEN + "Configuration files reloaded!");
+                } else
+                {
+                    sender.sendMessage(ChatColor.RED + "Could not reload configuration files!");
                 }
             }
-            if(success)
-            {
-                sender.sendMessage(ChatColor.GREEN + "Configuration files reloaded!");
-            } else
-            {
-                sender.sendMessage(ChatColor.RED + "Could not reload configuration files!");
-            }
+        } else
+        {
+            sender.sendMessage(Messages.NO_PERMISSION);
         }
         return true;
     }
