@@ -7,6 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.block.Skull;
 import org.bukkit.block.data.BlockData;
@@ -26,7 +27,6 @@ public class VoteTopService
 
     public void updateSigns()
     {
-        System.out.println("----");
         new BukkitRunnable()
         {
             @Override
@@ -51,7 +51,6 @@ public class VoteTopService
             Sign sign = (Sign) loc.getBlock().getState();
             if (topVoter != null)
             {
-                System.out.println(topVoter.getName());
                 Location oldLoc = plugin.getData().getLocation("vote_top." + top);
                 if (oldLoc != null)
                 {
@@ -87,8 +86,8 @@ public class VoteTopService
         if (blockData instanceof WallSign)
         {
             WallSign sign = (WallSign) blockData;
-            Block block1 = loc.add(0, 1, 0).getBlock();
-            Block block2 = loc.add(0, 1, 0).getBlock().getRelative(sign.getFacing().getOppositeFace());
+            Block block1 = loc.getBlock().getRelative(BlockFace.UP);
+            Block block2 = loc.getBlock().getRelative(sign.getFacing().getOppositeFace()).getRelative(BlockFace.UP);
             for (Block block : new Block[]{block1, block2})
             {
                 if (block.getState() instanceof Skull)
@@ -102,7 +101,9 @@ public class VoteTopService
                     {
                         if (skull.hasOwner())
                         {
-                            Material material = block.getType();
+                            Material material = skull.getType();
+                            BlockFace blockFace = skull.getRotation();
+
                             block.setType(Material.AIR);
                             new BukkitRunnable()
                             {
@@ -111,7 +112,13 @@ public class VoteTopService
                                 {
                                     block.setType(material);
                                     Skull skull = (Skull) block.getState();
-                                    skull.setRotation(sign.getFacing());
+                                    if(material == Material.PLAYER_WALL_HEAD)
+                                    {
+                                        skull.setRotation(sign.getFacing());
+                                    } else
+                                    {
+                                        skull.setRotation(blockFace);
+                                    }
                                     skull.update(true);
                                 }
                             }.runTaskLater(plugin, 1L);

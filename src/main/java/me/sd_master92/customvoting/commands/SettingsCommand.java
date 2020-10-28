@@ -1,20 +1,18 @@
 package me.sd_master92.customvoting.commands;
 
-import com.vexsoftware.votifier.model.Vote;
-import com.vexsoftware.votifier.model.VotifierEvent;
 import me.sd_master92.customvoting.Main;
 import me.sd_master92.customvoting.constants.Messages;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 
-import java.util.Date;
-
-public class FakeVoteCommand implements CommandExecutor
+public class SettingsCommand implements CommandExecutor
 {
     private final Main plugin;
 
-    public FakeVoteCommand(Main plugin)
+    public SettingsCommand(Main plugin)
     {
         this.plugin = plugin;
     }
@@ -24,13 +22,12 @@ public class FakeVoteCommand implements CommandExecutor
     {
         if(command.getPermission() != null && sender.hasPermission(command.getPermission()))
         {
-            Vote vote = new Vote();
-            vote.setUsername(sender.getName());
-            vote.setServiceName("fakevote.com");
-            vote.setAddress("0.0.0.0");
-            Date date = new Date();
-            vote.setTimeStamp(String.valueOf(date.getTime()));
-            plugin.getServer().getPluginManager().callEvent(new VotifierEvent(vote));
+            if (sender instanceof Player)
+            {
+                Player player = (Player) sender;
+                Inventory settings = plugin.getGuiService().getSettings();
+                player.openInventory(settings);
+            }
         } else
         {
             sender.sendMessage(Messages.NO_PERMISSION);

@@ -20,18 +20,21 @@ public class VoteTopListener implements Listener
     {
         if (event.getBlock().getState() instanceof Sign)
         {
-            String line0 = event.getLine(0);
-            String line1 = event.getLine(1);
-            if (line0 != null && line1 != null && line0.toLowerCase().equalsIgnoreCase("[votes]") && line1.toLowerCase().contains("top"))
+            if(event.getPlayer().hasPermission("customvoting.votetop.signs"))
             {
-                event.setCancelled(true);
-                try
+                String line0 = event.getLine(0);
+                String line1 = event.getLine(1);
+                if (line0 != null && line1 != null && line0.toLowerCase().equalsIgnoreCase("[votes]") && line1.toLowerCase().contains("top"))
                 {
-                    line1 = line1.trim().replace("top", "");
-                    int top = Integer.parseInt(line1);
-                    plugin.getVoteTopService().updateSign(event.getBlock().getLocation(), top);
-                } catch (Exception ignored)
-                {
+                    event.setCancelled(true);
+                    try
+                    {
+                        line1 = line1.trim().replace("top", "");
+                        int top = Integer.parseInt(line1);
+                        plugin.getVoteTopService().updateSign(event.getBlock().getLocation(), top);
+                    } catch (Exception ignored)
+                    {
+                    }
                 }
             }
         }

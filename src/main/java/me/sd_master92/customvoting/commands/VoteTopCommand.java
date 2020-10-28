@@ -2,6 +2,7 @@ package me.sd_master92.customvoting.commands;
 
 import me.sd_master92.customvoting.Main;
 import me.sd_master92.customvoting.VoteFile;
+import me.sd_master92.customvoting.constants.Messages;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -21,34 +22,40 @@ public class VoteTopCommand implements CommandExecutor
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
     {
-        List<VoteFile> topVoters = plugin.getVoteTopService().getTopVoters();
-        if (topVoters.size() > 0)
+        if(command.getPermission() != null && sender.hasPermission(command.getPermission()))
         {
-            List<String> messages = new ArrayList<>();
-            for (String message : plugin.getMessages().getMessages("vote_top_command.format", null))
+            List<VoteFile> topVoters = plugin.getVoteTopService().getTopVoters();
+            if (topVoters.size() > 0)
             {
-                if (!message.contains("%PLAYERS%"))
+                List<String> messages = new ArrayList<>();
+                for (String message : plugin.getMessages().getMessages("vote_top_command.format", null))
                 {
-                    messages.add(message);
-                } else
-                {
-                    Map<String, String> placeholders = new HashMap<>();
-                    for (VoteFile topVoter : topVoters.stream().limit(plugin.getSettings().getNumber("vote_top_command")).collect(Collectors.toList()))
+                    if (!message.contains("%PLAYERS%"))
                     {
-                        placeholders.put("%PLAYER%", topVoter.getName());
-                        placeholders.put("%VOTES%", "" + topVoter.getVotes());
-                        message = plugin.getMessages().getMessage("vote_top_command.players", placeholders);
                         messages.add(message);
+                    } else
+                    {
+                        Map<String, String> placeholders = new HashMap<>();
+                        for (VoteFile topVoter : topVoters.stream().limit(plugin.getSettings().getNumber("vote_top_command")).collect(Collectors.toList()))
+                        {
+                            placeholders.put("%PLAYER%", topVoter.getName());
+                            placeholders.put("%VOTES%", "" + topVoter.getVotes());
+                            message = plugin.getMessages().getMessage("vote_top_command.players", placeholders);
+                            messages.add(message);
+                        }
                     }
                 }
-            }
-            for (String message : messages)
+                for (String message : messages)
+                {
+                    sender.sendMessage(message);
+                }
+            } else
             {
-                sender.sendMessage(message);
+                sender.sendMessage(plugin.getMessages().getMessage("vote_top_command.not_found", null));
             }
         } else
         {
-            sender.sendMessage(plugin.getMessages().getMessage("vote_top_command.not_found", null));
+            sender.sendMessage(Messages.NO_PERMISSION);
         }
         return true;
     }

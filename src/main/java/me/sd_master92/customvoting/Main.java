@@ -2,9 +2,11 @@ package me.sd_master92.customvoting;
 
 import me.sd_master92.customfile.CustomFile;
 import me.sd_master92.customvoting.commands.*;
+import me.sd_master92.customvoting.listeners.InventoryListener;
 import me.sd_master92.customvoting.listeners.PlayerListener;
 import me.sd_master92.customvoting.listeners.VoteTopListener;
 import me.sd_master92.customvoting.listeners.VotifierListener;
+import me.sd_master92.customvoting.services.GUIService;
 import me.sd_master92.customvoting.services.VoteService;
 import me.sd_master92.customvoting.services.VoteTopService;
 import org.bukkit.ChatColor;
@@ -31,6 +33,7 @@ public class Main extends JavaPlugin
 
     private VoteService voteService;
     private VoteTopService voteTopService;
+    private GUIService guiService;
 
     @Override
     public void onEnable()
@@ -141,6 +144,7 @@ public class Main extends JavaPlugin
         registerListener(new PlayerListener(this));
         registerListener(new VotifierListener(this));
         registerListener(new VoteTopListener(this));
+        registerListener(new InventoryListener(this));
     }
 
     private void registerListener(Listener listener)
@@ -154,8 +158,10 @@ public class Main extends JavaPlugin
         registerCommand("votes", new VotesCommand(this));
         registerCommand("votetop", new VoteTopCommand(this));
         registerCommand("fakevote", new FakeVoteCommand(this));
-        registerCommand("votereload", new ReloadCommand(this));
         registerCommand("setvotes", new SetVotesCommand(this));
+
+        registerCommand("votereload", new ReloadCommand(this));
+        registerCommand("votesettings", new SettingsCommand(this));
     }
 
     private void registerCommand(String name, CommandExecutor executor)
@@ -175,6 +181,7 @@ public class Main extends JavaPlugin
     {
         voteService = new VoteService(this);
         voteTopService = new VoteTopService(this);
+        guiService = new GUIService(this);
     }
 
     public VoteService getVoteService()
@@ -185,6 +192,11 @@ public class Main extends JavaPlugin
     public VoteTopService getVoteTopService()
     {
         return voteTopService;
+    }
+
+    public GUIService getGuiService()
+    {
+        return guiService;
     }
 
     public void print(String message)

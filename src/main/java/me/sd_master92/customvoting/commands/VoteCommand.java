@@ -1,6 +1,7 @@
 package me.sd_master92.customvoting.commands;
 
 import me.sd_master92.customvoting.Main;
+import me.sd_master92.customvoting.constants.Messages;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -17,9 +18,15 @@ public class VoteCommand implements CommandExecutor
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
     {
-        for (String message : plugin.getMessages().getMessages("vote_command", null))
+        if(command.getPermission() != null && sender.hasPermission(command.getPermission()))
         {
-            sender.sendMessage(message);
+            for (String message : plugin.getMessages().getMessages("vote_command", null))
+            {
+                sender.sendMessage(message);
+            }
+        } else
+        {
+            sender.sendMessage(Messages.NO_PERMISSION);
         }
         return true;
     }
