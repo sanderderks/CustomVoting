@@ -1,23 +1,24 @@
 package me.sd_master92.customvoting;
 
 import me.sd_master92.customfile.PlayerFile;
+import me.sd_master92.customvoting.services.VoteTopService;
 import org.bukkit.entity.Player;
 
 public class VoteFile extends PlayerFile
 {
-    private final Main plugin;
+    private final VoteTopService voteTopService;
 
     public VoteFile(String uuid, Main plugin)
     {
         super(uuid, plugin);
-        this.plugin = plugin;
+        voteTopService = new VoteTopService(plugin);
         register();
     }
 
     public VoteFile(Player player, Main plugin)
     {
         super(player, plugin);
-        this.plugin = plugin;
+        voteTopService = new VoteTopService(plugin);
         register();
     }
 
@@ -39,7 +40,7 @@ public class VoteFile extends PlayerFile
         setNumber("votes", n);
         if(updateSigns)
         {
-            plugin.getVoteTopService().updateSigns();
+            voteTopService.updateSigns();
         }
     }
 
@@ -49,7 +50,7 @@ public class VoteFile extends PlayerFile
         addNumber("votes", 1);
         if(updateSigns)
         {
-            plugin.getVoteTopService().updateSigns();
+            voteTopService.updateSigns();
         }
     }
 }
