@@ -2,6 +2,7 @@ package me.sd_master92.customvoting.commands;
 
 import me.sd_master92.customvoting.Main;
 import me.sd_master92.customvoting.constants.Messages;
+import me.sd_master92.customvoting.services.GUIService;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -10,11 +11,11 @@ import org.bukkit.inventory.Inventory;
 
 public class SettingsCommand implements CommandExecutor
 {
-    private final Main plugin;
+    private final GUIService guiService;
 
     public SettingsCommand(Main plugin)
     {
-        this.plugin = plugin;
+        guiService = new GUIService(plugin);
     }
 
     @Override
@@ -25,7 +26,7 @@ public class SettingsCommand implements CommandExecutor
             if (sender instanceof Player)
             {
                 Player player = (Player) sender;
-                Inventory settings = plugin.getGuiService().getSettings();
+                Inventory settings = guiService.getSettings();
                 player.openInventory(settings);
             }
         } else

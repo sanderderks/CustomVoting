@@ -88,7 +88,7 @@
         <dependency>
             <groupId>me.sd_master92</groupId>
             <artifactId>CustomFile</artifactId>
-            <version>1.6</version>
+            <version>1.7</version>
         </dependency>
         <dependency>
             <groupId>com.vexsoftware</groupId>
