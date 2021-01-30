@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: me.sd_master92:CustomFile:1.6">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/me/sd_master92/customfile/1.6/customfile-1.6.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/me/sd_master92/customfile/1.6/CustomFile-1.6-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/me/sd_master92/customfile/1.6/CustomFile-1.6-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
