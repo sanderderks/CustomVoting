@@ -82,13 +82,13 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.16.3-R0.1-SNAPSHOT</version>
+            <version>1.16.5-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>me.sd_master92</groupId>
             <artifactId>CustomFile</artifactId>
-            <version>1.6</version>
+            <version>1.7</version>
         </dependency>
         <dependency>
             <groupId>com.vexsoftware</groupId>

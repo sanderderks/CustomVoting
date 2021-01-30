@@ -1,7 +1,6 @@
 package me.sd_master92.customvoting.commands;
 
-import com.vexsoftware.votifier.model.Vote;
-import com.vexsoftware.votifier.model.VotifierEvent;
+import me.sd_master92.customfile.CustomFile;
 import me.sd_master92.customfile.PlayerFile;
 import me.sd_master92.customvoting.Main;
 import me.sd_master92.customvoting.constants.Messages;
@@ -9,8 +8,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-
-import java.util.Date;
 
 public class ReloadCommand implements CommandExecutor
 {
@@ -28,15 +25,7 @@ public class ReloadCommand implements CommandExecutor
         {
             if (plugin.getSettings().reloadConfig() && plugin.getData().reloadConfig() && plugin.getMessages().reloadConfig())
             {
-                boolean success = true;
-                for (PlayerFile playerFile : PlayerFile.getAll(plugin))
-                {
-                    if (!playerFile.reloadConfig())
-                    {
-                        success = false;
-                    }
-                }
-                if (success)
+                if (PlayerFile.getAll(plugin).stream().allMatch(CustomFile::reloadConfig))
                 {
                     sender.sendMessage(ChatColor.GREEN + "Configuration files reloaded!");
                 } else

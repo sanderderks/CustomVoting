@@ -40,9 +40,10 @@ public class VotesCommand implements CommandExecutor
                 PlayerFile playerFile = PlayerFile.getByName(name, plugin);
                 if (playerFile != null)
                 {
+                    VoteFile voteFile = new VoteFile(playerFile.getUuid(), plugin);
                     HashMap<String, String> placeholders = new HashMap<>();
-                    placeholders.put("%PLAYER%", "" + new VoteFile(playerFile.getUuid(), plugin).getName());
-                    placeholders.put("%VOTES%", "" + new VoteFile(playerFile.getUuid(), plugin).getVotes());
+                    placeholders.put("%PLAYER%", "" + voteFile.getName());
+                    placeholders.put("%VOTES%", "" + voteFile.getVotes());
                     sender.sendMessage(plugin.getMessages().getMessage("votes_command.others", placeholders));
                 } else
                 {

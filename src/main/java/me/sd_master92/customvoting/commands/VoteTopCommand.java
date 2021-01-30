@@ -3,6 +3,7 @@ package me.sd_master92.customvoting.commands;
 import me.sd_master92.customvoting.Main;
 import me.sd_master92.customvoting.VoteFile;
 import me.sd_master92.customvoting.constants.Messages;
+import me.sd_master92.customvoting.services.VoteTopService;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -13,10 +14,12 @@ import java.util.stream.Collectors;
 public class VoteTopCommand implements CommandExecutor
 {
     private final Main plugin;
+    private final VoteTopService voteTopService;
 
     public VoteTopCommand(Main plugin)
     {
         this.plugin = plugin;
+        voteTopService = new VoteTopService(plugin);
     }
 
     @Override
@@ -24,7 +27,7 @@ public class VoteTopCommand implements CommandExecutor
     {
         if(command.getPermission() != null && sender.hasPermission(command.getPermission()))
         {
-            List<VoteFile> topVoters = plugin.getVoteTopService().getTopVoters();
+            List<VoteFile> topVoters = voteTopService.getTopVoters();
             if (topVoters.size() > 0)
             {
                 List<String> messages = new ArrayList<>();

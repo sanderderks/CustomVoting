@@ -6,9 +6,6 @@ import me.sd_master92.customvoting.listeners.InventoryListener;
 import me.sd_master92.customvoting.listeners.PlayerListener;
 import me.sd_master92.customvoting.listeners.VoteTopListener;
 import me.sd_master92.customvoting.listeners.VotifierListener;
-import me.sd_master92.customvoting.services.GUIService;
-import me.sd_master92.customvoting.services.VoteService;
-import me.sd_master92.customvoting.services.VoteTopService;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.event.Listener;
@@ -31,10 +28,6 @@ public class Main extends JavaPlugin
     private CustomFile messages;
     private CustomFile data;
 
-    private VoteService voteService;
-    private VoteTopService voteTopService;
-    private GUIService guiService;
-
     @Override
     public void onEnable()
     {
@@ -51,7 +44,6 @@ public class Main extends JavaPlugin
         registerFiles();
         registerListeners();
         registerCommands();
-        registerServices();
 
         print("");
         print(ChatColor.GREEN + "v" + VERSION + " has been enabled.");
@@ -175,28 +167,6 @@ public class Main extends JavaPlugin
             print("|");
             error("|___could not register command '" + name.toLowerCase() + "'!");
         }
-    }
-
-    private void registerServices()
-    {
-        voteService = new VoteService(this);
-        voteTopService = new VoteTopService(this);
-        guiService = new GUIService(this);
-    }
-
-    public VoteService getVoteService()
-    {
-        return voteService;
-    }
-
-    public VoteTopService getVoteTopService()
-    {
-        return voteTopService;
-    }
-
-    public GUIService getGuiService()
-    {
-        return guiService;
     }
 
     public void print(String message)
