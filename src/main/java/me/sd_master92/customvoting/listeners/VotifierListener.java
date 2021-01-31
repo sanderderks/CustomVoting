@@ -12,10 +12,12 @@ import org.bukkit.event.Listener;
 
 public class VotifierListener implements Listener
 {
+    private final Main plugin;
     private final VoteService voteService;
 
     public VotifierListener(Main plugin)
     {
+        this.plugin = plugin;
         voteService = new VoteService(plugin);
     }
 
@@ -29,7 +31,8 @@ public class VotifierListener implements Listener
             voteService.forwardVote(player, vote);
         } else
         {
-            // offline vote
+            voteService.queueVote(vote);
+            plugin.print(vote.getUsername() + " is offline. Vote has placed in queue.");
         }
     }
 }

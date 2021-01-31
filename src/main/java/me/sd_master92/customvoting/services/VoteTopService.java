@@ -1,6 +1,5 @@
 package me.sd_master92.customvoting.services;
 
-import me.sd_master92.customfile.PlayerFile;
 import me.sd_master92.customvoting.Main;
 import me.sd_master92.customvoting.VoteFile;
 import me.sd_master92.customvoting.constants.Messages;
@@ -67,7 +66,7 @@ public class VoteTopService
 
     public void updateSign(Location loc, int top)
     {
-        VoteFile topVoter = getTopVoter(top - 1);
+        VoteFile topVoter = VoteFile.getTopVoter(plugin, top - 1);
         if (loc.getBlock().getState() instanceof Sign)
         {
             Sign sign = (Sign) loc.getBlock().getState();
@@ -176,34 +175,5 @@ public class VoteTopService
                 }
             }
         }
-    }
-
-    public List<VoteFile> getTopVoters()
-    {
-        List<VoteFile> topVoters = new ArrayList<>();
-        for (PlayerFile playerFile : PlayerFile.getAll(plugin))
-        {
-            topVoters.add(new VoteFile(playerFile.getUuid(), plugin));
-        }
-        topVoters.sort((x, y) ->
-        {
-            int compare = Integer.compare(y.getVotes(), x.getVotes());
-            if (compare == 0)
-            {
-                compare = Long.compare(x.getTimeStamp("last"), y.getTimeStamp("last"));
-            }
-            return compare;
-        });
-        return topVoters;
-    }
-
-    public VoteFile getTopVoter(int n)
-    {
-        List<VoteFile> topVoters = getTopVoters();
-        if (n >= 0 && n < topVoters.size())
-        {
-            return topVoters.get(n);
-        }
-        return null;
     }
 }

@@ -106,8 +106,8 @@ public class GUIService
     public ItemStack getUseSoundEffects()
     {
         return createItem(Material.MUSIC_DISC_CAT, ChatColor.LIGHT_PURPLE + "Sound Effects?",
-                ChatColor.GRAY + "Currently: " + (plugin.getSettings().getBoolean(Settings.USE_SOUND_EFFECTS) ?
-                        ChatColor.GREEN + "true" : ChatColor.RED + "false"));
+                ChatColor.GRAY + "Status: " + (plugin.getSettings().getBoolean(Settings.USE_SOUND_EFFECTS) ?
+                        ChatColor.GREEN + "ON" : ChatColor.RED + "OFF"));
     }
 
     public ItemStack getVoteTopCommandShowPlayers()

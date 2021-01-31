@@ -15,12 +15,10 @@ import java.util.stream.Collectors;
 public class VoteTopCommand implements CommandExecutor
 {
     private final Main plugin;
-    private final VoteTopService voteTopService;
 
     public VoteTopCommand(Main plugin)
     {
         this.plugin = plugin;
-        voteTopService = new VoteTopService(plugin);
     }
 
     @Override
@@ -28,7 +26,7 @@ public class VoteTopCommand implements CommandExecutor
     {
         if(command.getPermission() != null && sender.hasPermission(command.getPermission()))
         {
-            List<VoteFile> topVoters = voteTopService.getTopVoters();
+            List<VoteFile> topVoters = VoteFile.getTopVoters(plugin);
             if (topVoters.size() > 0)
             {
                 List<String> messages = new ArrayList<>();
