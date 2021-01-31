@@ -1,0 +1,34 @@
+items:
+  rewards:
+    - ==: org.bukkit.inventory.ItemStack
+      v: 2586
+      type: DIAMOND
+      amount: 3
+    - ==: org.bukkit.inventory.ItemStack
+      v: 2586
+      type: EMERALD
+      amount: 3
+    - ==: org.bukkit.inventory.ItemStack
+      v: 2586
+      type: COOKIE
+      amount: 2
+    - ==: org.bukkit.inventory.ItemStack
+      v: 2586
+      type: COOKED_BEEF
+      amount: 16
+    - ==: org.bukkit.inventory.ItemStack
+      v: 2586
+      type: OAK_LOG
+      amount: 8
+    - ==: org.bukkit.inventory.ItemStack
+      v: 2586
+      type: COBBLESTONE
+      amount: 32
+    - ==: org.bukkit.inventory.ItemStack
+      v: 2586
+      type: SAND
+      amount: 5
+    - ==: org.bukkit.inventory.ItemStack
+      v: 2586
+      type: EXPERIENCE_BOTTLE
+      amount: 5

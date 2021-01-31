@@ -12,10 +12,12 @@ import org.bukkit.inventory.Inventory;
 
 public class SettingsCommand implements CommandExecutor
 {
+    private final Main plugin;
     private final GUIService guiService;
 
     public SettingsCommand(Main plugin)
     {
+        this.plugin = plugin;
         guiService = new GUIService(plugin);
     }
 
@@ -28,7 +30,7 @@ public class SettingsCommand implements CommandExecutor
             {
                 Player player = (Player) sender;
                 Inventory settings = guiService.getSettings();
-                Sounds.OPEN.play(player.getLocation());
+                Sounds.OPEN.play(plugin, player.getLocation());
                 player.openInventory(settings);
             }
         } else

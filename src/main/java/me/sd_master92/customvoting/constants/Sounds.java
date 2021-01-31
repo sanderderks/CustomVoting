@@ -1,5 +1,6 @@
 package me.sd_master92.customvoting.constants;
 
+import me.sd_master92.customvoting.Main;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.World;
@@ -26,12 +27,15 @@ public enum Sounds
         return sound;
     }
 
-    public void play(Location loc)
+    public void play(Main plugin, Location loc)
     {
-        World world = loc.getWorld();
-        if (world != null)
+        if(plugin.getSettings().getBoolean(Settings.USE_SOUND_EFFECTS))
         {
-            world.playSound(loc, sound, 10, 1);
+            World world = loc.getWorld();
+            if (world != null)
+            {
+                world.playSound(loc, sound, 10, 1);
+            }
         }
     }
 }

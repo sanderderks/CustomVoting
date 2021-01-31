@@ -36,10 +36,12 @@ vote_top_signs:
     - '&4Top Voters'
     - '&c&lof'
     - '&4&lSome Server!'
+    - ''
   player_signs:
     format:
       - '&4&lTop %NUMBER%:'
       - '&b%PLAYER%'
       - '&d%VOTES% votes'
+      - ''
     not_found: '&cNot found'
-    outdated: '&Outdated'
+    outdated: '&cOutdated'

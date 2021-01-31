@@ -37,16 +37,24 @@ public class VoteTopService
                 for (String key : locations.keySet())
                 {
                     Location loc = locations.get(key);
-                    int top = Integer.parseInt(key);
-                    updateSign(loc, top);
+                    if (key.equals("title"))
+                    {
+                        updateSign(loc);
+                    } else
+                    {
+                        int top = Integer.parseInt(key);
+                        updateSign(loc, top);
+                    }
                 }
             }
         }.runTaskLater(plugin, 40L);
     }
 
-    public void updateSign(Location loc) {
+    public void updateSign(Location loc)
+    {
         if (loc.getBlock().getState() instanceof Sign)
         {
+            plugin.getData().setLocation("vote_top.title", loc);
             Sign sign = (Sign) loc.getBlock().getState();
             List<String> messages = plugin.getMessages().getMessages(Messages.VOTE_TOP_SIGNS_TITLE_SIGN);
             for (int i = 0; i < messages.size(); i++)
@@ -66,21 +74,38 @@ public class VoteTopService
             if (topVoter != null)
             {
                 Location oldLoc = plugin.getData().getLocation("vote_top." + top);
-                if (oldLoc != null)
+                if (oldLoc == null)
                 {
-                    if (oldLoc.getBlock().getState() instanceof Sign)
+                    plugin.getData().setLocation("vote_top." + top, loc);
+                } else
+                {
+                    if (!oldLoc.equals(loc))
                     {
-                        Sign oldSign = (Sign) oldLoc.getBlock().getState();
-                        oldSign.setLine(0, plugin.getMessages().getMessage(Messages.VOTE_TOP_SIGNS_PLAYER_SIGNS_OUTDATED));
-                        oldSign.update(true);
+                        plugin.getData().setLocation("vote_top." + top, loc);
+                        if (oldLoc.getBlock().getState() instanceof Sign)
+                        {
+                            Sign oldSign = (Sign) oldLoc.getBlock().getState();
+                            for (int i = 0; i < 4; i++)
+                            {
+                                if (i == 1)
+                                {
+                                    oldSign.setLine(i,
+                                            plugin.getMessages().getMessage(Messages.VOTE_TOP_SIGNS_PLAYER_SIGNS_OUTDATED));
+                                } else
+                                {
+                                    oldSign.setLine(i, "");
+                                }
+                            }
+                            oldSign.update(true);
+                        }
                     }
                 }
-                plugin.getData().setLocation("vote_top." + "" + top, loc);
                 Map<String, String> placeholders = new HashMap<>();
                 placeholders.put("%NUMBER%", "" + top);
                 placeholders.put("%PLAYER%", topVoter.getName());
                 placeholders.put("%VOTES%", "" + topVoter.getVotes());
-                List<String> messages = plugin.getMessages().getMessages(Messages.VOTE_TOP_SIGNS_PLAYER_SIGNS_FORMAT, placeholders);
+                List<String> messages = plugin.getMessages().getMessages(Messages.VOTE_TOP_SIGNS_PLAYER_SIGNS_FORMAT,
+                        placeholders);
                 for (int i = 0; i < messages.size(); i++)
                 {
                     sign.setLine(i, messages.get(i));
@@ -88,7 +113,17 @@ public class VoteTopService
                 updateSkulls(loc, topVoter.getUuid());
             } else
             {
-                sign.setLine(0, plugin.getMessages().getMessage(Messages.VOTE_TOP_SIGNS_PLAYER_SIGNS_NOT_FOUND));
+                for (int i = 0; i < 4; i++)
+                {
+                    if (i == 1)
+                    {
+                        sign.setLine(i,
+                                plugin.getMessages().getMessage(Messages.VOTE_TOP_SIGNS_PLAYER_SIGNS_NOT_FOUND));
+                    } else
+                    {
+                        sign.setLine(i, "");
+                    }
+                }
             }
             sign.update(true);
         }
@@ -126,7 +161,7 @@ public class VoteTopService
                                 {
                                     block.setType(material);
                                     Skull skull = (Skull) block.getState();
-                                    if(material == Material.PLAYER_WALL_HEAD)
+                                    if (material == Material.PLAYER_WALL_HEAD)
                                     {
                                         skull.setRotation(sign.getFacing());
                                     } else

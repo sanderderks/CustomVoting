@@ -1,7 +1,7 @@
 package me.sd_master92.customvoting.services;
 
 import me.sd_master92.customvoting.Main;
-import me.sd_master92.customvoting.constants.InventoryName;
+import me.sd_master92.customvoting.constants.Settings;
 import me.sd_master92.customvoting.constants.Sounds;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -20,11 +20,12 @@ public class GUIService
     public final static String GENERAL_SETTINGS_INVENTORY = "General Settings";
     public final static String REWARD_SETTINGS_INVENTORY = "Vote Rewards";
 
-    public static final ItemStack BACK_ITEM = createItem(Material.BARRIER, ChatColor.RED + "Back", null);
-    public static final ItemStack SAVE_ITEM = createItem(Material.WRITABLE_BOOK, ChatColor.GREEN + "Save", null);
-    public static final ItemStack UNDER_CONSTRUCTION = createItem(Material.IRON_SHOVEL, ChatColor.RED + "Under Construction", null);
-    public static final ItemStack GENERAL_SETTINGS = createItem(Material.COMMAND_BLOCK, ChatColor.AQUA + "General", null);
-    public static final ItemStack REWARD_SETTINGS = createItem(Material.DIAMOND, ChatColor.LIGHT_PURPLE + "Rewards", null);
+    public static final ItemStack BACK_ITEM = createItem(Material.BARRIER, ChatColor.RED + "Back");
+    public static final ItemStack SAVE_ITEM = createItem(Material.WRITABLE_BOOK, ChatColor.GREEN + "Save");
+    public static final ItemStack UNDER_CONSTRUCTION = createItem(Material.IRON_SHOVEL, ChatColor.RED + "Under " +
+            "Construction");
+    public static final ItemStack GENERAL_SETTINGS = createItem(Material.COMMAND_BLOCK, ChatColor.AQUA + "General");
+    public static final ItemStack REWARD_SETTINGS = createItem(Material.DIAMOND, ChatColor.LIGHT_PURPLE + "Rewards");
 
     private final Main plugin;
 
@@ -42,12 +43,18 @@ public class GUIService
             meta.setDisplayName(name);
             if (lore != null)
             {
+                meta.setLore(null);
                 meta.setLore(Arrays.asList(lore.split(";")));
             }
-            meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS);
+            meta.addItemFlags(ItemFlag.values());
             item.setItemMeta(meta);
         }
         return item;
+    }
+
+    public static ItemStack createItem(Material mat, String name)
+    {
+        return createItem(mat, name, null);
     }
 
     public Inventory getSettings()
@@ -63,6 +70,8 @@ public class GUIService
     public Inventory getGeneralSettings()
     {
         Inventory inv = Bukkit.createInventory(null, 9, GENERAL_SETTINGS_INVENTORY);
+        inv.setItem(0, getUseSoundEffects());
+        inv.setItem(1, getVoteTopCommandShowPlayers());
         inv.setItem(8, BACK_ITEM);
         return inv;
     }
@@ -85,12 +94,26 @@ public class GUIService
         inv.setItem(26, null);
         if (plugin.getData().setItems("rewards", inv.getContents()))
         {
-            Sounds.SUCCESS.play(player.getLocation());
+            Sounds.SUCCESS.play(plugin, player.getLocation());
             player.sendMessage(ChatColor.GREEN + "Successfully updated vote rewards!");
         } else
         {
-            Sounds.FAILURE.play(player.getLocation());
+            Sounds.FAILURE.play(plugin, player.getLocation());
             player.sendMessage(ChatColor.RED + "Failed to update vote rewards!");
         }
+    }
+
+    public ItemStack getUseSoundEffects()
+    {
+        return createItem(Material.MUSIC_DISC_CAT, ChatColor.LIGHT_PURPLE + "Sound Effects?",
+                ChatColor.GRAY + "Currently: " + (plugin.getSettings().getBoolean(Settings.USE_SOUND_EFFECTS) ?
+                        ChatColor.GREEN + "true" : ChatColor.RED + "false"));
+    }
+
+    public ItemStack getVoteTopCommandShowPlayers()
+    {
+        return createItem(Material.PLAYER_HEAD, ChatColor.LIGHT_PURPLE + "Vote Top Command",
+                ChatColor.GRAY + "How many players to show?;" + ChatColor.GRAY + "Currently: " +
+                        ChatColor.AQUA + plugin.getSettings().getNumber(Settings.VOTE_TOP_COMMAND_SHOW_PLAYERS));
     }
 }

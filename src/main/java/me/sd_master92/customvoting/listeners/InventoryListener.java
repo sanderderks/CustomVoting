@@ -1,10 +1,9 @@
 package me.sd_master92.customvoting.listeners;
 
 import me.sd_master92.customvoting.Main;
-import me.sd_master92.customvoting.constants.InventoryName;
+import me.sd_master92.customvoting.constants.Settings;
 import me.sd_master92.customvoting.constants.Sounds;
 import me.sd_master92.customvoting.services.GUIService;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -15,11 +14,13 @@ import org.bukkit.inventory.ItemStack;
 
 public class InventoryListener implements Listener
 {
+    private final Main plugin;
     private final GUIService guiService;
     private boolean cancelCloseEvent;
 
     public InventoryListener(Main plugin)
     {
+        this.plugin = plugin;
         guiService = new GUIService(plugin);
         cancelCloseEvent = false;
     }
@@ -41,17 +42,17 @@ public class InventoryListener implements Listener
                         switch (item.getType())
                         {
                             case COMMAND_BLOCK:
-                                Sounds.CLICK.play(player.getLocation());
+                                Sounds.CLICK.play(plugin, player.getLocation());
                                 cancelCloseEvent = true;
                                 player.openInventory(guiService.getGeneralSettings());
                                 break;
                             case DIAMOND:
-                                Sounds.CLICK.play(player.getLocation());
+                                Sounds.CLICK.play(plugin, player.getLocation());
                                 cancelCloseEvent = true;
                                 player.openInventory(guiService.getRewardSettings());
                                 break;
                             case IRON_SHOVEL:
-                                Sounds.NOT_ALLOWED.play(player.getLocation());
+                                Sounds.NOT_ALLOWED.play(plugin, player.getLocation());
                                 break;
                         }
                     }
@@ -62,11 +63,30 @@ public class InventoryListener implements Listener
                     event.setCancelled(true);
                     if (item != null)
                     {
-                        if (item.getType() == Material.BARRIER)
+                        switch (item.getType())
                         {
-                            Sounds.CLICK.play(player.getLocation());
-                            cancelCloseEvent = true;
-                            player.openInventory(guiService.getSettings());
+                            case BARRIER:
+                                Sounds.CLICK.play(plugin, player.getLocation());
+                                cancelCloseEvent = true;
+                                player.openInventory(guiService.getSettings());
+                                break;
+                            case MUSIC_DISC_CAT:
+                                Sounds.CHANGE.play(plugin, player.getLocation());
+                                plugin.getSettings().set(Settings.USE_SOUND_EFFECTS,
+                                        !plugin.getSettings().getBoolean(Settings.USE_SOUND_EFFECTS));
+                                event.setCurrentItem(guiService.getUseSoundEffects());
+                                break;
+                            case PLAYER_HEAD:
+                                Sounds.CHANGE.play(plugin, player.getLocation());
+                                if (plugin.getSettings().getNumber(Settings.VOTE_TOP_COMMAND_SHOW_PLAYERS) < 10)
+                                {
+                                    plugin.getSettings().addNumber(Settings.VOTE_TOP_COMMAND_SHOW_PLAYERS);
+                                } else
+                                {
+                                    plugin.getSettings().setNumber(Settings.VOTE_TOP_COMMAND_SHOW_PLAYERS, 1);
+                                }
+                                event.setCurrentItem(guiService.getVoteTopCommandShowPlayers());
+                                break;
                         }
                     }
                 }
@@ -82,7 +102,7 @@ public class InventoryListener implements Listener
                             guiService.saveRewardSettings(player, event.getInventory());
                         } else
                         {
-                            Sounds.CLICK.play(player.getLocation());
+                            Sounds.CLICK.play(plugin, player.getLocation());
                         }
                         cancelCloseEvent = true;
                         player.openInventory(guiService.getSettings());
@@ -108,7 +128,7 @@ public class InventoryListener implements Listener
                 {
                     case GUIService.MAIN_SETTINGS_INVENTORY:
                     case GUIService.GENERAL_SETTINGS_INVENTORY:
-                        Sounds.CLOSE.play(player.getLocation());
+                        Sounds.CLOSE.play(plugin, player.getLocation());
                         break;
                     case GUIService.REWARD_SETTINGS_INVENTORY:
                         guiService.saveRewardSettings(player, event.getInventory());
