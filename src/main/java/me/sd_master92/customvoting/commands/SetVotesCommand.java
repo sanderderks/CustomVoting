@@ -3,7 +3,7 @@ package me.sd_master92.customvoting.commands;
 import me.sd_master92.customfile.PlayerFile;
 import me.sd_master92.customvoting.Main;
 import me.sd_master92.customvoting.VoteFile;
-import me.sd_master92.customvoting.constants.types.Messages;
+import me.sd_master92.customvoting.constants.Messages;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

@@ -2,8 +2,8 @@ package me.sd_master92.customvoting.commands;
 
 import me.sd_master92.customvoting.Main;
 import me.sd_master92.customvoting.VoteFile;
-import me.sd_master92.customvoting.constants.types.Messages;
-import me.sd_master92.customvoting.constants.types.Settings;
+import me.sd_master92.customvoting.constants.Messages;
+import me.sd_master92.customvoting.constants.Settings;
 import me.sd_master92.customvoting.services.VoteTopService;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

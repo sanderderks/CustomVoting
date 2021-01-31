@@ -1,8 +1,10 @@
-package me.sd_master92.customvoting.constants.types;
+package me.sd_master92.customvoting.constants;
 
+import org.bukkit.Location;
 import org.bukkit.Sound;
+import org.bukkit.World;
 
-public enum SoundType
+public enum Sounds
 {
     SUCCESS(Sound.ENTITY_EXPERIENCE_ORB_PICKUP),
     FAILURE(Sound.BLOCK_ANVIL_LAND),
@@ -14,7 +16,7 @@ public enum SoundType
 
     private final Sound sound;
 
-    SoundType(final Sound sound)
+    Sounds(final Sound sound)
     {
         this.sound = sound;
     }
@@ -22,5 +24,14 @@ public enum SoundType
     public Sound getSound()
     {
         return sound;
+    }
+
+    public void play(Location loc)
+    {
+        World world = loc.getWorld();
+        if (world != null)
+        {
+            world.playSound(loc, sound, 10, 1);
+        }
     }
 }

@@ -2,8 +2,7 @@ package me.sd_master92.customvoting.services;
 
 import me.sd_master92.customvoting.Main;
 import me.sd_master92.customvoting.constants.InventoryName;
-import me.sd_master92.customvoting.constants.types.SoundType;
-import me.sd_master92.customvoting.helpers.SoundHelper;
+import me.sd_master92.customvoting.constants.Sounds;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -17,6 +16,10 @@ import java.util.Arrays;
 
 public class GUIService
 {
+    public final static String MAIN_SETTINGS_INVENTORY = "Vote Settings";
+    public final static String GENERAL_SETTINGS_INVENTORY = "General Settings";
+    public final static String REWARD_SETTINGS_INVENTORY = "Vote Rewards";
+
     public static final ItemStack BACK_ITEM = createItem(Material.BARRIER, ChatColor.RED + "Back", null);
     public static final ItemStack SAVE_ITEM = createItem(Material.WRITABLE_BOOK, ChatColor.GREEN + "Save", null);
     public static final ItemStack UNDER_CONSTRUCTION = createItem(Material.IRON_SHOVEL, ChatColor.RED + "Under Construction", null);
@@ -49,7 +52,7 @@ public class GUIService
 
     public Inventory getSettings()
     {
-        Inventory inv = Bukkit.createInventory(null, 9, InventoryName.MAIN_SETTINGS_INVENTORY);
+        Inventory inv = Bukkit.createInventory(null, 9, MAIN_SETTINGS_INVENTORY);
         inv.setItem(1, GENERAL_SETTINGS);
         inv.setItem(3, REWARD_SETTINGS);
         inv.setItem(5, UNDER_CONSTRUCTION);
@@ -59,14 +62,14 @@ public class GUIService
 
     public Inventory getGeneralSettings()
     {
-        Inventory inv = Bukkit.createInventory(null, 9, InventoryName.GENERAL_SETTINGS_INVENTORY);
+        Inventory inv = Bukkit.createInventory(null, 9, GENERAL_SETTINGS_INVENTORY);
         inv.setItem(8, BACK_ITEM);
         return inv;
     }
 
     public Inventory getRewardSettings()
     {
-        Inventory inv = Bukkit.createInventory(null, 27, InventoryName.REWARD_SETTINGS_INVENTORY);
+        Inventory inv = Bukkit.createInventory(null, 27, REWARD_SETTINGS_INVENTORY);
         for (ItemStack reward : plugin.getData().getItems("rewards"))
         {
             inv.addItem(reward);
@@ -82,11 +85,11 @@ public class GUIService
         inv.setItem(26, null);
         if (plugin.getData().setItems("rewards", inv.getContents()))
         {
-            SoundHelper.playSound(SoundType.SUCCESS, player.getLocation());
+            Sounds.SUCCESS.play(player.getLocation());
             player.sendMessage(ChatColor.GREEN + "Successfully updated vote rewards!");
         } else
         {
-            SoundHelper.playSound(SoundType.FAILURE, player.getLocation());
+            Sounds.FAILURE.play(player.getLocation());
             player.sendMessage(ChatColor.RED + "Failed to update vote rewards!");
         }
     }

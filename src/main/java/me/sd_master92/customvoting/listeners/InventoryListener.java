@@ -2,8 +2,7 @@ package me.sd_master92.customvoting.listeners;
 
 import me.sd_master92.customvoting.Main;
 import me.sd_master92.customvoting.constants.InventoryName;
-import me.sd_master92.customvoting.constants.types.SoundType;
-import me.sd_master92.customvoting.helpers.SoundHelper;
+import me.sd_master92.customvoting.constants.Sounds;
 import me.sd_master92.customvoting.services.GUIService;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -34,7 +33,7 @@ public class InventoryListener implements Listener
             ItemStack item = event.getCurrentItem();
             switch (event.getView().getTitle())
             {
-                case InventoryName.MAIN_SETTINGS_INVENTORY:
+                case GUIService.MAIN_SETTINGS_INVENTORY:
                 {
                     event.setCancelled(true);
                     if (item != null)
@@ -42,37 +41,37 @@ public class InventoryListener implements Listener
                         switch (item.getType())
                         {
                             case COMMAND_BLOCK:
-                                SoundHelper.playSound(SoundType.CLICK, player.getLocation());
+                                Sounds.CLICK.play(player.getLocation());
                                 cancelCloseEvent = true;
                                 player.openInventory(guiService.getGeneralSettings());
                                 break;
                             case DIAMOND:
-                                SoundHelper.playSound(SoundType.CLICK, player.getLocation());
+                                Sounds.CLICK.play(player.getLocation());
                                 cancelCloseEvent = true;
                                 player.openInventory(guiService.getRewardSettings());
                                 break;
                             case IRON_SHOVEL:
-                                SoundHelper.playSound(SoundType.NOT_ALLOWED, player.getLocation());
+                                Sounds.NOT_ALLOWED.play(player.getLocation());
                                 break;
                         }
                     }
                 }
                 break;
-                case InventoryName.GENERAL_SETTINGS_INVENTORY:
+                case GUIService.GENERAL_SETTINGS_INVENTORY:
                 {
                     event.setCancelled(true);
                     if (item != null)
                     {
                         if (item.getType() == Material.BARRIER)
                         {
-                            SoundHelper.playSound(SoundType.CLICK, player.getLocation());
+                            Sounds.CLICK.play(player.getLocation());
                             cancelCloseEvent = true;
                             player.openInventory(guiService.getSettings());
                         }
                     }
                 }
                 break;
-                case InventoryName
+                case GUIService
                         .REWARD_SETTINGS_INVENTORY:
                 {
                     if (event.getSlot() >= 25)
@@ -83,7 +82,7 @@ public class InventoryListener implements Listener
                             guiService.saveRewardSettings(player, event.getInventory());
                         } else
                         {
-                            SoundHelper.playSound(SoundType.CLICK, player.getLocation());
+                            Sounds.CLICK.play(player.getLocation());
                         }
                         cancelCloseEvent = true;
                         player.openInventory(guiService.getSettings());
@@ -107,11 +106,11 @@ public class InventoryListener implements Listener
                 Player player = (Player) event.getPlayer();
                 switch (event.getView().getTitle())
                 {
-                    case InventoryName.MAIN_SETTINGS_INVENTORY:
-                    case InventoryName.GENERAL_SETTINGS_INVENTORY:
-                        SoundHelper.playSound(SoundType.CLOSE, player.getLocation());
+                    case GUIService.MAIN_SETTINGS_INVENTORY:
+                    case GUIService.GENERAL_SETTINGS_INVENTORY:
+                        Sounds.CLOSE.play(player.getLocation());
                         break;
-                    case InventoryName.REWARD_SETTINGS_INVENTORY:
+                    case GUIService.REWARD_SETTINGS_INVENTORY:
                         guiService.saveRewardSettings(player, event.getInventory());
                 }
             }
@@ -123,8 +122,8 @@ public class InventoryListener implements Listener
     {
         switch (event.getView().getTitle())
         {
-            case InventoryName.MAIN_SETTINGS_INVENTORY:
-            case InventoryName.GENERAL_SETTINGS_INVENTORY:
+            case GUIService.MAIN_SETTINGS_INVENTORY:
+            case GUIService.GENERAL_SETTINGS_INVENTORY:
                 event.setCancelled(true);
                 break;
             default:

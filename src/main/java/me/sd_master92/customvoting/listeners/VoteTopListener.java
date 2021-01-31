@@ -1,7 +1,7 @@
 package me.sd_master92.customvoting.listeners;
 
 import me.sd_master92.customvoting.Main;
-import me.sd_master92.customvoting.constants.types.Messages;
+import me.sd_master92.customvoting.constants.Messages;
 import me.sd_master92.customvoting.services.VoteTopService;
 import org.bukkit.Location;
 import org.bukkit.block.Sign;

@@ -3,7 +3,7 @@ package me.sd_master92.customvoting.services;
 import me.sd_master92.customfile.PlayerFile;
 import me.sd_master92.customvoting.Main;
 import me.sd_master92.customvoting.VoteFile;
-import me.sd_master92.customvoting.constants.types.Messages;
+import me.sd_master92.customvoting.constants.Messages;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
