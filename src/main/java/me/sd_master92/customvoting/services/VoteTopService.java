@@ -3,6 +3,7 @@ package me.sd_master92.customvoting.services;
 import me.sd_master92.customfile.PlayerFile;
 import me.sd_master92.customvoting.Main;
 import me.sd_master92.customvoting.VoteFile;
+import me.sd_master92.customvoting.constants.types.Messages;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -43,6 +44,19 @@ public class VoteTopService
         }.runTaskLater(plugin, 40L);
     }
 
+    public void updateSign(Location loc) {
+        if (loc.getBlock().getState() instanceof Sign)
+        {
+            Sign sign = (Sign) loc.getBlock().getState();
+            List<String> messages = plugin.getMessages().getMessages(Messages.VOTE_TOP_SIGNS_TITLE_SIGN);
+            for (int i = 0; i < messages.size(); i++)
+            {
+                sign.setLine(i, messages.get(i));
+            }
+            sign.update(true);
+        }
+    }
+
     public void updateSign(Location loc, int top)
     {
         VoteFile topVoter = getTopVoter(top - 1);
@@ -57,7 +71,7 @@ public class VoteTopService
                     if (oldLoc.getBlock().getState() instanceof Sign)
                     {
                         Sign oldSign = (Sign) oldLoc.getBlock().getState();
-                        oldSign.setLine(0, plugin.getMessages().getMessage("vote_top_signs.outdated", null));
+                        oldSign.setLine(0, plugin.getMessages().getMessage(Messages.VOTE_TOP_SIGNS_PLAYER_SIGNS_OUTDATED));
                         oldSign.update(true);
                     }
                 }
@@ -66,7 +80,7 @@ public class VoteTopService
                 placeholders.put("%NUMBER%", "" + top);
                 placeholders.put("%PLAYER%", topVoter.getName());
                 placeholders.put("%VOTES%", "" + topVoter.getVotes());
-                List<String> messages = plugin.getMessages().getMessages("vote_top_signs.format", placeholders);
+                List<String> messages = plugin.getMessages().getMessages(Messages.VOTE_TOP_SIGNS_PLAYER_SIGNS_FORMAT, placeholders);
                 for (int i = 0; i < messages.size(); i++)
                 {
                     sign.setLine(i, messages.get(i));
@@ -74,7 +88,7 @@ public class VoteTopService
                 updateSkulls(loc, topVoter.getUuid());
             } else
             {
-                sign.setLine(0, plugin.getMessages().getMessage("vote_top_signs.not_found", null));
+                sign.setLine(0, plugin.getMessages().getMessage(Messages.VOTE_TOP_SIGNS_PLAYER_SIGNS_NOT_FOUND));
             }
             sign.update(true);
         }

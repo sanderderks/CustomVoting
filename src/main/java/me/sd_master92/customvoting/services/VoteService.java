@@ -3,6 +3,7 @@ package me.sd_master92.customvoting.services;
 import com.vexsoftware.votifier.model.Vote;
 import me.sd_master92.customvoting.Main;
 import me.sd_master92.customvoting.VoteFile;
+import me.sd_master92.customvoting.constants.types.Messages;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.EntityType;
@@ -33,7 +34,7 @@ public class VoteService
         HashMap<String, String> placeholders = new HashMap<>();
         placeholders.put("%PLAYER%", vote.getUsername());
         placeholders.put("%SERVICE%", vote.getServiceName());
-        String message = plugin.getMessages().getMessage("broadcast", placeholders);
+        String message = plugin.getMessages().getMessage(Messages.BROADCAST, placeholders);
         plugin.getServer().broadcastMessage(message);
     }
 

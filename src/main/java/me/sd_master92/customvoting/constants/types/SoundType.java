@@ -9,11 +9,12 @@ public enum SoundType
     NOT_ALLOWED(Sound.BLOCK_ANVIL_PLACE),
     CHANGE(Sound.UI_BUTTON_CLICK),
     CLICK(Sound.BLOCK_NOTE_BLOCK_PLING),
+    OPEN(Sound.BLOCK_ENDER_CHEST_OPEN),
     CLOSE(Sound.BLOCK_ENDER_CHEST_CLOSE);
 
     private final Sound sound;
 
-    SoundType(Sound sound)
+    SoundType(final Sound sound)
     {
         this.sound = sound;
     }

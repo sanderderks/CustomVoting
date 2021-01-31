@@ -1,8 +1,11 @@
 package me.sd_master92.customvoting.listeners;
 
 import me.sd_master92.customvoting.Main;
+import me.sd_master92.customvoting.constants.types.Messages;
 import me.sd_master92.customvoting.services.VoteTopService;
+import org.bukkit.Location;
 import org.bukkit.block.Sign;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.SignChangeEvent;
@@ -25,16 +28,25 @@ public class VoteTopListener implements Listener
             {
                 String line0 = event.getLine(0);
                 String line1 = event.getLine(1);
-                if (line0 != null && line1 != null && line0.toLowerCase().equalsIgnoreCase("[votes]") && line1.toLowerCase().contains("top"))
+                if (line0 != null && line0.toLowerCase().equalsIgnoreCase("[votes]"))
                 {
                     event.setCancelled(true);
-                    try
+                    Location loc = event.getBlock().getLocation();
+                    if(line1 != null && line1.toLowerCase().contains("top"))
                     {
-                        line1 = line1.trim().replace("top", "");
-                        int top = Integer.parseInt(line1);
-                        voteTopService.updateSign(event.getBlock().getLocation(), top);
-                    } catch (Exception ignored)
+                        try
+                        {
+                            line1 = line1.trim().replace("top", "");
+                            int top = Integer.parseInt(line1);
+                            voteTopService.updateSign(loc, top);
+                        } catch (Exception ignored)
+                        {
+                            Player player = event.getPlayer();
+                            player.sendMessage(Messages.EXCEPTION);
+                        }
+                    } else
                     {
+                        voteTopService.updateSign(loc);
                     }
                 }
             }

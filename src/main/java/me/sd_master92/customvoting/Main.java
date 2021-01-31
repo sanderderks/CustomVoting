@@ -24,7 +24,7 @@ public class Main extends JavaPlugin
     private final String VERSION = getDescription().getVersion();
     private final String AUTHOR = getDescription().getAuthors().get(0);
 
-    private CustomFile config;
+    private CustomFile settings;
     private CustomFile messages;
     private CustomFile data;
 
@@ -111,14 +111,14 @@ public class Main extends JavaPlugin
 
     private void registerFiles()
     {
-        config = new CustomFile("config.yml", this);
+        settings = new CustomFile("settings.yml", this);
         messages = new CustomFile("messages.yml", this);
         data = new CustomFile("data.yml", this);
     }
 
     public CustomFile getSettings()
     {
-        return config;
+        return settings;
     }
 
     public CustomFile getMessages()

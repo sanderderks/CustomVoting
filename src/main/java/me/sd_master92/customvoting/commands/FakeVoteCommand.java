@@ -3,7 +3,7 @@ package me.sd_master92.customvoting.commands;
 import com.vexsoftware.votifier.model.Vote;
 import com.vexsoftware.votifier.model.VotifierEvent;
 import me.sd_master92.customvoting.Main;
-import me.sd_master92.customvoting.constants.Messages;
+import me.sd_master92.customvoting.constants.types.Messages;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

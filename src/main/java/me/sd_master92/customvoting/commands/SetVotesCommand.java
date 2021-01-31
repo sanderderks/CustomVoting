@@ -3,7 +3,7 @@ package me.sd_master92.customvoting.commands;
 import me.sd_master92.customfile.PlayerFile;
 import me.sd_master92.customvoting.Main;
 import me.sd_master92.customvoting.VoteFile;
-import me.sd_master92.customvoting.constants.Messages;
+import me.sd_master92.customvoting.constants.types.Messages;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -28,10 +28,10 @@ public class SetVotesCommand implements CommandExecutor
             {
                 if (sender instanceof Player)
                 {
-                    sender.sendMessage(ChatColor.RED + "- /setvotes <amount>\n- /setvotes <name> <amount>");
+                    sender.sendMessage(ChatColor.RED + "- /setvotes <amount> [name]");
                 } else
                 {
-                    sender.sendMessage(ChatColor.RED + "- /setvotes <name> <amount>");
+                    sender.sendMessage(ChatColor.RED + "- /setvotes <amount> <name>");
                 }
             } else if (args.length == 1)
             {
@@ -57,7 +57,7 @@ public class SetVotesCommand implements CommandExecutor
                     }
                 } else
                 {
-                    sender.sendMessage(ChatColor.RED + "- /setvotes <name> <amount>");
+                    sender.sendMessage(ChatColor.RED + "- /setvotes <amount> <name>");
                 }
             } else
             {

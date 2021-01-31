@@ -1,7 +1,7 @@
 package me.sd_master92.customvoting.listeners;
 
 import me.sd_master92.customvoting.Main;
-import me.sd_master92.customvoting.constants.Names;
+import me.sd_master92.customvoting.constants.InventoryName;
 import me.sd_master92.customvoting.constants.types.SoundType;
 import me.sd_master92.customvoting.helpers.SoundHelper;
 import me.sd_master92.customvoting.services.GUIService;
@@ -34,7 +34,7 @@ public class InventoryListener implements Listener
             ItemStack item = event.getCurrentItem();
             switch (event.getView().getTitle())
             {
-                case Names.MAIN_SETTINGS_INVENTORY:
+                case InventoryName.MAIN_SETTINGS_INVENTORY:
                 {
                     event.setCancelled(true);
                     if (item != null)
@@ -58,7 +58,7 @@ public class InventoryListener implements Listener
                     }
                 }
                 break;
-                case Names.GENERAL_SETTINGS_INVENTORY:
+                case InventoryName.GENERAL_SETTINGS_INVENTORY:
                 {
                     event.setCancelled(true);
                     if (item != null)
@@ -72,7 +72,7 @@ public class InventoryListener implements Listener
                     }
                 }
                 break;
-                case Names
+                case InventoryName
                         .REWARD_SETTINGS_INVENTORY:
                 {
                     if (event.getSlot() >= 25)
@@ -107,11 +107,11 @@ public class InventoryListener implements Listener
                 Player player = (Player) event.getPlayer();
                 switch (event.getView().getTitle())
                 {
-                    case Names.MAIN_SETTINGS_INVENTORY:
-                    case Names.GENERAL_SETTINGS_INVENTORY:
+                    case InventoryName.MAIN_SETTINGS_INVENTORY:
+                    case InventoryName.GENERAL_SETTINGS_INVENTORY:
                         SoundHelper.playSound(SoundType.CLOSE, player.getLocation());
                         break;
-                    case Names.REWARD_SETTINGS_INVENTORY:
+                    case InventoryName.REWARD_SETTINGS_INVENTORY:
                         guiService.saveRewardSettings(player, event.getInventory());
                 }
             }
@@ -123,8 +123,8 @@ public class InventoryListener implements Listener
     {
         switch (event.getView().getTitle())
         {
-            case Names.MAIN_SETTINGS_INVENTORY:
-            case Names.GENERAL_SETTINGS_INVENTORY:
+            case InventoryName.MAIN_SETTINGS_INVENTORY:
+            case InventoryName.GENERAL_SETTINGS_INVENTORY:
                 event.setCancelled(true);
                 break;
             default:

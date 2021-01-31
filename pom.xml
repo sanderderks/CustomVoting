@@ -35,9 +35,8 @@
                 <!-- Keep filtering at false for other resources to prevent bad magic -->
                 <filtering>false</filtering>
                 <includes>
-                    <include>config.yml</include>
+                    <include>settings.yml</include>
                     <include>messages.yml</include>
-                    <include>data.yml</include>
                 </includes>
                 <excludes>
                     <exclude>**/*.java</exclude>

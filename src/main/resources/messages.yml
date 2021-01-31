@@ -1,5 +1,9 @@
 # CustomVoting by sd_master92
 
+no_permission: '&cYou do not have permission to perform this command.'
+invalid_player: '&cThat player does not exist.'
+exception: '&cSomething went wrong!'
+
 broadcast: '&d%PLAYER% &7just voted at &d%SERVICE%&7!'
 
 vote_command:
@@ -28,9 +32,14 @@ vote_top_command:
   not_found: '&cThere are no players to show'
 
 vote_top_signs:
-  format:
-    - '&4&lTop %NUMBER%:'
-    - '&b%PLAYER%'
-    - '&d%VOTES% votes'
-  not_found: '&cNot found'
-  outdated: '&Outdated'
+  title_sign:
+    - '&4Top Voters'
+    - '&c&lof'
+    - '&4&lSome Server!'
+  player_signs:
+    format:
+      - '&4&lTop %NUMBER%:'
+      - '&b%PLAYER%'
+      - '&d%VOTES% votes'
+    not_found: '&cNot found'
+    outdated: '&Outdated'

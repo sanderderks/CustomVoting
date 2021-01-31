@@ -2,7 +2,8 @@ package me.sd_master92.customvoting.commands;
 
 import me.sd_master92.customvoting.Main;
 import me.sd_master92.customvoting.VoteFile;
-import me.sd_master92.customvoting.constants.Messages;
+import me.sd_master92.customvoting.constants.types.Messages;
+import me.sd_master92.customvoting.constants.types.Settings;
 import me.sd_master92.customvoting.services.VoteTopService;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -31,7 +32,7 @@ public class VoteTopCommand implements CommandExecutor
             if (topVoters.size() > 0)
             {
                 List<String> messages = new ArrayList<>();
-                for (String message : plugin.getMessages().getMessages("vote_top_command.format", null))
+                for (String message : plugin.getMessages().getMessages(Messages.VOTE_TOP_COMMAND_FORMAT))
                 {
                     if (!message.contains("%PLAYERS%"))
                     {
@@ -39,11 +40,11 @@ public class VoteTopCommand implements CommandExecutor
                     } else
                     {
                         Map<String, String> placeholders = new HashMap<>();
-                        for (VoteFile topVoter : topVoters.stream().limit(plugin.getSettings().getNumber("vote_top_command")).collect(Collectors.toList()))
+                        for (VoteFile topVoter : topVoters.stream().limit(plugin.getSettings().getNumber(Settings.VOTE_TOP_COMMAND_SHOW_PLAYERS)).collect(Collectors.toList()))
                         {
                             placeholders.put("%PLAYER%", topVoter.getName());
                             placeholders.put("%VOTES%", "" + topVoter.getVotes());
-                            message = plugin.getMessages().getMessage("vote_top_command.players", placeholders);
+                            message = plugin.getMessages().getMessage(Messages.VOTE_TOP_COMMAND_PLAYERS, placeholders);
                             messages.add(message);
                         }
                     }
@@ -54,7 +55,7 @@ public class VoteTopCommand implements CommandExecutor
                 }
             } else
             {
-                sender.sendMessage(plugin.getMessages().getMessage("vote_top_command.not_found", null));
+                sender.sendMessage(plugin.getMessages().getMessage(Messages.VOTE_TOP_COMMAND_NOT_FOUND));
             }
         } else
         {

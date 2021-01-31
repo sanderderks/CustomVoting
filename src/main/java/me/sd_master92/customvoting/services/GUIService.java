@@ -1,7 +1,7 @@
 package me.sd_master92.customvoting.services;
 
 import me.sd_master92.customvoting.Main;
-import me.sd_master92.customvoting.constants.Names;
+import me.sd_master92.customvoting.constants.InventoryName;
 import me.sd_master92.customvoting.constants.types.SoundType;
 import me.sd_master92.customvoting.helpers.SoundHelper;
 import org.bukkit.Bukkit;
@@ -49,7 +49,7 @@ public class GUIService
 
     public Inventory getSettings()
     {
-        Inventory inv = Bukkit.createInventory(null, 9, Names.MAIN_SETTINGS_INVENTORY);
+        Inventory inv = Bukkit.createInventory(null, 9, InventoryName.MAIN_SETTINGS_INVENTORY);
         inv.setItem(1, GENERAL_SETTINGS);
         inv.setItem(3, REWARD_SETTINGS);
         inv.setItem(5, UNDER_CONSTRUCTION);
@@ -59,14 +59,14 @@ public class GUIService
 
     public Inventory getGeneralSettings()
     {
-        Inventory inv = Bukkit.createInventory(null, 9, Names.GENERAL_SETTINGS_INVENTORY);
+        Inventory inv = Bukkit.createInventory(null, 9, InventoryName.GENERAL_SETTINGS_INVENTORY);
         inv.setItem(8, BACK_ITEM);
         return inv;
     }
 
     public Inventory getRewardSettings()
     {
-        Inventory inv = Bukkit.createInventory(null, 27, Names.REWARD_SETTINGS_INVENTORY);
+        Inventory inv = Bukkit.createInventory(null, 27, InventoryName.REWARD_SETTINGS_INVENTORY);
         for (ItemStack reward : plugin.getData().getItems("rewards"))
         {
             inv.addItem(reward);
