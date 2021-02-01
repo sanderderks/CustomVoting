@@ -1,3 +1,4 @@
+current_votes: 0
 items:
   rewards:
     - ==: org.bukkit.inventory.ItemStack

@@ -22,6 +22,9 @@ commands:
   setvotes:
     description: set votes
     permission: customvoting.setvotes
+  voteparty:
+    description: vote party
+    permission: customvoting.voteparty
   votereload:
     description: reload
     permission: customvoting.reload
@@ -38,10 +41,11 @@ permissions:
       customvoting.votes.*: true
       customvoting.votetop: true
       customvoting.fakevote: true
+      customvoting.voteparty: true
       customvoting.reload: true
       customvoting.settings: true
   customvoting.vote:
-    default: op
+    default: true
   customvoting.votes.*:
     default: op
     children:
@@ -49,16 +53,18 @@ permissions:
       customvoting.votes.others: true
       customvoting.votes.set: true
   customvoting.votes:
-    default: op
+    default: true
   customvoting.votes.others:
     default: op
   customvoting.votes.set:
     default: op
   customvoting.votetop:
-    default: op
+    default: true
   customvoting.votetop.signs:
     default: op
   customvoting.fakevote:
+    default: op
+  customvoting.voteparty:
     default: op
   customvoting.reload:
     default: op

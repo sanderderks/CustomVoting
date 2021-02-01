@@ -1,10 +1,14 @@
 package me.sd_master92.customvoting.constants;
 
+import org.bukkit.ChatColor;
+
 public class Messages
 {
     public static final String NO_PERMISSION = "no_permission";
+    public static final String MUST_BE_PLAYER = "must_be_player";
     public static final String INVALID_PLAYER = "invalid_player";
-    public static final String EXCEPTION = "exception";
+    public static final String EXCEPTION = ChatColor.RED + "Something went wrong! Please contact the server " +
+            "administrator.";
 
     public static final String BROADCAST = "broadcast";
     public static final String MONTHLY_RESET = "monthly_reset";
@@ -23,4 +27,10 @@ public class Messages
     public static final String VOTE_TOP_SIGNS_PLAYER_SIGNS_FORMAT = "vote_top_signs.player_signs.format";
     public static final String VOTE_TOP_SIGNS_PLAYER_SIGNS_NOT_FOUND = "vote_top_signs.player_signs.not_found";
     public static final String VOTE_TOP_SIGNS_PLAYER_SIGNS_OUTDATED = "vote_top_signs.player_signs.outdated";
+
+    public static final String VOTE_PARTY_UNTIL = "vote_party.until";
+    public static final String VOTE_PARTY_COUNTDOWN = "vote_party.countdown";
+    public static final String VOTE_PARTY_COUNTDOWN_ENDING = "vote_party.countdown_ending";
+    public static final String VOTE_PARTY_START = "vote_party.start";
+    public static final String VOTE_PARTY_END = "vote_party.end";
 }

@@ -19,6 +19,7 @@ public class GUIService
     public final static String MAIN_SETTINGS_INVENTORY = "Vote Settings";
     public final static String GENERAL_SETTINGS_INVENTORY = "General Settings";
     public final static String REWARD_SETTINGS_INVENTORY = "Vote Rewards";
+    public final static String VOTE_PARTY_REWARDS_INVENTORY = "Vote Party Chest #";
 
     public static final ItemStack BACK_ITEM = createItem(Material.BARRIER, ChatColor.RED + "Back");
     public static final ItemStack SAVE_ITEM = createItem(Material.WRITABLE_BOOK, ChatColor.GREEN + "Save");
@@ -70,9 +71,13 @@ public class GUIService
     public Inventory getGeneralSettings()
     {
         Inventory inv = Bukkit.createInventory(null, 9, GENERAL_SETTINGS_INVENTORY);
-        inv.setItem(0, getDoMonthlyReset());
-        inv.setItem(1, getUseSoundEffects());
-        inv.setItem(2, getVoteTopCommandShowPlayers());
+        inv.setItem(0, getDoMonthlyResetSetting());
+        inv.setItem(1, getUseSoundEffectsSetting());
+        inv.setItem(2, getUseFirework());
+        inv.setItem(3, getDoVoteParty());
+        inv.setItem(4, getVotesUntilVoteParty());
+        inv.setItem(5, getVotePartyCountdownSetting());
+        inv.setItem(6, getVoteTopCommandShowPlayersSetting());
         inv.setItem(8, BACK_ITEM);
         return inv;
     }
@@ -89,7 +94,7 @@ public class GUIService
         return inv;
     }
 
-    public void saveRewardSettings(Player player, Inventory inv)
+    public void saveRewards(Player player, Inventory inv)
     {
         inv.setItem(25, null);
         inv.setItem(26, null);
@@ -104,21 +109,57 @@ public class GUIService
         }
     }
 
-    public ItemStack getDoMonthlyReset()
+    public Inventory getVotePartyRewards(String key)
     {
-        return createItem(Material.CLOCK, ChatColor.RED + "Monthly Reset",
+        Inventory inv = Bukkit.createInventory(null, 54, VOTE_PARTY_REWARDS_INVENTORY + key);
+        inv.setContents(plugin.getData().getItems("voteparty." + key));
+        return inv;
+    }
+
+    public ItemStack getDoMonthlyResetSetting()
+    {
+        return createItem(Material.CLOCK, ChatColor.LIGHT_PURPLE + "Monthly Reset",
                 ChatColor.GRAY + "Status: " + (plugin.getSettings().getBoolean(Settings.MONTHLY_RESET) ?
                         ChatColor.GREEN + "ON" : ChatColor.RED + "OFF"));
     }
 
-    public ItemStack getUseSoundEffects()
+    public ItemStack getUseSoundEffectsSetting()
     {
         return createItem(Material.MUSIC_DISC_CAT, ChatColor.LIGHT_PURPLE + "Sound Effects",
                 ChatColor.GRAY + "Status: " + (plugin.getSettings().getBoolean(Settings.USE_SOUND_EFFECTS) ?
                         ChatColor.GREEN + "ON" : ChatColor.RED + "OFF"));
     }
 
-    public ItemStack getVoteTopCommandShowPlayers()
+    public ItemStack getUseFirework()
+    {
+        return createItem(Material.FIREWORK_ROCKET, ChatColor.LIGHT_PURPLE + "Firework",
+                ChatColor.GRAY + "Status: " + (plugin.getSettings().getBoolean(Settings.FIREWORK) ?
+                        ChatColor.GREEN + "ON" : ChatColor.RED + "OFF"));
+    }
+
+    public ItemStack getDoVoteParty()
+    {
+        return createItem(Material.EXPERIENCE_BOTTLE, ChatColor.LIGHT_PURPLE + "Vote Party",
+                ChatColor.GRAY + "Status: " + (plugin.getSettings().getBoolean(Settings.VOTE_PARTY) ?
+                        ChatColor.GREEN + "ON" : ChatColor.RED + "OFF"));
+    }
+
+    public ItemStack getVotesUntilVoteParty()
+    {
+        int votesRequired = plugin.getSettings().getNumber(Settings.VOTES_REQUIRED_FOR_VOTE_PARTY);
+        int votesUntil = votesRequired - plugin.getData().getNumber("current_votes");
+        return createItem(Material.ENCHANTED_BOOK, ChatColor.LIGHT_PURPLE + "Votes until Vote Party",
+                ChatColor.GRAY + "Required: " + ChatColor.AQUA + votesRequired + ";" + ChatColor.GRAY + "Votes left:" +
+                        " " + ChatColor.GREEN + votesUntil);
+    }
+
+    public ItemStack getVotePartyCountdownSetting()
+    {
+        return createItem(Material.ENDER_CHEST, ChatColor.LIGHT_PURPLE + "Vote Party Countdown",
+                ChatColor.GRAY + "Currently: " + ChatColor.AQUA + plugin.getSettings().getNumber(Settings.VOTE_PARTY_COUNTDOWN));
+    }
+
+    public ItemStack getVoteTopCommandShowPlayersSetting()
     {
         return createItem(Material.PLAYER_HEAD, ChatColor.LIGHT_PURPLE + "Vote Top Command",
                 ChatColor.GRAY + "How many players to show?;" + ChatColor.GRAY + "Currently: " +

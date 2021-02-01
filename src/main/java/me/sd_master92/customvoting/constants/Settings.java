@@ -4,5 +4,9 @@ public class Settings
 {
     public static final String MONTHLY_RESET = "monthly_reset";
     public static final String USE_SOUND_EFFECTS = "sound_effects";
+    public static final String VOTE_PARTY_COUNTDOWN = "vote_party_countdown";
     public static final String VOTE_TOP_COMMAND_SHOW_PLAYERS = "vote_top_command_show_players";
+    public static final String FIREWORK = "firework";
+    public static final String VOTE_PARTY = "vote_party";
+    public static final String VOTES_REQUIRED_FOR_VOTE_PARTY = "votes_required_for_vote_party";
 }

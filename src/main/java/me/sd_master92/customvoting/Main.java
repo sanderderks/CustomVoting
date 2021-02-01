@@ -153,6 +153,7 @@ public class Main extends JavaPlugin
         registerCommand("votetop", new VoteTopCommand(this));
         registerCommand("fakevote", new FakeVoteCommand(this));
         registerCommand("setvotes", new SetVotesCommand(this));
+        registerCommand("voteparty", new VotePartyCommand(this));
 
         registerCommand("votereload", new ReloadCommand(this));
         registerCommand("votesettings", new SettingsCommand(this));
