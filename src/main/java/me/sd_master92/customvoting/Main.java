@@ -6,6 +6,7 @@ import me.sd_master92.customvoting.listeners.InventoryListener;
 import me.sd_master92.customvoting.listeners.PlayerListener;
 import me.sd_master92.customvoting.listeners.VoteTopListener;
 import me.sd_master92.customvoting.listeners.VotifierListener;
+import me.sd_master92.customvoting.tasks.DailyTask;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.event.Listener;
@@ -44,6 +45,7 @@ public class Main extends JavaPlugin
         registerFiles();
         registerListeners();
         registerCommands();
+        startTasks();
 
         print("");
         print(ChatColor.GREEN + "v" + VERSION + " has been enabled.");
@@ -167,6 +169,11 @@ public class Main extends JavaPlugin
             print("|");
             error("|___could not register command '" + name.toLowerCase() + "'!");
         }
+    }
+
+    private void startTasks()
+    {
+        new DailyTask(this);
     }
 
     public void print(String message)

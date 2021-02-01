@@ -1,6 +1,7 @@
 package me.sd_master92.customvoting.commands;
 
 import me.sd_master92.customvoting.Main;
+import me.sd_master92.customvoting.VoteFile;
 import me.sd_master92.customvoting.constants.Messages;
 import me.sd_master92.customvoting.services.VoteService;
 import org.bukkit.command.Command;
@@ -9,10 +10,12 @@ import org.bukkit.command.CommandSender;
 
 public class FakeVoteCommand implements CommandExecutor
 {
+    private final Main plugin;
     private final VoteService voteService;
 
     public FakeVoteCommand(Main plugin)
     {
+        this.plugin = plugin;
         voteService = new VoteService(plugin);
     }
 
@@ -26,11 +29,18 @@ public class FakeVoteCommand implements CommandExecutor
                 voteService.fakeVote(sender.getName());
             } else
             {
-                voteService.fakeVote(args[0]);
+                String name = args[0];
+                if(VoteFile.getByName(name, plugin) != null)
+                {
+                    voteService.fakeVote(args[0]);
+                } else
+                {
+                    sender.sendMessage(plugin.getMessages().getMessage(Messages.INVALID_PLAYER));
+                }
             }
         } else
         {
-            sender.sendMessage(Messages.NO_PERMISSION);
+            sender.sendMessage(plugin.getMessages().getMessage(Messages.NO_PERMISSION));
         }
         return true;
     }

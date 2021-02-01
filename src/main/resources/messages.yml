@@ -5,7 +5,7 @@ invalid_player: '&cThat player does not exist.'
 exception: '&cSomething went wrong!'
 
 broadcast: '&d%PLAYER% &7just voted at &d%SERVICE%&7!'
-
+monthly_reset: '&d&lAll votes have been reset, because a new month has started!'
 vote_command:
   - '&bVote for &dServerName &b!'
   - '&b---------------'

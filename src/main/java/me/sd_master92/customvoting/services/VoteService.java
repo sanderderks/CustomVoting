@@ -14,7 +14,6 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 
 public class VoteService
 {
@@ -46,11 +45,7 @@ public class VoteService
         PlayerFile playerFile = PlayerFile.getByName(vote.getUsername(), plugin);
         if(playerFile != null)
         {
-            String path = "queue." + playerFile.getUuid();
-            List<String> queue = plugin.getData().getStringList(path);
-            queue.add(vote.getServiceName());
-            plugin.getData().set(path, queue);
-            plugin.getData().saveConfig();
+            new VoteFile(playerFile.getUuid(), plugin).addQueue(vote.getServiceName());
         }
     }
 

@@ -70,6 +70,12 @@ public class InventoryListener implements Listener
                                 cancelCloseEvent = true;
                                 player.openInventory(guiService.getSettings());
                                 break;
+                            case CLOCK:
+                                Sounds.CHANGE.play(plugin, player.getLocation());
+                                plugin.getSettings().set(Settings.MONTHLY_RESET,
+                                        !plugin.getSettings().getBoolean(Settings.MONTHLY_RESET));
+                                event.setCurrentItem(guiService.getDoMonthlyReset());
+                                break;
                             case MUSIC_DISC_CAT:
                                 Sounds.CHANGE.play(plugin, player.getLocation());
                                 plugin.getSettings().set(Settings.USE_SOUND_EFFECTS,

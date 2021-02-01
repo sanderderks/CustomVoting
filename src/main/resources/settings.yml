@@ -1,4 +1,5 @@
 # Custom Voting by sd_master92
 
+monthly_reset: false
 sound_effects: true
 vote_top_command_show_players: 3

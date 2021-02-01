@@ -12,10 +12,12 @@ import org.bukkit.event.block.SignChangeEvent;
 
 public class VoteTopListener implements Listener
 {
+    private final Main plugin;
     private final VoteTopService voteTopService;
 
     public VoteTopListener(Main plugin)
     {
+        this.plugin = plugin;
         voteTopService = new VoteTopService(plugin);
     }
 
@@ -42,7 +44,7 @@ public class VoteTopListener implements Listener
                         } catch (Exception ignored)
                         {
                             Player player = event.getPlayer();
-                            player.sendMessage(Messages.EXCEPTION);
+                            player.sendMessage(plugin.getMessages().getMessage(Messages.EXCEPTION));
                         }
                     } else
                     {

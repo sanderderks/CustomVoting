@@ -57,7 +57,7 @@ public class VoteTopCommand implements CommandExecutor
             }
         } else
         {
-            sender.sendMessage(Messages.NO_PERMISSION);
+            sender.sendMessage(plugin.getMessages().getMessage(Messages.NO_PERMISSION));
         }
         return true;
     }

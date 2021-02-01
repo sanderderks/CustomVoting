@@ -70,8 +70,9 @@ public class GUIService
     public Inventory getGeneralSettings()
     {
         Inventory inv = Bukkit.createInventory(null, 9, GENERAL_SETTINGS_INVENTORY);
-        inv.setItem(0, getUseSoundEffects());
-        inv.setItem(1, getVoteTopCommandShowPlayers());
+        inv.setItem(0, getDoMonthlyReset());
+        inv.setItem(1, getUseSoundEffects());
+        inv.setItem(2, getVoteTopCommandShowPlayers());
         inv.setItem(8, BACK_ITEM);
         return inv;
     }
@@ -103,9 +104,16 @@ public class GUIService
         }
     }
 
+    public ItemStack getDoMonthlyReset()
+    {
+        return createItem(Material.CLOCK, ChatColor.RED + "Monthly Reset",
+                ChatColor.GRAY + "Status: " + (plugin.getSettings().getBoolean(Settings.MONTHLY_RESET) ?
+                        ChatColor.GREEN + "ON" : ChatColor.RED + "OFF"));
+    }
+
     public ItemStack getUseSoundEffects()
     {
-        return createItem(Material.MUSIC_DISC_CAT, ChatColor.LIGHT_PURPLE + "Sound Effects?",
+        return createItem(Material.MUSIC_DISC_CAT, ChatColor.LIGHT_PURPLE + "Sound Effects",
                 ChatColor.GRAY + "Status: " + (plugin.getSettings().getBoolean(Settings.USE_SOUND_EFFECTS) ?
                         ChatColor.GREEN + "ON" : ChatColor.RED + "OFF"));
     }

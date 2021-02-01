@@ -5,7 +5,9 @@ public class Messages
     public static final String NO_PERMISSION = "no_permission";
     public static final String INVALID_PLAYER = "invalid_player";
     public static final String EXCEPTION = "exception";
+
     public static final String BROADCAST = "broadcast";
+    public static final String MONTHLY_RESET = "monthly_reset";
 
     public static final String VOTE_COMMAND = "vote_command";
 

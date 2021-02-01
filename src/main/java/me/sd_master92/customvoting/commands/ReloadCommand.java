@@ -37,7 +37,7 @@ public class ReloadCommand implements CommandExecutor
             }
         } else
         {
-            sender.sendMessage(Messages.NO_PERMISSION);
+            sender.sendMessage(plugin.getMessages().getMessage(Messages.NO_PERMISSION));
         }
         return true;
     }

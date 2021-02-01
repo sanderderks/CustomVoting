@@ -32,7 +32,7 @@ public class VotifierListener implements Listener
         } else
         {
             voteService.queueVote(vote);
-            plugin.print(vote.getUsername() + " is offline. Vote has placed in queue.");
+            plugin.print(vote.getUsername() + " is offline. Vote has been placed in queue.");
         }
     }
 }

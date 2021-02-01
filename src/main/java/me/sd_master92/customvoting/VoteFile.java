@@ -72,6 +72,7 @@ public class VoteFile extends PlayerFile
 
     public void setVotes(int n, boolean updateSigns)
     {
+        setTimeStamp("last");
         setNumber("votes", n);
         if(updateSigns)
         {
@@ -97,5 +98,13 @@ public class VoteFile extends PlayerFile
     public boolean clearQueue()
     {
         return plugin.getData().delete("queue." + getUuid());
+    }
+
+    public boolean addQueue(String service) {
+        String path = "queue." + getUuid();
+        List<String> queue = plugin.getData().getStringList(path);
+        queue.add(service);
+        plugin.getData().set(path, queue);
+        return plugin.getData().saveConfig();
     }
 }
