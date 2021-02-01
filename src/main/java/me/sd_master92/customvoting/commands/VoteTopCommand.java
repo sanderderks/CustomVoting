@@ -4,12 +4,14 @@ import me.sd_master92.customvoting.Main;
 import me.sd_master92.customvoting.VoteFile;
 import me.sd_master92.customvoting.constants.Messages;
 import me.sd_master92.customvoting.constants.Settings;
-import me.sd_master92.customvoting.services.VoteTopService;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class VoteTopCommand implements CommandExecutor
@@ -24,7 +26,7 @@ public class VoteTopCommand implements CommandExecutor
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
     {
-        if(command.getPermission() != null && sender.hasPermission(command.getPermission()))
+        if (command.getPermission() != null && sender.hasPermission(command.getPermission()))
         {
             List<VoteFile> topVoters = VoteFile.getTopVoters(plugin);
             if (topVoters.size() > 0)
@@ -38,7 +40,8 @@ public class VoteTopCommand implements CommandExecutor
                     } else
                     {
                         Map<String, String> placeholders = new HashMap<>();
-                        for (VoteFile topVoter : topVoters.stream().limit(plugin.getSettings().getNumber(Settings.VOTE_TOP_COMMAND_SHOW_PLAYERS)).collect(Collectors.toList()))
+                        for (VoteFile topVoter :
+                                topVoters.stream().limit(plugin.getSettings().getNumber(Settings.VOTE_TOP_COMMAND_SHOW_PLAYERS)).collect(Collectors.toList()))
                         {
                             placeholders.put("%PLAYER%", topVoter.getName());
                             placeholders.put("%VOTES%", "" + topVoter.getVotes());
