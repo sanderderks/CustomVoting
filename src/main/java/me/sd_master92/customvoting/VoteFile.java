@@ -1,6 +1,7 @@
 package me.sd_master92.customvoting;
 
 import me.sd_master92.customfile.PlayerFile;
+import me.sd_master92.customvoting.constants.Data;
 import me.sd_master92.customvoting.services.VoteTopService;
 import org.bukkit.entity.Player;
 
@@ -92,16 +93,16 @@ public class VoteFile extends PlayerFile
 
     public List<String> getQueue()
     {
-        return plugin.getData().getStringList("queue." + getUuid());
+        return plugin.getData().getStringList(Data.VOTE_QUEUE + "." + getUuid());
     }
 
     public boolean clearQueue()
     {
-        return plugin.getData().delete("queue." + getUuid());
+        return plugin.getData().delete(Data.VOTE_QUEUE + "." + getUuid());
     }
 
     public boolean addQueue(String service) {
-        String path = "queue." + getUuid();
+        String path = Data.VOTE_QUEUE + "." + getUuid();
         List<String> queue = plugin.getData().getStringList(path);
         queue.add(service);
         plugin.getData().set(path, queue);

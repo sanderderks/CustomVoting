@@ -2,8 +2,10 @@ package me.sd_master92.customvoting.services;
 
 import me.sd_master92.customvoting.Main;
 import me.sd_master92.customvoting.VoteFile;
+import me.sd_master92.customvoting.constants.Data;
 import me.sd_master92.customvoting.constants.Messages;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -12,6 +14,7 @@ import org.bukkit.block.Sign;
 import org.bukkit.block.Skull;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.type.WallSign;
+import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
@@ -32,7 +35,7 @@ public class VoteTopService
             @Override
             public void run()
             {
-                Map<String, Location> locations = plugin.getData().getLocations("vote_top");
+                Map<String, Location> locations = plugin.getData().getLocations(Data.VOTE_TOP);
                 for (String key : locations.keySet())
                 {
                     Location loc = locations.get(key);
@@ -49,11 +52,15 @@ public class VoteTopService
         }.runTaskLater(plugin, 40L);
     }
 
-    public void updateSign(Location loc)
+    public void updateSign(Player player, Location loc)
     {
         if (loc.getBlock().getState() instanceof Sign)
         {
-            plugin.getData().setLocation("vote_top.title", loc);
+            plugin.getData().setLocation(Data.VOTE_TOP + ".title", loc);
+            if(player != null)
+            {
+                player.sendMessage(ChatColor.GREEN + "Registered Vote Sign #title");
+            }
             Sign sign = (Sign) loc.getBlock().getState();
             List<String> messages = plugin.getMessages().getMessages(Messages.VOTE_TOP_SIGNS_TITLE_SIGN);
             for (int i = 0; i < messages.size(); i++)
@@ -64,7 +71,12 @@ public class VoteTopService
         }
     }
 
-    public void updateSign(Location loc, int top)
+    public void updateSign(Location loc)
+    {
+        updateSign(null, loc);
+    }
+
+    public void updateSign(Player player, Location loc, int top)
     {
         VoteFile topVoter = VoteFile.getTopVoter(plugin, top - 1);
         if (loc.getBlock().getState() instanceof Sign)
@@ -72,15 +84,19 @@ public class VoteTopService
             Sign sign = (Sign) loc.getBlock().getState();
             if (topVoter != null)
             {
-                Location oldLoc = plugin.getData().getLocation("vote_top." + top);
+                Location oldLoc = plugin.getData().getLocation(Data.VOTE_TOP + "." + top);
                 if (oldLoc == null)
                 {
-                    plugin.getData().setLocation("vote_top." + top, loc);
+                    plugin.getData().setLocation(Data.VOTE_TOP + "." + top, loc);
+                    if(player != null)
+                    {
+                        player.sendMessage(ChatColor.GREEN + "Registered Vote Sign #" + top);
+                    }
                 } else
                 {
                     if (!oldLoc.equals(loc))
                     {
-                        plugin.getData().setLocation("vote_top." + top, loc);
+                        plugin.getData().setLocation(Data.VOTE_TOP + "." + top, loc);
                         if (oldLoc.getBlock().getState() instanceof Sign)
                         {
                             Sign oldSign = (Sign) oldLoc.getBlock().getState();
@@ -126,6 +142,11 @@ public class VoteTopService
             }
             sign.update(true);
         }
+    }
+
+    public void updateSign(Location loc, int top)
+    {
+        updateSign(null, loc, top);
     }
 
     public void updateSkulls(Location loc, String uuid)

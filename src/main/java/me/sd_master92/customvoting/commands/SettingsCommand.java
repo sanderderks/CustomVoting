@@ -2,7 +2,7 @@ package me.sd_master92.customvoting.commands;
 
 import me.sd_master92.customvoting.Main;
 import me.sd_master92.customvoting.constants.Messages;
-import me.sd_master92.customvoting.constants.Sounds;
+import me.sd_master92.customvoting.constants.enumerations.SoundType;
 import me.sd_master92.customvoting.services.GUIService;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -30,7 +30,7 @@ public class SettingsCommand implements CommandExecutor
             {
                 Player player = (Player) sender;
                 Inventory settings = guiService.getSettings();
-                Sounds.OPEN.play(plugin, player.getLocation());
+                SoundType.OPEN.play(plugin, player.getLocation());
                 player.openInventory(settings);
             }
         } else

@@ -5,6 +5,7 @@ import com.vexsoftware.votifier.model.VotifierEvent;
 import me.sd_master92.customfile.PlayerFile;
 import me.sd_master92.customvoting.Main;
 import me.sd_master92.customvoting.VoteFile;
+import me.sd_master92.customvoting.constants.Data;
 import me.sd_master92.customvoting.constants.Messages;
 import me.sd_master92.customvoting.constants.Settings;
 import org.bukkit.Color;
@@ -96,7 +97,7 @@ public class VoteService
         broadcastVote(vote);
         shootFirework(plugin, player.getLocation());
         giveRewards(player);
-        substractVotesUntilVoteParty();
+        subtractVotesUntilVoteParty();
     }
 
     public void broadcastVote(Vote vote)
@@ -108,26 +109,26 @@ public class VoteService
         plugin.getServer().broadcastMessage(message);
     }
 
-    public void substractVotesUntilVoteParty()
+    public void subtractVotesUntilVoteParty()
     {
-        if (plugin.getData().getLocations("voteparty").size() > 0)
+        if (plugin.getData().getLocations(Data.VOTE_PARTY).size() > 0)
         {
             int votesRequired = plugin.getSettings().getNumber(Settings.VOTES_REQUIRED_FOR_VOTE_PARTY);
-            int votesUntil = votesRequired - plugin.getData().getNumber("current_votes");
+            int votesUntil = votesRequired - plugin.getData().getNumber(Data.CURRENT_VOTES);
             if (votesUntil <= 1)
             {
-                plugin.getData().setNumber("current_votes", 0);
+                plugin.getData().setNumber(Data.CURRENT_VOTES, 0);
                 new BukkitRunnable()
                 {
                     @Override
                     public void run()
                     {
-                        votePartyService.start();
+                        votePartyService.countdown();
                     }
                 }.runTaskLater(plugin, 40);
             } else
             {
-                plugin.getData().addNumber("current_votes");
+                plugin.getData().addNumber(Data.CURRENT_VOTES);
                 if (!isAwaitingBroadcast)
                 {
                     isAwaitingBroadcast = true;
@@ -136,12 +137,15 @@ public class VoteService
                         @Override
                         public void run()
                         {
-                            int updatedVotesUntil = votesRequired - plugin.getData().getNumber("current_votes");
-                            Map<String, String> placeholders = new HashMap<>();
-                            placeholders.put("%VOTES%", "" + updatedVotesUntil);
-                            plugin.getServer().broadcastMessage(plugin.getMessages().getMessage(Messages.VOTE_PARTY_UNTIL,
-                                    placeholders));
-                            isAwaitingBroadcast = false;
+                            int updatedVotesUntil = votesRequired - plugin.getData().getNumber(Data.CURRENT_VOTES);
+                            if(updatedVotesUntil != votesRequired)
+                            {
+                                Map<String, String> placeholders = new HashMap<>();
+                                placeholders.put("%VOTES%", "" + updatedVotesUntil);
+                                plugin.getServer().broadcastMessage(plugin.getMessages().getMessage(Messages.VOTE_PARTY_UNTIL,
+                                        placeholders));
+                                isAwaitingBroadcast = false;
+                            }
                         }
                     }.runTaskLater(plugin, 40);
                 }
@@ -151,7 +155,7 @@ public class VoteService
 
     public void giveRewards(Player player)
     {
-        for (ItemStack reward : plugin.getData().getItems("rewards"))
+        for (ItemStack reward : plugin.getData().getItems(Data.VOTE_REWARDS))
         {
             for (ItemStack item : player.getInventory().addItem(reward).values())
             {
