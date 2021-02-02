@@ -8,9 +8,9 @@ import java.util.Optional;
 
 public enum VotePartyType
 {
-    ALL_CHESTS_AT_ONCE(0, "All Chests at Once"),
-    ONE_CHEST_AT_A_TIME(1, "One Chest at a Time"),
-    RANDOM_CHEST_AT_A_TIME(2, "Random Chest at a Time");
+    RANDOM_CHEST_AT_A_TIME(0, "Randomly"),
+    ALL_CHESTS_AT_ONCE(1, "All Chests at Once"),
+    ONE_CHEST_AT_A_TIME(2, "One Chest at a Time");
 
     private final int value;
     private final String name;
@@ -29,7 +29,7 @@ public enum VotePartyType
             return valueOf(currentValue + 1);
         } else
         {
-            return ALL_CHESTS_AT_ONCE;
+            return valueOf(0);
         }
     }
 

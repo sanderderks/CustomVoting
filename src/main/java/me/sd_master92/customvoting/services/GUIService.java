@@ -1,6 +1,7 @@
 package me.sd_master92.customvoting.services;
 
 import me.sd_master92.customvoting.Main;
+import me.sd_master92.customvoting.constants.Data;
 import me.sd_master92.customvoting.constants.Settings;
 import me.sd_master92.customvoting.constants.enumerations.SoundType;
 import me.sd_master92.customvoting.constants.enumerations.VotePartyType;
@@ -86,7 +87,7 @@ public class GUIService
     public Inventory getRewardSettings()
     {
         Inventory inv = Bukkit.createInventory(null, 27, REWARD_SETTINGS_INVENTORY);
-        for (ItemStack reward : plugin.getData().getItems("rewards"))
+        for (ItemStack reward : plugin.getData().getItems(Data.VOTE_REWARDS))
         {
             inv.addItem(reward);
         }
@@ -99,7 +100,7 @@ public class GUIService
     {
         inv.setItem(25, null);
         inv.setItem(26, null);
-        if (plugin.getData().setItems("rewards", inv.getContents()))
+        if (plugin.getData().setItems(Data.VOTE_REWARDS, inv.getContents()))
         {
             SoundType.SUCCESS.play(plugin, player.getLocation());
             player.sendMessage(ChatColor.GREEN + "Successfully updated vote rewards!");
@@ -113,7 +114,7 @@ public class GUIService
     public Inventory getVotePartyRewards(String key)
     {
         Inventory inv = Bukkit.createInventory(null, 54, VOTE_PARTY_REWARDS_INVENTORY + key);
-        inv.setContents(plugin.getData().getItems("voteparty." + key));
+        inv.setContents(plugin.getData().getItems(Data.VOTE_PARTY + "." + key));
         return inv;
     }
 

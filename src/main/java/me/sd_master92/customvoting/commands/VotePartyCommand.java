@@ -1,6 +1,7 @@
 package me.sd_master92.customvoting.commands;
 
 import me.sd_master92.customvoting.Main;
+import me.sd_master92.customvoting.constants.Data;
 import me.sd_master92.customvoting.constants.Messages;
 import me.sd_master92.customvoting.services.VotePartyService;
 import org.bukkit.ChatColor;
@@ -40,9 +41,9 @@ public class VotePartyCommand implements CommandExecutor
                             player.sendMessage(ChatColor.GREEN + "You have been given the Vote Party Chest.");
                             break;
                         case "start":
-                            if(!plugin.getData().getLocations("voteparty").isEmpty())
+                            if(!plugin.getData().getLocations(Data.VOTE_PARTY).isEmpty())
                             {
-                                votePartyService.start();
+                                votePartyService.countdown();
                             } else
                             {
                                 sender.sendMessage(ChatColor.RED + "There are no registered Vote Party Chests.");

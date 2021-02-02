@@ -2,6 +2,7 @@ package me.sd_master92.customvoting.listeners;
 
 import me.sd_master92.customvoting.Main;
 import me.sd_master92.customvoting.VoteFile;
+import me.sd_master92.customvoting.constants.Data;
 import me.sd_master92.customvoting.constants.enumerations.SoundType;
 import me.sd_master92.customvoting.services.GUIService;
 import me.sd_master92.customvoting.services.VotePartyService;
@@ -9,6 +10,9 @@ import me.sd_master92.customvoting.services.VoteService;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -19,10 +23,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class PlayerListener implements Listener
 {
@@ -69,17 +70,18 @@ public class PlayerListener implements Listener
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event)
     {
-        if (event.getBlock().getType() == Material.ENDER_CHEST)
+        Player player = event.getPlayer();
+        Block block = event.getBlock();
+        if (block.getType() == Material.ENDER_CHEST)
         {
-            Map<String, Location> chests = plugin.getData().getLocations("voteparty");
+            Map<String, Location> chests = plugin.getData().getLocations(Data.VOTE_PARTY);
             for (String key : chests.keySet())
             {
                 if (chests.get(key).equals(event.getBlock().getLocation()))
                 {
-                    Player player = event.getPlayer();
                     if (player.hasPermission("çustomvoting.voteparty"))
                     {
-                        if (plugin.getData().deleteLocation("voteparty." + key))
+                        if (plugin.getData().deleteLocation(Data.VOTE_PARTY + "." + key))
                         {
                             plugin.getData().deleteItems("voteparty." + key);
                             event.setDropItems(false);
@@ -90,6 +92,27 @@ public class PlayerListener implements Listener
                         event.setCancelled(true);
                         player.sendMessage(ChatColor.RED + "You do not have permission to break this block.");
                     }
+                }
+            }
+        } else if (block.getState() instanceof Sign)
+        {
+            checkAndDeleteVoteSign(player, block.getLocation());
+        } else
+        {
+            List<Location> locations = new ArrayList<>();
+            for (BlockFace face : new BlockFace[]{BlockFace.UP, BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH,
+                    BlockFace.WEST})
+            {
+                if (block.getRelative(face).getState() instanceof Sign)
+                {
+                    locations.add(block.getRelative(face).getLocation());
+                }
+            }
+            if (!locations.isEmpty())
+            {
+                for (Location loc : locations)
+                {
+                    checkAndDeleteVoteSign(player, loc);
                 }
             }
         }
@@ -103,13 +126,13 @@ public class PlayerListener implements Listener
             Player player = event.getPlayer();
             if (player.hasPermission("customvoting.voteparty"))
             {
-                Set<String> chests = plugin.getData().getLocations("voteparty").keySet();
+                Set<String> chests = plugin.getData().getLocations(Data.VOTE_PARTY).keySet();
                 int i = 1;
                 while (chests.contains("" + i))
                 {
                     i++;
                 }
-                plugin.getData().setLocation("voteparty." + i, event.getBlock().getLocation());
+                plugin.getData().setLocation(Data.VOTE_PARTY + "." + i, event.getBlock().getLocation());
                 SoundType.SUCCESS.play(plugin, player.getLocation());
                 player.sendMessage(ChatColor.GREEN + "Vote Party Chest #" + i + " registered.");
                 player.getInventory().setItemInMainHand(VotePartyService.VOTE_PARTY_ITEM);
@@ -128,7 +151,7 @@ public class PlayerListener implements Listener
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getClickedBlock() != null && event.getClickedBlock().getType() == Material.ENDER_CHEST && !player.isSneaking())
         {
             Location loc = event.getClickedBlock().getLocation();
-            Map<String, Location> chests = plugin.getData().getLocations("voteparty");
+            Map<String, Location> chests = plugin.getData().getLocations(Data.VOTE_PARTY);
             for (String key : chests.keySet())
             {
                 if (chests.get(key).equals(loc))
@@ -142,6 +165,21 @@ public class PlayerListener implements Listener
                     {
                         player.sendMessage(ChatColor.RED + "You do not have permission to open this chest.");
                     }
+                }
+            }
+        }
+    }
+
+    private void checkAndDeleteVoteSign(Player player, Location loc)
+    {
+        Map<String, Location> locations = plugin.getData().getLocations(Data.VOTE_TOP);
+        for (String key : locations.keySet())
+        {
+            if (loc.equals(locations.get(key)))
+            {
+                if (plugin.getData().deleteLocation(Data.VOTE_TOP + "." + key))
+                {
+                    player.sendMessage(ChatColor.RED + "Unregistered Vote Sign #" + key);
                 }
             }
         }
