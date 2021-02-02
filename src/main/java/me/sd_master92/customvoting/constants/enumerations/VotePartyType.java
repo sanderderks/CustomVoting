@@ -1,0 +1,53 @@
+package me.sd_master92.customvoting.constants.enumerations;
+
+import me.sd_master92.customvoting.Main;
+import me.sd_master92.customvoting.constants.Settings;
+
+import java.util.Arrays;
+import java.util.Optional;
+
+public enum VotePartyType
+{
+    ALL_CHESTS_AT_ONCE(0, "All Chests at Once"),
+    ONE_CHEST_AT_A_TIME(1, "One Chest at a Time"),
+    RANDOM_CHEST_AT_A_TIME(2, "Random Chest at a Time");
+
+    private final int value;
+    private final String name;
+
+    VotePartyType(final int dropType, final String name)
+    {
+        this.value = dropType;
+        this.name = name;
+    }
+
+    public static VotePartyType next(Main plugin)
+    {
+        int currentValue = VotePartyType.valueOf(plugin.getSettings().getNumber(Settings.VOTE_PARTY_TYPE)).getValue();
+        if (currentValue < values().length - 1)
+        {
+            return valueOf(currentValue + 1);
+        } else
+        {
+            return ALL_CHESTS_AT_ONCE;
+        }
+    }
+
+    public static VotePartyType valueOf(int value)
+    {
+        Optional<VotePartyType> votePartyType = Arrays.stream(values())
+                .filter(type -> type.value == value)
+                .findFirst();
+        return votePartyType.orElse(ALL_CHESTS_AT_ONCE);
+    }
+
+    public int getValue()
+    {
+        return value;
+    }
+
+    public String getName()
+    {
+        return name;
+    }
+}

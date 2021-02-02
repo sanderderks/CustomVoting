@@ -96,7 +96,7 @@ public class VoteService
         broadcastVote(vote);
         shootFirework(plugin, player.getLocation());
         giveRewards(player);
-        substractVotesUntilVoteParty();
+        subtractVotesUntilVoteParty();
     }
 
     public void broadcastVote(Vote vote)
@@ -108,7 +108,7 @@ public class VoteService
         plugin.getServer().broadcastMessage(message);
     }
 
-    public void substractVotesUntilVoteParty()
+    public void subtractVotesUntilVoteParty()
     {
         if (plugin.getData().getLocations("voteparty").size() > 0)
         {
@@ -137,11 +137,14 @@ public class VoteService
                         public void run()
                         {
                             int updatedVotesUntil = votesRequired - plugin.getData().getNumber("current_votes");
-                            Map<String, String> placeholders = new HashMap<>();
-                            placeholders.put("%VOTES%", "" + updatedVotesUntil);
-                            plugin.getServer().broadcastMessage(plugin.getMessages().getMessage(Messages.VOTE_PARTY_UNTIL,
-                                    placeholders));
-                            isAwaitingBroadcast = false;
+                            if(updatedVotesUntil != votesRequired)
+                            {
+                                Map<String, String> placeholders = new HashMap<>();
+                                placeholders.put("%VOTES%", "" + updatedVotesUntil);
+                                plugin.getServer().broadcastMessage(plugin.getMessages().getMessage(Messages.VOTE_PARTY_UNTIL,
+                                        placeholders));
+                                isAwaitingBroadcast = false;
+                            }
                         }
                     }.runTaskLater(plugin, 40);
                 }

@@ -2,7 +2,8 @@ package me.sd_master92.customvoting.services;
 
 import me.sd_master92.customvoting.Main;
 import me.sd_master92.customvoting.constants.Settings;
-import me.sd_master92.customvoting.constants.Sounds;
+import me.sd_master92.customvoting.constants.enumerations.SoundType;
+import me.sd_master92.customvoting.constants.enumerations.VotePartyType;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -75,9 +76,9 @@ public class GUIService
         inv.setItem(1, getUseSoundEffectsSetting());
         inv.setItem(2, getUseFirework());
         inv.setItem(3, getDoVoteParty());
-        inv.setItem(4, getVotesUntilVoteParty());
-        inv.setItem(5, getVotePartyCountdownSetting());
-        inv.setItem(6, getVoteTopCommandShowPlayersSetting());
+        inv.setItem(4, getVotePartyType());
+        inv.setItem(5, getVotesUntilVoteParty());
+        inv.setItem(6, getVotePartyCountdownSetting());
         inv.setItem(8, BACK_ITEM);
         return inv;
     }
@@ -100,11 +101,11 @@ public class GUIService
         inv.setItem(26, null);
         if (plugin.getData().setItems("rewards", inv.getContents()))
         {
-            Sounds.SUCCESS.play(plugin, player.getLocation());
+            SoundType.SUCCESS.play(plugin, player.getLocation());
             player.sendMessage(ChatColor.GREEN + "Successfully updated vote rewards!");
         } else
         {
-            Sounds.FAILURE.play(plugin, player.getLocation());
+            SoundType.FAILURE.play(plugin, player.getLocation());
             player.sendMessage(ChatColor.RED + "Failed to update vote rewards!");
         }
     }
@@ -144,6 +145,12 @@ public class GUIService
                         ChatColor.GREEN + "ON" : ChatColor.RED + "OFF"));
     }
 
+    public ItemStack getVotePartyType()
+    {
+        return createItem(Material.SPLASH_POTION, ChatColor.LIGHT_PURPLE + "Vote Party Type",
+                ChatColor.GRAY + "Status: " + ChatColor.AQUA + VotePartyType.valueOf(plugin.getSettings().getNumber(Settings.VOTE_PARTY_TYPE)).getName());
+    }
+
     public ItemStack getVotesUntilVoteParty()
     {
         int votesRequired = plugin.getSettings().getNumber(Settings.VOTES_REQUIRED_FOR_VOTE_PARTY);
@@ -157,12 +164,5 @@ public class GUIService
     {
         return createItem(Material.ENDER_CHEST, ChatColor.LIGHT_PURPLE + "Vote Party Countdown",
                 ChatColor.GRAY + "Currently: " + ChatColor.AQUA + plugin.getSettings().getNumber(Settings.VOTE_PARTY_COUNTDOWN));
-    }
-
-    public ItemStack getVoteTopCommandShowPlayersSetting()
-    {
-        return createItem(Material.PLAYER_HEAD, ChatColor.LIGHT_PURPLE + "Vote Top Command",
-                ChatColor.GRAY + "How many players to show?;" + ChatColor.GRAY + "Currently: " +
-                        ChatColor.AQUA + plugin.getSettings().getNumber(Settings.VOTE_TOP_COMMAND_SHOW_PLAYERS));
     }
 }

@@ -1,11 +1,12 @@
-package me.sd_master92.customvoting.constants;
+package me.sd_master92.customvoting.constants.enumerations;
 
 import me.sd_master92.customvoting.Main;
+import me.sd_master92.customvoting.constants.Settings;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.World;
 
-public enum Sounds
+public enum SoundType
 {
     SUCCESS(Sound.ENTITY_EXPERIENCE_ORB_PICKUP),
     FAILURE(Sound.BLOCK_ANVIL_LAND),
@@ -19,7 +20,7 @@ public enum Sounds
 
     private final Sound sound;
 
-    Sounds(final Sound sound)
+    SoundType(final Sound sound)
     {
         this.sound = sound;
     }

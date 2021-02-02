@@ -3,7 +3,8 @@ package me.sd_master92.customvoting.services;
 import me.sd_master92.customvoting.Main;
 import me.sd_master92.customvoting.constants.Messages;
 import me.sd_master92.customvoting.constants.Settings;
-import me.sd_master92.customvoting.constants.Sounds;
+import me.sd_master92.customvoting.constants.enumerations.SoundType;
+import me.sd_master92.customvoting.constants.enumerations.VotePartyType;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -29,17 +30,22 @@ public class VotePartyService
         this.plugin = plugin;
     }
 
-    private void dropItems()
+    private void dropChests()
     {
+        int votePartyType = plugin.getSettings().getNumber(Settings.VOTE_PARTY_TYPE);
         Map<String, Location> chests = plugin.getData().getLocations("voteparty");
+
         Random random = new Random();
         Map<Integer, Boolean> tasks = new HashMap<>();
+
         for (String key : chests.keySet())
         {
+            List<ItemStack> chest = new ArrayList<>(Arrays.asList(plugin.getData().getItems("voteparty." + key)));
+
             Location loc = chests.get(key).add(0.5, 0, 0.5);
             Location dropLoc = new Location(loc.getWorld(), loc.getX(), loc.getY() - 1, loc.getZ());
             Location fireworkLoc = new Location(loc.getWorld(), loc.getX(), loc.getY() + 1, loc.getZ());
-            List<ItemStack> items = new ArrayList<>(Arrays.asList(plugin.getData().getItems("voteparty." + key)));
+
             new BukkitRunnable()
             {
                 @Override
@@ -47,42 +53,41 @@ public class VotePartyService
                 {
                     if (!tasks.containsKey(getTaskId()))
                     {
-                        tasks.put(getTaskId(), true);
+                        tasks.put(getTaskId(), false);
                     }
-                    if (items.size() > 0)
+                    if (votePartyType == VotePartyType.ALL_CHESTS_AT_ONCE.getValue() || !tasks.containsValue(true) || tasks.get(getTaskId()))
                     {
-                        int i = random.nextInt(items.size());
-                        if (dropLoc.getWorld() != null)
+                        if (votePartyType == VotePartyType.ONE_CHEST_AT_A_TIME.getValue())
                         {
-                            dropLoc.getWorld().dropItem(dropLoc, items.remove(i));
+                            tasks.put(getTaskId(), true);
                         }
-                        if (random.nextInt(3) == 0)
+                        if (chest.size() > 0)
                         {
-                            VoteService.shootFirework(plugin, fireworkLoc);
+                            int i = random.nextInt(chest.size());
+                            if (dropLoc.getWorld() != null)
+                            {
+                                dropLoc.getWorld().dropItem(dropLoc, chest.remove(i));
+                            }
+                            if (random.nextInt(3) == 0)
+                            {
+                                VoteService.shootFirework(plugin, fireworkLoc);
+                            }
+                        } else
+                        {
+                            tasks.remove(getTaskId());
+                            if (tasks.isEmpty())
+                            {
+                                plugin.getServer().broadcastMessage(plugin.getMessages().getMessage(Messages.VOTE_PARTY_END));
+                            }
+                            cancel();
                         }
-                    } else
-                    {
-                        tasks.remove(getTaskId());
-                        cancel();
                     }
                 }
             }.runTaskTimer(plugin, 0, 10);
         }
-        new BukkitRunnable()
-        {
-            @Override
-            public void run()
-            {
-                if (tasks.isEmpty())
-                {
-                    plugin.getServer().broadcastMessage(plugin.getMessages().getMessage(Messages.VOTE_PARTY_END));
-                    cancel();
-                }
-            }
-        }.runTaskTimer(plugin, 0, 20);
     }
 
-    private void playForAll(Sounds sound)
+    private void playForAll(SoundType sound)
     {
         for (Player player : plugin.getServer().getOnlinePlayers())
         {
@@ -106,7 +111,7 @@ public class VotePartyService
                     case 10:
                         Map<String, String> placeholders = new HashMap<>();
                         placeholders.put("%TIME%", "" + count);
-                        playForAll(Sounds.NOTIFY);
+                        playForAll(SoundType.NOTIFY);
                         plugin.getServer().broadcastMessage(plugin.getMessages().getMessage(Messages.VOTE_PARTY_COUNTDOWN, placeholders));
                         break;
                     case 5:
@@ -116,13 +121,13 @@ public class VotePartyService
                     case 1:
                         placeholders = new HashMap<>();
                         placeholders.put("%TIME%", "" + count);
-                        playForAll(Sounds.NOTIFY);
+                        playForAll(SoundType.NOTIFY);
                         plugin.getServer().broadcastMessage(plugin.getMessages().getMessage(Messages.VOTE_PARTY_COUNTDOWN_ENDING, placeholders));
                         break;
                     case 0:
-                        playForAll(Sounds.VOTE_PARTY_START);
+                        playForAll(SoundType.VOTE_PARTY_START);
                         plugin.getServer().broadcastMessage(plugin.getMessages().getMessage(Messages.VOTE_PARTY_START));
-                        dropItems();
+                        dropChests();
                         cancel();
                 }
                 count--;
@@ -134,11 +139,11 @@ public class VotePartyService
     {
         if (plugin.getData().setItems("voteparty." + key, contents))
         {
-            Sounds.SUCCESS.play(plugin, player.getLocation());
+            SoundType.SUCCESS.play(plugin, player.getLocation());
             player.sendMessage(ChatColor.GREEN + "Successfully updated Vote Party Chest #" + key);
         } else
         {
-            Sounds.FAILURE.play(plugin, player.getLocation());
+            SoundType.FAILURE.play(plugin, player.getLocation());
             player.sendMessage(ChatColor.RED + "Failed to update Vote Party Chest #" + key);
         }
     }

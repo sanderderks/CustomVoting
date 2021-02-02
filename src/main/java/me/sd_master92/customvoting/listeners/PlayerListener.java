@@ -2,7 +2,7 @@ package me.sd_master92.customvoting.listeners;
 
 import me.sd_master92.customvoting.Main;
 import me.sd_master92.customvoting.VoteFile;
-import me.sd_master92.customvoting.constants.Sounds;
+import me.sd_master92.customvoting.constants.enumerations.SoundType;
 import me.sd_master92.customvoting.services.GUIService;
 import me.sd_master92.customvoting.services.VotePartyService;
 import me.sd_master92.customvoting.services.VoteService;
@@ -110,7 +110,7 @@ public class PlayerListener implements Listener
                     i++;
                 }
                 plugin.getData().setLocation("voteparty." + i, event.getBlock().getLocation());
-                Sounds.SUCCESS.play(plugin, player.getLocation());
+                SoundType.SUCCESS.play(plugin, player.getLocation());
                 player.sendMessage(ChatColor.GREEN + "Vote Party Chest #" + i + " registered.");
                 player.getInventory().setItemInMainHand(VotePartyService.VOTE_PARTY_ITEM);
             } else
@@ -136,7 +136,7 @@ public class PlayerListener implements Listener
                     event.setCancelled(true);
                     if (player.hasPermission("customvoting.voteparty"))
                     {
-                        Sounds.OPEN.play(plugin, player.getLocation());
+                        SoundType.OPEN.play(plugin, player.getLocation());
                         player.openInventory(guiService.getVotePartyRewards(key));
                     } else
                     {

@@ -3,7 +3,6 @@ package me.sd_master92.customvoting.commands;
 import me.sd_master92.customvoting.Main;
 import me.sd_master92.customvoting.VoteFile;
 import me.sd_master92.customvoting.constants.Messages;
-import me.sd_master92.customvoting.constants.Settings;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -41,7 +40,7 @@ public class VoteTopCommand implements CommandExecutor
                     {
                         Map<String, String> placeholders = new HashMap<>();
                         for (VoteFile topVoter :
-                                topVoters.stream().limit(plugin.getSettings().getNumber(Settings.VOTE_TOP_COMMAND_SHOW_PLAYERS)).collect(Collectors.toList()))
+                                topVoters.stream().limit(5).collect(Collectors.toList()))
                         {
                             placeholders.put("%PLAYER%", topVoter.getName());
                             placeholders.put("%VOTES%", "" + topVoter.getVotes());
