@@ -4,7 +4,7 @@ version: ${version}
 author: ${author}
 description: ${description}
 api-version: 1.16
-softdepend: [ Votifier ]
+softdepend: [ Votifier, Vault ]
 
 commands:
   vote:

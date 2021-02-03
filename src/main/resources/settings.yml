@@ -2,8 +2,10 @@
 
 monthly_reset: false
 sound_effects: true
-vote_party_countdown: 30
 firework: true
 vote_party: true
 vote_party_type: 0
+vote_party_countdown: 30
 votes_required_for_vote_party: 10
+vote_reward_money: 100
+vote_reward_xp: 3

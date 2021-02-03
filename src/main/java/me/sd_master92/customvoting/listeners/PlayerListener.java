@@ -3,6 +3,7 @@ package me.sd_master92.customvoting.listeners;
 import me.sd_master92.customvoting.Main;
 import me.sd_master92.customvoting.VoteFile;
 import me.sd_master92.customvoting.constants.Data;
+import me.sd_master92.customvoting.constants.Settings;
 import me.sd_master92.customvoting.constants.enumerations.SoundType;
 import me.sd_master92.customvoting.services.GUIService;
 import me.sd_master92.customvoting.services.VotePartyService;
@@ -19,6 +20,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -27,6 +30,7 @@ import java.util.*;
 
 public class PlayerListener implements Listener
 {
+    public static List<UUID> chatInput = new ArrayList<>();
     private final Main plugin;
     private final VoteService voteService;
     private final GUIService guiService;
@@ -64,6 +68,52 @@ public class PlayerListener implements Listener
                 }
             }.runTaskTimer(plugin, 200L, 20L);
             voteFile.clearQueue();
+        }
+    }
+
+    @EventHandler
+    public void onCommandProcess(PlayerCommandPreprocessEvent event)
+    {
+        Player player = event.getPlayer();
+        if(chatInput.contains(player.getUniqueId()))
+        {
+            event.setCancelled(true);
+            player.sendMessage(ChatColor.RED + "Enter a number");
+        }
+    }
+
+    @EventHandler
+    public void onPlayerChat(AsyncPlayerChatEvent event)
+    {
+        Player player = event.getPlayer();
+        if(chatInput.contains(player.getUniqueId()))
+        {
+            event.setCancelled(true);
+            if(event.getMessage().equalsIgnoreCase("cancel"))
+            {
+                chatInput.remove(player.getUniqueId());
+                SoundType.FAILURE.play(plugin, player.getLocation());
+            } else
+            {
+                try
+                {
+                    double input = Double.parseDouble(event.getMessage());
+                    if (input <= 0 || input > 1000000)
+                    {
+                        player.sendMessage(ChatColor.RED + "Enter a number between 1 and 1.000.000");
+                    } else
+                    {
+                        plugin.getSettings().set(Settings.VOTE_REWARD_MONEY, input);
+                        plugin.getSettings().saveConfig();
+                        chatInput.remove(player.getUniqueId());
+                        SoundType.SUCCESS.play(plugin, player.getLocation());
+                        player.sendMessage(ChatColor.GREEN + "Successfully updated the money reward!");
+                    }
+                } catch (Exception e)
+                {
+                    player.sendMessage(ChatColor.RED + "Enter a number");
+                }
+            }
         }
     }
 

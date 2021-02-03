@@ -14,6 +14,10 @@ public class Messages
     public static final String MONTHLY_RESET = "monthly_reset";
 
     public static final String VOTE_COMMAND = "vote_command";
+    public static final String VOTE_REWARD_PREFIX = "vote_rewards.prefix";
+    public static final String VOTE_REWARD_DIVIDER = "vote_rewards.divider";
+    public static final String VOTE_REWARD_MONEY = "vote_rewards.money";
+    public static final String VOTE_REWARD_XP = "vote_rewards.xp";
 
     public static final String VOTES_COMMAND_SELF = "votes_command.self";
     public static final String VOTES_COMMAND_OTHERS = "votes_command.others";

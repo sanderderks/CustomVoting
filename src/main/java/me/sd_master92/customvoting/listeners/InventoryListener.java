@@ -6,6 +6,7 @@ import me.sd_master92.customvoting.constants.enumerations.SoundType;
 import me.sd_master92.customvoting.constants.enumerations.VotePartyType;
 import me.sd_master92.customvoting.services.GUIService;
 import me.sd_master92.customvoting.services.VotePartyService;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -13,20 +14,25 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 public class InventoryListener implements Listener
 {
     private final Main plugin;
     private final GUIService guiService;
     private final VotePartyService votePartyService;
-    private boolean cancelCloseEvent;
+    private final List<UUID> cancelCloseEvent;
 
     public InventoryListener(Main plugin)
     {
         this.plugin = plugin;
         guiService = new GUIService(plugin);
         votePartyService = new VotePartyService(plugin);
-        cancelCloseEvent = false;
+        cancelCloseEvent = new ArrayList<>();
     }
 
     @EventHandler
@@ -39,7 +45,6 @@ public class InventoryListener implements Listener
             switch (event.getView().getTitle())
             {
                 case GUIService.MAIN_SETTINGS_INVENTORY:
-                {
                     event.setCancelled(true);
                     if (item != null)
                     {
@@ -47,12 +52,12 @@ public class InventoryListener implements Listener
                         {
                             case COMMAND_BLOCK:
                                 SoundType.CLICK.play(plugin, player.getLocation());
-                                cancelCloseEvent = true;
+                                cancelCloseEvent.add(player.getUniqueId());
                                 player.openInventory(guiService.getGeneralSettings());
                                 break;
                             case DIAMOND:
                                 SoundType.CLICK.play(plugin, player.getLocation());
-                                cancelCloseEvent = true;
+                                cancelCloseEvent.add(player.getUniqueId());
                                 player.openInventory(guiService.getRewardSettings());
                                 break;
                             case IRON_SHOVEL:
@@ -60,10 +65,8 @@ public class InventoryListener implements Listener
                                 break;
                         }
                     }
-                }
-                break;
+                    break;
                 case GUIService.GENERAL_SETTINGS_INVENTORY:
-                {
                     event.setCancelled(true);
                     if (item != null)
                     {
@@ -71,7 +74,7 @@ public class InventoryListener implements Listener
                         {
                             case BARRIER:
                                 SoundType.CLICK.play(plugin, player.getLocation());
-                                cancelCloseEvent = true;
+                                cancelCloseEvent.add(player.getUniqueId());
                                 player.openInventory(guiService.getSettings());
                                 break;
                             case CLOCK:
@@ -132,11 +135,72 @@ public class InventoryListener implements Listener
                                 break;
                         }
                     }
-                }
-                break;
+                    break;
+                case GUIService.REWARD_SETTINGS_INVENTORY:
+                    event.setCancelled(true);
+                    if (item != null)
+                    {
+                        switch (item.getType())
+                        {
+                            case BARRIER:
+                                SoundType.CLICK.play(plugin, player.getLocation());
+                                cancelCloseEvent.add(player.getUniqueId());
+                                player.openInventory(guiService.getSettings());
+                                break;
+                            case CHEST:
+                                SoundType.CLICK.play(plugin, player.getLocation());
+                                cancelCloseEvent.add(player.getUniqueId());
+                                player.openInventory(guiService.getItemRewards());
+                                break;
+                            case GOLD_INGOT:
+                                if (Main.economy != null)
+                                {
+                                    SoundType.CHANGE.play(plugin, player.getLocation());
+                                    PlayerListener.chatInput.add(player.getUniqueId());
+                                    cancelCloseEvent.add(player.getUniqueId());
+                                    player.closeInventory();
+                                    player.sendMessage(ChatColor.GREEN + "Please enter a number between 1 and 1.000" +
+                                            ".000");
+                                    player.sendMessage(ChatColor.GRAY + "Type 'cancel' to go back");
+                                    new BukkitRunnable()
+                                    {
+                                        @Override
+                                        public void run()
+                                        {
+                                            if (!PlayerListener.chatInput.contains(player.getUniqueId()))
+                                            {
+                                                player.openInventory(guiService.getRewardSettings());
+                                                cancelCloseEvent.remove(player.getUniqueId());
+                                                cancel();
+                                            } else if (!player.isOnline())
+                                            {
+                                                PlayerListener.chatInput.remove(player.getUniqueId());
+                                                cancel();
+                                            }
+                                        }
+                                    }.runTaskTimer(plugin, 0, 10);
+                                    break;
+                                } else
+                                {
+                                    SoundType.FAILURE.play(plugin, player.getLocation());
+                                }
+                                break;
+                            case EXPERIENCE_BOTTLE:
+                                SoundType.CHANGE.play(plugin, player.getLocation());
+                                if (plugin.getSettings().getNumber(Settings.VOTE_REWARD_EXPERIENCE) < 10)
+                                {
+                                    plugin.getSettings().addNumber(Settings.VOTE_REWARD_EXPERIENCE, 1);
+                                } else
+                                {
+                                    plugin.getSettings().setNumber(Settings.VOTE_REWARD_EXPERIENCE, 0);
+                                }
+                                event.setCurrentItem(guiService.getExperienceRewardSetting());
+                                break;
+                        }
+                    }
+                    break;
                 case GUIService
-                        .REWARD_SETTINGS_INVENTORY:
-                {
+                        .ITEM_REWARDS_INVENTORY:
                     if (event.getSlot() >= 25)
                     {
                         event.setCancelled(true);
@@ -147,11 +211,10 @@ public class InventoryListener implements Listener
                         {
                             SoundType.CLICK.play(plugin, player.getLocation());
                         }
-                        cancelCloseEvent = true;
-                        player.openInventory(guiService.getSettings());
+                        cancelCloseEvent.add(player.getUniqueId());
+                        player.openInventory(guiService.getRewardSettings());
                     }
                     break;
-                }
             }
         }
     }
@@ -161,19 +224,17 @@ public class InventoryListener implements Listener
     {
         if (event.getPlayer() instanceof Player)
         {
-            if (cancelCloseEvent)
+            Player player = (Player) event.getPlayer();
+            if (!cancelCloseEvent.contains(player.getUniqueId()))
             {
-                cancelCloseEvent = false;
-            } else
-            {
-                Player player = (Player) event.getPlayer();
                 switch (event.getView().getTitle())
                 {
                     case GUIService.MAIN_SETTINGS_INVENTORY:
                     case GUIService.GENERAL_SETTINGS_INVENTORY:
+                    case GUIService.REWARD_SETTINGS_INVENTORY:
                         SoundType.CLOSE.play(plugin, player.getLocation());
                         break;
-                    case GUIService.REWARD_SETTINGS_INVENTORY:
+                    case GUIService.ITEM_REWARDS_INVENTORY:
                         guiService.saveRewards(player, event.getInventory());
                         break;
                     default:
@@ -183,6 +244,9 @@ public class InventoryListener implements Listener
                                     event.getInventory().getContents());
                         }
                 }
+            } else
+            {
+                cancelCloseEvent.remove(player.getUniqueId());
             }
         }
     }
