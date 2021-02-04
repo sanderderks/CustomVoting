@@ -32,6 +32,7 @@ public class VotesCommand implements CommandExecutor
                     Player player = (Player) sender;
                     HashMap<String, String> placeholders = new HashMap<>();
                     placeholders.put("%VOTES%", "" + new VoteFile(player, plugin).getVotes());
+                    placeholders.put("%s%", new VoteFile(player, plugin).getVotes() == 1 ? "" : "s");
                     player.sendMessage(plugin.getMessages().getMessage(Messages.VOTES_COMMAND_SELF, placeholders));
                 }
             } else
@@ -44,6 +45,7 @@ public class VotesCommand implements CommandExecutor
                     HashMap<String, String> placeholders = new HashMap<>();
                     placeholders.put("%PLAYER%", "" + voteFile.getName());
                     placeholders.put("%VOTES%", "" + voteFile.getVotes());
+                    placeholders.put("%s%", voteFile.getVotes() == 1 ? "" : "s");
                     sender.sendMessage(plugin.getMessages().getMessage(Messages.VOTES_COMMAND_OTHERS, placeholders));
                 } else
                 {

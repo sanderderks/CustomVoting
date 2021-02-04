@@ -119,6 +119,7 @@ public class VoteTopService
                 placeholders.put("%NUMBER%", "" + top);
                 placeholders.put("%PLAYER%", topVoter.getName());
                 placeholders.put("%VOTES%", "" + topVoter.getVotes());
+                placeholders.put("%s%", topVoter.getVotes() == 1 ? "" : "");
                 List<String> messages = plugin.getMessages().getMessages(Messages.VOTE_TOP_SIGNS_PLAYER_SIGNS_FORMAT,
                         placeholders);
                 for (int i = 0; i < messages.size(); i++)

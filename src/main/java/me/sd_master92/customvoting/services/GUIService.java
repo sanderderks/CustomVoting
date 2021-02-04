@@ -8,6 +8,7 @@ import me.sd_master92.customvoting.constants.enumerations.VotePartyType;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
@@ -21,14 +22,19 @@ public class GUIService
     public final static String MAIN_SETTINGS_INVENTORY = "Vote Settings";
     public final static String GENERAL_SETTINGS_INVENTORY = "General Settings";
     public final static String REWARD_SETTINGS_INVENTORY = "Vote Rewards";
+    public final static String ITEM_REWARDS_INVENTORY = "Item Rewards";
     public final static String VOTE_PARTY_REWARDS_INVENTORY = "Vote Party Chest #";
 
     public static final ItemStack BACK_ITEM = createItem(Material.BARRIER, ChatColor.RED + "Back");
     public static final ItemStack SAVE_ITEM = createItem(Material.WRITABLE_BOOK, ChatColor.GREEN + "Save");
     public static final ItemStack UNDER_CONSTRUCTION = createItem(Material.IRON_SHOVEL, ChatColor.RED + "Under " +
             "Construction");
-    public static final ItemStack GENERAL_SETTINGS = createItem(Material.COMMAND_BLOCK, ChatColor.AQUA + "General");
-    public static final ItemStack REWARD_SETTINGS = createItem(Material.DIAMOND, ChatColor.LIGHT_PURPLE + "Rewards");
+    public static final ItemStack GENERAL_SETTINGS = createItem(Material.COMMAND_BLOCK, ChatColor.AQUA + "General",
+            null, true);
+    public static final ItemStack REWARD_SETTINGS = createItem(Material.DIAMOND, ChatColor.LIGHT_PURPLE + "Rewards",
+            null, true);
+    public static final ItemStack ITEM_REWARD_SETTINGS = createItem(Material.CHEST, ChatColor.LIGHT_PURPLE +
+            "Item Rewards");
 
     private final Main plugin;
 
@@ -37,7 +43,7 @@ public class GUIService
         this.plugin = plugin;
     }
 
-    public static ItemStack createItem(Material mat, String name, String lore)
+    public static ItemStack createItem(Material mat, String name, String lore, boolean enchanted)
     {
         ItemStack item = new ItemStack(mat);
         ItemMeta meta = item.getItemMeta();
@@ -49,10 +55,19 @@ public class GUIService
                 meta.setLore(null);
                 meta.setLore(Arrays.asList(lore.split(";")));
             }
+            if (enchanted)
+            {
+                meta.addEnchant(Enchantment.MENDING, 1, true);
+            }
             meta.addItemFlags(ItemFlag.values());
             item.setItemMeta(meta);
         }
         return item;
+    }
+
+    public static ItemStack createItem(Material mat, String name, String lore)
+    {
+        return createItem(mat, name, lore, false);
     }
 
     public static ItemStack createItem(Material mat, String name)
@@ -86,7 +101,17 @@ public class GUIService
 
     public Inventory getRewardSettings()
     {
-        Inventory inv = Bukkit.createInventory(null, 27, REWARD_SETTINGS_INVENTORY);
+        Inventory inv = Bukkit.createInventory(null, 9, REWARD_SETTINGS_INVENTORY);
+        inv.setItem(0, ITEM_REWARD_SETTINGS);
+        inv.setItem(1, getMoneyRewardSetting());
+        inv.setItem(2, getExperienceRewardSetting());
+        inv.setItem(8, BACK_ITEM);
+        return inv;
+    }
+
+    public Inventory getItemRewards()
+    {
+        Inventory inv = Bukkit.createInventory(null, 27, ITEM_REWARDS_INVENTORY);
         for (ItemStack reward : plugin.getData().getItems(Data.VOTE_REWARDS))
         {
             inv.addItem(reward);
@@ -165,5 +190,18 @@ public class GUIService
     {
         return createItem(Material.ENDER_CHEST, ChatColor.LIGHT_PURPLE + "Vote Party Countdown",
                 ChatColor.GRAY + "Currently: " + ChatColor.AQUA + plugin.getSettings().getNumber(Settings.VOTE_PARTY_COUNTDOWN));
+    }
+
+    public ItemStack getMoneyRewardSetting()
+    {
+        return createItem(Material.GOLD_INGOT, ChatColor.LIGHT_PURPLE + "Money Reward",
+                Main.economy != null ?
+                        ChatColor.GRAY + "Currently: " + ChatColor.GREEN + Main.economy.format(plugin.getSettings().getDouble(Settings.VOTE_REWARD_MONEY)) : ChatColor.RED + "DISABLED");
+    }
+
+    public ItemStack getExperienceRewardSetting()
+    {
+        return createItem(Material.EXPERIENCE_BOTTLE, ChatColor.LIGHT_PURPLE + "XP Reward",
+                ChatColor.GRAY + "Currently: " + ChatColor.GREEN + plugin.getSettings().getNumber(Settings.VOTE_REWARD_EXPERIENCE) + " levels");
     }
 }

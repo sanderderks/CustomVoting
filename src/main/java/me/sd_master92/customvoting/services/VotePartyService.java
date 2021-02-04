@@ -57,6 +57,7 @@ public class VotePartyService
                     case 1:
                         placeholders = new HashMap<>();
                         placeholders.put("%TIME%", "" + count);
+                        placeholders.put("%s%", count == 1 ? "" : "s");
                         playForAll(SoundType.NOTIFY);
                         plugin.getServer().broadcastMessage(plugin.getMessages().getMessage(Messages.VOTE_PARTY_COUNTDOWN_ENDING, placeholders));
                         break;
@@ -109,7 +110,7 @@ public class VotePartyService
             List<ItemStack> chest =
                     new ArrayList<>(Arrays.asList(plugin.getData().getItems(Data.VOTE_PARTY + "." + key)));
 
-                    Location loc = locations.get(key).clone().add(0.5, 0, 0.5);
+            Location loc = locations.get(key).clone().add(0.5, 0, 0.5);
             Location dropLoc = new Location(loc.getWorld(), loc.getX(), loc.getY() - 1, loc.getZ());
             Location fireworkLoc = new Location(loc.getWorld(), loc.getX(), loc.getY() + 1, loc.getZ());
 
@@ -135,7 +136,7 @@ public class VotePartyService
                             {
                                 dropLoc.getWorld().dropItem(dropLoc, chest.remove(i));
                             }
-                            if (random.nextInt(3) == 0)
+                            if (random.nextInt(2) == 0)
                             {
                                 VoteService.shootFirework(plugin, fireworkLoc);
                             }

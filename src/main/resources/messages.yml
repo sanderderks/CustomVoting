@@ -20,9 +20,15 @@ vote_command:
   - '&avotelink3.com'
   - '&b---------------'
 
+vote_rewards:
+  prefix: '&aReceived: '
+  divider: ' &a+ '
+  money: '&b$%MONEY%'
+  xp: '&b%XP% &aXP level%s%'
+
 votes_command:
-  self: '&aYou currently have &b%VOTES% &avotes!'
-  others: '&b%PLAYER% &acurrently has &b%VOTES% &avotes!'
+  self: '&aYou currently have &b%VOTES% &avote%s%!'
+  others: '&b%PLAYER% &acurrently has &b%VOTES% &avote%s%!'
   not_found: '&cThat player does not exist.'
 
 vote_top_command:
@@ -44,13 +50,13 @@ vote_top_signs:
     format:
       - '&4&lTop %NUMBER%:'
       - '&b%PLAYER%'
-      - '&d%VOTES% votes'
+      - '&d%VOTES% vote%s%'
       - ''
     not_found: '&cNot found'
     outdated: '&cOutdated'
 
 vote_party:
-  until: '&b%VOTES% &avotes until the &bVote Party&a!'
+  until: '&b%VOTES% &avote%s% until the &bVote Party&a!'
   countdown: '&aVote Party starting in &b%TIME% &aseconds!'
   countdown_ending: '&aVote Party starting in &b%TIME%'
   start: '&aThe Vote Party has begun!'

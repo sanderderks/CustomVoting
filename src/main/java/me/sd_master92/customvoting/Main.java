@@ -7,10 +7,12 @@ import me.sd_master92.customvoting.listeners.PlayerListener;
 import me.sd_master92.customvoting.listeners.VoteTopListener;
 import me.sd_master92.customvoting.listeners.VotifierListener;
 import me.sd_master92.customvoting.tasks.DailyTask;
+import net.milkbowl.vault.economy.Economy;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -21,10 +23,10 @@ import java.util.Objects;
 
 public class Main extends JavaPlugin
 {
+    public static Economy economy = null;
     private final String NAME = getDescription().getName();
     private final String VERSION = getDescription().getVersion();
     private final String AUTHOR = getDescription().getAuthors().get(0);
-
     private CustomFile settings;
     private CustomFile messages;
     private CustomFile data;
@@ -42,6 +44,7 @@ public class Main extends JavaPlugin
         {
             return;
         }
+        checkHooks();
         registerFiles();
         registerListeners();
         registerCommands();
@@ -111,6 +114,33 @@ public class Main extends JavaPlugin
         return true;
     }
 
+    private void checkHooks()
+    {
+        print("");
+        print("| checking for economy hook");
+        print("|");
+        if (!setupEconomy())
+        {
+            error("|___economy hook not found");
+        }
+        print("|___successfully hooked into '" + economy.getName() + "'");
+    }
+
+    private boolean setupEconomy()
+    {
+        if (getServer().getPluginManager().getPlugin("Vault") == null)
+        {
+            return false;
+        }
+        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
+        if (rsp == null)
+        {
+            return false;
+        }
+        economy = rsp.getProvider();
+        return true;
+    }
+
     private void registerFiles()
     {
         settings = new CustomFile("settings.yml", this);
@@ -143,7 +173,7 @@ public class Main extends JavaPlugin
 
     private void registerListener(Listener listener)
     {
-        getServer().getPluginManager().registerEvents(listener,this);
+        getServer().getPluginManager().registerEvents(listener, this);
     }
 
     private void registerCommands()
