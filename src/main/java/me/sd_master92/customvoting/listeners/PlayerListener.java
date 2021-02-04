@@ -98,9 +98,9 @@ public class PlayerListener implements Listener
                 try
                 {
                     double input = Double.parseDouble(event.getMessage());
-                    if (input <= 0 || input > 1000000)
+                    if (input < 0 || input > 1000000)
                     {
-                        player.sendMessage(ChatColor.RED + "Enter a number between 1 and 1.000.000");
+                        player.sendMessage(ChatColor.RED + "Enter a number between 0 and 1.000.000");
                     } else
                     {
                         plugin.getSettings().set(Settings.VOTE_REWARD_MONEY, input);

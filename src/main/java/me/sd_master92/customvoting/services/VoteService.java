@@ -8,7 +8,6 @@ import me.sd_master92.customvoting.VoteFile;
 import me.sd_master92.customvoting.constants.Data;
 import me.sd_master92.customvoting.constants.Messages;
 import me.sd_master92.customvoting.constants.Settings;
-import me.sd_master92.customvoting.constants.enumerations.SoundType;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.milkbowl.vault.economy.Economy;
@@ -165,7 +164,7 @@ public class VoteService
     public void giveRewards(Player player)
     {
         giveItems(player);
-        String rewardMessage = plugin.getMessages().getMessage(Messages.VOTE_REWARD_PREFIX);
+        String rewardMessage = "";
         double money = giveMoney(player);
         if (Main.economy != null && money > 0)
         {
@@ -173,32 +172,36 @@ public class VoteService
             placeholders.put("%MONEY%", new DecimalFormat("#.##").format(money));
             rewardMessage += plugin.getMessages().getMessage(Messages.VOTE_REWARD_MONEY, placeholders);
         }
-        rewardMessage += rewardMessage.isEmpty() ? "" : plugin.getMessages().getMessage(Messages.VOTE_REWARD_DIVIDER);
         int xp = giveExperience(player);
         if (xp > 0)
         {
-            SoundType.RECEIVE_REWARDS.play(plugin, player.getLocation());
             Map<String, String> placeholders = new HashMap<>();
             placeholders.put("%XP%", "" + xp);
             placeholders.put("%s%", xp == 1 ? "" : "s");
+            rewardMessage += rewardMessage.isEmpty() ? "" :
+                    plugin.getMessages().getMessage(Messages.VOTE_REWARD_DIVIDER);
             rewardMessage += plugin.getMessages().getMessage(Messages.VOTE_REWARD_XP, placeholders);
         }
         String message = rewardMessage;
-        new BukkitRunnable()
+        if (!message.isEmpty())
         {
-            int i = 0;
-            @Override
-            public void run()
+            new BukkitRunnable()
             {
-                player.spigot().sendMessage(ChatMessageType.ACTION_BAR,
-                        new TextComponent(message));
-                if(i == 0)
+                int i = 40;
+
+                @Override
+                public void run()
                 {
-                    cancel();
+                    player.spigot().sendMessage(ChatMessageType.ACTION_BAR,
+                            new TextComponent(plugin.getMessages().getMessage(Messages.VOTE_REWARD_PREFIX) + message));
+                    if (i == 0)
+                    {
+                        cancel();
+                    }
+                    i--;
                 }
-                i++;
-            }
-        }.runTaskTimer(plugin, 0, 1);
+            }.runTaskTimer(plugin, 0, 1);
+        }
     }
 
     public void giveItems(Player player)

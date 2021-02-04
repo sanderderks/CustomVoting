@@ -159,7 +159,7 @@ public class InventoryListener implements Listener
                                     PlayerListener.chatInput.add(player.getUniqueId());
                                     cancelCloseEvent.add(player.getUniqueId());
                                     player.closeInventory();
-                                    player.sendMessage(ChatColor.GREEN + "Please enter a number between 1 and 1.000" +
+                                    player.sendMessage(ChatColor.GREEN + "Please enter a number between 0 and 1.000" +
                                             ".000");
                                     player.sendMessage(ChatColor.GRAY + "Type 'cancel' to go back");
                                     new BukkitRunnable()

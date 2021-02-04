@@ -136,7 +136,7 @@ public class VotePartyService
                             {
                                 dropLoc.getWorld().dropItem(dropLoc, chest.remove(i));
                             }
-                            if (random.nextInt(3) == 0)
+                            if (random.nextInt(2) == 0)
                             {
                                 VoteService.shootFirework(plugin, fireworkLoc);
                             }
