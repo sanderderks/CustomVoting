@@ -237,8 +237,8 @@ public class VoteService
     public void giveLuckyReward(Player player)
     {
         Random random = new Random();
-        int i = random.nextInt(plugin.getSettings().getNumber(Settings.LUCKY_VOTE_CHANCE));
-        if (i == 0)
+        int i = random.nextInt(100);
+        if (i < plugin.getSettings().getNumber(Settings.LUCKY_VOTE_CHANCE))
         {
             ItemStack[] luckyRewards = plugin.getData().getItems(Data.LUCKY_REWARDS);
             i = random.nextInt(luckyRewards.length);

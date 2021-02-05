@@ -219,7 +219,7 @@ public class InventoryListener implements Listener
                                     plugin.getSettings().addNumber(Settings.LUCKY_VOTE_CHANCE, 5);
                                 } else
                                 {
-                                    plugin.getSettings().setNumber(Settings.LUCKY_VOTE_CHANCE, 0);
+                                    plugin.getSettings().setNumber(Settings.LUCKY_VOTE_CHANCE, 1);
                                 }
                                 event.setCurrentItem(guiService.getLuckyVoteChanceSetting());
                                 break;
