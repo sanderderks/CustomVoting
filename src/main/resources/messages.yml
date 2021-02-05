@@ -7,7 +7,7 @@ exception: '&cSomething went wrong!'
 
 monthly_reset: '&d&lAll votes have been reset, because a new month has started!'
 
-broadcast: '&d%PLAYER% &7just voted at &d%SERVICE%&7!'
+vote_broadcast: '&d%PLAYER% &7just voted at &d%SERVICE%&7!'
 
 vote_command:
   - '&bVote for &dServerName &b!'

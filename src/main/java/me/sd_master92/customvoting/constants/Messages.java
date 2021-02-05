@@ -9,10 +9,9 @@ public class Messages
     public static final String INVALID_PLAYER = "invalid_player";
     public static final String EXCEPTION = ChatColor.RED + "Something went wrong! Please contact the server " +
             "administrator.";
-
-    public static final String BROADCAST = "broadcast";
     public static final String MONTHLY_RESET = "monthly_reset";
 
+    public static final String BROADCAST = "vote_broadcast";
     public static final String VOTE_COMMAND = "vote_command";
     public static final String VOTE_REWARD_PREFIX = "vote_rewards.prefix";
     public static final String VOTE_REWARD_DIVIDER = "vote_rewards.divider";
