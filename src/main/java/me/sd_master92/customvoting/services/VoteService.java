@@ -30,10 +30,9 @@ import java.util.Random;
 
 public class VoteService
 {
+    public static boolean isAwaitingBroadcast = false;
     private final Main plugin;
     private final VotePartyService votePartyService;
-
-    private boolean isAwaitingBroadcast = false;
 
     public VoteService(Main plugin)
     {
@@ -112,7 +111,7 @@ public class VoteService
         HashMap<String, String> placeholders = new HashMap<>();
         placeholders.put("%PLAYER%", vote.getUsername());
         placeholders.put("%SERVICE%", vote.getServiceName());
-        String message = plugin.getMessages().getMessage(Messages.BROADCAST, placeholders);
+        String message = plugin.getMessages().getMessage(Messages.VOTE_BROADCAST, placeholders);
         plugin.getServer().broadcastMessage(message);
     }
 
@@ -152,8 +151,8 @@ public class VoteService
                                 placeholders.put("%s%", updatedVotesUntil == 1 ? "" : "s");
                                 plugin.getServer().broadcastMessage(plugin.getMessages().getMessage(Messages.VOTE_PARTY_UNTIL,
                                         placeholders));
-                                isAwaitingBroadcast = false;
                             }
+                            isAwaitingBroadcast = false;
                         }
                     }.runTaskLater(plugin, 40);
                 }
@@ -164,6 +163,7 @@ public class VoteService
     public void giveRewards(Player player)
     {
         giveItems(player);
+        giveLuckyReward(player);
         String rewardMessage = "";
         double money = giveMoney(player);
         if (Main.economy != null && money > 0)
@@ -232,5 +232,21 @@ public class VoteService
         int amount = plugin.getSettings().getNumber(Settings.VOTE_REWARD_EXPERIENCE);
         player.setLevel(player.getLevel() + amount);
         return amount;
+    }
+
+    public void giveLuckyReward(Player player)
+    {
+        Random random = new Random();
+        int i = random.nextInt(plugin.getSettings().getNumber(Settings.LUCKY_VOTE_CHANCE));
+        if (i == 0)
+        {
+            ItemStack[] luckyRewards = plugin.getData().getItems(Data.LUCKY_REWARDS);
+            i = random.nextInt(luckyRewards.length);
+            for (ItemStack item : player.getInventory().addItem(luckyRewards[i]).values())
+            {
+                player.getWorld().dropItemNaturally(player.getLocation(), item);
+            }
+            player.sendMessage(plugin.getMessages().getMessage(Messages.VOTE_LUCKY));
+        }
     }
 }

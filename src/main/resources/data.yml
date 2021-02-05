@@ -33,3 +33,27 @@ items:
       v: 2586
       type: EXPERIENCE_BOTTLE
       amount: 5
+  lucky_rewards:
+    - ==: org.bukkit.inventory.ItemStack
+      v: 2586
+      type: ENCHANTED_GOLDEN_APPLE
+    - ==: org.bukkit.inventory.ItemStack
+      v: 2586
+      type: NETHERITE_INGOT
+    - ==: org.bukkit.inventory.ItemStack
+      v: 2586
+      type: NETHER_STAR
+    - ==: org.bukkit.inventory.ItemStack
+      v: 2586
+      type: VILLAGER_SPAWN_EGG
+    - ==: org.bukkit.inventory.ItemStack
+      v: 2586
+      type: TRIDENT
+    - ==: org.bukkit.inventory.ItemStack
+      v: 2586
+      type: ENCHANTED_BOOK
+      meta:
+        ==: ItemMeta
+        meta-type: ENCHANTED
+        stored-enchants:
+          MENDING: 1

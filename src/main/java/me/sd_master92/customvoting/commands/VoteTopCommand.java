@@ -44,6 +44,7 @@ public class VoteTopCommand implements CommandExecutor
                         {
                             placeholders.put("%PLAYER%", topVoter.getName());
                             placeholders.put("%VOTES%", "" + topVoter.getVotes());
+                            placeholders.put("%s%", topVoter.getVotes() == 1 ? "s" : "");
                             message = plugin.getMessages().getMessage(Messages.VOTE_TOP_COMMAND_PLAYERS, placeholders);
                             messages.add(message);
                         }

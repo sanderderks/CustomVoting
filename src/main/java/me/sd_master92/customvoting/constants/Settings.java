@@ -11,4 +11,6 @@ public class Settings
     public static final String VOTES_REQUIRED_FOR_VOTE_PARTY = "votes_required_for_vote_party";
     public static final String VOTE_REWARD_MONEY = "vote_reward_money";
     public static final String VOTE_REWARD_EXPERIENCE = "vote_reward_xp";
+    public static final String LUCKY_VOTE = "lucky_vote";
+    public static final String LUCKY_VOTE_CHANCE = "lucky_vote_chance";
 }
