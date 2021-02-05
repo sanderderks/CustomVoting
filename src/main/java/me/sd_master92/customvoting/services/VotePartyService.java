@@ -47,7 +47,7 @@ public class VotePartyService
                     case 10:
                         Map<String, String> placeholders = new HashMap<>();
                         placeholders.put("%TIME%", "" + count);
-                        playForAll(SoundType.NOTIFY);
+                        SoundType.NOTIFY.playForAll(plugin);
                         plugin.getServer().broadcastMessage(plugin.getMessages().getMessage(Messages.VOTE_PARTY_COUNTDOWN, placeholders));
                         break;
                     case 5:
@@ -58,11 +58,11 @@ public class VotePartyService
                         placeholders = new HashMap<>();
                         placeholders.put("%TIME%", "" + count);
                         placeholders.put("%s%", count == 1 ? "" : "s");
-                        playForAll(SoundType.NOTIFY);
+                        SoundType.NOTIFY.playForAll(plugin);
                         plugin.getServer().broadcastMessage(plugin.getMessages().getMessage(Messages.VOTE_PARTY_COUNTDOWN_ENDING, placeholders));
                         break;
                     case 0:
-                        playForAll(SoundType.VOTE_PARTY_START);
+                        SoundType.VOTE_PARTY_START.playForAll(plugin);
                         plugin.getServer().broadcastMessage(plugin.getMessages().getMessage(Messages.VOTE_PARTY_START));
                         start();
                         cancel();
@@ -200,13 +200,5 @@ public class VotePartyService
                 }
             }
         }.runTaskTimer(plugin, 0, 10);
-    }
-
-    private void playForAll(SoundType sound)
-    {
-        for (Player player : plugin.getServer().getOnlinePlayers())
-        {
-            sound.play(plugin, player.getLocation());
-        }
     }
 }

@@ -5,6 +5,7 @@ import me.sd_master92.customvoting.constants.Settings;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.World;
+import org.bukkit.entity.Player;
 
 public enum SoundType
 {
@@ -33,13 +34,21 @@ public enum SoundType
 
     public void play(Main plugin, Location loc)
     {
-        if(plugin.getSettings().getBoolean(Settings.USE_SOUND_EFFECTS))
+        if (plugin.getSettings().getBoolean(Settings.USE_SOUND_EFFECTS))
         {
             World world = loc.getWorld();
             if (world != null)
             {
                 world.playSound(loc, sound, 10, 1);
             }
+        }
+    }
+
+    public void playForAll(Main plugin)
+    {
+        for (Player player : plugin.getServer().getOnlinePlayers())
+        {
+            play(plugin, player.getLocation());
         }
     }
 }
