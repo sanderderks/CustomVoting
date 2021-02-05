@@ -30,7 +30,7 @@ public class SettingsCommand implements CommandExecutor
             {
                 Player player = (Player) sender;
                 Inventory settings = guiService.getSettings();
-                SoundType.OPEN.play(plugin, player.getLocation());
+                SoundType.OPEN.play(plugin, player);
                 player.openInventory(settings);
             }
         } else

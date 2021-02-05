@@ -92,7 +92,7 @@ public class PlayerListener implements Listener
             if(event.getMessage().equalsIgnoreCase("cancel"))
             {
                 chatInput.remove(player.getUniqueId());
-                SoundType.FAILURE.play(plugin, player.getLocation());
+                SoundType.FAILURE.play(plugin, player);
             } else
             {
                 try
@@ -106,7 +106,7 @@ public class PlayerListener implements Listener
                         plugin.getSettings().set(Settings.VOTE_REWARD_MONEY, input);
                         plugin.getSettings().saveConfig();
                         chatInput.remove(player.getUniqueId());
-                        SoundType.SUCCESS.play(plugin, player.getLocation());
+                        SoundType.SUCCESS.play(plugin, player);
                         player.sendMessage(ChatColor.GREEN + "Successfully updated the money reward!");
                     }
                 } catch (Exception e)
@@ -183,7 +183,7 @@ public class PlayerListener implements Listener
                     i++;
                 }
                 plugin.getData().setLocation(Data.VOTE_PARTY + "." + i, event.getBlock().getLocation());
-                SoundType.SUCCESS.play(plugin, player.getLocation());
+                SoundType.SUCCESS.play(plugin, player);
                 player.sendMessage(ChatColor.GREEN + "Vote Party Chest #" + i + " registered.");
                 player.getInventory().setItemInMainHand(VotePartyService.VOTE_PARTY_ITEM);
             } else
@@ -209,7 +209,7 @@ public class PlayerListener implements Listener
                     event.setCancelled(true);
                     if (player.hasPermission("customvoting.voteparty"))
                     {
-                        SoundType.OPEN.play(plugin, player.getLocation());
+                        SoundType.OPEN.play(plugin, player);
                         player.openInventory(guiService.getVotePartyRewards(key));
                     } else
                     {

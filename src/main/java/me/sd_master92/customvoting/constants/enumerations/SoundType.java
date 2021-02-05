@@ -17,8 +17,7 @@ public enum SoundType
     CLICK(Sound.BLOCK_NOTE_BLOCK_PLING),
     OPEN(Sound.BLOCK_ENDER_CHEST_OPEN),
     CLOSE(Sound.BLOCK_ENDER_CHEST_CLOSE),
-    VOTE_PARTY_START(Sound.ENTITY_ENDER_DRAGON_GROWL),
-    RECEIVE_REWARDS(Sound.ENTITY_PLAYER_LEVELUP);
+    VOTE_PARTY_START(Sound.ENTITY_ENDER_DRAGON_GROWL);
 
     private final Sound sound;
 
@@ -41,6 +40,15 @@ public enum SoundType
             {
                 world.playSound(loc, sound, 10, 1);
             }
+        }
+    }
+
+    public void play(Main plugin, Player player)
+    {
+        Location loc = player.getLocation();
+        if (plugin.getSettings().getBoolean(Settings.USE_SOUND_EFFECTS))
+        {
+            player.playSound(loc, sound, 10, 1);
         }
     }
 

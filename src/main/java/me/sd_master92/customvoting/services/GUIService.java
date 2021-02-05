@@ -145,11 +145,11 @@ public class GUIService
         inv.setItem(26, null);
         if (plugin.getData().setItems(path, inv.getContents()))
         {
-            SoundType.SUCCESS.play(plugin, player.getLocation());
+            SoundType.SUCCESS.play(plugin, player);
             player.sendMessage(ChatColor.GREEN + "Successfully updated the rewards!");
         } else
         {
-            SoundType.FAILURE.play(plugin, player.getLocation());
+            SoundType.FAILURE.play(plugin, player);
             player.sendMessage(ChatColor.RED + "Failed to update the rewards!");
         }
     }

@@ -84,11 +84,11 @@ public class VotePartyService
     {
         if (plugin.getData().setItems(Data.VOTE_PARTY + "." + key, contents))
         {
-            SoundType.SUCCESS.play(plugin, player.getLocation());
+            SoundType.SUCCESS.play(plugin, player);
             player.sendMessage(ChatColor.GREEN + "Successfully updated Vote Party Chest #" + key);
         } else
         {
-            SoundType.FAILURE.play(plugin, player.getLocation());
+            SoundType.FAILURE.play(plugin, player);
             player.sendMessage(ChatColor.RED + "Failed to update Vote Party Chest #" + key);
         }
     }
