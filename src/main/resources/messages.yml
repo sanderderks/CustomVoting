@@ -23,20 +23,32 @@ vote_command:
 vote_rewards:
   prefix: '&aReceived: '
   divider: ' &a+ '
+  # %MONEY% amount of money reward
   money: '&b$%MONEY%'
+  # %XP% amount of xp levels reward
+  # %s% extra s for when the XP is higher than 1
   xp: '&b%XP% &aXP level%s%'
 
 votes_command:
+  # %VOTES% votes of the player
+  # %s% extra s for when the VOTES is higher than 1
   self: '&aYou currently have &b%VOTES% &avote%s%!'
+  # %PLAYER% name of the player
+  # %VOTES% votes of the player
+  # %s% extra s for when the VOTES is higher than 1
   others: '&b%PLAYER% &acurrently has &b%VOTES% &avote%s%!'
   not_found: '&cThat player does not exist.'
 
 vote_top_command:
+  # %PLAYERS% 5x the 'players' line
   format:
     - '&aTop Voters'
     - '&b---------------'
     - '%PLAYERS%'
     - '&b---------------'
+  # %PLAYER% name of the player
+  # %VOTES% votes of the player
+  # %s% extra s for when the VOTES is higher than 1
   players: '&d%PLAYER%&7: &b%VOTES%'
   not_found: '&cThere are no players to show'
 
@@ -47,6 +59,10 @@ vote_top_signs:
     - '&4&lSome Server!'
     - ''
   player_signs:
+    # %NUMBER% top x
+    # %PLAYER% name of the player
+    # %VOTES% votes of the player
+    # %s% extra s for when the VOTES is higher than 1
     format:
       - '&4&lTop %NUMBER%:'
       - '&b%PLAYER%'
@@ -56,8 +72,13 @@ vote_top_signs:
     outdated: '&cOutdated'
 
 vote_party:
+  # %VOTES% votes until the vote party
+  # %s% extra s for when the VOTES is higher than 1
   until: '&b%VOTES% &avote%s% until the &bVote Party&a!'
+  # %TIME% seconds until the vote party
   countdown: '&aVote Party starting in &b%TIME% &aseconds!'
+  # %TIME% seconds until the vote party
+  # %s% extra s for when the TIME is higher than 1
   countdown_ending: '&aVote Party starting in &b%TIME%'
   start: '&aThe Vote Party has begun!'
   end: '&7The Vote Party has ended!'
