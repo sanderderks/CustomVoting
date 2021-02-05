@@ -122,6 +122,7 @@ public class Main extends JavaPlugin
         if (!setupEconomy())
         {
             error("|___economy hook not found");
+            return;
         }
         print("|___successfully hooked into '" + economy.getName() + "'");
     }
