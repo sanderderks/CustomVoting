@@ -23,6 +23,7 @@ public class GUIService
     public final static String GENERAL_SETTINGS_INVENTORY = "General Settings";
     public final static String REWARD_SETTINGS_INVENTORY = "Vote Rewards";
     public final static String ITEM_REWARDS_INVENTORY = "Item Rewards";
+    public final static String LUCKY_REWARDS_INVENTORY = "Lucky Rewards";
     public final static String VOTE_PARTY_REWARDS_INVENTORY = "Vote Party Chest #";
 
     public static final ItemStack BACK_ITEM = createItem(Material.BARRIER, ChatColor.RED + "Back");
@@ -35,6 +36,8 @@ public class GUIService
             null, true);
     public static final ItemStack ITEM_REWARD_SETTINGS = createItem(Material.CHEST, ChatColor.LIGHT_PURPLE +
             "Item Rewards");
+    public static final ItemStack LUCKY_REWARD_SETTINGS = createItem(Material.ENDER_CHEST, ChatColor.LIGHT_PURPLE +
+            "Lucky Rewards");
 
     private final Main plugin;
 
@@ -90,11 +93,12 @@ public class GUIService
         Inventory inv = Bukkit.createInventory(null, 9, GENERAL_SETTINGS_INVENTORY);
         inv.setItem(0, getDoMonthlyResetSetting());
         inv.setItem(1, getUseSoundEffectsSetting());
-        inv.setItem(2, getUseFirework());
-        inv.setItem(3, getDoVoteParty());
-        inv.setItem(4, getVotePartyType());
-        inv.setItem(5, getVotesUntilVoteParty());
-        inv.setItem(6, getVotePartyCountdownSetting());
+        inv.setItem(2, getUseFireworkSetting());
+        inv.setItem(3, getDoLuckyVoteSetting());
+        inv.setItem(4, getDoVotePartySetting());
+        inv.setItem(5, getVotePartyTypeSetting());
+        inv.setItem(6, getVotesUntilVotePartySetting());
+        inv.setItem(7, getVotePartyCountdownSetting());
         inv.setItem(8, BACK_ITEM);
         return inv;
     }
@@ -105,6 +109,8 @@ public class GUIService
         inv.setItem(0, ITEM_REWARD_SETTINGS);
         inv.setItem(1, getMoneyRewardSetting());
         inv.setItem(2, getExperienceRewardSetting());
+        inv.setItem(3, LUCKY_REWARD_SETTINGS);
+        inv.setItem(4, getLuckyVoteChanceSetting());
         inv.setItem(8, BACK_ITEM);
         return inv;
     }
@@ -121,18 +127,30 @@ public class GUIService
         return inv;
     }
 
-    public void saveRewards(Player player, Inventory inv)
+    public Inventory getLuckyRewards()
+    {
+        Inventory inv = Bukkit.createInventory(null, 27, LUCKY_REWARDS_INVENTORY);
+        for (ItemStack reward : plugin.getData().getItems(Data.LUCKY_REWARDS))
+        {
+            inv.addItem(reward);
+        }
+        inv.setItem(25, BACK_ITEM);
+        inv.setItem(26, SAVE_ITEM);
+        return inv;
+    }
+
+    public void saveRewards(String path, Player player, Inventory inv)
     {
         inv.setItem(25, null);
         inv.setItem(26, null);
-        if (plugin.getData().setItems(Data.VOTE_REWARDS, inv.getContents()))
+        if (plugin.getData().setItems(path, inv.getContents()))
         {
             SoundType.SUCCESS.play(plugin, player.getLocation());
-            player.sendMessage(ChatColor.GREEN + "Successfully updated vote rewards!");
+            player.sendMessage(ChatColor.GREEN + "Successfully updated the rewards!");
         } else
         {
             SoundType.FAILURE.play(plugin, player.getLocation());
-            player.sendMessage(ChatColor.RED + "Failed to update vote rewards!");
+            player.sendMessage(ChatColor.RED + "Failed to update the rewards!");
         }
     }
 
@@ -157,27 +175,40 @@ public class GUIService
                         ChatColor.GREEN + "ON" : ChatColor.RED + "OFF"));
     }
 
-    public ItemStack getUseFirework()
+    public ItemStack getUseFireworkSetting()
     {
         return createItem(Material.FIREWORK_ROCKET, ChatColor.LIGHT_PURPLE + "Firework",
                 ChatColor.GRAY + "Status: " + (plugin.getSettings().getBoolean(Settings.FIREWORK) ?
                         ChatColor.GREEN + "ON" : ChatColor.RED + "OFF"));
     }
 
-    public ItemStack getDoVoteParty()
+    public ItemStack getDoVotePartySetting()
     {
         return createItem(Material.EXPERIENCE_BOTTLE, ChatColor.LIGHT_PURPLE + "Vote Party",
                 ChatColor.GRAY + "Status: " + (plugin.getSettings().getBoolean(Settings.VOTE_PARTY) ?
                         ChatColor.GREEN + "ON" : ChatColor.RED + "OFF"));
     }
 
-    public ItemStack getVotePartyType()
+    public ItemStack getDoLuckyVoteSetting()
+    {
+        return createItem(Material.TOTEM_OF_UNDYING, ChatColor.LIGHT_PURPLE + "Lucky Vote",
+                ChatColor.GRAY + "Status: " + (plugin.getSettings().getBoolean(Settings.LUCKY_VOTE) ?
+                        ChatColor.GREEN + "ON" : ChatColor.RED + "OFF"));
+    }
+
+    public ItemStack getLuckyVoteChanceSetting()
+    {
+        return createItem(Material.ENDER_EYE, ChatColor.LIGHT_PURPLE + "Lucky Vote Chance",
+                ChatColor.GRAY + "Currently: " + ChatColor.AQUA + plugin.getSettings().getNumber(Settings.LUCKY_VOTE_CHANCE) + ChatColor.GRAY + "%");
+    }
+
+    public ItemStack getVotePartyTypeSetting()
     {
         return createItem(Material.SPLASH_POTION, ChatColor.LIGHT_PURPLE + "Vote Party Type",
                 ChatColor.GRAY + "Status: " + ChatColor.AQUA + VotePartyType.valueOf(plugin.getSettings().getNumber(Settings.VOTE_PARTY_TYPE)).getName());
     }
 
-    public ItemStack getVotesUntilVoteParty()
+    public ItemStack getVotesUntilVotePartySetting()
     {
         int votesRequired = plugin.getSettings().getNumber(Settings.VOTES_REQUIRED_FOR_VOTE_PARTY);
         int votesUntil = votesRequired - plugin.getData().getNumber("current_votes");

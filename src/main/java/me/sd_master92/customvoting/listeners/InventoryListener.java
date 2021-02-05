@@ -1,6 +1,7 @@
 package me.sd_master92.customvoting.listeners;
 
 import me.sd_master92.customvoting.Main;
+import me.sd_master92.customvoting.constants.Data;
 import me.sd_master92.customvoting.constants.Settings;
 import me.sd_master92.customvoting.constants.enumerations.SoundType;
 import me.sd_master92.customvoting.constants.enumerations.VotePartyType;
@@ -96,20 +97,20 @@ public class InventoryListener implements Listener
                                 plugin.getSettings().set(Settings.FIREWORK,
                                         !plugin.getSettings().getBoolean(Settings.FIREWORK));
                                 plugin.getSettings().saveConfig();
-                                event.setCurrentItem(guiService.getUseFirework());
+                                event.setCurrentItem(guiService.getUseFireworkSetting());
                                 break;
                             case EXPERIENCE_BOTTLE:
                                 SoundType.CHANGE.play(plugin, player.getLocation());
                                 plugin.getSettings().set(Settings.VOTE_PARTY,
                                         !plugin.getSettings().getBoolean(Settings.VOTE_PARTY));
                                 plugin.getSettings().saveConfig();
-                                event.setCurrentItem(guiService.getDoVoteParty());
+                                event.setCurrentItem(guiService.getDoVotePartySetting());
                                 break;
                             case SPLASH_POTION:
                                 SoundType.CHANGE.play(plugin, player.getLocation());
                                 plugin.getSettings().setNumber(Settings.VOTE_PARTY_TYPE,
                                         VotePartyType.next(plugin).getValue());
-                                event.setCurrentItem(guiService.getVotePartyType());
+                                event.setCurrentItem(guiService.getVotePartyTypeSetting());
                                 break;
                             case ENCHANTED_BOOK:
                                 SoundType.CHANGE.play(plugin, player.getLocation());
@@ -120,7 +121,7 @@ public class InventoryListener implements Listener
                                 {
                                     plugin.getSettings().setNumber(Settings.VOTES_REQUIRED_FOR_VOTE_PARTY, 10);
                                 }
-                                event.setCurrentItem(guiService.getVotesUntilVoteParty());
+                                event.setCurrentItem(guiService.getVotesUntilVotePartySetting());
                                 break;
                             case ENDER_CHEST:
                                 SoundType.CHANGE.play(plugin, player.getLocation());
@@ -132,6 +133,12 @@ public class InventoryListener implements Listener
                                     plugin.getSettings().setNumber(Settings.VOTE_PARTY_COUNTDOWN, 0);
                                 }
                                 event.setCurrentItem(guiService.getVotePartyCountdownSetting());
+                                break;
+                            case TOTEM_OF_UNDYING:
+                                SoundType.CHANGE.play(plugin, player.getLocation());
+                                plugin.getSettings().set(Settings.LUCKY_VOTE,
+                                        !plugin.getSettings().getBoolean(Settings.LUCKY_VOTE));
+                                event.setCurrentItem(guiService.getDoLuckyVoteSetting());
                                 break;
                         }
                     }
@@ -196,6 +203,26 @@ public class InventoryListener implements Listener
                                 }
                                 event.setCurrentItem(guiService.getExperienceRewardSetting());
                                 break;
+                            case ENDER_CHEST:
+                                SoundType.CLICK.play(plugin, player.getLocation());
+                                cancelCloseEvent.add(player.getUniqueId());
+                                player.openInventory(guiService.getLuckyRewards());
+                                break;
+                            case ENDER_EYE:
+                                SoundType.CHANGE.play(plugin, player.getLocation());
+                                int chance = plugin.getSettings().getNumber(Settings.LUCKY_VOTE_CHANCE);
+                                if (chance < 10)
+                                {
+                                    plugin.getSettings().addNumber(Settings.LUCKY_VOTE_CHANCE, 1);
+                                } else if (chance < 100)
+                                {
+                                    plugin.getSettings().addNumber(Settings.LUCKY_VOTE_CHANCE, 5);
+                                } else
+                                {
+                                    plugin.getSettings().setNumber(Settings.LUCKY_VOTE_CHANCE, 0);
+                                }
+                                event.setCurrentItem(guiService.getLuckyVoteChanceSetting());
+                                break;
                         }
                     }
                     break;
@@ -206,7 +233,23 @@ public class InventoryListener implements Listener
                         event.setCancelled(true);
                         if (event.getSlot() == 26)
                         {
-                            guiService.saveRewards(player, event.getInventory());
+                            guiService.saveRewards(Data.VOTE_REWARDS, player, event.getInventory());
+                        } else
+                        {
+                            SoundType.CLICK.play(plugin, player.getLocation());
+                        }
+                        cancelCloseEvent.add(player.getUniqueId());
+                        player.openInventory(guiService.getRewardSettings());
+                    }
+                    break;
+                case GUIService
+                        .LUCKY_REWARDS_INVENTORY:
+                    if (event.getSlot() >= 25)
+                    {
+                        event.setCancelled(true);
+                        if (event.getSlot() == 26)
+                        {
+                            guiService.saveRewards(Data.LUCKY_REWARDS, player, event.getInventory());
                         } else
                         {
                             SoundType.CLICK.play(plugin, player.getLocation());
@@ -227,7 +270,8 @@ public class InventoryListener implements Listener
             Player player = (Player) event.getPlayer();
             if (!cancelCloseEvent.contains(player.getUniqueId()))
             {
-                switch (event.getView().getTitle())
+                String title = event.getView().getTitle();
+                switch (title)
                 {
                     case GUIService.MAIN_SETTINGS_INVENTORY:
                     case GUIService.GENERAL_SETTINGS_INVENTORY:
@@ -235,14 +279,16 @@ public class InventoryListener implements Listener
                         SoundType.CLOSE.play(plugin, player.getLocation());
                         break;
                     case GUIService.ITEM_REWARDS_INVENTORY:
-                        guiService.saveRewards(player, event.getInventory());
+                        guiService.saveRewards(Data.VOTE_REWARDS, player, event.getInventory());
                         break;
-                    default:
-                        if (event.getView().getTitle().contains(GUIService.VOTE_PARTY_REWARDS_INVENTORY))
-                        {
-                            votePartyService.saveRewards(player, event.getView().getTitle().split("#")[1],
-                                    event.getInventory().getContents());
-                        }
+                    case GUIService.LUCKY_REWARDS_INVENTORY:
+                        guiService.saveRewards(Data.LUCKY_REWARDS, player, event.getInventory());
+                        break;
+                }
+                if (title.contains(GUIService.VOTE_PARTY_REWARDS_INVENTORY))
+                {
+                    votePartyService.saveRewards(player, title.split("#")[1],
+                            event.getInventory().getContents());
                 }
             } else
             {

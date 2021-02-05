@@ -9,3 +9,5 @@ vote_party_countdown: 30
 votes_required_for_vote_party: 10
 vote_reward_money: 100
 vote_reward_xp: 3
+lucky_vote: true
+lucky_vote_chance: 50

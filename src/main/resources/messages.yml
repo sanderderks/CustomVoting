@@ -8,6 +8,7 @@ exception: '&cSomething went wrong!'
 monthly_reset: '&d&lAll votes have been reset, because a new month has started!'
 
 vote_broadcast: '&d%PLAYER% &7just voted at &d%SERVICE%&7!'
+lucky_vote: '&aYou received a &dLucky Reward&a!'
 
 vote_command:
   - '&bVote for &dServerName &b!'

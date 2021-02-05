@@ -23,7 +23,8 @@ public class VotePartyService
             ChatColor.GRAY + "Place this chest somewhere in the sky.;" + ChatColor.GRAY + "The contents of this chest" +
                     " will;" +
                     ChatColor.GRAY + "start dropping when the voteparty starts.");
-
+    public static boolean isActive = false;
+    private int queue = 0;
     private final Main plugin;
 
     public VotePartyService(Main plugin)
@@ -33,43 +34,50 @@ public class VotePartyService
 
     public void countdown()
     {
-        new BukkitRunnable()
+        if(!isActive)
         {
-            int count = plugin.getSettings().getNumber(Settings.VOTE_PARTY_COUNTDOWN);
-
-            @Override
-            public void run()
+            isActive = true;
+            new BukkitRunnable()
             {
-                switch (count)
+                int count = plugin.getSettings().getNumber(Settings.VOTE_PARTY_COUNTDOWN);
+
+                @Override
+                public void run()
                 {
-                    case 30:
-                    case 15:
-                    case 10:
-                        Map<String, String> placeholders = new HashMap<>();
-                        placeholders.put("%TIME%", "" + count);
-                        SoundType.NOTIFY.playForAll(plugin);
-                        plugin.getServer().broadcastMessage(plugin.getMessages().getMessage(Messages.VOTE_PARTY_COUNTDOWN, placeholders));
-                        break;
-                    case 5:
-                    case 4:
-                    case 3:
-                    case 2:
-                    case 1:
-                        placeholders = new HashMap<>();
-                        placeholders.put("%TIME%", "" + count);
-                        placeholders.put("%s%", count == 1 ? "" : "s");
-                        SoundType.NOTIFY.playForAll(plugin);
-                        plugin.getServer().broadcastMessage(plugin.getMessages().getMessage(Messages.VOTE_PARTY_COUNTDOWN_ENDING, placeholders));
-                        break;
-                    case 0:
-                        SoundType.VOTE_PARTY_START.playForAll(plugin);
-                        plugin.getServer().broadcastMessage(plugin.getMessages().getMessage(Messages.VOTE_PARTY_START));
-                        start();
-                        cancel();
+                    switch (count)
+                    {
+                        case 30:
+                        case 15:
+                        case 10:
+                            Map<String, String> placeholders = new HashMap<>();
+                            placeholders.put("%TIME%", "" + count);
+                            SoundType.NOTIFY.playForAll(plugin);
+                            plugin.getServer().broadcastMessage(plugin.getMessages().getMessage(Messages.VOTE_PARTY_COUNTDOWN, placeholders));
+                            break;
+                        case 5:
+                        case 4:
+                        case 3:
+                        case 2:
+                        case 1:
+                            placeholders = new HashMap<>();
+                            placeholders.put("%TIME%", "" + count);
+                            placeholders.put("%s%", count == 1 ? "" : "s");
+                            SoundType.NOTIFY.playForAll(plugin);
+                            plugin.getServer().broadcastMessage(plugin.getMessages().getMessage(Messages.VOTE_PARTY_COUNTDOWN_ENDING, placeholders));
+                            break;
+                        case 0:
+                            SoundType.VOTE_PARTY_START.playForAll(plugin);
+                            plugin.getServer().broadcastMessage(plugin.getMessages().getMessage(Messages.VOTE_PARTY_START));
+                            start();
+                            cancel();
+                    }
+                    count--;
                 }
-                count--;
-            }
-        }.runTaskTimer(plugin, 0, 20);
+            }.runTaskTimer(plugin, 0, 20);
+        } else
+        {
+            queue++;
+        }
     }
 
     public void saveRewards(Player player, String key, ItemStack[] contents)
@@ -196,6 +204,12 @@ public class VotePartyService
                 } else
                 {
                     plugin.getServer().broadcastMessage(plugin.getMessages().getMessage(Messages.VOTE_PARTY_END));
+                    isActive = false;
+                    if(queue > 0)
+                    {
+                        queue--;
+                        countdown();
+                    }
                     cancel();
                 }
             }
