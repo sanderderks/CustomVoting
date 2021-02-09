@@ -4,7 +4,7 @@ import me.sd_master92.customfile.CustomFile;
 import me.sd_master92.customfile.PlayerFile;
 import me.sd_master92.customvoting.Main;
 import me.sd_master92.customvoting.constants.Messages;
-import me.sd_master92.customvoting.services.VoteTopService;
+import me.sd_master92.customvoting.services.VoteTopSignService;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -28,7 +28,7 @@ public class ReloadCommand implements CommandExecutor
             {
                 if (PlayerFile.getAll(plugin).stream().allMatch(CustomFile::reloadConfig))
                 {
-                    new VoteTopService(plugin).updateSigns();
+                    new VoteTopSignService(plugin).updateSigns();
                     sender.sendMessage(ChatColor.GREEN + "Configuration files reloaded!");
                 } else
                 {

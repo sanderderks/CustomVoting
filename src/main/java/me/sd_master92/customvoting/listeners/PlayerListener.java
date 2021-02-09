@@ -222,12 +222,12 @@ public class PlayerListener implements Listener
 
     private void checkAndDeleteVoteSign(Player player, Location loc)
     {
-        Map<String, Location> locations = plugin.getData().getLocations(Data.VOTE_TOP);
+        Map<String, Location> locations = plugin.getData().getLocations(Data.VOTE_TOP_SIGNS);
         for (String key : locations.keySet())
         {
             if (loc.equals(locations.get(key)))
             {
-                if (plugin.getData().deleteLocation(Data.VOTE_TOP + "." + key))
+                if (plugin.getData().deleteLocation(Data.VOTE_TOP_SIGNS + "." + key))
                 {
                     player.sendMessage(ChatColor.RED + "Unregistered Vote Sign #" + key);
                 }

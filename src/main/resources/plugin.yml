@@ -22,6 +22,12 @@ commands:
   setvotes:
     description: set votes
     permission: customvoting.setvotes
+  createtop:
+    description: create top stand
+    permission: customvoting.createtop
+  deletetop:
+    description: delete top stand
+    permission: customvoting.deletetop
   voteparty:
     description: vote party
     permission: customvoting.voteparty
@@ -40,6 +46,8 @@ permissions:
       customvoting.vote: true
       customvoting.votes.*: true
       customvoting.votetop: true
+      customvoting.createtop: true
+      customvoting.deletetop: true
       customvoting.fakevote: true
       customvoting.voteparty: true
       customvoting.reload: true
@@ -57,6 +65,10 @@ permissions:
   customvoting.votes.others:
     default: op
   customvoting.votes.set:
+    default: op
+  customvoting.createtop:
+    default: op
+  customvoting.deletetop:
     default: op
   customvoting.votetop:
     default: true

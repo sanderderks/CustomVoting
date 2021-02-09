@@ -19,11 +19,11 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
 
-public class VoteTopService
+public class VoteTopSignService
 {
     private final Main plugin;
 
-    public VoteTopService(Main plugin)
+    public VoteTopSignService(Main plugin)
     {
         this.plugin = plugin;
     }
@@ -35,7 +35,7 @@ public class VoteTopService
             @Override
             public void run()
             {
-                Map<String, Location> locations = plugin.getData().getLocations(Data.VOTE_TOP);
+                Map<String, Location> locations = plugin.getData().getLocations(Data.VOTE_TOP_SIGNS);
                 for (String key : locations.keySet())
                 {
                     Location loc = locations.get(key);
@@ -56,7 +56,7 @@ public class VoteTopService
     {
         if (loc.getBlock().getState() instanceof Sign)
         {
-            plugin.getData().setLocation(Data.VOTE_TOP + ".title", loc);
+            plugin.getData().setLocation(Data.VOTE_TOP_SIGNS + ".title", loc);
             if(player != null)
             {
                 player.sendMessage(ChatColor.GREEN + "Registered Vote Sign #title");
@@ -78,16 +78,16 @@ public class VoteTopService
 
     public void updateSign(Player player, Location loc, int top)
     {
-        VoteFile topVoter = VoteFile.getTopVoter(plugin, top - 1);
+        VoteFile topVoter = VoteFile.getTopVoter(plugin, top);
         if (loc.getBlock().getState() instanceof Sign)
         {
             Sign sign = (Sign) loc.getBlock().getState();
             if (topVoter != null)
             {
-                Location oldLoc = plugin.getData().getLocation(Data.VOTE_TOP + "." + top);
+                Location oldLoc = plugin.getData().getLocation(Data.VOTE_TOP_SIGNS + "." + top);
                 if (oldLoc == null)
                 {
-                    plugin.getData().setLocation(Data.VOTE_TOP + "." + top, loc);
+                    plugin.getData().setLocation(Data.VOTE_TOP_SIGNS + "." + top, loc);
                     if(player != null)
                     {
                         player.sendMessage(ChatColor.GREEN + "Registered Vote Sign #" + top);
@@ -96,7 +96,7 @@ public class VoteTopService
                 {
                     if (!oldLoc.equals(loc))
                     {
-                        plugin.getData().setLocation(Data.VOTE_TOP + "." + top, loc);
+                        plugin.getData().setLocation(Data.VOTE_TOP_SIGNS + "." + top, loc);
                         if (oldLoc.getBlock().getState() instanceof Sign)
                         {
                             Sign oldSign = (Sign) oldLoc.getBlock().getState();
@@ -126,7 +126,7 @@ public class VoteTopService
                 {
                     sign.setLine(i, messages.get(i));
                 }
-                updateSkulls(loc, topVoter.getUuid());
+                updateSkull(loc, topVoter.getUuid());
             } else
             {
                 for (int i = 0; i < 4; i++)
@@ -150,7 +150,7 @@ public class VoteTopService
         updateSign(null, loc, top);
     }
 
-    public void updateSkulls(Location loc, String uuid)
+    public void updateSkull(Location loc, String uuid)
     {
         BlockData blockData = loc.getBlock().getBlockData();
         if (blockData instanceof WallSign)

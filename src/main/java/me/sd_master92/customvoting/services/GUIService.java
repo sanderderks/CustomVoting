@@ -52,7 +52,10 @@ public class GUIService
         ItemMeta meta = item.getItemMeta();
         if (meta != null)
         {
-            meta.setDisplayName(name);
+            if(name != null)
+            {
+                meta.setDisplayName(name);
+            }
             if (lore != null)
             {
                 meta.setLore(null);
@@ -76,6 +79,11 @@ public class GUIService
     public static ItemStack createItem(Material mat, String name)
     {
         return createItem(mat, name, null);
+    }
+
+    public static ItemStack createItem(Material mat, boolean enchanted)
+    {
+        return createItem(mat, null, null, enchanted);
     }
 
     public Inventory getSettings()

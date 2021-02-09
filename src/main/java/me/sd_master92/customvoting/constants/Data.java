@@ -7,5 +7,6 @@ public class Data
     public static final String LUCKY_REWARDS = "lucky_rewards";
     public static final String CURRENT_VOTES = "current_votes";
     public static final String VOTE_QUEUE = "queue";
-    public static final String VOTE_TOP = "vote_top";
+    public static final String VOTE_TOP_SIGNS = "vote_top";
+    public static final String VOTE_TOP_STANDS = "armor_stands";
 }

@@ -2,7 +2,7 @@ package me.sd_master92.customvoting.listeners;
 
 import me.sd_master92.customvoting.Main;
 import me.sd_master92.customvoting.constants.Messages;
-import me.sd_master92.customvoting.services.VoteTopService;
+import me.sd_master92.customvoting.services.VoteTopSignService;
 import org.bukkit.Location;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
@@ -13,12 +13,12 @@ import org.bukkit.event.block.SignChangeEvent;
 public class VoteTopListener implements Listener
 {
     private final Main plugin;
-    private final VoteTopService voteTopService;
+    private final VoteTopSignService voteTopService;
 
     public VoteTopListener(Main plugin)
     {
         this.plugin = plugin;
-        voteTopService = new VoteTopService(plugin);
+        voteTopService = new VoteTopSignService(plugin);
     }
 
     @EventHandler

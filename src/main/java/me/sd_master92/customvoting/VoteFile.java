@@ -2,7 +2,8 @@ package me.sd_master92.customvoting;
 
 import me.sd_master92.customfile.PlayerFile;
 import me.sd_master92.customvoting.constants.Data;
-import me.sd_master92.customvoting.services.VoteTopService;
+import me.sd_master92.customvoting.services.VoteTopSignService;
+import me.sd_master92.customvoting.services.VoteTopStandService;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -11,13 +12,15 @@ import java.util.List;
 public class VoteFile extends PlayerFile
 {
     private final Main plugin;
-    private final VoteTopService voteTopService;
+    private final VoteTopSignService voteTopSignService;
+    private final VoteTopStandService voteTopStandService;
 
     public VoteFile(String uuid, Main plugin)
     {
         super(uuid, plugin);
         this.plugin = plugin;
-        voteTopService = new VoteTopService(plugin);
+        voteTopSignService = new VoteTopSignService(plugin);
+        voteTopStandService = new VoteTopStandService(plugin);
         register();
     }
 
@@ -25,16 +28,9 @@ public class VoteFile extends PlayerFile
     {
         super(player, plugin);
         this.plugin = plugin;
-        voteTopService = new VoteTopService(plugin);
+        voteTopSignService = new VoteTopSignService(plugin);
+        voteTopStandService = new VoteTopStandService(plugin);
         register();
-    }
-
-    private void register()
-    {
-        if (getVotes() == 0)
-        {
-            setVotes(0, false);
-        }
     }
 
     public static List<VoteFile> getTopVoters(Main plugin)
@@ -58,6 +54,7 @@ public class VoteFile extends PlayerFile
 
     public static VoteFile getTopVoter(Main plugin, int n)
     {
+        n--;
         List<VoteFile> topVoters = getTopVoters(plugin);
         if (n >= 0 && n < topVoters.size())
         {
@@ -66,28 +63,38 @@ public class VoteFile extends PlayerFile
         return null;
     }
 
+    private void register()
+    {
+        if (getVotes() == 0)
+        {
+            setVotes(0, false);
+        }
+    }
+
     public int getVotes()
     {
         return getNumber("votes");
     }
 
-    public void setVotes(int n, boolean updateSigns)
+    public void setVotes(int n, boolean update)
     {
         setTimeStamp("last");
         setNumber("votes", n);
-        if(updateSigns)
+        if(update)
         {
-            voteTopService.updateSigns();
+            voteTopSignService.updateSigns();
+            voteTopStandService.updateStands();
         }
     }
 
-    public void addVote(boolean updateSigns)
+    public void addVote(boolean update)
     {
         setTimeStamp("last");
         addNumber("votes", 1);
-        if(updateSigns)
+        if(update)
         {
-            voteTopService.updateSigns();
+            voteTopSignService.updateSigns();
+            voteTopStandService.updateStands();
         }
     }
 
@@ -101,7 +108,8 @@ public class VoteFile extends PlayerFile
         return plugin.getData().delete(Data.VOTE_QUEUE + "." + getUuid());
     }
 
-    public boolean addQueue(String service) {
+    public boolean addQueue(String service)
+    {
         String path = Data.VOTE_QUEUE + "." + getUuid();
         List<String> queue = plugin.getData().getStringList(path);
         queue.add(service);
