@@ -4,9 +4,11 @@ import me.sd_master92.customvoting.Main;
 import me.sd_master92.customvoting.VoteFile;
 import me.sd_master92.customvoting.constants.Messages;
 import me.sd_master92.customvoting.services.VoteService;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 public class FakeVoteCommand implements CommandExecutor
 {
@@ -26,7 +28,13 @@ public class FakeVoteCommand implements CommandExecutor
         {
             if(args.length == 0)
             {
-                voteService.fakeVote(sender.getName());
+                if(sender instanceof Player)
+                {
+                    voteService.fakeVote(sender.getName());
+                } else
+                {
+                    sender.sendMessage(ChatColor.RED + "- /fakevote <name>");
+                }
             } else
             {
                 String name = args[0];
