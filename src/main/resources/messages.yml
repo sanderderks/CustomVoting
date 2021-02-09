@@ -72,6 +72,14 @@ vote_top_signs:
     not_found: '&cNot found'
     outdated: '&cOutdated'
 
+# %TOP% top x
+# %PLAYER% name of the player
+# %VOTES% votes of the player
+vote_top_stands:
+  top: '&a&lTop %TOP%:'
+  center: '&b%PLAYER%'
+  bottom: '&7Votes: &d%VOTES%'
+
 vote_party:
   # %VOTES% votes until the vote party
   # %s% extra s for when the VOTES is higher than 1

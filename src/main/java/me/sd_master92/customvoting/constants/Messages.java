@@ -29,6 +29,10 @@ public class Messages
     public static final String VOTE_TOP_SIGNS_PLAYER_SIGNS_NOT_FOUND = "vote_top_signs.player_signs.not_found";
     public static final String VOTE_TOP_SIGNS_PLAYER_SIGNS_OUTDATED = "vote_top_signs.player_signs.outdated";
 
+    public static final String VOTE_TOP_STANDS_TOP = "vote_top_stands.top";
+    public static final String VOTE_TOP_STANDS_CENTER = "vote_top_stands.center";
+    public static final String VOTE_TOP_STANDS_BOTTOM = "vote_top_stands.bottom";
+
     public static final String VOTE_PARTY_UNTIL = "vote_party.until";
     public static final String VOTE_PARTY_COUNTDOWN = "vote_party.countdown";
     public static final String VOTE_PARTY_COUNTDOWN_ENDING = "vote_party.countdown_ending";

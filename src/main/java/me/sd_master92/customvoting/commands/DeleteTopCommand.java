@@ -82,7 +82,7 @@ public class DeleteTopCommand implements CommandExecutor
                                 }
                             }
                             plugin.getData().set(Data.VOTE_TOP_STANDS + "." + top, null);
-                            plugin.saveConfig();
+                            plugin.getData().saveConfig();
                             player.sendMessage(ChatColor.GREEN + "Successfully deleted Vote Stand #" + top);
                         }
                     } catch (Exception e)

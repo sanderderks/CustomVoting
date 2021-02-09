@@ -3,6 +3,7 @@ package me.sd_master92.customvoting.services;
 import me.sd_master92.customvoting.Main;
 import me.sd_master92.customvoting.VoteFile;
 import me.sd_master92.customvoting.constants.Data;
+import me.sd_master92.customvoting.constants.Messages;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -13,6 +14,8 @@ import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class VoteTopStandService
@@ -36,6 +39,31 @@ public class VoteTopStandService
                     int top = Integer.parseInt(n);
                     VoteFile voteFile = VoteFile.getTopVoter(plugin, top);
 
+                    Map<String, String> placeholders = new HashMap<>();
+                    placeholders.put("%TOP%", "" + top);
+                    if (voteFile != null)
+                    {
+                        placeholders.put("%PLAYER%", voteFile.getName());
+                        placeholders.put("%VOTES%", "" + voteFile.getVotes());
+                    } else
+                    {
+                        placeholders.put("%PLAYER%", ChatColor.RED + "Unknown");
+                        placeholders.put("%VOTES%", "" + 0);
+                    }
+
+                    String topUuid = section.getString(top + ".top");
+                    if (topUuid != null)
+                    {
+                        Entity topEntity =
+                                plugin.getServer().getEntity(UUID.fromString(topUuid));
+                        if (topEntity instanceof ArmorStand)
+                        {
+                            ArmorStand topStand = (ArmorStand) topEntity;
+                            topStand.setCustomName(plugin.getMessages().getMessage(Messages.VOTE_TOP_STANDS_TOP,
+                                    placeholders));
+                        }
+                    }
+
                     String nameUuid = section.getString(top + ".name");
                     if (nameUuid != null)
                     {
@@ -44,13 +72,8 @@ public class VoteTopStandService
                         if (nameEntity instanceof ArmorStand)
                         {
                             ArmorStand nameStand = (ArmorStand) nameEntity;
-                            if (voteFile != null)
-                            {
-                                nameStand.setCustomName(ChatColor.AQUA + voteFile.getName());
-                            } else
-                            {
-                                nameStand.setCustomName(ChatColor.RED + "Unknown");
-                            }
+                            nameStand.setCustomName(plugin.getMessages().getMessage(Messages.VOTE_TOP_STANDS_CENTER,
+                                    placeholders));
                         }
                     }
                     String votesUuid = section.getString(top + ".votes");
@@ -61,13 +84,9 @@ public class VoteTopStandService
                         if (votesEntity instanceof ArmorStand)
                         {
                             ArmorStand votesStand = (ArmorStand) votesEntity;
-                            if (voteFile != null)
-                            {
-                                votesStand.setCustomName(ChatColor.GRAY + "Votes: " + ChatColor.LIGHT_PURPLE + voteFile.getVotes());
-                            } else
-                            {
-                                votesStand.setCustomName(ChatColor.GRAY + "Votes: " + ChatColor.LIGHT_PURPLE + 0);
-                            }
+                            votesStand.setCustomName(plugin.getMessages().getMessage(Messages.VOTE_TOP_STANDS_BOTTOM,
+                                    placeholders));
+
                             ItemStack skull = new ItemStack(Material.PLAYER_HEAD);
                             SkullMeta skullMeta = (SkullMeta) skull.getItemMeta();
                             if (skullMeta != null && voteFile != null)

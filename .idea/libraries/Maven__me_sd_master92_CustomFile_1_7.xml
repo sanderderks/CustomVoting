@@ -24,8 +24,10 @@
       <root url="jar://$MAVEN_REPOSITORY$/me/sd_master92/customfile/1.7/CustomFile-1.7-javadoc.jar!/" />
       <root url="jar://$MAVEN_REPOSITORY$/me/sd_master92/customfile/1.7/CustomFile-1.7-javadoc.jar!/" />
       <root url="jar://$MAVEN_REPOSITORY$/me/sd_master92/customfile/1.7/CustomFile-1.7-javadoc.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/me/sd_master92/customfile/1.7/CustomFile-1.7-javadoc.jar!/" />
     </JAVADOC>
     <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/me/sd_master92/customfile/1.7/CustomFile-1.7-sources.jar!/" />
       <root url="jar://$MAVEN_REPOSITORY$/me/sd_master92/customfile/1.7/CustomFile-1.7-sources.jar!/" />
       <root url="jar://$MAVEN_REPOSITORY$/me/sd_master92/customfile/1.7/CustomFile-1.7-sources.jar!/" />
       <root url="jar://$MAVEN_REPOSITORY$/me/sd_master92/customfile/1.7/CustomFile-1.7-sources.jar!/" />

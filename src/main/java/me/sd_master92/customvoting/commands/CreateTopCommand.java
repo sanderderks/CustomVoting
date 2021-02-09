@@ -69,8 +69,6 @@ public class CreateTopCommand implements CommandExecutor
                                 topStand.setGravity(false);
                                 topStand.setCustomNameVisible(true);
 
-                                topStand.setCustomName(ChatColor.GREEN + "" + ChatColor.BOLD + "Top " + top + ":");
-
                                 ArmorStand nameStand =
                                         (ArmorStand) world.spawnEntity(player.getLocation().add(0, 0.5, 0),
                                                 EntityType.ARMOR_STAND);
