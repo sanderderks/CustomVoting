@@ -154,6 +154,12 @@ public class VotePartyService
                             if (tasks.isEmpty())
                             {
                                 plugin.getServer().broadcastMessage(plugin.getMessages().getMessage(Messages.VOTE_PARTY_END));
+                                isActive = false;
+                                if(queue > 0)
+                                {
+                                    queue--;
+                                    countdown();
+                                }
                             }
                             cancel();
                         }
