@@ -1,4 +1,4 @@
-package me.sd_master92.customvoting.subjects.voteparty;
+package me.sd_master92.customvoting.subjects;
 
 import me.sd_master92.customvoting.Main;
 import me.sd_master92.customvoting.constants.Data;
@@ -6,8 +6,10 @@ import me.sd_master92.customvoting.constants.Messages;
 import me.sd_master92.customvoting.constants.Settings;
 import me.sd_master92.customvoting.constants.enumerations.SoundType;
 import me.sd_master92.customvoting.constants.enumerations.VotePartyType;
-import me.sd_master92.customvoting.services.VoteService;
+import me.sd_master92.customvoting.services.GUIService;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -15,6 +17,13 @@ import java.util.*;
 
 public class VoteParty
 {
+    public static final ItemStack VOTE_PARTY_ITEM = GUIService.createItem(Material.ENDER_CHEST,
+            ChatColor.LIGHT_PURPLE +
+                    "Vote Party Chest",
+            ChatColor.GRAY + "Place this chest somewhere in the sky.;" + ChatColor.GRAY + "The contents of this chest" +
+                    " will;" +
+                    ChatColor.GRAY + "start dropping when the voteparty starts.");
+
     private static boolean isActive = false;
     private static final List<VoteParty> queue = new ArrayList<>();
 
@@ -130,7 +139,7 @@ public class VoteParty
                             }
                             if (random.nextInt(2) == 0)
                             {
-                                VoteService.shootFirework(plugin, fireworkLoc);
+                                CustomVote.shootFirework(plugin, fireworkLoc);
                             }
                         } else
                         {
@@ -184,7 +193,7 @@ public class VoteParty
                     }
                     if (random.nextInt(3) == 0)
                     {
-                        VoteService.shootFirework(plugin, fireworkLoc);
+                        CustomVote.shootFirework(plugin, fireworkLoc);
                     }
                 } else
                 {

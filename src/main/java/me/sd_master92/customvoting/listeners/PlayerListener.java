@@ -6,8 +6,8 @@ import me.sd_master92.customvoting.constants.Data;
 import me.sd_master92.customvoting.constants.Settings;
 import me.sd_master92.customvoting.constants.enumerations.SoundType;
 import me.sd_master92.customvoting.services.GUIService;
-import me.sd_master92.customvoting.services.VotePartyService;
-import me.sd_master92.customvoting.services.VoteService;
+import me.sd_master92.customvoting.subjects.CustomVote;
+import me.sd_master92.customvoting.subjects.VoteParty;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -32,13 +32,11 @@ public class PlayerListener implements Listener
 {
     public static List<UUID> chatInput = new ArrayList<>();
     private final Main plugin;
-    private final VoteService voteService;
     private final GUIService guiService;
 
     public PlayerListener(Main plugin)
     {
         this.plugin = plugin;
-        voteService = new VoteService(plugin);
         guiService = new GUIService(plugin);
     }
 
@@ -60,7 +58,7 @@ public class PlayerListener implements Listener
                 {
                     if (iterator.hasNext())
                     {
-                        voteService.fakeVote(player.getName(), iterator.next());
+                        CustomVote.create(plugin, player.getName(), iterator.next());
                     } else
                     {
                         cancel();
@@ -171,7 +169,7 @@ public class PlayerListener implements Listener
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event)
     {
-        if (event.getItemInHand().equals(VotePartyService.VOTE_PARTY_ITEM))
+        if (event.getItemInHand().equals(VoteParty.VOTE_PARTY_ITEM))
         {
             Player player = event.getPlayer();
             if (player.hasPermission("customvoting.voteparty"))
@@ -185,7 +183,7 @@ public class PlayerListener implements Listener
                 plugin.getData().setLocation(Data.VOTE_PARTY + "." + i, event.getBlock().getLocation());
                 SoundType.SUCCESS.play(plugin, player);
                 player.sendMessage(ChatColor.GREEN + "Vote Party Chest #" + i + " registered.");
-                player.getInventory().setItemInMainHand(VotePartyService.VOTE_PARTY_ITEM);
+                player.getInventory().setItemInMainHand(VoteParty.VOTE_PARTY_ITEM);
             } else
             {
                 event.setCancelled(true);

@@ -6,7 +6,6 @@ import me.sd_master92.customvoting.constants.Settings;
 import me.sd_master92.customvoting.constants.enumerations.SoundType;
 import me.sd_master92.customvoting.constants.enumerations.VotePartyType;
 import me.sd_master92.customvoting.services.GUIService;
-import me.sd_master92.customvoting.services.VotePartyService;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -25,14 +24,12 @@ public class InventoryListener implements Listener
 {
     private final Main plugin;
     private final GUIService guiService;
-    private final VotePartyService votePartyService;
     private final List<UUID> cancelCloseEvent;
 
     public InventoryListener(Main plugin)
     {
         this.plugin = plugin;
         guiService = new GUIService(plugin);
-        votePartyService = new VotePartyService(plugin);
         cancelCloseEvent = new ArrayList<>();
     }
 
@@ -287,8 +284,16 @@ public class InventoryListener implements Listener
                 }
                 if (title.contains(GUIService.VOTE_PARTY_REWARDS_INVENTORY))
                 {
-                    votePartyService.saveRewards(player, title.split("#")[1],
-                            event.getInventory().getContents());
+                    String key = title.split("#")[1];
+                    if (plugin.getData().setItems(Data.VOTE_PARTY + "." + key, event.getInventory().getContents()))
+                    {
+                        SoundType.SUCCESS.play(plugin, player);
+                        player.sendMessage(ChatColor.GREEN + "Successfully updated Vote Party Chest #" + key);
+                    } else
+                    {
+                        SoundType.FAILURE.play(plugin, player);
+                        player.sendMessage(ChatColor.RED + "Failed to update Vote Party Chest #" + key);
+                    }
                 }
             } else
             {

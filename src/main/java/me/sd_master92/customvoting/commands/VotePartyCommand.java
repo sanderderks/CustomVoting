@@ -3,8 +3,7 @@ package me.sd_master92.customvoting.commands;
 import me.sd_master92.customvoting.Main;
 import me.sd_master92.customvoting.constants.Data;
 import me.sd_master92.customvoting.constants.Messages;
-import me.sd_master92.customvoting.services.VotePartyService;
-import me.sd_master92.customvoting.subjects.voteparty.VoteParty;
+import me.sd_master92.customvoting.subjects.VoteParty;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -36,7 +35,7 @@ public class VotePartyCommand implements CommandExecutor
                     switch (args[0])
                     {
                         case "create":
-                            player.getInventory().addItem(VotePartyService.VOTE_PARTY_ITEM);
+                            player.getInventory().addItem(VoteParty.VOTE_PARTY_ITEM);
                             player.sendMessage(ChatColor.GREEN + "You have been given the Vote Party Chest.");
                             break;
                         case "start":

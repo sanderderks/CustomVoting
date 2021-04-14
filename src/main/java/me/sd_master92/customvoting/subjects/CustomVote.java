@@ -1,4 +1,4 @@
-package me.sd_master92.customvoting.services;
+package me.sd_master92.customvoting.subjects;
 
 import com.vexsoftware.votifier.model.Vote;
 import com.vexsoftware.votifier.model.VotifierEvent;
@@ -8,14 +8,10 @@ import me.sd_master92.customvoting.VoteFile;
 import me.sd_master92.customvoting.constants.Data;
 import me.sd_master92.customvoting.constants.Messages;
 import me.sd_master92.customvoting.constants.Settings;
-import me.sd_master92.customvoting.subjects.voteparty.VoteParty;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.milkbowl.vault.economy.Economy;
-import org.bukkit.Color;
-import org.bukkit.FireworkEffect;
-import org.bukkit.Location;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
@@ -29,94 +25,62 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-public class VoteService
+public class CustomVote extends Vote
 {
-    public static boolean isAwaitingBroadcast = false;
-    private final Main plugin;
-    private final VotePartyService votePartyService;
+    private static boolean isAwaitingBroadcast = false;
 
-    public VoteService(Main plugin)
+    private final Main plugin;
+
+    public CustomVote(Main plugin, Vote vote)
     {
+        super();
         this.plugin = plugin;
-        votePartyService = new VotePartyService(plugin);
+        setUsername(vote.getUsername());
+        setServiceName(vote.getServiceName());
+        setAddress(vote.getAddress());
+        setTimeStamp(vote.getTimeStamp());
+
+        forwardVote();
     }
 
-    public static void shootFirework(Main plugin, Location loc)
+    private void forwardVote()
     {
-        if (plugin.getSettings().getBoolean(Settings.FIREWORK))
+        Player player = Bukkit.getPlayer(getUsername());
+        if(player == null)
         {
-            World world = loc.getWorld();
-            if (world != null)
+            queue();
+        } else
+        {
+            new VoteFile(player.getUniqueId().toString(), plugin).addVote(true);
+            broadcast();
+            shootFirework(plugin, player.getLocation());
+            giveRewards(player);
+            if (plugin.getSettings().getBoolean(Settings.VOTE_PARTY))
             {
-                Firework firework = (Firework) world.spawnEntity(loc, EntityType.FIREWORK);
-                FireworkMeta fireworkMeta = firework.getFireworkMeta();
-                Random random = new Random();
-                Color[] colors = {Color.AQUA, Color.BLUE, Color.FUCHSIA, Color.GREEN, Color.LIME, Color.MAROON,
-                        Color.NAVY,
-                        Color.OLIVE, Color.ORANGE, Color.PURPLE, Color.RED, Color.TEAL,};
-                FireworkEffect.Type[] fireworkEffects = {FireworkEffect.Type.BALL, FireworkEffect.Type.BALL_LARGE,
-                        FireworkEffect.Type.BURST, FireworkEffect.Type.STAR};
-                FireworkEffect effect =
-                        FireworkEffect.builder()
-                                .flicker(random.nextBoolean())
-                                .withColor(colors[random.nextInt(colors.length)])
-                                .withFade(colors[random.nextInt(colors.length)])
-                                .with(fireworkEffects[random.nextInt(fireworkEffects.length)])
-                                .trail(random.nextBoolean()).build();
-                fireworkMeta.addEffect(effect);
-                fireworkMeta.setPower(random.nextInt(2) + 1);
-                firework.setFireworkMeta(fireworkMeta);
+                subtractVotesUntilVoteParty();
             }
         }
     }
 
-    public void fakeVote(String name, String service)
+    private void queue()
     {
-        Vote vote = new Vote();
-        vote.setUsername(name);
-        vote.setServiceName(service);
-        vote.setAddress("0.0.0.0");
-        Date date = new Date();
-        vote.setTimeStamp(String.valueOf(date.getTime()));
-        plugin.getServer().getPluginManager().callEvent(new VotifierEvent(vote));
-    }
-
-    public void fakeVote(String name)
-    {
-        fakeVote(name, "fakevote.com");
-    }
-
-    public void queueVote(Vote vote)
-    {
-        PlayerFile playerFile = PlayerFile.getByName(vote.getUsername(), plugin);
+        PlayerFile playerFile = PlayerFile.getByName(getUsername(), plugin);
         if (playerFile != null)
         {
-            new VoteFile(playerFile.getUuid(), plugin).addQueue(vote.getServiceName());
+            new VoteFile(playerFile.getUuid(), plugin).addQueue(getServiceName());
         }
     }
 
-    public void forwardVote(Player player, Vote vote)
-    {
-        new VoteFile(player.getUniqueId().toString(), plugin).addVote(true);
-        broadcastVote(vote);
-        shootFirework(plugin, player.getLocation());
-        giveRewards(player);
-        if (plugin.getSettings().getBoolean(Settings.VOTE_PARTY))
-        {
-            subtractVotesUntilVoteParty();
-        }
-    }
-
-    public void broadcastVote(Vote vote)
+    private void broadcast()
     {
         HashMap<String, String> placeholders = new HashMap<>();
-        placeholders.put("%PLAYER%", vote.getUsername());
-        placeholders.put("%SERVICE%", vote.getServiceName());
+        placeholders.put("%PLAYER%", getUsername());
+        placeholders.put("%SERVICE%", getServiceName());
         String message = plugin.getMessages().getMessage(Messages.VOTE_BROADCAST, placeholders);
         plugin.getServer().broadcastMessage(message);
     }
 
-    public void subtractVotesUntilVoteParty()
+    private void subtractVotesUntilVoteParty()
     {
         if (plugin.getData().getLocations(Data.VOTE_PARTY).size() > 0)
         {
@@ -161,7 +125,7 @@ public class VoteService
         }
     }
 
-    public void giveRewards(Player player)
+    private void giveRewards(Player player)
     {
         giveItems(player);
         giveLuckyReward(player);
@@ -205,7 +169,7 @@ public class VoteService
         }
     }
 
-    public void giveItems(Player player)
+    private void giveItems(Player player)
     {
         for (ItemStack reward : plugin.getData().getItems(Data.VOTE_REWARDS))
         {
@@ -216,7 +180,7 @@ public class VoteService
         }
     }
 
-    public double giveMoney(Player player)
+    private double giveMoney(Player player)
     {
         Economy economy = Main.economy;
         if (economy != null && economy.hasAccount(player))
@@ -228,14 +192,14 @@ public class VoteService
         return 0;
     }
 
-    public int giveExperience(Player player)
+    private int giveExperience(Player player)
     {
         int amount = plugin.getSettings().getNumber(Settings.VOTE_REWARD_EXPERIENCE);
         player.setLevel(player.getLevel() + amount);
         return amount;
     }
 
-    public void giveLuckyReward(Player player)
+    private void giveLuckyReward(Player player)
     {
         Random random = new Random();
         int i = random.nextInt(100);
@@ -249,5 +213,45 @@ public class VoteService
             }
             player.sendMessage(plugin.getMessages().getMessage(Messages.VOTE_LUCKY));
         }
+    }
+
+    public static void shootFirework(Main plugin, Location loc)
+    {
+        if (plugin.getSettings().getBoolean(Settings.FIREWORK))
+        {
+            World world = loc.getWorld();
+            if (world != null)
+            {
+                Firework firework = (Firework) world.spawnEntity(loc, EntityType.FIREWORK);
+                FireworkMeta fireworkMeta = firework.getFireworkMeta();
+                Random random = new Random();
+                Color[] colors = {Color.AQUA, Color.BLUE, Color.FUCHSIA, Color.GREEN, Color.LIME, Color.MAROON,
+                        Color.NAVY,
+                        Color.OLIVE, Color.ORANGE, Color.PURPLE, Color.RED, Color.TEAL,};
+                FireworkEffect.Type[] fireworkEffects = {FireworkEffect.Type.BALL, FireworkEffect.Type.BALL_LARGE,
+                        FireworkEffect.Type.BURST, FireworkEffect.Type.STAR};
+                FireworkEffect effect =
+                        FireworkEffect.builder()
+                                .flicker(random.nextBoolean())
+                                .withColor(colors[random.nextInt(colors.length)])
+                                .withFade(colors[random.nextInt(colors.length)])
+                                .with(fireworkEffects[random.nextInt(fireworkEffects.length)])
+                                .trail(random.nextBoolean()).build();
+                fireworkMeta.addEffect(effect);
+                fireworkMeta.setPower(random.nextInt(2) + 1);
+                firework.setFireworkMeta(fireworkMeta);
+            }
+        }
+    }
+
+    public static void create(Main plugin, String name, String service)
+    {
+        Vote vote = new Vote();
+        vote.setUsername(name);
+        vote.setServiceName(service);
+        vote.setAddress("0.0.0.0");
+        Date date = new Date();
+        vote.setTimeStamp(String.valueOf(date.getTime()));
+        plugin.getServer().getPluginManager().callEvent(new VotifierEvent(vote));
     }
 }
