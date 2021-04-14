@@ -5,8 +5,8 @@ import me.sd_master92.customvoting.Main;
 import me.sd_master92.customvoting.VoteFile;
 import me.sd_master92.customvoting.constants.Messages;
 import me.sd_master92.customvoting.constants.Settings;
-import me.sd_master92.customvoting.services.VoteTopSignService;
-import me.sd_master92.customvoting.services.VoteTopStandService;
+import me.sd_master92.customvoting.subjects.VoteTopSign;
+import me.sd_master92.customvoting.subjects.VoteTopStand;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Calendar;
@@ -34,8 +34,8 @@ public class DailyTask
 
     private void reloadVoteTop()
     {
-        new VoteTopSignService(plugin).updateSigns();
-        new VoteTopStandService(plugin).updateStands();
+        VoteTopSign.updateAll(plugin);
+        VoteTopStand.updateAll(plugin);
     }
 
     private void checkMonthlyReset()

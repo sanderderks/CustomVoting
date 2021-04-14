@@ -2,8 +2,8 @@ package me.sd_master92.customvoting;
 
 import me.sd_master92.customfile.PlayerFile;
 import me.sd_master92.customvoting.constants.Data;
-import me.sd_master92.customvoting.services.VoteTopSignService;
-import me.sd_master92.customvoting.services.VoteTopStandService;
+import me.sd_master92.customvoting.subjects.VoteTopSign;
+import me.sd_master92.customvoting.subjects.VoteTopStand;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -12,15 +12,11 @@ import java.util.List;
 public class VoteFile extends PlayerFile
 {
     private final Main plugin;
-    private final VoteTopSignService voteTopSignService;
-    private final VoteTopStandService voteTopStandService;
 
     public VoteFile(String uuid, Main plugin)
     {
         super(uuid, plugin);
         this.plugin = plugin;
-        voteTopSignService = new VoteTopSignService(plugin);
-        voteTopStandService = new VoteTopStandService(plugin);
         register();
     }
 
@@ -28,8 +24,6 @@ public class VoteFile extends PlayerFile
     {
         super(player, plugin);
         this.plugin = plugin;
-        voteTopSignService = new VoteTopSignService(plugin);
-        voteTopStandService = new VoteTopStandService(plugin);
         register();
     }
 
@@ -82,8 +76,8 @@ public class VoteFile extends PlayerFile
         setNumber("votes", n);
         if(update)
         {
-            voteTopSignService.updateSigns();
-            voteTopStandService.updateStands();
+            VoteTopSign.updateAll(plugin);
+            VoteTopStand.updateAll(plugin);
         }
     }
 
@@ -93,8 +87,8 @@ public class VoteFile extends PlayerFile
         addNumber("votes", 1);
         if(update)
         {
-            voteTopSignService.updateSigns();
-            voteTopStandService.updateStands();
+            VoteTopSign.updateAll(plugin);
+            VoteTopStand.updateAll(plugin);
         }
     }
 

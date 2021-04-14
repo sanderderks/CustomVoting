@@ -8,6 +8,7 @@ import me.sd_master92.customvoting.constants.enumerations.SoundType;
 import me.sd_master92.customvoting.services.GUIService;
 import me.sd_master92.customvoting.subjects.CustomVote;
 import me.sd_master92.customvoting.subjects.VoteParty;
+import me.sd_master92.customvoting.subjects.VoteTopSign;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -144,7 +145,11 @@ public class PlayerListener implements Listener
             }
         } else if (block.getState() instanceof Sign)
         {
-            checkAndDeleteVoteSign(player, block.getLocation());
+            VoteTopSign voteTop = VoteTopSign.get(block.getLocation());
+            if(voteTop != null)
+            {
+                voteTop.delete(player);
+            }
         } else
         {
             List<Location> locations = new ArrayList<>();
@@ -160,7 +165,11 @@ public class PlayerListener implements Listener
             {
                 for (Location loc : locations)
                 {
-                    checkAndDeleteVoteSign(player, loc);
+                    VoteTopSign voteTop = VoteTopSign.get(loc);
+                    if(voteTop != null)
+                    {
+                        voteTop.delete(player);
+                    }
                 }
             }
         }
@@ -213,21 +222,6 @@ public class PlayerListener implements Listener
                     {
                         player.sendMessage(ChatColor.RED + "You do not have permission to open this chest.");
                     }
-                }
-            }
-        }
-    }
-
-    private void checkAndDeleteVoteSign(Player player, Location loc)
-    {
-        Map<String, Location> locations = plugin.getData().getLocations(Data.VOTE_TOP_SIGNS);
-        for (String key : locations.keySet())
-        {
-            if (loc.equals(locations.get(key)))
-            {
-                if (plugin.getData().deleteLocation(Data.VOTE_TOP_SIGNS + "." + key))
-                {
-                    player.sendMessage(ChatColor.RED + "Unregistered Vote Sign #" + key);
                 }
             }
         }

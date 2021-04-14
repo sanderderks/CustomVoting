@@ -1,8 +1,7 @@
 package me.sd_master92.customvoting.listeners;
 
 import me.sd_master92.customvoting.Main;
-import me.sd_master92.customvoting.constants.Messages;
-import me.sd_master92.customvoting.services.VoteTopSignService;
+import me.sd_master92.customvoting.subjects.VoteTopSign;
 import org.bukkit.Location;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
@@ -13,12 +12,10 @@ import org.bukkit.event.block.SignChangeEvent;
 public class VoteTopListener implements Listener
 {
     private final Main plugin;
-    private final VoteTopSignService voteTopService;
 
     public VoteTopListener(Main plugin)
     {
         this.plugin = plugin;
-        voteTopService = new VoteTopSignService(plugin);
     }
 
     @EventHandler
@@ -41,14 +38,14 @@ public class VoteTopListener implements Listener
                         {
                             line1 = line1.trim().replace("top", "");
                             int top = Integer.parseInt(line1);
-                            voteTopService.updateSign(player, loc, top);
+                            new VoteTopSign(plugin, top, loc, player);
                         } catch (Exception ignored)
                         {
-                            player.sendMessage(plugin.getMessages().getMessage(Messages.EXCEPTION));
+
                         }
                     } else
                     {
-                        voteTopService.updateSign(player, loc);
+                        new VoteTopSign(plugin, 0, loc, player);
                     }
                 }
             }
