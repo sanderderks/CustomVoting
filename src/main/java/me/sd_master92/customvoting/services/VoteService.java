@@ -8,6 +8,7 @@ import me.sd_master92.customvoting.VoteFile;
 import me.sd_master92.customvoting.constants.Data;
 import me.sd_master92.customvoting.constants.Messages;
 import me.sd_master92.customvoting.constants.Settings;
+import me.sd_master92.customvoting.subjects.voteparty.VoteParty;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.milkbowl.vault.economy.Economy;
@@ -129,7 +130,7 @@ public class VoteService
                     @Override
                     public void run()
                     {
-                        votePartyService.countdown();
+                        new VoteParty(plugin).start();
                     }
                 }.runTaskLater(plugin, 40);
             } else
