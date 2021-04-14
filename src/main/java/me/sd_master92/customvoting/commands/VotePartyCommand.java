@@ -4,6 +4,7 @@ import me.sd_master92.customvoting.Main;
 import me.sd_master92.customvoting.constants.Data;
 import me.sd_master92.customvoting.constants.Messages;
 import me.sd_master92.customvoting.services.VotePartyService;
+import me.sd_master92.customvoting.subjects.voteparty.VoteParty;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -13,12 +14,10 @@ import org.bukkit.entity.Player;
 public class VotePartyCommand implements CommandExecutor
 {
     private final Main plugin;
-    private final VotePartyService votePartyService;
 
     public VotePartyCommand(Main plugin)
     {
         this.plugin = plugin;
-        votePartyService = new VotePartyService(plugin);
     }
 
     @Override
@@ -43,7 +42,7 @@ public class VotePartyCommand implements CommandExecutor
                         case "start":
                             if(!plugin.getData().getLocations(Data.VOTE_PARTY).isEmpty())
                             {
-                                votePartyService.countdown();
+                                new VoteParty(plugin).start();
                             } else
                             {
                                 sender.sendMessage(ChatColor.RED + "There are no registered Vote Party Chests.");
