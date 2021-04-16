@@ -20,13 +20,13 @@ public class VoteCommand implements CommandExecutor
     {
         if(command.getPermission() != null && sender.hasPermission(command.getPermission()))
         {
-            for (String message : plugin.getMessages().getMessages(Messages.VOTE_COMMAND))
+            for (String message : Messages.VOTE_COMMAND.getMessages(plugin))
             {
                 sender.sendMessage(message);
             }
         } else
         {
-            sender.sendMessage(plugin.getMessages().getMessage(Messages.NO_PERMISSION));
+            sender.sendMessage(Messages.NO_PERMISSION.getMessage(plugin));
         }
         return true;
     }

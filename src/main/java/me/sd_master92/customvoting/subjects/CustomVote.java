@@ -76,7 +76,7 @@ public class CustomVote extends Vote
         HashMap<String, String> placeholders = new HashMap<>();
         placeholders.put("%PLAYER%", getUsername());
         placeholders.put("%SERVICE%", getServiceName());
-        String message = plugin.getMessages().getMessage(Messages.VOTE_BROADCAST, placeholders);
+        String message = Messages.VOTE_BROADCAST.getMessage(plugin, placeholders);
         plugin.getServer().broadcastMessage(message);
     }
 
@@ -114,8 +114,7 @@ public class CustomVote extends Vote
                                 Map<String, String> placeholders = new HashMap<>();
                                 placeholders.put("%VOTES%", "" + updatedVotesUntil);
                                 placeholders.put("%s%", updatedVotesUntil == 1 ? "" : "s");
-                                plugin.getServer().broadcastMessage(plugin.getMessages().getMessage(Messages.VOTE_PARTY_UNTIL,
-                                        placeholders));
+                                plugin.getServer().broadcastMessage(Messages.VOTE_PARTY_UNTIL.getMessage(plugin, placeholders));
                             }
                             isAwaitingBroadcast = false;
                         }
@@ -135,7 +134,7 @@ public class CustomVote extends Vote
         {
             Map<String, String> placeholders = new HashMap<>();
             placeholders.put("%MONEY%", new DecimalFormat("#.##").format(money));
-            rewardMessage += plugin.getMessages().getMessage(Messages.VOTE_REWARD_MONEY, placeholders);
+            rewardMessage += Messages.VOTE_REWARD_MONEY.getMessage(plugin, placeholders);
         }
         int xp = giveExperience(player);
         if (xp > 0)
@@ -144,8 +143,8 @@ public class CustomVote extends Vote
             placeholders.put("%XP%", "" + xp);
             placeholders.put("%s%", xp == 1 ? "" : "s");
             rewardMessage += rewardMessage.isEmpty() ? "" :
-                    plugin.getMessages().getMessage(Messages.VOTE_REWARD_DIVIDER);
-            rewardMessage += plugin.getMessages().getMessage(Messages.VOTE_REWARD_XP, placeholders);
+                    Messages.VOTE_REWARD_DIVIDER.getMessage(plugin);
+            rewardMessage += Messages.VOTE_REWARD_XP.getMessage(plugin, placeholders);
         }
         String message = rewardMessage;
         if (!message.isEmpty())
@@ -158,7 +157,7 @@ public class CustomVote extends Vote
                 public void run()
                 {
                     player.spigot().sendMessage(ChatMessageType.ACTION_BAR,
-                            new TextComponent(plugin.getMessages().getMessage(Messages.VOTE_REWARD_PREFIX) + message));
+                            new TextComponent(Messages.VOTE_REWARD_PREFIX.getMessage(plugin) + message));
                     if (i == 0)
                     {
                         cancel();
@@ -211,7 +210,7 @@ public class CustomVote extends Vote
             {
                 player.getWorld().dropItemNaturally(player.getLocation(), item);
             }
-            player.sendMessage(plugin.getMessages().getMessage(Messages.VOTE_LUCKY));
+            player.sendMessage(Messages.VOTE_LUCKY.getMessage(plugin));
         }
     }
 

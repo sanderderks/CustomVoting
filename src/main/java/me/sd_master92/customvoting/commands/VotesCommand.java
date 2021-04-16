@@ -33,7 +33,7 @@ public class VotesCommand implements CommandExecutor
                     HashMap<String, String> placeholders = new HashMap<>();
                     placeholders.put("%VOTES%", "" + new VoteFile(player, plugin).getVotes());
                     placeholders.put("%s%", new VoteFile(player, plugin).getVotes() == 1 ? "" : "s");
-                    player.sendMessage(plugin.getMessages().getMessage(Messages.VOTES_COMMAND_SELF, placeholders));
+                    player.sendMessage(Messages.VOTES_COMMAND_SELF.getMessage(plugin, placeholders));
                 }
             } else
             {
@@ -46,15 +46,15 @@ public class VotesCommand implements CommandExecutor
                     placeholders.put("%PLAYER%", "" + voteFile.getName());
                     placeholders.put("%VOTES%", "" + voteFile.getVotes());
                     placeholders.put("%s%", voteFile.getVotes() == 1 ? "" : "s");
-                    sender.sendMessage(plugin.getMessages().getMessage(Messages.VOTES_COMMAND_OTHERS, placeholders));
+                    sender.sendMessage(Messages.VOTES_COMMAND_OTHERS.getMessage(plugin, placeholders));
                 } else
                 {
-                    sender.sendMessage(plugin.getMessages().getMessage(Messages.VOTES_COMMAND_NOT_FOUND));
+                    sender.sendMessage(Messages.VOTES_COMMAND_NOT_FOUND.getMessage(plugin));
                 }
             }
         } else
         {
-            sender.sendMessage(plugin.getMessages().getMessage(Messages.NO_PERMISSION));
+            sender.sendMessage(Messages.NO_PERMISSION.getMessage(plugin));
         }
         return true;
     }

@@ -31,7 +31,7 @@ public class VoteTopCommand implements CommandExecutor
             if (topVoters.size() > 0)
             {
                 List<String> messages = new ArrayList<>();
-                for (String message : plugin.getMessages().getMessages(Messages.VOTE_TOP_COMMAND_FORMAT))
+                for (String message : Messages.VOTE_TOP_COMMAND_FORMAT.getMessages(plugin))
                 {
                     if (!message.contains("%PLAYERS%"))
                     {
@@ -45,7 +45,7 @@ public class VoteTopCommand implements CommandExecutor
                             placeholders.put("%PLAYER%", topVoter.getName());
                             placeholders.put("%VOTES%", "" + topVoter.getVotes());
                             placeholders.put("%s%", topVoter.getVotes() == 1 ? "s" : "");
-                            message = plugin.getMessages().getMessage(Messages.VOTE_TOP_COMMAND_PLAYERS, placeholders);
+                            message = Messages.VOTE_TOP_COMMAND_PLAYERS.getMessage(plugin, placeholders);
                             messages.add(message);
                         }
                     }
@@ -56,11 +56,11 @@ public class VoteTopCommand implements CommandExecutor
                 }
             } else
             {
-                sender.sendMessage(plugin.getMessages().getMessage(Messages.VOTE_TOP_COMMAND_NOT_FOUND));
+                sender.sendMessage(Messages.VOTE_TOP_COMMAND_NOT_FOUND.getMessage(plugin));
             }
         } else
         {
-            sender.sendMessage(plugin.getMessages().getMessage(Messages.NO_PERMISSION));
+            sender.sendMessage(Messages.NO_PERMISSION.getMessage(plugin));
         }
         return true;
     }

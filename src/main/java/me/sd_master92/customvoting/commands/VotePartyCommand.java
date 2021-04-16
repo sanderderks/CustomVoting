@@ -53,11 +53,11 @@ public class VotePartyCommand implements CommandExecutor
                 }
             } else
             {
-                sender.sendMessage(plugin.getMessages().getMessage(Messages.MUST_BE_PLAYER));
+                sender.sendMessage(Messages.MUST_BE_PLAYER.getMessage(plugin));
             }
         } else
         {
-            sender.sendMessage(plugin.getMessages().getMessage(Messages.NO_PERMISSION));
+            sender.sendMessage(Messages.NO_PERMISSION.getMessage(plugin));
         }
         return false;
     }

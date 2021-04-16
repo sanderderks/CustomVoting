@@ -221,12 +221,9 @@ public class VoteTopStand
             placeholders.put("%VOTES%", "" + 0);
         }
 
-        topStand.setCustomName(plugin.getMessages().getMessage(Messages.VOTE_TOP_STANDS_TOP,
-                placeholders));
-        nameStand.setCustomName(plugin.getMessages().getMessage(Messages.VOTE_TOP_STANDS_CENTER,
-                placeholders));
-        votesStand.setCustomName(plugin.getMessages().getMessage(Messages.VOTE_TOP_STANDS_BOTTOM,
-                placeholders));
+        topStand.setCustomName(Messages.VOTE_TOP_STANDS_TOP.getMessage(plugin, placeholders));
+        nameStand.setCustomName(Messages.VOTE_TOP_STANDS_CENTER.getMessage(plugin, placeholders));
+        votesStand.setCustomName(Messages.VOTE_TOP_STANDS_BOTTOM.getMessage(plugin, placeholders));
 
         ItemStack skull = new ItemStack(Material.PLAYER_HEAD);
         SkullMeta skullMeta = (SkullMeta) skull.getItemMeta();

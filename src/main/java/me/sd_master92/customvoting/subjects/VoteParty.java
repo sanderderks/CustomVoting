@@ -57,7 +57,7 @@ public class VoteParty
                             Map<String, String> placeholders = new HashMap<>();
                             placeholders.put("%TIME%", "" + count);
                             SoundType.NOTIFY.playForAll(plugin);
-                            plugin.getServer().broadcastMessage(plugin.getMessages().getMessage(Messages.VOTE_PARTY_COUNTDOWN, placeholders));
+                            plugin.getServer().broadcastMessage(Messages.VOTE_PARTY_COUNTDOWN.getMessage(plugin, placeholders));
                             break;
                         case 5:
                         case 4:
@@ -68,11 +68,11 @@ public class VoteParty
                             placeholders.put("%TIME%", "" + count);
                             placeholders.put("%s%", count == 1 ? "" : "s");
                             SoundType.NOTIFY.playForAll(plugin);
-                            plugin.getServer().broadcastMessage(plugin.getMessages().getMessage(Messages.VOTE_PARTY_COUNTDOWN_ENDING, placeholders));
+                            plugin.getServer().broadcastMessage(Messages.VOTE_PARTY_COUNTDOWN_ENDING.getMessage(plugin, placeholders));
                             break;
                         case 0:
                             SoundType.VOTE_PARTY_START.playForAll(plugin);
-                            plugin.getServer().broadcastMessage(plugin.getMessages().getMessage(Messages.VOTE_PARTY_START));
+                            plugin.getServer().broadcastMessage(Messages.VOTE_PARTY_START.getMessage(plugin));
                             if (votePartyType == VotePartyType.RANDOM_CHEST_AT_A_TIME.getValue())
                             {
                                 dropChestsRandomly();
@@ -146,7 +146,7 @@ public class VoteParty
                             tasks.remove(getTaskId());
                             if (tasks.isEmpty())
                             {
-                                plugin.getServer().broadcastMessage(plugin.getMessages().getMessage(Messages.VOTE_PARTY_END));
+                                plugin.getServer().broadcastMessage(Messages.VOTE_PARTY_END.getMessage(plugin));
                                 stop();
                             }
                             cancel();
@@ -197,7 +197,7 @@ public class VoteParty
                     }
                 } else
                 {
-                    plugin.getServer().broadcastMessage(plugin.getMessages().getMessage(Messages.VOTE_PARTY_END));
+                    plugin.getServer().broadcastMessage(Messages.VOTE_PARTY_END.getMessage(plugin));
                     stop();
                     cancel();
                 }

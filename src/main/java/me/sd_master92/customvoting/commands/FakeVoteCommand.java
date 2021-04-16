@@ -41,12 +41,12 @@ public class FakeVoteCommand implements CommandExecutor
                     fakeVote(args[0]);
                 } else
                 {
-                    sender.sendMessage(plugin.getMessages().getMessage(Messages.INVALID_PLAYER));
+                    sender.sendMessage(Messages.INVALID_PLAYER.getMessage(plugin));
                 }
             }
         } else
         {
-            sender.sendMessage(plugin.getMessages().getMessage(Messages.NO_PERMISSION));
+            sender.sendMessage(Messages.NO_PERMISSION.getMessage(plugin));
         }
         return true;
     }

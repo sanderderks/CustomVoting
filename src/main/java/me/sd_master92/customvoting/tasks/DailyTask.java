@@ -47,7 +47,7 @@ public class DailyTask
                 VoteFile voteFile = new VoteFile(playerFile.getUuid(), plugin);
                 voteFile.setVotes(0, true);
             }
-            plugin.getServer().broadcastMessage(plugin.getMessages().getMessage(Messages.MONTHLY_RESET));
+            plugin.getServer().broadcastMessage(Messages.MONTHLY_RESET.getMessage(plugin));
         }
     }
 }

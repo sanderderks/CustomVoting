@@ -35,7 +35,7 @@ public class SettingsCommand implements CommandExecutor
             }
         } else
         {
-            sender.sendMessage(plugin.getMessages().getMessage(Messages.NO_PERMISSION));
+            sender.sendMessage(Messages.NO_PERMISSION.getMessage(plugin));
         }
         return true;
     }

@@ -3,7 +3,6 @@
 no_permission: '&cYou do not have permission to perform this command.'
 must_be_player: '&cYou must be a player to perform this command'
 invalid_player: '&cThat player does not exist.'
-exception: '&cSomething went wrong!'
 
 monthly_reset: '&d&lAll votes have been reset, because a new month has started!'
 

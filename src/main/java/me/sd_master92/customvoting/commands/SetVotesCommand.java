@@ -76,7 +76,7 @@ public class SetVotesCommand implements CommandExecutor
                             sender.sendMessage(ChatColor.AQUA + voteFile.getName() + "'s " + ChatColor.GREEN + "votes have been set to " + ChatColor.AQUA + n + ChatColor.GREEN + ".");
                         } else
                         {
-                            sender.sendMessage(plugin.getMessages().getMessage(Messages.INVALID_PLAYER));
+                            sender.sendMessage(Messages.INVALID_PLAYER.getMessage(plugin));
                         }
                     } else
                     {
@@ -88,7 +88,7 @@ public class SetVotesCommand implements CommandExecutor
                 }
             }
         } else {
-            sender.sendMessage(plugin.getMessages().getMessage(Messages.NO_PERMISSION));
+            sender.sendMessage(Messages.NO_PERMISSION.getMessage(plugin));
         }
         return true;
     }

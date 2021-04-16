@@ -119,7 +119,7 @@ public class VoteTopSign
         if (loc.getBlock().getState() instanceof Sign)
         {
             Sign sign = (Sign) loc.getBlock().getState();
-            List<String> messages = plugin.getMessages().getMessages(Messages.VOTE_TOP_SIGNS_TITLE_SIGN);
+            List<String> messages = Messages.VOTE_TOP_SIGNS_TITLE_SIGN.getMessages(plugin);
             for (int i = 0; i < messages.size(); i++)
             {
                 sign.setLine(i, messages.get(i));
@@ -147,7 +147,7 @@ public class VoteTopSign
                             if (i == 1)
                             {
                                 oldSign.setLine(i,
-                                        plugin.getMessages().getMessage(Messages.VOTE_TOP_SIGNS_PLAYER_SIGNS_OUTDATED));
+                                        Messages.VOTE_TOP_SIGNS_PLAYER_SIGNS_OUTDATED.getMessage(plugin));
                             } else
                             {
                                 oldSign.setLine(i, "");
@@ -164,8 +164,7 @@ public class VoteTopSign
                 placeholders.put("%PLAYER%", topVoter.getName());
                 placeholders.put("%VOTES%", "" + topVoter.getVotes());
                 placeholders.put("%s%", topVoter.getVotes() == 1 ? "" : "s");
-                List<String> messages = plugin.getMessages().getMessages(Messages.VOTE_TOP_SIGNS_PLAYER_SIGNS_FORMAT,
-                        placeholders);
+                List<String> messages = Messages.VOTE_TOP_SIGNS_PLAYER_SIGNS_FORMAT.getMessages(plugin, placeholders);
                 for (int i = 0; i < messages.size(); i++)
                 {
                     sign.setLine(i, messages.get(i));
@@ -178,7 +177,7 @@ public class VoteTopSign
                     if (i == 1)
                     {
                         sign.setLine(i,
-                                plugin.getMessages().getMessage(Messages.VOTE_TOP_SIGNS_PLAYER_SIGNS_NOT_FOUND));
+                                Messages.VOTE_TOP_SIGNS_PLAYER_SIGNS_NOT_FOUND.getMessage(plugin));
                     } else
                     {
                         sign.setLine(i, "");

@@ -49,11 +49,11 @@ public class DeleteTopCommand implements CommandExecutor
                 }
             } else
             {
-                player.sendMessage(plugin.getMessages().getMessage(Messages.NO_PERMISSION));
+                player.sendMessage(Messages.NO_PERMISSION.getMessage(plugin));
             }
         } else
         {
-            sender.sendMessage(plugin.getMessages().getMessage(Messages.NO_PERMISSION));
+            sender.sendMessage(Messages.MUST_BE_PLAYER.getMessage(plugin));
         }
         return true;
     }
