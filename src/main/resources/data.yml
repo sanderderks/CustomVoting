@@ -2,55 +2,55 @@ current_votes: 0
 items:
   rewards:
     - ==: org.bukkit.inventory.ItemStack
-      v: 2586
+      v: 2724
       type: DIAMOND
       amount: 3
     - ==: org.bukkit.inventory.ItemStack
-      v: 2586
+      v: 2724
       type: EMERALD
       amount: 3
     - ==: org.bukkit.inventory.ItemStack
-      v: 2586
+      v: 2724
       type: COOKIE
       amount: 2
     - ==: org.bukkit.inventory.ItemStack
-      v: 2586
+      v: 2724
       type: COOKED_BEEF
       amount: 16
     - ==: org.bukkit.inventory.ItemStack
-      v: 2586
+      v: 2724
       type: OAK_LOG
-      amount: 8
+      amount: 16
     - ==: org.bukkit.inventory.ItemStack
-      v: 2586
+      v: 2724
       type: COBBLESTONE
       amount: 32
     - ==: org.bukkit.inventory.ItemStack
-      v: 2586
+      v: 2724
       type: SAND
-      amount: 5
+      amount: 16
     - ==: org.bukkit.inventory.ItemStack
-      v: 2586
+      v: 2724
       type: EXPERIENCE_BOTTLE
       amount: 5
   lucky_rewards:
     - ==: org.bukkit.inventory.ItemStack
-      v: 2586
+      v: 2724
       type: ENCHANTED_GOLDEN_APPLE
     - ==: org.bukkit.inventory.ItemStack
-      v: 2586
+      v: 2724
       type: NETHERITE_INGOT
     - ==: org.bukkit.inventory.ItemStack
-      v: 2586
+      v: 2724
       type: NETHER_STAR
     - ==: org.bukkit.inventory.ItemStack
-      v: 2586
+      v: 2724
       type: VILLAGER_SPAWN_EGG
     - ==: org.bukkit.inventory.ItemStack
-      v: 2586
+      v: 2724
       type: TRIDENT
     - ==: org.bukkit.inventory.ItemStack
-      v: 2586
+      v: 2724
       type: ENCHANTED_BOOK
       meta:
         ==: ItemMeta

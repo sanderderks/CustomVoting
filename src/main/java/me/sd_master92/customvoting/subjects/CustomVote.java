@@ -205,12 +205,15 @@ public class CustomVote extends Vote
         if (i < plugin.getSettings().getNumber(Settings.LUCKY_VOTE_CHANCE))
         {
             ItemStack[] luckyRewards = plugin.getData().getItems(Data.LUCKY_REWARDS);
-            i = random.nextInt(luckyRewards.length);
-            for (ItemStack item : player.getInventory().addItem(luckyRewards[i]).values())
+            if(luckyRewards.length > 0)
             {
-                player.getWorld().dropItemNaturally(player.getLocation(), item);
+                i = random.nextInt(luckyRewards.length);
+                for (ItemStack item : player.getInventory().addItem(luckyRewards[i]).values())
+                {
+                    player.getWorld().dropItemNaturally(player.getLocation(), item);
+                }
+                player.sendMessage(Messages.VOTE_LUCKY.getMessage(plugin));
             }
-            player.sendMessage(Messages.VOTE_LUCKY.getMessage(plugin));
         }
     }
 
