@@ -102,8 +102,8 @@ public class PlayerListener implements Listener
                         player.sendMessage(ChatColor.RED + "Enter a number between 0 and 1.000.000");
                     } else
                     {
-                        plugin.getSettings().set(Settings.VOTE_REWARD_MONEY, input);
-                        plugin.getSettings().saveConfig();
+                        plugin.getConfig().set(Settings.VOTE_REWARD_MONEY, input);
+                        plugin.getConfig().saveConfig();
                         chatInput.remove(player.getUniqueId());
                         SoundType.SUCCESS.play(plugin, player);
                         player.sendMessage(ChatColor.GREEN + "Successfully updated the money reward!");

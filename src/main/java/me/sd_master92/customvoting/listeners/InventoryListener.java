@@ -73,68 +73,68 @@ public class InventoryListener implements Listener
                             case BARRIER:
                                 SoundType.CLICK.play(plugin, player);
                                 cancelCloseEvent.add(player.getUniqueId());
-                                player.openInventory(guiService.getSettings());
+                                player.openInventory(guiService.getConfig());
                                 break;
                             case CLOCK:
                                 SoundType.CHANGE.play(plugin, player);
-                                plugin.getSettings().set(Settings.MONTHLY_RESET,
-                                        !plugin.getSettings().getBoolean(Settings.MONTHLY_RESET));
-                                plugin.getSettings().saveConfig();
+                                plugin.getConfig().set(Settings.MONTHLY_RESET,
+                                        !plugin.getConfig().getBoolean(Settings.MONTHLY_RESET));
+                                plugin.getConfig().saveConfig();
                                 event.setCurrentItem(guiService.getDoMonthlyResetSetting());
                                 break;
                             case MUSIC_DISC_CAT:
                                 SoundType.CHANGE.play(plugin, player);
-                                plugin.getSettings().set(Settings.USE_SOUND_EFFECTS,
-                                        !plugin.getSettings().getBoolean(Settings.USE_SOUND_EFFECTS));
-                                plugin.getSettings().saveConfig();
+                                plugin.getConfig().set(Settings.USE_SOUND_EFFECTS,
+                                        !plugin.getConfig().getBoolean(Settings.USE_SOUND_EFFECTS));
+                                plugin.getConfig().saveConfig();
                                 event.setCurrentItem(guiService.getUseSoundEffectsSetting());
                                 break;
                             case FIREWORK_ROCKET:
                                 SoundType.CHANGE.play(plugin, player);
-                                plugin.getSettings().set(Settings.FIREWORK,
-                                        !plugin.getSettings().getBoolean(Settings.FIREWORK));
-                                plugin.getSettings().saveConfig();
+                                plugin.getConfig().set(Settings.FIREWORK,
+                                        !plugin.getConfig().getBoolean(Settings.FIREWORK));
+                                plugin.getConfig().saveConfig();
                                 event.setCurrentItem(guiService.getUseFireworkSetting());
                                 break;
                             case EXPERIENCE_BOTTLE:
                                 SoundType.CHANGE.play(plugin, player);
-                                plugin.getSettings().set(Settings.VOTE_PARTY,
-                                        !plugin.getSettings().getBoolean(Settings.VOTE_PARTY));
-                                plugin.getSettings().saveConfig();
+                                plugin.getConfig().set(Settings.VOTE_PARTY,
+                                        !plugin.getConfig().getBoolean(Settings.VOTE_PARTY));
+                                plugin.getConfig().saveConfig();
                                 event.setCurrentItem(guiService.getDoVotePartySetting());
                                 break;
                             case SPLASH_POTION:
                                 SoundType.CHANGE.play(plugin, player);
-                                plugin.getSettings().setNumber(Settings.VOTE_PARTY_TYPE,
+                                plugin.getConfig().setNumber(Settings.VOTE_PARTY_TYPE,
                                         VotePartyType.next(plugin).getValue());
                                 event.setCurrentItem(guiService.getVotePartyTypeSetting());
                                 break;
                             case ENCHANTED_BOOK:
                                 SoundType.CHANGE.play(plugin, player);
-                                if (plugin.getSettings().getNumber(Settings.VOTES_REQUIRED_FOR_VOTE_PARTY) < 100)
+                                if (plugin.getConfig().getNumber(Settings.VOTES_REQUIRED_FOR_VOTE_PARTY) < 100)
                                 {
-                                    plugin.getSettings().addNumber(Settings.VOTES_REQUIRED_FOR_VOTE_PARTY, 10);
+                                    plugin.getConfig().addNumber(Settings.VOTES_REQUIRED_FOR_VOTE_PARTY, 10);
                                 } else
                                 {
-                                    plugin.getSettings().setNumber(Settings.VOTES_REQUIRED_FOR_VOTE_PARTY, 10);
+                                    plugin.getConfig().setNumber(Settings.VOTES_REQUIRED_FOR_VOTE_PARTY, 10);
                                 }
                                 event.setCurrentItem(guiService.getVotesUntilVotePartySetting());
                                 break;
                             case ENDER_CHEST:
                                 SoundType.CHANGE.play(plugin, player);
-                                if (plugin.getSettings().getNumber(Settings.VOTE_PARTY_COUNTDOWN) < 60)
+                                if (plugin.getConfig().getNumber(Settings.VOTE_PARTY_COUNTDOWN) < 60)
                                 {
-                                    plugin.getSettings().addNumber(Settings.VOTE_PARTY_COUNTDOWN, 10);
+                                    plugin.getConfig().addNumber(Settings.VOTE_PARTY_COUNTDOWN, 10);
                                 } else
                                 {
-                                    plugin.getSettings().setNumber(Settings.VOTE_PARTY_COUNTDOWN, 0);
+                                    plugin.getConfig().setNumber(Settings.VOTE_PARTY_COUNTDOWN, 0);
                                 }
                                 event.setCurrentItem(guiService.getVotePartyCountdownSetting());
                                 break;
                             case TOTEM_OF_UNDYING:
                                 SoundType.CHANGE.play(plugin, player);
-                                plugin.getSettings().set(Settings.LUCKY_VOTE,
-                                        !plugin.getSettings().getBoolean(Settings.LUCKY_VOTE));
+                                plugin.getConfig().set(Settings.LUCKY_VOTE,
+                                        !plugin.getConfig().getBoolean(Settings.LUCKY_VOTE));
                                 event.setCurrentItem(guiService.getDoLuckyVoteSetting());
                                 break;
                         }
@@ -149,7 +149,7 @@ public class InventoryListener implements Listener
                             case BARRIER:
                                 SoundType.CLICK.play(plugin, player);
                                 cancelCloseEvent.add(player.getUniqueId());
-                                player.openInventory(guiService.getSettings());
+                                player.openInventory(guiService.getConfig());
                                 break;
                             case CHEST:
                                 SoundType.CLICK.play(plugin, player);
@@ -191,12 +191,12 @@ public class InventoryListener implements Listener
                                 break;
                             case EXPERIENCE_BOTTLE:
                                 SoundType.CHANGE.play(plugin, player);
-                                if (plugin.getSettings().getNumber(Settings.VOTE_REWARD_EXPERIENCE) < 10)
+                                if (plugin.getConfig().getNumber(Settings.VOTE_REWARD_EXPERIENCE) < 10)
                                 {
-                                    plugin.getSettings().addNumber(Settings.VOTE_REWARD_EXPERIENCE, 1);
+                                    plugin.getConfig().addNumber(Settings.VOTE_REWARD_EXPERIENCE, 1);
                                 } else
                                 {
-                                    plugin.getSettings().setNumber(Settings.VOTE_REWARD_EXPERIENCE, 0);
+                                    plugin.getConfig().setNumber(Settings.VOTE_REWARD_EXPERIENCE, 0);
                                 }
                                 event.setCurrentItem(guiService.getExperienceRewardSetting());
                                 break;
@@ -207,16 +207,16 @@ public class InventoryListener implements Listener
                                 break;
                             case ENDER_EYE:
                                 SoundType.CHANGE.play(plugin, player);
-                                int chance = plugin.getSettings().getNumber(Settings.LUCKY_VOTE_CHANCE);
+                                int chance = plugin.getConfig().getNumber(Settings.LUCKY_VOTE_CHANCE);
                                 if (chance < 10)
                                 {
-                                    plugin.getSettings().addNumber(Settings.LUCKY_VOTE_CHANCE, 1);
+                                    plugin.getConfig().addNumber(Settings.LUCKY_VOTE_CHANCE, 1);
                                 } else if (chance < 100)
                                 {
-                                    plugin.getSettings().addNumber(Settings.LUCKY_VOTE_CHANCE, 5);
+                                    plugin.getConfig().addNumber(Settings.LUCKY_VOTE_CHANCE, 5);
                                 } else
                                 {
-                                    plugin.getSettings().setNumber(Settings.LUCKY_VOTE_CHANCE, 1);
+                                    plugin.getConfig().setNumber(Settings.LUCKY_VOTE_CHANCE, 1);
                                 }
                                 event.setCurrentItem(guiService.getLuckyVoteChanceSetting());
                                 break;

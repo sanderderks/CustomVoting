@@ -34,8 +34,8 @@ public class VoteParty
     public VoteParty(Main plugin)
     {
         this.plugin = plugin;
-        votePartyType = plugin.getSettings().getNumber(Settings.VOTE_PARTY_TYPE);
-        count = plugin.getSettings().getNumber(Settings.VOTE_PARTY_COUNTDOWN);
+        votePartyType = plugin.getConfig().getNumber(Settings.VOTE_PARTY_TYPE);
+        count = plugin.getConfig().getNumber(Settings.VOTE_PARTY_COUNTDOWN);
     }
 
     public void start()
@@ -162,9 +162,16 @@ public class VoteParty
         Map<String, Location> locations = plugin.getData().getLocations(Data.VOTE_PARTY);
         Map<String, List<ItemStack>> chests = new HashMap<>();
         List<String> keys = new ArrayList<>(locations.keySet());
-        keys.forEach(key -> chests.put(key,
-                new ArrayList<>(Arrays.asList(plugin.getData().getItems(
-                        Data.VOTE_PARTY + "." + key)))));
+        keys.forEach(key ->
+        {
+            ItemStack[] items = plugin.getData().getItems(
+                    Data.VOTE_PARTY + "." + key);
+            if(items.length > 0)
+            {
+                chests.put(key,
+                        new ArrayList<>(Arrays.asList(items)));
+            }
+        });
 
         Random random = new Random();
         new BukkitRunnable()
@@ -172,7 +179,7 @@ public class VoteParty
             @Override
             public void run()
             {
-                if (!keys.isEmpty())
+                if (!keys.isEmpty() && !chests.isEmpty())
                 {
                     String key = keys.get(random.nextInt(keys.size()));
                     List<ItemStack> chest = chests.get(key);

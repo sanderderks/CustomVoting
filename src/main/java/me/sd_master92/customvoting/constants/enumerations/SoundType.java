@@ -33,7 +33,7 @@ public enum SoundType
 
     public void play(Main plugin, Location loc)
     {
-        if (plugin.getSettings().getBoolean(Settings.USE_SOUND_EFFECTS))
+        if (plugin.getConfig().getBoolean(Settings.USE_SOUND_EFFECTS))
         {
             World world = loc.getWorld();
             if (world != null)
@@ -46,7 +46,7 @@ public enum SoundType
     public void play(Main plugin, Player player)
     {
         Location loc = player.getLocation();
-        if (plugin.getSettings().getBoolean(Settings.USE_SOUND_EFFECTS))
+        if (plugin.getConfig().getBoolean(Settings.USE_SOUND_EFFECTS))
         {
             player.playSound(loc, sound, 10, 1);
         }

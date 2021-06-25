@@ -23,7 +23,7 @@ public enum VotePartyType
 
     public static VotePartyType next(Main plugin)
     {
-        int currentValue = VotePartyType.valueOf(plugin.getSettings().getNumber(Settings.VOTE_PARTY_TYPE)).getValue();
+        int currentValue = VotePartyType.valueOf(plugin.getConfig().getNumber(Settings.VOTE_PARTY_TYPE)).getValue();
         if (currentValue < values().length - 1)
         {
             return valueOf(currentValue + 1);

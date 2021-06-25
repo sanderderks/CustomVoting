@@ -4,51 +4,50 @@ import me.sd_master92.customvoting.Main;
 import me.sd_master92.customvoting.VoteFile;
 import me.sd_master92.customvoting.constants.Messages;
 import me.sd_master92.customvoting.subjects.CustomVote;
+import me.sd_master92.plugin.command.SimpleCommand;
 import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class FakeVoteCommand implements CommandExecutor
+public class FakeVoteCommand extends SimpleCommand
 {
     private final Main plugin;
 
     public FakeVoteCommand(Main plugin)
     {
+        super(plugin, "fakevote");
         this.plugin = plugin;
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
+    public void onCommand(CommandSender sender, String[] args)
     {
-        if (command.getPermission() != null && sender.hasPermission(command.getPermission()))
+        if (args.length == 0)
         {
-            if(args.length == 0)
+            if (sender instanceof Player)
             {
-                if(sender instanceof Player)
-                {
-                    fakeVote(sender.getName());
-                } else
-                {
-                    sender.sendMessage(ChatColor.RED + "- /fakevote <name>");
-                }
+                fakeVote(sender.getName());
             } else
             {
-                String name = args[0];
-                if(VoteFile.getByName(name, plugin) != null)
-                {
-                    fakeVote(args[0]);
-                } else
-                {
-                    sender.sendMessage(Messages.INVALID_PLAYER.getMessage(plugin));
-                }
+                sender.sendMessage(ChatColor.RED + "- /fakevote <name>");
             }
         } else
         {
-            sender.sendMessage(Messages.NO_PERMISSION.getMessage(plugin));
+            String name = args[0];
+            if (VoteFile.getByName(name, plugin) != null)
+            {
+                fakeVote(args[0]);
+            } else
+            {
+                sender.sendMessage(Messages.INVALID_PLAYER.getMessage(plugin));
+            }
         }
-        return true;
+    }
+
+    @Override
+    public void onCommand(Player player, String[] args)
+    {
+
     }
 
     private void fakeVote(String name)

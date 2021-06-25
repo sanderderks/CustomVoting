@@ -1,42 +1,37 @@
 package me.sd_master92.customvoting.commands;
 
 import me.sd_master92.customvoting.Main;
-import me.sd_master92.customvoting.constants.Messages;
 import me.sd_master92.customvoting.constants.enumerations.SoundType;
 import me.sd_master92.customvoting.services.GUIService;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
+import me.sd_master92.plugin.command.SimpleCommand;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
-public class SettingsCommand implements CommandExecutor
+public class SettingsCommand extends SimpleCommand
 {
     private final Main plugin;
     private final GUIService guiService;
 
     public SettingsCommand(Main plugin)
     {
+        super(plugin, "votesettings");
+        withPlayer();
         this.plugin = plugin;
         guiService = new GUIService(plugin);
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
+    public void onCommand(CommandSender commandSender, String[] strings)
     {
-        if(command.getPermission() != null && sender.hasPermission(command.getPermission()))
-        {
-            if (sender instanceof Player)
-            {
-                Player player = (Player) sender;
-                Inventory settings = guiService.getSettings();
-                SoundType.OPEN.play(plugin, player);
-                player.openInventory(settings);
-            }
-        } else
-        {
-            sender.sendMessage(Messages.NO_PERMISSION.getMessage(plugin));
-        }
-        return true;
+
+    }
+
+    @Override
+    public void onCommand(Player player, String[] strings)
+    {
+        Inventory settings = guiService.getConfig();
+        SoundType.OPEN.play(plugin, player);
+        player.openInventory(settings);
     }
 }

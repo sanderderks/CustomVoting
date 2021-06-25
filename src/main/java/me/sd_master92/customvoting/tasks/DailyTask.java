@@ -23,7 +23,7 @@ public class DailyTask
             @Override
             public void run()
             {
-                if(plugin.getSettings().getBoolean(Settings.MONTHLY_RESET))
+                if(plugin.getConfig().getBoolean(Settings.MONTHLY_RESET))
                 {
                     reloadVoteTop();
                     checkMonthlyReset();

@@ -94,13 +94,13 @@
         </dependency>
         <dependency>
             <groupId>me.sd_master92</groupId>
-            <artifactId>CustomFile</artifactId>
-            <version>1.9</version>
+            <artifactId>CustomPlugin</artifactId>
+            <version>1.0</version>
         </dependency>
         <dependency>
             <groupId>me.sd_master92</groupId>
-            <artifactId>SimpleCommand</artifactId>
-            <version>1.0</version>
+            <artifactId>CustomFile</artifactId>
+            <version>1.9</version>
         </dependency>
         <dependency>
             <groupId>com.vexsoftware</groupId>

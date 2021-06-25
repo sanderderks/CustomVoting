@@ -86,7 +86,7 @@ public class GUIService
         return createItem(mat, null, null, enchanted);
     }
 
-    public Inventory getSettings()
+    public Inventory getConfig()
     {
         Inventory inv = Bukkit.createInventory(null, 9, MAIN_SETTINGS_INVENTORY);
         inv.setItem(1, GENERAL_SETTINGS);
@@ -172,53 +172,53 @@ public class GUIService
     public ItemStack getDoMonthlyResetSetting()
     {
         return createItem(Material.CLOCK, ChatColor.LIGHT_PURPLE + "Monthly Reset",
-                ChatColor.GRAY + "Status: " + (plugin.getSettings().getBoolean(Settings.MONTHLY_RESET) ?
+                ChatColor.GRAY + "Status: " + (plugin.getConfig().getBoolean(Settings.MONTHLY_RESET) ?
                         ChatColor.GREEN + "ON" : ChatColor.RED + "OFF"));
     }
 
     public ItemStack getUseSoundEffectsSetting()
     {
         return createItem(Material.MUSIC_DISC_CAT, ChatColor.LIGHT_PURPLE + "Sound Effects",
-                ChatColor.GRAY + "Status: " + (plugin.getSettings().getBoolean(Settings.USE_SOUND_EFFECTS) ?
+                ChatColor.GRAY + "Status: " + (plugin.getConfig().getBoolean(Settings.USE_SOUND_EFFECTS) ?
                         ChatColor.GREEN + "ON" : ChatColor.RED + "OFF"));
     }
 
     public ItemStack getUseFireworkSetting()
     {
         return createItem(Material.FIREWORK_ROCKET, ChatColor.LIGHT_PURPLE + "Firework",
-                ChatColor.GRAY + "Status: " + (plugin.getSettings().getBoolean(Settings.FIREWORK) ?
+                ChatColor.GRAY + "Status: " + (plugin.getConfig().getBoolean(Settings.FIREWORK) ?
                         ChatColor.GREEN + "ON" : ChatColor.RED + "OFF"));
     }
 
     public ItemStack getDoVotePartySetting()
     {
         return createItem(Material.EXPERIENCE_BOTTLE, ChatColor.LIGHT_PURPLE + "Vote Party",
-                ChatColor.GRAY + "Status: " + (plugin.getSettings().getBoolean(Settings.VOTE_PARTY) ?
+                ChatColor.GRAY + "Status: " + (plugin.getConfig().getBoolean(Settings.VOTE_PARTY) ?
                         ChatColor.GREEN + "ON" : ChatColor.RED + "OFF"));
     }
 
     public ItemStack getDoLuckyVoteSetting()
     {
         return createItem(Material.TOTEM_OF_UNDYING, ChatColor.LIGHT_PURPLE + "Lucky Vote",
-                ChatColor.GRAY + "Status: " + (plugin.getSettings().getBoolean(Settings.LUCKY_VOTE) ?
+                ChatColor.GRAY + "Status: " + (plugin.getConfig().getBoolean(Settings.LUCKY_VOTE) ?
                         ChatColor.GREEN + "ON" : ChatColor.RED + "OFF"));
     }
 
     public ItemStack getLuckyVoteChanceSetting()
     {
         return createItem(Material.ENDER_EYE, ChatColor.LIGHT_PURPLE + "Lucky Vote Chance",
-                ChatColor.GRAY + "Currently: " + ChatColor.AQUA + plugin.getSettings().getNumber(Settings.LUCKY_VOTE_CHANCE) + ChatColor.GRAY + "%");
+                ChatColor.GRAY + "Currently: " + ChatColor.AQUA + plugin.getConfig().getNumber(Settings.LUCKY_VOTE_CHANCE) + ChatColor.GRAY + "%");
     }
 
     public ItemStack getVotePartyTypeSetting()
     {
         return createItem(Material.SPLASH_POTION, ChatColor.LIGHT_PURPLE + "Vote Party Type",
-                ChatColor.GRAY + "Status: " + ChatColor.AQUA + VotePartyType.valueOf(plugin.getSettings().getNumber(Settings.VOTE_PARTY_TYPE)).getName());
+                ChatColor.GRAY + "Status: " + ChatColor.AQUA + VotePartyType.valueOf(plugin.getConfig().getNumber(Settings.VOTE_PARTY_TYPE)).getName());
     }
 
     public ItemStack getVotesUntilVotePartySetting()
     {
-        int votesRequired = plugin.getSettings().getNumber(Settings.VOTES_REQUIRED_FOR_VOTE_PARTY);
+        int votesRequired = plugin.getConfig().getNumber(Settings.VOTES_REQUIRED_FOR_VOTE_PARTY);
         int votesUntil = votesRequired - plugin.getData().getNumber("current_votes");
         return createItem(Material.ENCHANTED_BOOK, ChatColor.LIGHT_PURPLE + "Votes until Vote Party",
                 ChatColor.GRAY + "Required: " + ChatColor.AQUA + votesRequired + ";" + ChatColor.GRAY + "Votes left:" +
@@ -228,19 +228,19 @@ public class GUIService
     public ItemStack getVotePartyCountdownSetting()
     {
         return createItem(Material.ENDER_CHEST, ChatColor.LIGHT_PURPLE + "Vote Party Countdown",
-                ChatColor.GRAY + "Currently: " + ChatColor.AQUA + plugin.getSettings().getNumber(Settings.VOTE_PARTY_COUNTDOWN));
+                ChatColor.GRAY + "Currently: " + ChatColor.AQUA + plugin.getConfig().getNumber(Settings.VOTE_PARTY_COUNTDOWN));
     }
 
     public ItemStack getMoneyRewardSetting()
     {
         return createItem(Material.GOLD_INGOT, ChatColor.LIGHT_PURPLE + "Money Reward",
                 Main.economy != null ?
-                        ChatColor.GRAY + "Currently: " + ChatColor.GREEN + Main.economy.format(plugin.getSettings().getDouble(Settings.VOTE_REWARD_MONEY)) : ChatColor.RED + "DISABLED");
+                        ChatColor.GRAY + "Currently: " + ChatColor.GREEN + Main.economy.format(plugin.getConfig().getDouble(Settings.VOTE_REWARD_MONEY)) : ChatColor.RED + "DISABLED");
     }
 
     public ItemStack getExperienceRewardSetting()
     {
         return createItem(Material.EXPERIENCE_BOTTLE, ChatColor.LIGHT_PURPLE + "XP Reward",
-                ChatColor.GRAY + "Currently: " + ChatColor.GREEN + plugin.getSettings().getNumber(Settings.VOTE_REWARD_EXPERIENCE) + " levels");
+                ChatColor.GRAY + "Currently: " + ChatColor.GREEN + plugin.getConfig().getNumber(Settings.VOTE_REWARD_EXPERIENCE) + " levels");
     }
 }
