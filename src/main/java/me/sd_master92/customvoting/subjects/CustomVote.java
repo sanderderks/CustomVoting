@@ -168,6 +168,7 @@ public class CustomVote extends Vote
     {
         giveItems(player);
         giveLuckyReward(player);
+        executeCommands(player);
         String rewardMessage = "";
         double money = giveMoney(player);
         if (Main.economy != null && money > 0)
@@ -254,6 +255,15 @@ public class CustomVote extends Vote
                 }
                 player.sendMessage(Messages.VOTE_LUCKY.getMessage(plugin));
             }
+        }
+    }
+
+    private void executeCommands(Player player)
+    {
+        for (String command : plugin.getData().getStringList(Data.VOTE_COMMANDS))
+        {
+            plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), command.replace("%PLAYER%",
+                    player.getName()));
         }
     }
 }

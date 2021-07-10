@@ -160,7 +160,7 @@ public class InventoryListener implements Listener
                                 if (Main.economy != null)
                                 {
                                     SoundType.CHANGE.play(plugin, player);
-                                    PlayerListener.chatInput.add(player.getUniqueId());
+                                    PlayerListener.moneyInput.add(player.getUniqueId());
                                     cancelCloseEvent.add(player.getUniqueId());
                                     player.closeInventory();
                                     player.sendMessage(ChatColor.GREEN + "Please enter a number between 0 and 1.000" +
@@ -171,19 +171,18 @@ public class InventoryListener implements Listener
                                         @Override
                                         public void run()
                                         {
-                                            if (!PlayerListener.chatInput.contains(player.getUniqueId()))
+                                            if (!PlayerListener.moneyInput.contains(player.getUniqueId()))
                                             {
                                                 player.openInventory(guiService.getRewardSettings());
                                                 cancelCloseEvent.remove(player.getUniqueId());
                                                 cancel();
                                             } else if (!player.isOnline())
                                             {
-                                                PlayerListener.chatInput.remove(player.getUniqueId());
+                                                PlayerListener.moneyInput.remove(player.getUniqueId());
                                                 cancel();
                                             }
                                         }
                                     }.runTaskTimer(plugin, 0, 10);
-                                    break;
                                 } else
                                 {
                                     SoundType.FAILURE.play(plugin, player);
@@ -199,6 +198,46 @@ public class InventoryListener implements Listener
                                     plugin.getConfig().setNumber(Settings.VOTE_REWARD_EXPERIENCE, 0);
                                 }
                                 event.setCurrentItem(guiService.getExperienceRewardSetting());
+                                break;
+                            case COMMAND_BLOCK:
+                                SoundType.CHANGE.play(plugin, player);
+                                PlayerListener.commandInput.add(player.getUniqueId());
+                                cancelCloseEvent.add(player.getUniqueId());
+                                player.closeInventory();
+                                player.sendMessage(ChatColor.GREEN + "Please enter a command to add or remove from " +
+                                        "the list");
+                                player.sendMessage(ChatColor.GREEN + "(with %PLAYER% as placeholder)");
+                                player.sendMessage(ChatColor.GRAY + "Type 'cancel' to go back");
+                                player.sendMessage("");
+                                List<String> commands = plugin.getData().getStringList(Data.VOTE_COMMANDS);
+                                if (commands.isEmpty())
+                                {
+                                    player.sendMessage(ChatColor.RED + "There are currently no commands.");
+                                } else
+                                {
+                                    player.sendMessage(ChatColor.GRAY + "Commands:");
+                                    for (String command : commands)
+                                    {
+                                        player.sendMessage(ChatColor.GRAY + "/" + ChatColor.GREEN + command);
+                                    }
+                                }
+                                new BukkitRunnable()
+                                {
+                                    @Override
+                                    public void run()
+                                    {
+                                        if (!PlayerListener.commandInput.contains(player.getUniqueId()))
+                                        {
+                                            player.openInventory(guiService.getRewardSettings());
+                                            cancelCloseEvent.remove(player.getUniqueId());
+                                            cancel();
+                                        } else if (!player.isOnline())
+                                        {
+                                            PlayerListener.commandInput.remove(player.getUniqueId());
+                                            cancel();
+                                        }
+                                    }
+                                }.runTaskTimer(plugin, 0, 10);
                                 break;
                             case ENDER_CHEST:
                                 SoundType.CLICK.play(plugin, player);

@@ -52,7 +52,7 @@ public class GUIService
         ItemMeta meta = item.getItemMeta();
         if (meta != null)
         {
-            if(name != null)
+            if (name != null)
             {
                 meta.setDisplayName(name);
             }
@@ -117,8 +117,9 @@ public class GUIService
         inv.setItem(0, ITEM_REWARD_SETTINGS);
         inv.setItem(1, getMoneyRewardSetting());
         inv.setItem(2, getExperienceRewardSetting());
-        inv.setItem(3, LUCKY_REWARD_SETTINGS);
-        inv.setItem(4, getLuckyVoteChanceSetting());
+        inv.setItem(3, getCommandRewardSetting());
+        inv.setItem(4, LUCKY_REWARD_SETTINGS);
+        inv.setItem(5, getLuckyVoteChanceSetting());
         inv.setItem(8, BACK_ITEM);
         return inv;
     }
@@ -236,6 +237,12 @@ public class GUIService
         return createItem(Material.GOLD_INGOT, ChatColor.LIGHT_PURPLE + "Money Reward",
                 Main.economy != null ?
                         ChatColor.GRAY + "Currently: " + ChatColor.GREEN + Main.economy.format(plugin.getConfig().getDouble(Settings.VOTE_REWARD_MONEY)) : ChatColor.RED + "DISABLED");
+    }
+
+    public ItemStack getCommandRewardSetting()
+    {
+        return createItem(Material.COMMAND_BLOCK, ChatColor.LIGHT_PURPLE + "Command Reward",
+                ChatColor.GRAY + "Currently: " + ChatColor.AQUA + plugin.getData().getStringList(Data.VOTE_COMMANDS).size() + ChatColor.GRAY + " commands");
     }
 
     public ItemStack getExperienceRewardSetting()

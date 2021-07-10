@@ -9,4 +9,5 @@ public class Data
     public static final String VOTE_QUEUE = "queue";
     public static final String VOTE_TOP_SIGNS = "vote_top";
     public static final String VOTE_TOP_STANDS = "armor_stands";
+    public static final String VOTE_COMMANDS = "vote_commands";
 }

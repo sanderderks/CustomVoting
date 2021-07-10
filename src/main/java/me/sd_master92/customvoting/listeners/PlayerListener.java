@@ -31,9 +31,11 @@ import java.util.*;
 
 public class PlayerListener implements Listener
 {
-    public static List<UUID> chatInput = new ArrayList<>();
+    public static List<UUID> moneyInput = new ArrayList<>();
+    public static List<UUID> commandInput = new ArrayList<>();
     private final Main plugin;
     private final GUIService guiService;
+    private final String[] forbiddenCommands = {"fakevote", "reload", "restart", "stop", "op"};
 
     public PlayerListener(Main plugin)
     {
@@ -74,10 +76,16 @@ public class PlayerListener implements Listener
     public void onCommandProcess(PlayerCommandPreprocessEvent event)
     {
         Player player = event.getPlayer();
-        if(chatInput.contains(player.getUniqueId()))
+        if (moneyInput.contains(player.getUniqueId()))
         {
             event.setCancelled(true);
             player.sendMessage(ChatColor.RED + "Enter a number");
+        }
+        if (commandInput.contains(player.getUniqueId()))
+        {
+            event.setCancelled(true);
+            String command = event.getMessage();
+            checkCommand(command, player);
         }
     }
 
@@ -85,12 +93,12 @@ public class PlayerListener implements Listener
     public void onPlayerChat(AsyncPlayerChatEvent event)
     {
         Player player = event.getPlayer();
-        if(chatInput.contains(player.getUniqueId()))
+        if (moneyInput.contains(player.getUniqueId()))
         {
             event.setCancelled(true);
-            if(event.getMessage().equalsIgnoreCase("cancel"))
+            if (event.getMessage().equalsIgnoreCase("cancel"))
             {
-                chatInput.remove(player.getUniqueId());
+                moneyInput.remove(player.getUniqueId());
                 SoundType.FAILURE.play(plugin, player);
             } else
             {
@@ -104,7 +112,7 @@ public class PlayerListener implements Listener
                     {
                         plugin.getConfig().set(Settings.VOTE_REWARD_MONEY, input);
                         plugin.getConfig().saveConfig();
-                        chatInput.remove(player.getUniqueId());
+                        moneyInput.remove(player.getUniqueId());
                         SoundType.SUCCESS.play(plugin, player);
                         player.sendMessage(ChatColor.GREEN + "Successfully updated the money reward!");
                     }
@@ -112,6 +120,18 @@ public class PlayerListener implements Listener
                 {
                     player.sendMessage(ChatColor.RED + "Enter a number");
                 }
+            }
+        }
+        if (commandInput.contains(player.getUniqueId()))
+        {
+            event.setCancelled(true);
+            if (event.getMessage().equalsIgnoreCase("cancel"))
+            {
+                commandInput.remove(player.getUniqueId());
+                SoundType.FAILURE.play(plugin, player);
+            } else
+            {
+                checkCommand(event.getMessage(), player);
             }
         }
     }
@@ -146,7 +166,7 @@ public class PlayerListener implements Listener
         } else if (block.getState() instanceof Sign)
         {
             VoteTopSign voteTop = VoteTopSign.get(block.getLocation());
-            if(voteTop != null)
+            if (voteTop != null)
             {
                 voteTop.delete(player);
             }
@@ -166,7 +186,7 @@ public class PlayerListener implements Listener
                 for (Location loc : locations)
                 {
                     VoteTopSign voteTop = VoteTopSign.get(loc);
-                    if(voteTop != null)
+                    if (voteTop != null)
                     {
                         voteTop.delete(player);
                     }
@@ -225,5 +245,34 @@ public class PlayerListener implements Listener
                 }
             }
         }
+    }
+
+    private void checkCommand(String command, Player player)
+    {
+        for (String forbidden : forbiddenCommands)
+        {
+            if (command.toLowerCase().contains(forbidden))
+            {
+                player.sendMessage(ChatColor.RED + "This command is forbidden.");
+                return;
+            }
+        }
+        if (command.startsWith("/"))
+        {
+            command = command.substring(1);
+        }
+        List<String> commands = plugin.getData().getStringList(Data.VOTE_COMMANDS);
+        if (commands.contains(command))
+        {
+            commands.remove(command);
+            player.sendMessage(ChatColor.RED + "Removed /" + command + " from commands");
+        } else
+        {
+            commands.add(command);
+            player.sendMessage(ChatColor.GREEN + "Added /" + command + " to commands");
+        }
+        plugin.getData().set(Data.VOTE_COMMANDS, commands);
+        plugin.getData().saveConfig();
+        commandInput.remove(player.getUniqueId());
     }
 }
