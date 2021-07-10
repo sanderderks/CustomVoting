@@ -19,20 +19,20 @@ public class VotePartyStartCommand extends SimpleSubCommand
     }
 
     @Override
-    public void onCommand(CommandSender commandSender, String[] strings)
+    public void onCommand(CommandSender sender, String[] strings)
     {
-
+        if (!plugin.getData().getLocations(Data.VOTE_PARTY).isEmpty())
+        {
+            new VoteParty(plugin).start();
+        } else
+        {
+            sender.sendMessage(ChatColor.RED + "There are no registered Vote Party Chests.");
+        }
     }
 
     @Override
     public void onCommand(Player player, String[] strings)
     {
-        if(!plugin.getData().getLocations(Data.VOTE_PARTY).isEmpty())
-        {
-            new VoteParty(plugin).start();
-        } else
-        {
-            player.sendMessage(ChatColor.RED + "There are no registered Vote Party Chests.");
-        }
+
     }
 }

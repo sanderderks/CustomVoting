@@ -12,7 +12,6 @@ public class VotePartyCommand extends SimpleCommand
     {
         super(plugin, "voteparty", false, new VotePartyCreateCommand(), new VotePartyStartCommand(plugin));
         withUsage(ChatColor.RED + "- /voteparty create | start");
-        withPlayer();
     }
 
     @Override

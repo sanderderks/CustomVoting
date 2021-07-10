@@ -11,6 +11,7 @@ public class VotePartyCreateCommand extends SimpleSubCommand
     public VotePartyCreateCommand()
     {
         super("create");
+        withPlayer();
         withPermission("voteparty.create");
     }
 
