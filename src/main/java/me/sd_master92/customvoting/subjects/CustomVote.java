@@ -211,7 +211,7 @@ public class CustomVote extends Vote
 
     private void giveItems(Player player)
     {
-        for (ItemStack reward : plugin.getData().getItems(Data.VOTE_REWARDS))
+        for (ItemStack reward : plugin.getData().getItems(Data.ITEM_REWARDS))
         {
             for (ItemStack item : player.getInventory().addItem(reward).values())
             {

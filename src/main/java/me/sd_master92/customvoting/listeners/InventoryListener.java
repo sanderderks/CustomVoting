@@ -57,6 +57,11 @@ public class InventoryListener implements Listener
                                 cancelCloseEvent.add(player.getUniqueId());
                                 player.openInventory(new RewardSettings(plugin).getInventory());
                                 break;
+                            case SPYGLASS:
+                                SoundType.CLICK.play(plugin, player);
+                                cancelCloseEvent.add(player.getUniqueId());
+                                player.openInventory(new Support(plugin).getInventory());
+                                break;
                             case IRON_SHOVEL:
                                 SoundType.NOT_ALLOWED.play(plugin, player);
                                 break;
@@ -155,7 +160,7 @@ public class InventoryListener implements Listener
                             case CHEST:
                                 SoundType.CLICK.play(plugin, player);
                                 cancelCloseEvent.add(player.getUniqueId());
-                                player.openInventory(new VoteRewards(plugin).getInventory());
+                                player.openInventory(new ItemRewards(plugin).getInventory());
                                 break;
                             case GOLD_INGOT:
                                 if (Main.economy != null)
@@ -263,13 +268,43 @@ public class InventoryListener implements Listener
                         }
                     }
                     break;
-                case VoteRewards.NAME:
+                case Support.NAME:
+                    event.setCancelled(true);
+                    if (item != null)
+                    {
+                        switch (item.getType())
+                        {
+                            case BARRIER:
+                                SoundType.CLICK.play(plugin, player);
+                                cancelCloseEvent.add(player.getUniqueId());
+                                player.openInventory(new VoteSettings().getInventory());
+                                break;
+                            case CLOCK:
+                                if (!plugin.isUpToDate())
+                                {
+                                    SoundType.CLICK.play(plugin, player);
+                                    cancelCloseEvent.add(player.getUniqueId());
+                                    player.closeInventory();
+                                    plugin.sendDownloadUrl(player);
+                                }
+                                break;
+                            case FILLED_MAP:
+                                SoundType.CHANGE.play(plugin, player);
+                                plugin.getConfig().set(Settings.INGAME_UPDATES,
+                                        !plugin.getConfig().getBoolean(Settings.INGAME_UPDATES));
+                                plugin.getConfig().saveConfig();
+                                event.setCurrentItem(Settings.getDoIngameUpdatesSetting(plugin));
+                                break;
+                        }
+                    }
+                    break;
+                case ItemRewards.NAME:
                     if (event.getSlot() >= 25)
                     {
                         event.setCancelled(true);
                         if (event.getSlot() == 26)
                         {
-                            VoteRewards.save(plugin, player, event.getInventory());
+                            ItemRewards.save(plugin, player, event.getInventory());
                         } else
                         {
                             SoundType.CLICK.play(plugin, player);
@@ -311,10 +346,11 @@ public class InventoryListener implements Listener
                     case VoteSettings.NAME:
                     case GeneralSettings.NAME:
                     case RewardSettings.NAME:
+                    case Support.NAME:
                         SoundType.CLOSE.play(plugin, player);
                         break;
-                    case VoteRewards.NAME:
-                        VoteRewards.save(plugin, player, event.getInventory());
+                    case ItemRewards.NAME:
+                        ItemRewards.save(plugin, player, event.getInventory());
                         break;
                     case LuckyRewards.NAME:
                         LuckyRewards.save(plugin, player, event.getInventory());
@@ -348,6 +384,7 @@ public class InventoryListener implements Listener
             case VoteSettings.NAME:
             case GeneralSettings.NAME:
             case RewardSettings.NAME:
+            case Support.NAME:
                 event.setCancelled(true);
                 break;
             default:

@@ -17,3 +17,4 @@ forbidden_commands:
   - stop
   - restart
   - reload
+ingame_updates: true

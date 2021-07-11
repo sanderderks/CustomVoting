@@ -22,6 +22,32 @@ public class Settings
     public static final String LUCKY_VOTE = "lucky_vote";
     public static final String LUCKY_VOTE_CHANCE = "lucky_vote_chance";
     public static final String FORBIDDEN_COMMANDS = "forbidden_commands";
+    public static final String INGAME_UPDATES = "ingame_updates";
+
+    public static void initialize(Main plugin)
+    {
+        setDefault(plugin, MONTHLY_RESET, false);
+        setDefault(plugin, USE_SOUND_EFFECTS, true);
+        setDefault(plugin, VOTE_PARTY_COUNTDOWN, 30);
+        setDefault(plugin, FIREWORK, true);
+        setDefault(plugin, VOTE_PARTY, true);
+        setDefault(plugin, VOTES_REQUIRED_FOR_VOTE_PARTY, 10);
+        setDefault(plugin, VOTE_REWARD_MONEY, 100);
+        setDefault(plugin, VOTE_REWARD_EXPERIENCE, 3);
+        setDefault(plugin, LUCKY_VOTE, true);
+        setDefault(plugin, LUCKY_VOTE_CHANCE, 50);
+        setDefault(plugin, FORBIDDEN_COMMANDS, new String[]{"fakevote", "op", "stop", "restart", "reload"});
+        setDefault(plugin, INGAME_UPDATES, true);
+        plugin.getConfig().saveConfig();
+    }
+
+    private static void setDefault(Main plugin, String path, Object value)
+    {
+        if (plugin.getConfig().get(path) == null)
+        {
+            plugin.getConfig().set(path, value);
+        }
+    }
 
     public static ItemStack getDoMonthlyResetSetting(Main plugin)
     {
@@ -97,5 +123,12 @@ public class Settings
     {
         return createItem(Material.EXPERIENCE_BOTTLE, ChatColor.LIGHT_PURPLE + "XP Reward",
                 ChatColor.GRAY + "Currently: " + ChatColor.AQUA + plugin.getConfig().getNumber(VOTE_REWARD_EXPERIENCE) + " levels");
+    }
+
+    public static ItemStack getDoIngameUpdatesSetting(Main plugin)
+    {
+        return createItem(Material.FILLED_MAP, ChatColor.LIGHT_PURPLE + "Ingame Updates",
+                ChatColor.GRAY + "Status: " + (plugin.getConfig().getBoolean(INGAME_UPDATES) ?
+                        ChatColor.GREEN + "ON" : ChatColor.RED + "OFF"));
     }
 }

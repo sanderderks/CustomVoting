@@ -67,6 +67,19 @@ public class PlayerListener implements Listener
             }.runTaskTimer(plugin, 200L, 20L);
             voteFile.clearQueue();
         }
+        if (player.isOp() && plugin.getConfig().getBoolean(Settings.INGAME_UPDATES))
+        {
+            new BukkitRunnable()
+            {
+                @Override
+                public void run()
+                {
+                    plugin.sendDownloadUrl(player);
+                    player.sendMessage("");
+                    player.sendMessage(ChatColor.GRAY + "Updates can be turned off in the /votesettings");
+                }
+            }.runTaskLater(plugin, 20 * 5);
+        }
     }
 
     @EventHandler

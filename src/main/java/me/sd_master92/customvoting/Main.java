@@ -3,6 +3,7 @@ package me.sd_master92.customvoting;
 import me.sd_master92.customfile.CustomFile;
 import me.sd_master92.customvoting.commands.*;
 import me.sd_master92.customvoting.commands.voteparty.VotePartyCommand;
+import me.sd_master92.customvoting.constants.Settings;
 import me.sd_master92.customvoting.listeners.InventoryListener;
 import me.sd_master92.customvoting.listeners.PlayerListener;
 import me.sd_master92.customvoting.listeners.VoteTopListener;
@@ -93,6 +94,8 @@ public class Main extends CustomPlugin
     {
         messages = new CustomFile("messages.yml", this);
         data = new CustomFile("data.yml", this);
+
+        Settings.initialize(this);
     }
 
     public CustomFile getMessages()

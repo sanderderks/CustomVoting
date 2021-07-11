@@ -95,7 +95,7 @@
         <dependency>
             <groupId>me.sd_master92</groupId>
             <artifactId>CustomPlugin</artifactId>
-            <version>1.1</version>
+            <version>1.2</version>
         </dependency>
         <dependency>
             <groupId>me.sd_master92</groupId>

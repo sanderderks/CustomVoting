@@ -9,7 +9,7 @@ import org.bukkit.inventory.ItemStack;
 public class Data
 {
     public static final String VOTE_PARTY = "vote_party";
-    public static final String VOTE_REWARDS = "rewards";
+    public static final String ITEM_REWARDS = "rewards";
     public static final String LUCKY_REWARDS = "lucky_rewards";
     public static final String CURRENT_VOTES = "current_votes";
     public static final String VOTE_QUEUE = "queue";
@@ -28,7 +28,7 @@ public class Data
         return GUI.createItem(Material.CHEST,
                 ChatColor.LIGHT_PURPLE +
                         "Item Rewards",
-                ChatColor.GRAY + "Currently: " + ChatColor.AQUA + plugin.getData().getItems(VOTE_REWARDS).length + ChatColor.GRAY + " item stacks");
+                ChatColor.GRAY + "Currently: " + ChatColor.AQUA + plugin.getData().getItems(ITEM_REWARDS).length + ChatColor.GRAY + " item stacks");
     }
 
     public static ItemStack getLuckyRewardSetting(Main plugin)

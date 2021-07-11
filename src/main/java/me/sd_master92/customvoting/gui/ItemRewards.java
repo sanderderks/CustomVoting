@@ -8,17 +8,15 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-public class VoteRewards extends GUI
+public class ItemRewards extends GUI
 {
     public static final String NAME = "Item Rewards";
-    private final Main plugin;
 
-    public VoteRewards(Main plugin)
+    public ItemRewards(Main plugin)
     {
         super(NAME, 27);
-        this.plugin = plugin;
 
-        for (ItemStack reward : plugin.getData().getItems(Data.VOTE_REWARDS))
+        for (ItemStack reward : plugin.getData().getItems(Data.ITEM_REWARDS))
         {
             getInventory().addItem(reward);
         }
@@ -30,7 +28,7 @@ public class VoteRewards extends GUI
     {
         inv.setItem(25, null);
         inv.setItem(26, null);
-        if (plugin.getData().setItems(Data.VOTE_REWARDS, inv.getContents()))
+        if (plugin.getData().setItems(Data.ITEM_REWARDS, inv.getContents()))
         {
             SoundType.SUCCESS.play(plugin, player);
             player.sendMessage(ChatColor.GREEN + "Successfully updated the Item Rewards!");

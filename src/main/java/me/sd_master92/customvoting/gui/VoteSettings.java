@@ -11,6 +11,8 @@ public class VoteSettings extends GUI
             null, true);
     public static final ItemStack REWARD_SETTINGS = createItem(Material.DIAMOND, ChatColor.LIGHT_PURPLE + "Rewards",
             null, true);
+    public static final ItemStack SUPPORT = createItem(Material.SPYGLASS, ChatColor.GREEN + "Support",
+            null, true);
 
     public VoteSettings()
     {
@@ -19,6 +21,6 @@ public class VoteSettings extends GUI
         getInventory().setItem(1, GENERAL_SETTINGS);
         getInventory().setItem(3, REWARD_SETTINGS);
         getInventory().setItem(5, UNDER_CONSTRUCTION);
-        getInventory().setItem(7, UNDER_CONSTRUCTION);
+        getInventory().setItem(7, SUPPORT);
     }
 }
