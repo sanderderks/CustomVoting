@@ -5,7 +5,7 @@ import me.sd_master92.customvoting.constants.Data;
 import me.sd_master92.customvoting.constants.Settings;
 import me.sd_master92.customvoting.constants.enumerations.SoundType;
 import me.sd_master92.customvoting.constants.enumerations.VotePartyType;
-import me.sd_master92.customvoting.services.GUIService;
+import me.sd_master92.customvoting.gui.*;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -23,13 +23,11 @@ import java.util.UUID;
 public class InventoryListener implements Listener
 {
     private final Main plugin;
-    private final GUIService guiService;
     private final List<UUID> cancelCloseEvent;
 
     public InventoryListener(Main plugin)
     {
         this.plugin = plugin;
-        guiService = new GUIService(plugin);
         cancelCloseEvent = new ArrayList<>();
     }
 
@@ -42,7 +40,8 @@ public class InventoryListener implements Listener
             ItemStack item = event.getCurrentItem();
             switch (event.getView().getTitle())
             {
-                case GUIService.MAIN_SETTINGS_INVENTORY:
+                case VoteSettings
+                        .NAME:
                     event.setCancelled(true);
                     if (item != null)
                     {
@@ -51,12 +50,12 @@ public class InventoryListener implements Listener
                             case COMMAND_BLOCK:
                                 SoundType.CLICK.play(plugin, player);
                                 cancelCloseEvent.add(player.getUniqueId());
-                                player.openInventory(guiService.getGeneralSettings());
+                                player.openInventory(new GeneralSettings(plugin).getInventory());
                                 break;
                             case DIAMOND:
                                 SoundType.CLICK.play(plugin, player);
                                 cancelCloseEvent.add(player.getUniqueId());
-                                player.openInventory(guiService.getRewardSettings());
+                                player.openInventory(new RewardSettings(plugin).getInventory());
                                 break;
                             case IRON_SHOVEL:
                                 SoundType.NOT_ALLOWED.play(plugin, player);
@@ -64,7 +63,8 @@ public class InventoryListener implements Listener
                         }
                     }
                     break;
-                case GUIService.GENERAL_SETTINGS_INVENTORY:
+                case GeneralSettings
+                        .NAME:
                     event.setCancelled(true);
                     if (item != null)
                     {
@@ -73,41 +73,41 @@ public class InventoryListener implements Listener
                             case BARRIER:
                                 SoundType.CLICK.play(plugin, player);
                                 cancelCloseEvent.add(player.getUniqueId());
-                                player.openInventory(guiService.getConfig());
+                                player.openInventory(new VoteSettings().getInventory());
                                 break;
                             case CLOCK:
                                 SoundType.CHANGE.play(plugin, player);
                                 plugin.getConfig().set(Settings.MONTHLY_RESET,
                                         !plugin.getConfig().getBoolean(Settings.MONTHLY_RESET));
                                 plugin.getConfig().saveConfig();
-                                event.setCurrentItem(guiService.getDoMonthlyResetSetting());
+                                event.setCurrentItem(Settings.getDoMonthlyResetSetting(plugin));
                                 break;
                             case MUSIC_DISC_CAT:
                                 SoundType.CHANGE.play(plugin, player);
                                 plugin.getConfig().set(Settings.USE_SOUND_EFFECTS,
                                         !plugin.getConfig().getBoolean(Settings.USE_SOUND_EFFECTS));
                                 plugin.getConfig().saveConfig();
-                                event.setCurrentItem(guiService.getUseSoundEffectsSetting());
+                                event.setCurrentItem(Settings.getUseSoundEffectsSetting(plugin));
                                 break;
                             case FIREWORK_ROCKET:
                                 SoundType.CHANGE.play(plugin, player);
                                 plugin.getConfig().set(Settings.FIREWORK,
                                         !plugin.getConfig().getBoolean(Settings.FIREWORK));
                                 plugin.getConfig().saveConfig();
-                                event.setCurrentItem(guiService.getUseFireworkSetting());
+                                event.setCurrentItem(Settings.getUseFireworkSetting(plugin));
                                 break;
                             case EXPERIENCE_BOTTLE:
                                 SoundType.CHANGE.play(plugin, player);
                                 plugin.getConfig().set(Settings.VOTE_PARTY,
                                         !plugin.getConfig().getBoolean(Settings.VOTE_PARTY));
                                 plugin.getConfig().saveConfig();
-                                event.setCurrentItem(guiService.getDoVotePartySetting());
+                                event.setCurrentItem(Settings.getDoVotePartySetting(plugin));
                                 break;
                             case SPLASH_POTION:
                                 SoundType.CHANGE.play(plugin, player);
                                 plugin.getConfig().setNumber(Settings.VOTE_PARTY_TYPE,
                                         VotePartyType.next(plugin).getValue());
-                                event.setCurrentItem(guiService.getVotePartyTypeSetting());
+                                event.setCurrentItem(Settings.getVotePartyTypeSetting(plugin));
                                 break;
                             case ENCHANTED_BOOK:
                                 SoundType.CHANGE.play(plugin, player);
@@ -118,7 +118,7 @@ public class InventoryListener implements Listener
                                 {
                                     plugin.getConfig().setNumber(Settings.VOTES_REQUIRED_FOR_VOTE_PARTY, 10);
                                 }
-                                event.setCurrentItem(guiService.getVotesUntilVotePartySetting());
+                                event.setCurrentItem(Settings.getVotesUntilVotePartySetting(plugin));
                                 break;
                             case ENDER_CHEST:
                                 SoundType.CHANGE.play(plugin, player);
@@ -129,18 +129,19 @@ public class InventoryListener implements Listener
                                 {
                                     plugin.getConfig().setNumber(Settings.VOTE_PARTY_COUNTDOWN, 0);
                                 }
-                                event.setCurrentItem(guiService.getVotePartyCountdownSetting());
+                                event.setCurrentItem(Settings.getVotePartyCountdownSetting(plugin));
                                 break;
                             case TOTEM_OF_UNDYING:
                                 SoundType.CHANGE.play(plugin, player);
                                 plugin.getConfig().set(Settings.LUCKY_VOTE,
                                         !plugin.getConfig().getBoolean(Settings.LUCKY_VOTE));
-                                event.setCurrentItem(guiService.getDoLuckyVoteSetting());
+                                plugin.getConfig().saveConfig();
+                                event.setCurrentItem(Settings.getDoLuckyVoteSetting(plugin));
                                 break;
                         }
                     }
                     break;
-                case GUIService.REWARD_SETTINGS_INVENTORY:
+                case RewardSettings.NAME:
                     event.setCancelled(true);
                     if (item != null)
                     {
@@ -149,12 +150,12 @@ public class InventoryListener implements Listener
                             case BARRIER:
                                 SoundType.CLICK.play(plugin, player);
                                 cancelCloseEvent.add(player.getUniqueId());
-                                player.openInventory(guiService.getConfig());
+                                player.openInventory(new VoteSettings().getInventory());
                                 break;
                             case CHEST:
                                 SoundType.CLICK.play(plugin, player);
                                 cancelCloseEvent.add(player.getUniqueId());
-                                player.openInventory(guiService.getItemRewards());
+                                player.openInventory(new VoteRewards(plugin).getInventory());
                                 break;
                             case GOLD_INGOT:
                                 if (Main.economy != null)
@@ -173,7 +174,7 @@ public class InventoryListener implements Listener
                                         {
                                             if (!PlayerListener.moneyInput.contains(player.getUniqueId()))
                                             {
-                                                player.openInventory(guiService.getRewardSettings());
+                                                player.openInventory(new RewardSettings(plugin).getInventory());
                                                 cancelCloseEvent.remove(player.getUniqueId());
                                                 cancel();
                                             } else if (!player.isOnline())
@@ -197,7 +198,7 @@ public class InventoryListener implements Listener
                                 {
                                     plugin.getConfig().setNumber(Settings.VOTE_REWARD_EXPERIENCE, 0);
                                 }
-                                event.setCurrentItem(guiService.getExperienceRewardSetting());
+                                event.setCurrentItem(Settings.getExperienceRewardSetting(plugin));
                                 break;
                             case COMMAND_BLOCK:
                                 SoundType.CHANGE.play(plugin, player);
@@ -228,7 +229,7 @@ public class InventoryListener implements Listener
                                     {
                                         if (!PlayerListener.commandInput.contains(player.getUniqueId()))
                                         {
-                                            player.openInventory(guiService.getRewardSettings());
+                                            player.openInventory(new RewardSettings(plugin).getInventory());
                                             cancelCloseEvent.remove(player.getUniqueId());
                                             cancel();
                                         } else if (!player.isOnline())
@@ -242,7 +243,7 @@ public class InventoryListener implements Listener
                             case ENDER_CHEST:
                                 SoundType.CLICK.play(plugin, player);
                                 cancelCloseEvent.add(player.getUniqueId());
-                                player.openInventory(guiService.getLuckyRewards());
+                                player.openInventory(new LuckyRewards(plugin).getInventory());
                                 break;
                             case ENDER_EYE:
                                 SoundType.CHANGE.play(plugin, player);
@@ -257,41 +258,39 @@ public class InventoryListener implements Listener
                                 {
                                     plugin.getConfig().setNumber(Settings.LUCKY_VOTE_CHANCE, 1);
                                 }
-                                event.setCurrentItem(guiService.getLuckyVoteChanceSetting());
+                                event.setCurrentItem(Settings.getLuckyVoteChanceSetting(plugin));
                                 break;
                         }
                     }
                     break;
-                case GUIService
-                        .ITEM_REWARDS_INVENTORY:
+                case VoteRewards.NAME:
                     if (event.getSlot() >= 25)
                     {
                         event.setCancelled(true);
                         if (event.getSlot() == 26)
                         {
-                            guiService.saveRewards(Data.VOTE_REWARDS, player, event.getInventory());
+                            VoteRewards.save(plugin, player, event.getInventory());
                         } else
                         {
                             SoundType.CLICK.play(plugin, player);
                         }
                         cancelCloseEvent.add(player.getUniqueId());
-                        player.openInventory(guiService.getRewardSettings());
+                        player.openInventory(new RewardSettings(plugin).getInventory());
                     }
                     break;
-                case GUIService
-                        .LUCKY_REWARDS_INVENTORY:
+                case LuckyRewards.NAME:
                     if (event.getSlot() >= 25)
                     {
                         event.setCancelled(true);
                         if (event.getSlot() == 26)
                         {
-                            guiService.saveRewards(Data.LUCKY_REWARDS, player, event.getInventory());
+                            LuckyRewards.save(plugin, player, event.getInventory());
                         } else
                         {
                             SoundType.CLICK.play(plugin, player);
                         }
                         cancelCloseEvent.add(player.getUniqueId());
-                        player.openInventory(guiService.getRewardSettings());
+                        player.openInventory(new RewardSettings(plugin).getInventory());
                     }
                     break;
             }
@@ -309,19 +308,19 @@ public class InventoryListener implements Listener
                 String title = event.getView().getTitle();
                 switch (title)
                 {
-                    case GUIService.MAIN_SETTINGS_INVENTORY:
-                    case GUIService.GENERAL_SETTINGS_INVENTORY:
-                    case GUIService.REWARD_SETTINGS_INVENTORY:
+                    case VoteSettings.NAME:
+                    case GeneralSettings.NAME:
+                    case RewardSettings.NAME:
                         SoundType.CLOSE.play(plugin, player);
                         break;
-                    case GUIService.ITEM_REWARDS_INVENTORY:
-                        guiService.saveRewards(Data.VOTE_REWARDS, player, event.getInventory());
+                    case VoteRewards.NAME:
+                        VoteRewards.save(plugin, player, event.getInventory());
                         break;
-                    case GUIService.LUCKY_REWARDS_INVENTORY:
-                        guiService.saveRewards(Data.LUCKY_REWARDS, player, event.getInventory());
+                    case LuckyRewards.NAME:
+                        LuckyRewards.save(plugin, player, event.getInventory());
                         break;
                 }
-                if (title.contains(GUIService.VOTE_PARTY_REWARDS_INVENTORY))
+                if (title.contains(VotePartyRewards.NAME))
                 {
                     String key = title.split("#")[1];
                     if (plugin.getData().setItems(Data.VOTE_PARTY + "." + key, event.getInventory().getContents()))
@@ -346,8 +345,9 @@ public class InventoryListener implements Listener
     {
         switch (event.getView().getTitle())
         {
-            case GUIService.MAIN_SETTINGS_INVENTORY:
-            case GUIService.GENERAL_SETTINGS_INVENTORY:
+            case VoteSettings.NAME:
+            case GeneralSettings.NAME:
+            case RewardSettings.NAME:
                 event.setCancelled(true);
                 break;
             default:

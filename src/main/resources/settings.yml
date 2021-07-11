@@ -11,3 +11,9 @@ vote_reward_money: 100
 vote_reward_xp: 3
 lucky_vote: true
 lucky_vote_chance: 50
+forbidden_commands:
+  - fakevote
+  - op
+  - stop
+  - restart
+  - reload

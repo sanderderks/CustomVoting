@@ -5,7 +5,7 @@ import me.sd_master92.customvoting.VoteFile;
 import me.sd_master92.customvoting.constants.Data;
 import me.sd_master92.customvoting.constants.Settings;
 import me.sd_master92.customvoting.constants.enumerations.SoundType;
-import me.sd_master92.customvoting.services.GUIService;
+import me.sd_master92.customvoting.gui.VotePartyRewards;
 import me.sd_master92.customvoting.subjects.CustomVote;
 import me.sd_master92.customvoting.subjects.VoteParty;
 import me.sd_master92.customvoting.subjects.VoteTopSign;
@@ -34,13 +34,10 @@ public class PlayerListener implements Listener
     public static List<UUID> moneyInput = new ArrayList<>();
     public static List<UUID> commandInput = new ArrayList<>();
     private final Main plugin;
-    private final GUIService guiService;
-    private final String[] forbiddenCommands = {"fakevote", "reload", "restart", "stop", "op"};
 
     public PlayerListener(Main plugin)
     {
         this.plugin = plugin;
-        guiService = new GUIService(plugin);
     }
 
     @EventHandler
@@ -237,7 +234,7 @@ public class PlayerListener implements Listener
                     if (player.hasPermission("customvoting.voteparty"))
                     {
                         SoundType.OPEN.play(plugin, player);
-                        player.openInventory(guiService.getVotePartyRewards(key));
+                        player.openInventory(new VotePartyRewards(plugin, key).getInventory());
                     } else
                     {
                         player.sendMessage(ChatColor.RED + "You do not have permission to open this chest.");
@@ -249,7 +246,7 @@ public class PlayerListener implements Listener
 
     private void checkCommand(String command, Player player)
     {
-        for (String forbidden : forbiddenCommands)
+        for (String forbidden : plugin.getConfig().getStringList(Settings.FORBIDDEN_COMMANDS))
         {
             if (command.toLowerCase().contains(forbidden))
             {

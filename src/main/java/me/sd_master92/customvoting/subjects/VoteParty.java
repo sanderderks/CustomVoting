@@ -6,7 +6,7 @@ import me.sd_master92.customvoting.constants.Messages;
 import me.sd_master92.customvoting.constants.Settings;
 import me.sd_master92.customvoting.constants.enumerations.SoundType;
 import me.sd_master92.customvoting.constants.enumerations.VotePartyType;
-import me.sd_master92.customvoting.services.GUIService;
+import me.sd_master92.customvoting.gui.GUI;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -17,16 +17,14 @@ import java.util.*;
 
 public class VoteParty
 {
-    public static final ItemStack VOTE_PARTY_ITEM = GUIService.createItem(Material.ENDER_CHEST,
+    public static final ItemStack VOTE_PARTY_ITEM = GUI.createItem(Material.ENDER_CHEST,
             ChatColor.LIGHT_PURPLE +
                     "Vote Party Chest",
             ChatColor.GRAY + "Place this chest somewhere in the sky.;" + ChatColor.GRAY + "The contents of this chest" +
                     " will;" +
                     ChatColor.GRAY + "start dropping when the voteparty starts.");
-
-    private static boolean isActive = false;
     private static final List<VoteParty> queue = new ArrayList<>();
-
+    private static boolean isActive = false;
     private final Main plugin;
     private final int votePartyType;
     private int count;
@@ -41,7 +39,7 @@ public class VoteParty
     public void start()
     {
         queue.add(this);
-        if(!isActive)
+        if (!isActive)
         {
             isActive = true;
             new BukkitRunnable()
@@ -166,7 +164,7 @@ public class VoteParty
         {
             ItemStack[] items = plugin.getData().getItems(
                     Data.VOTE_PARTY + "." + key);
-            if(items.length > 0)
+            if (items.length > 0)
             {
                 chests.put(key,
                         new ArrayList<>(Arrays.asList(items)));

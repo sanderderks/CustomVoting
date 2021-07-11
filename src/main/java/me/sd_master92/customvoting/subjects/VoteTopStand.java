@@ -4,8 +4,11 @@ import me.sd_master92.customvoting.Main;
 import me.sd_master92.customvoting.VoteFile;
 import me.sd_master92.customvoting.constants.Data;
 import me.sd_master92.customvoting.constants.Messages;
-import me.sd_master92.customvoting.services.GUIService;
-import org.bukkit.*;
+import me.sd_master92.customvoting.gui.GUI;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
@@ -40,7 +43,7 @@ public class VoteTopStand
         ConfigurationSection section = plugin.getData().getConfigurationSection(Data.VOTE_TOP_STANDS + "." + top);
         if (section != null)
         {
-            if(player != null)
+            if (player != null)
             {
                 player.sendMessage(ChatColor.RED + "That Vote Stand already exists.");
                 return;
@@ -50,7 +53,7 @@ public class VoteTopStand
                 nameStand = getArmorStand(section.getString("name"));
                 votesStand = getArmorStand(section.getString("votes"));
             }
-        } else if(player != null)
+        } else if (player != null)
         {
             create(player);
         }
@@ -174,31 +177,31 @@ public class VoteTopStand
                 switch (top)
                 {
                     case 1:
-                        entityEquipment.setChestplate(GUIService.createItem(Material.DIAMOND_CHESTPLATE, true));
-                        entityEquipment.setLeggings(GUIService.createItem(Material.DIAMOND_LEGGINGS, true));
-                        entityEquipment.setBoots(GUIService.createItem(Material.DIAMOND_BOOTS, true));
-                        entityEquipment.setItemInMainHand(GUIService.createItem(Material.DIAMOND_SWORD,
+                        entityEquipment.setChestplate(GUI.createItem(Material.DIAMOND_CHESTPLATE, true));
+                        entityEquipment.setLeggings(GUI.createItem(Material.DIAMOND_LEGGINGS, true));
+                        entityEquipment.setBoots(GUI.createItem(Material.DIAMOND_BOOTS, true));
+                        entityEquipment.setItemInMainHand(GUI.createItem(Material.DIAMOND_SWORD,
                                 true));
                         break;
                     case 2:
-                        entityEquipment.setChestplate(GUIService.createItem(Material.GOLDEN_CHESTPLATE, true));
-                        entityEquipment.setLeggings(GUIService.createItem(Material.GOLDEN_LEGGINGS, true));
-                        entityEquipment.setBoots(GUIService.createItem(Material.GOLDEN_BOOTS, true));
-                        entityEquipment.setItemInMainHand(GUIService.createItem(Material.GOLDEN_SWORD,
+                        entityEquipment.setChestplate(GUI.createItem(Material.GOLDEN_CHESTPLATE, true));
+                        entityEquipment.setLeggings(GUI.createItem(Material.GOLDEN_LEGGINGS, true));
+                        entityEquipment.setBoots(GUI.createItem(Material.GOLDEN_BOOTS, true));
+                        entityEquipment.setItemInMainHand(GUI.createItem(Material.GOLDEN_SWORD,
                                 true));
                         break;
                     case 3:
-                        entityEquipment.setChestplate(GUIService.createItem(Material.IRON_CHESTPLATE, true));
-                        entityEquipment.setLeggings(GUIService.createItem(Material.IRON_LEGGINGS, true));
-                        entityEquipment.setBoots(GUIService.createItem(Material.IRON_BOOTS, true));
-                        entityEquipment.setItemInMainHand(GUIService.createItem(Material.IRON_SWORD,
+                        entityEquipment.setChestplate(GUI.createItem(Material.IRON_CHESTPLATE, true));
+                        entityEquipment.setLeggings(GUI.createItem(Material.IRON_LEGGINGS, true));
+                        entityEquipment.setBoots(GUI.createItem(Material.IRON_BOOTS, true));
+                        entityEquipment.setItemInMainHand(GUI.createItem(Material.IRON_SWORD,
                                 true));
                         break;
                     default:
-                        entityEquipment.setChestplate(GUIService.createItem(Material.CHAINMAIL_CHESTPLATE, true));
-                        entityEquipment.setLeggings(GUIService.createItem(Material.CHAINMAIL_LEGGINGS, true));
-                        entityEquipment.setBoots(GUIService.createItem(Material.CHAINMAIL_BOOTS, true));
-                        entityEquipment.setItemInMainHand(GUIService.createItem(Material.STONE_SWORD, true));
+                        entityEquipment.setChestplate(GUI.createItem(Material.CHAINMAIL_CHESTPLATE, true));
+                        entityEquipment.setLeggings(GUI.createItem(Material.CHAINMAIL_LEGGINGS, true));
+                        entityEquipment.setBoots(GUI.createItem(Material.CHAINMAIL_BOOTS, true));
+                        entityEquipment.setItemInMainHand(GUI.createItem(Material.STONE_SWORD, true));
                 }
             }
         }
