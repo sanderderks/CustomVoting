@@ -10,7 +10,6 @@ import me.sd_master92.customvoting.listeners.VotifierListener;
 import me.sd_master92.customvoting.tasks.DailyTask;
 import me.sd_master92.plugin.CustomPlugin;
 import net.milkbowl.vault.economy.Economy;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
 public class Main extends CustomPlugin
@@ -27,7 +26,7 @@ public class Main extends CustomPlugin
     @Override
     protected void enable()
     {
-        if (!checkDependencies())
+        if (!checkVotifier())
         {
             return;
         }
@@ -44,20 +43,22 @@ public class Main extends CustomPlugin
 
     }
 
-    private boolean checkDependencies()
+    private boolean checkVotifier()
     {
         print("");
         print("| checking for Votifier");
         print("|");
-        Plugin votifier = getServer().getPluginManager().getPlugin("Votifier");
-        if (votifier == null)
+        try
+        {
+            Class.forName("com.vexsoftware.votifier.model.VotifierEvent");
+            print("|___dependency 'Votifier' found!");
+            return true;
+        } catch (ClassNotFoundException e)
         {
             error("|___dependency 'Votifier' not found, disabling...");
             setEnabled(false);
             return false;
         }
-        print("|___dependency 'Votifier' found!");
-        return true;
     }
 
     private void checkHooks()
