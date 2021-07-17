@@ -20,7 +20,21 @@
     <orderEntry type="library" name="Maven: me.sd_master92:CustomPlugin:1.2" level="project" />
     <orderEntry type="library" name="Maven: org.jetbrains:annotations:16.0.2" level="project" />
     <orderEntry type="library" name="Maven: me.sd_master92:CustomFile:2.0" level="project" />
-    <orderEntry type="library" name="Maven: com.vexsoftware:votifier:1.9" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: com.vexsoftware:votifier:1.9" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: com.github.nuvotifier:nuvotifier:2.7.2" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: com.github.nuvotifier.nuvotifier:nuvotifier-api:2.7.2" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: com.github.nuvotifier.nuvotifier:nuvotifier-bukkit:2.7.2" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: com.github.nuvotifier.nuvotifier:nuvotifier-bungeecord:2.7.2" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: com.github.nuvotifier.nuvotifier:nuvotifier-common:2.7.2" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: io.netty:netty-handler:4.1.49.Final" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: io.netty:netty-common:4.1.49.Final" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: io.netty:netty-resolver:4.1.49.Final" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: io.netty:netty-buffer:4.1.49.Final" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: io.netty:netty-transport:4.1.49.Final" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: io.netty:netty-codec:4.1.49.Final" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: io.netty:netty-transport-native-epoll:linux-x86_64:4.1.49.Final" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: io.netty:netty-transport-native-unix-common:4.1.49.Final" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: com.github.nuvotifier.nuvotifier:nuvotifier-sponge:2.7.2" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.github.MilkBowl:VaultAPI:1.7" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.bukkit:bukkit:1.13.1-R0.1-SNAPSHOT" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.googlecode.json-simple:json-simple:1.1.1" level="project" />

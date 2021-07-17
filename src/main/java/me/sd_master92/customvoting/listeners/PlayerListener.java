@@ -67,7 +67,7 @@ public class PlayerListener implements Listener
             }.runTaskTimer(plugin, 200L, 20L);
             voteFile.clearQueue();
         }
-        if (player.isOp() && plugin.getConfig().getBoolean(Settings.INGAME_UPDATES))
+        if (player.isOp() && plugin.getConfig().getBoolean(Settings.INGAME_UPDATES) && !plugin.isUpToDate())
         {
             new BukkitRunnable()
             {

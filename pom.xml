@@ -6,7 +6,7 @@
 
     <groupId>me.sd_master92</groupId>
     <artifactId>CustomVoting</artifactId>
-    <version>6.2.0</version>
+    <version>6.2.1</version>
     <name>CustomVoting</name>
     <description>Voting on its best. Totally customizable!</description>
 
@@ -106,6 +106,13 @@
             <groupId>com.vexsoftware</groupId>
             <artifactId>votifier</artifactId>
             <version>1.9</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.nuvotifier</groupId>
+            <artifactId>nuvotifier</artifactId>
+            <version>2.7.2</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.github.MilkBowl</groupId>
