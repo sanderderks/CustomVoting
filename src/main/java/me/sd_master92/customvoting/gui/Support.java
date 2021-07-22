@@ -19,6 +19,8 @@ public class Support extends GUI
                                 "Latest: " + ChatColor.GREEN + plugin.getLatestVersion() + ";;" + ChatColor.GRAY + "Click to " +
                                 "download"));
         getInventory().setItem(1, Settings.getDoIngameUpdatesSetting(plugin));
+        getInventory().setItem(2, createItem(Material.ENCHANTED_BOOK, ChatColor.LIGHT_PURPLE + "Discord",
+                ChatColor.GRAY + "Join the discord server"));
         getInventory().setItem(8, BACK_ITEM);
     }
 }

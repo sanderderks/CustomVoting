@@ -162,7 +162,7 @@ public class PlayerListener implements Listener
                     {
                         if (plugin.getData().deleteLocation(Data.VOTE_PARTY + "." + key))
                         {
-                            plugin.getData().deleteItems("voteparty." + key);
+                            plugin.getData().deleteItems(Data.VOTE_PARTY + "." + key);
                             event.setDropItems(false);
                             event.getPlayer().sendMessage(ChatColor.RED + "Vote Party Chest #" + key + " deleted.");
                         }

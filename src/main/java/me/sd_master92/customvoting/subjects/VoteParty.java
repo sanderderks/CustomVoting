@@ -7,9 +7,8 @@ import me.sd_master92.customvoting.constants.Settings;
 import me.sd_master92.customvoting.constants.enumerations.SoundType;
 import me.sd_master92.customvoting.constants.enumerations.VotePartyType;
 import me.sd_master92.customvoting.gui.GUI;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -74,6 +73,9 @@ public class VoteParty
                             if (votePartyType == VotePartyType.RANDOM_CHEST_AT_A_TIME.getValue())
                             {
                                 dropChestsRandomly();
+                            } else if (votePartyType == VotePartyType.ADD_TO_INVENTORY.getValue())
+                            {
+                                addToInventory();
                             } else
                             {
                                 dropChests();
@@ -208,5 +210,53 @@ public class VoteParty
                 }
             }
         }.runTaskTimer(plugin, 0, 10);
+    }
+
+    private void addToInventory()
+    {
+        Random random = new Random();
+        Map<Integer, Boolean> tasks = new HashMap<>();
+
+        for (String key : plugin.getData().getLocations(Data.VOTE_PARTY).keySet())
+        {
+            List<ItemStack> chest =
+                    new ArrayList<>(Arrays.asList(plugin.getData().getItems(Data.VOTE_PARTY + "." + key)));
+
+            new BukkitRunnable()
+            {
+                @Override
+                public void run()
+                {
+                    if (!tasks.containsKey(getTaskId()))
+                    {
+                        tasks.put(getTaskId(), false);
+                    }
+                    if (!tasks.containsValue(true) || tasks.get(getTaskId()))
+                    {
+                        tasks.put(getTaskId(), true);
+                        if (chest.size() > 0)
+                        {
+                            List<Player> players = new ArrayList<>(Bukkit.getOnlinePlayers());
+                            Player player = players.get(random.nextInt(players.size()));
+                            ItemStack item = chest.remove(random.nextInt(chest.size()));
+                            for(ItemStack left : player.getInventory().addItem(item).values())
+                            {
+                                player.getWorld().dropItem(player.getLocation(), left);
+                            }
+                            SoundType.PICKUP.play(plugin, player);
+                        } else
+                        {
+                            tasks.remove(getTaskId());
+                            if (tasks.isEmpty())
+                            {
+                                plugin.getServer().broadcastMessage(Messages.VOTE_PARTY_END.getMessage(plugin));
+                                stop();
+                            }
+                            cancel();
+                        }
+                    }
+                }
+            }.runTaskTimer(plugin, 0, 10);
+        }
     }
 }

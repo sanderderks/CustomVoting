@@ -295,6 +295,13 @@ public class InventoryListener implements Listener
                                 plugin.getConfig().saveConfig();
                                 event.setCurrentItem(Settings.getDoIngameUpdatesSetting(plugin));
                                 break;
+                            case ENCHANTED_BOOK:
+                                SoundType.CLICK.play(plugin, player);
+                                cancelCloseEvent.add(player.getUniqueId());
+                                player.closeInventory();
+                                player.sendMessage(ChatColor.AQUA + "Join the Discord server:");
+                                player.sendMessage(ChatColor.GREEN + "https://discord.gg/v3qmJu7jWD");
+                                break;
                         }
                     }
                     break;
