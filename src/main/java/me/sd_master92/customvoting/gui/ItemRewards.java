@@ -5,8 +5,11 @@ import me.sd_master92.customvoting.constants.Data;
 import me.sd_master92.customvoting.constants.enumerations.SoundType;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 public class ItemRewards extends GUI
 {
@@ -14,7 +17,7 @@ public class ItemRewards extends GUI
 
     public ItemRewards(Main plugin)
     {
-        super(NAME, 27);
+        super(plugin, NAME, 27, true);
 
         for (ItemStack reward : plugin.getData().getItems(Data.ITEM_REWARDS))
         {
@@ -37,5 +40,29 @@ public class ItemRewards extends GUI
             SoundType.FAILURE.play(plugin, player);
             player.sendMessage(ChatColor.RED + "Failed to update the Item Rewards!");
         }
+    }
+
+    @Override
+    public void onClick(InventoryClickEvent event, Player player, @NotNull ItemStack item)
+    {
+        if (event.getSlot() >= 25)
+        {
+            event.setCancelled(true);
+            if (event.getSlot() == 26)
+            {
+                ItemRewards.save(plugin, player, event.getInventory());
+            } else
+            {
+                SoundType.CLICK.play(plugin, player);
+            }
+            cancelCloseEvent();
+            player.openInventory(new RewardSettings(plugin).getInventory());
+        }
+    }
+
+    @Override
+    public void onClose(InventoryCloseEvent event, Player player)
+    {
+        ItemRewards.save(plugin, player, event.getInventory());
     }
 }

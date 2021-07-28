@@ -28,7 +28,7 @@ public class SettingsCommand extends SimpleCommand
     @Override
     public void onCommand(Player player, String[] strings)
     {
-        Inventory settings = new VoteSettings().getInventory();
+        Inventory settings = new VoteSettings(plugin).getInventory();
         SoundType.OPEN.play(plugin, player);
         player.openInventory(settings);
     }

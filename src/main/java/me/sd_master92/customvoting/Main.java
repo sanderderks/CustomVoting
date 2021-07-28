@@ -4,7 +4,6 @@ import me.sd_master92.customfile.CustomFile;
 import me.sd_master92.customvoting.commands.*;
 import me.sd_master92.customvoting.commands.voteparty.VotePartyCommand;
 import me.sd_master92.customvoting.constants.Settings;
-import me.sd_master92.customvoting.listeners.InventoryListener;
 import me.sd_master92.customvoting.listeners.PlayerListener;
 import me.sd_master92.customvoting.listeners.VoteTopListener;
 import me.sd_master92.customvoting.listeners.VotifierListener;
@@ -113,7 +112,6 @@ public class Main extends CustomPlugin
         registerListener(new PlayerListener(this));
         registerListener(new VotifierListener(this));
         registerListener(new VoteTopListener(this));
-        registerListener(new InventoryListener(this));
     }
 
     private void registerCommands()
