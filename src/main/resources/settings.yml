@@ -18,3 +18,10 @@ forbidden_commands:
   - restart
   - reload
 ingame_updates: true
+use_database: false
+database:
+  host: localhost
+  port: 3306
+  database: customvoting
+  user: root
+  password: root

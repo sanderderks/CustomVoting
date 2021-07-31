@@ -4,6 +4,7 @@ import me.sd_master92.customfile.PlayerFile;
 import me.sd_master92.customvoting.Main;
 import me.sd_master92.customvoting.VoteFile;
 import me.sd_master92.customvoting.constants.Messages;
+import me.sd_master92.customvoting.database.PlayerRow;
 import me.sd_master92.plugin.command.SimpleCommand;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -34,8 +35,15 @@ public class SetVotesCommand extends SimpleCommand
                     int n = Integer.parseInt(amount);
                     if (n >= 0)
                     {
-                        VoteFile voteFile = new VoteFile(player.getUniqueId().toString(), plugin);
-                        voteFile.setVotes(n, true);
+                        if(plugin.useDatabase())
+                        {
+                            PlayerRow playerRow = new PlayerRow(plugin, player);
+                            playerRow.setVotes(n, true);
+                        } else
+                        {
+                            VoteFile voteFile = new VoteFile(player.getUniqueId().toString(), plugin);
+                            voteFile.setVotes(n, true);
+                        }
                         sender.sendMessage(ChatColor.GREEN + "Your votes have been set to " + ChatColor.AQUA + n + ChatColor.GREEN + ".");
                     } else
                     {
@@ -61,9 +69,16 @@ public class SetVotesCommand extends SimpleCommand
                     PlayerFile playerFile = PlayerFile.getByName(name, plugin);
                     if (playerFile != null)
                     {
-                        VoteFile voteFile = new VoteFile(playerFile.getUuid(), plugin);
-                        voteFile.setVotes(n, true);
-                        sender.sendMessage(ChatColor.AQUA + voteFile.getName() + "'s " + ChatColor.GREEN + "votes have been set to " + ChatColor.AQUA + n + ChatColor.GREEN + ".");
+                        if(plugin.useDatabase())
+                        {
+                            PlayerRow playerRow = new PlayerRow(plugin, playerFile.getUuid());
+                            playerRow.setVotes(n, true);
+                        } else
+                        {
+                            VoteFile voteFile = new VoteFile(playerFile.getUuid(), plugin);
+                            voteFile.setVotes(n, true);
+                            sender.sendMessage(ChatColor.AQUA + voteFile.getName() + "'s " + ChatColor.GREEN + "votes have been set to " + ChatColor.AQUA + n + ChatColor.GREEN + ".");
+                        }
                     } else
                     {
                         sender.sendMessage(Messages.INVALID_PLAYER.getMessage(plugin));

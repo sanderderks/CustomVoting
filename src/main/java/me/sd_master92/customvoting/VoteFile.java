@@ -2,6 +2,7 @@ package me.sd_master92.customvoting;
 
 import me.sd_master92.customfile.PlayerFile;
 import me.sd_master92.customvoting.constants.Data;
+import me.sd_master92.customvoting.constants.Voter;
 import me.sd_master92.customvoting.subjects.VoteTopSign;
 import me.sd_master92.customvoting.subjects.VoteTopStand;
 import org.bukkit.entity.Player;
@@ -9,7 +10,7 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 
-public class VoteFile extends PlayerFile
+public class VoteFile extends PlayerFile implements Voter
 {
     private final Main plugin;
 

@@ -4,6 +4,8 @@ import me.sd_master92.customvoting.Main;
 import me.sd_master92.customvoting.VoteFile;
 import me.sd_master92.customvoting.constants.Data;
 import me.sd_master92.customvoting.constants.Messages;
+import me.sd_master92.customvoting.constants.Voter;
+import me.sd_master92.customvoting.database.PlayerTable;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -133,7 +135,8 @@ public class VoteTopSign
         if (loc.getBlock().getState() instanceof Sign)
         {
             Sign sign = (Sign) loc.getBlock().getState();
-            VoteFile topVoter = VoteFile.getTopVoter(plugin, top);
+            Voter topVoter = plugin.useDatabase() ? PlayerTable.getTopVoter(plugin, top) : VoteFile.getTopVoter(plugin,
+                top);
             if (topVoter != null)
             {
                 Location oldLoc = plugin.getData().getLocation(Data.VOTE_TOP_SIGNS + "." + top);

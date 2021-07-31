@@ -23,6 +23,13 @@ public class Settings
     public static final String LUCKY_VOTE_CHANCE = "lucky_vote_chance";
     public static final String FORBIDDEN_COMMANDS = "forbidden_commands";
     public static final String INGAME_UPDATES = "ingame_updates";
+    public static final String USE_DATABASE = "use_database";
+    public static final String DATABASE = "database";
+    public static final String DATABASE_HOST = DATABASE + ".host";
+    public static final String DATABASE_PORT = DATABASE + ".port";
+    public static final String DATABASE_DATABASE = DATABASE + ".database";
+    public static final String DATABASE_USER = DATABASE + ".user";
+    public static final String DATABASE_PASSWORD = DATABASE + ".password";
 
     public static void initialize(Main plugin)
     {
@@ -38,6 +45,12 @@ public class Settings
         setDefault(plugin, LUCKY_VOTE_CHANCE, 50);
         setDefault(plugin, FORBIDDEN_COMMANDS, new String[]{"fakevote", "op", "stop", "restart", "reload"});
         setDefault(plugin, INGAME_UPDATES, true);
+        setDefault(plugin, USE_DATABASE, false);
+        setDefault(plugin, DATABASE_HOST, "localhost");
+        setDefault(plugin, DATABASE_PORT, 3306);
+        setDefault(plugin, DATABASE_DATABASE, "customvoting");
+        setDefault(plugin, DATABASE_USER, "root");
+        setDefault(plugin, DATABASE_PASSWORD, "root");
         plugin.getConfig().saveConfig();
     }
 

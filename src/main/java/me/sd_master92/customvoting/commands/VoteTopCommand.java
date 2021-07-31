@@ -3,6 +3,8 @@ package me.sd_master92.customvoting.commands;
 import me.sd_master92.customvoting.Main;
 import me.sd_master92.customvoting.VoteFile;
 import me.sd_master92.customvoting.constants.Messages;
+import me.sd_master92.customvoting.constants.Voter;
+import me.sd_master92.customvoting.database.PlayerTable;
 import me.sd_master92.plugin.command.SimpleCommand;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -26,7 +28,8 @@ public class VoteTopCommand extends SimpleCommand
     @Override
     public void onCommand(CommandSender sender, String[] args)
     {
-        List<VoteFile> topVoters = VoteFile.getTopVoters(plugin);
+        List<? extends Voter> topVoters = plugin.useDatabase() ? PlayerTable.getTopVoters(plugin) :
+                VoteFile.getTopVoters(plugin);
         if (topVoters.size() > 0)
         {
             List<String> messages = new ArrayList<>();
@@ -38,7 +41,7 @@ public class VoteTopCommand extends SimpleCommand
                 } else
                 {
                     Map<String, String> placeholders = new HashMap<>();
-                    for (VoteFile topVoter :
+                    for (Voter topVoter :
                             topVoters.stream().limit(5).collect(Collectors.toList()))
                     {
                         placeholders.put("%PLAYER%", topVoter.getName());

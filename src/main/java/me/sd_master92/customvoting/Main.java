@@ -1,9 +1,11 @@
 package me.sd_master92.customvoting;
 
 import me.sd_master92.customfile.CustomFile;
+import me.sd_master92.customfile.database.CustomDatabase;
 import me.sd_master92.customvoting.commands.*;
 import me.sd_master92.customvoting.commands.voteparty.VotePartyCommand;
 import me.sd_master92.customvoting.constants.Settings;
+import me.sd_master92.customvoting.database.PlayerTable;
 import me.sd_master92.customvoting.listeners.PlayerListener;
 import me.sd_master92.customvoting.listeners.VoteTopListener;
 import me.sd_master92.customvoting.listeners.VotifierListener;
@@ -15,6 +17,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 public class Main extends CustomPlugin
 {
     public static Economy economy = null;
+    private PlayerTable players;
     private CustomFile messages;
     private CustomFile data;
 
@@ -32,6 +35,7 @@ public class Main extends CustomPlugin
         }
         checkHooks();
         registerFiles();
+        setupDatabase();
         registerListeners();
         registerCommands();
         startTasks();
@@ -40,7 +44,7 @@ public class Main extends CustomPlugin
     @Override
     protected void disable()
     {
-
+        players.getTable().getDatabase().disconnect();
     }
 
     private boolean checkVotifier()
@@ -95,6 +99,44 @@ public class Main extends CustomPlugin
         data = new CustomFile("data.yml", this);
 
         Settings.initialize(this);
+    }
+
+    private void setupDatabase()
+    {
+        print("");
+        print("| connecting to database");
+        print("|");
+        if (useDatabase())
+        {
+            CustomDatabase database = new CustomDatabase(getConfig(), Settings.DATABASE);
+            if (!database.connect())
+            {
+                error("|___could not connect to database");
+            } else
+            {
+                players = new PlayerTable(this, database);
+            }
+        } else
+        {
+            print("|");
+            print("|___database is disabled in the config");
+        }
+    }
+
+    public boolean useDatabase()
+    {
+        if (players != null)
+        {
+            return getConfig().getBoolean(Settings.USE_DATABASE) && players.getTable().getDatabase().isConnected();
+        } else
+        {
+            return getConfig().getBoolean(Settings.USE_DATABASE);
+        }
+    }
+
+    public PlayerTable getPlayerTable()
+    {
+        return players;
     }
 
     public CustomFile getMessages()

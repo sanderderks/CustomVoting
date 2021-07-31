@@ -4,6 +4,8 @@ import me.sd_master92.customvoting.Main;
 import me.sd_master92.customvoting.VoteFile;
 import me.sd_master92.customvoting.constants.Data;
 import me.sd_master92.customvoting.constants.Messages;
+import me.sd_master92.customvoting.constants.Voter;
+import me.sd_master92.customvoting.database.PlayerTable;
 import me.sd_master92.customvoting.gui.GUI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -210,7 +212,8 @@ public class VoteTopStand
 
     private void update()
     {
-        VoteFile voteFile = VoteFile.getTopVoter(plugin, top);
+        Voter voteFile = plugin.useDatabase() ? PlayerTable.getTopVoter(plugin, top) : VoteFile.getTopVoter(plugin,
+                top);
 
         Map<String, String> placeholders = new HashMap<>();
         placeholders.put("%TOP%", "" + top);

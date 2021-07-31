@@ -8,6 +8,7 @@ import me.sd_master92.customvoting.VoteFile;
 import me.sd_master92.customvoting.constants.Data;
 import me.sd_master92.customvoting.constants.Messages;
 import me.sd_master92.customvoting.constants.Settings;
+import me.sd_master92.customvoting.database.PlayerRow;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.milkbowl.vault.economy.Economy;
@@ -91,7 +92,13 @@ public class CustomVote extends Vote
             queue();
         } else
         {
-            new VoteFile(player.getUniqueId().toString(), plugin).addVote(true);
+            if(plugin.useDatabase())
+            {
+                new PlayerRow(plugin, player.getUniqueId().toString()).addVote(true);
+            } else
+            {
+                new VoteFile(player.getUniqueId().toString(), plugin).addVote(true);
+            }
             broadcast();
             shootFirework(plugin, player.getLocation());
             giveRewards(player);
@@ -104,10 +111,16 @@ public class CustomVote extends Vote
 
     private void queue()
     {
-        PlayerFile playerFile = PlayerFile.getByName(getUsername(), plugin);
-        if (playerFile != null)
+        if (plugin.useDatabase())
         {
-            new VoteFile(playerFile.getUuid(), plugin).addQueue(getServiceName());
+            new PlayerRow(plugin, plugin.getPlayerTable().getUuid(getUsername())).addQueue();
+        } else
+        {
+            PlayerFile playerFile = PlayerFile.getByName(getUsername(), plugin);
+            if (playerFile != null)
+            {
+                new VoteFile(playerFile.getUuid(), plugin).addQueue(getServiceName());
+            }
         }
     }
 

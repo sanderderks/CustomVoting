@@ -5,6 +5,7 @@ import me.sd_master92.customvoting.VoteFile;
 import me.sd_master92.customvoting.constants.Data;
 import me.sd_master92.customvoting.constants.Settings;
 import me.sd_master92.customvoting.constants.enumerations.SoundType;
+import me.sd_master92.customvoting.database.PlayerRow;
 import me.sd_master92.customvoting.gui.VotePartyRewards;
 import me.sd_master92.customvoting.subjects.CustomVote;
 import me.sd_master92.customvoting.subjects.VoteParty;
@@ -44,8 +45,40 @@ public class PlayerListener implements Listener
     public void onPlayerJoin(PlayerJoinEvent event)
     {
         Player player = event.getPlayer();
-        VoteFile voteFile = new VoteFile(player, plugin);
-        List<String> queue = voteFile.getQueue();
+        if (plugin.useDatabase())
+        {
+            List<String> queue = new ArrayList<>();
+            PlayerRow playerRow = new PlayerRow(plugin, player);
+            for (int i = 0; i < playerRow.getQueue(); i++)
+            {
+                queue.add("unknown.com");
+            }
+            executeQueue(queue, player);
+            playerRow.clearQueue();
+        } else
+        {
+            VoteFile voteFile = new VoteFile(player, plugin);
+            executeQueue(voteFile.getQueue(), player);
+            voteFile.clearQueue();
+        }
+
+        if (player.isOp() && plugin.getConfig().getBoolean(Settings.INGAME_UPDATES) && !plugin.isUpToDate())
+        {
+            new BukkitRunnable()
+            {
+                @Override
+                public void run()
+                {
+                    plugin.sendDownloadUrl(player);
+                    player.sendMessage("");
+                    player.sendMessage(ChatColor.GRAY + "Updates can be turned off in the /votesettings");
+                }
+            }.runTaskLater(plugin, 20 * 5);
+        }
+    }
+
+    private void executeQueue(List<String> queue, Player player)
+    {
         if (!queue.isEmpty())
         {
             plugin.print(queue.size() + " queued votes found for " + player.getName() + ". Forwarding in 10 seconds.." +
@@ -65,20 +98,6 @@ public class PlayerListener implements Listener
                     }
                 }
             }.runTaskTimer(plugin, 200L, 20L);
-            voteFile.clearQueue();
-        }
-        if (player.isOp() && plugin.getConfig().getBoolean(Settings.INGAME_UPDATES) && !plugin.isUpToDate())
-        {
-            new BukkitRunnable()
-            {
-                @Override
-                public void run()
-                {
-                    plugin.sendDownloadUrl(player);
-                    player.sendMessage("");
-                    player.sendMessage(ChatColor.GRAY + "Updates can be turned off in the /votesettings");
-                }
-            }.runTaskLater(plugin, 20 * 5);
         }
     }
 
