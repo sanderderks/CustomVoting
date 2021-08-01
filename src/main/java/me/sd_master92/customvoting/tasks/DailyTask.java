@@ -5,6 +5,7 @@ import me.sd_master92.customvoting.Main;
 import me.sd_master92.customvoting.VoteFile;
 import me.sd_master92.customvoting.constants.Messages;
 import me.sd_master92.customvoting.constants.Settings;
+import me.sd_master92.customvoting.database.PlayerRow;
 import me.sd_master92.customvoting.subjects.VoteTopSign;
 import me.sd_master92.customvoting.subjects.VoteTopStand;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -23,7 +24,7 @@ public class DailyTask
             @Override
             public void run()
             {
-                if(plugin.getConfig().getBoolean(Settings.MONTHLY_RESET))
+                if (plugin.getConfig().getBoolean(Settings.MONTHLY_RESET))
                 {
                     reloadVoteTop();
                     checkMonthlyReset();
@@ -40,12 +41,19 @@ public class DailyTask
 
     private void checkMonthlyReset()
     {
-        if(Calendar.getInstance().get(Calendar.DAY_OF_MONTH) == 1)
+        if (Calendar.getInstance().get(Calendar.DAY_OF_MONTH) == 1)
         {
-            for(PlayerFile playerFile : PlayerFile.getAll(plugin))
+            for (PlayerFile playerFile : PlayerFile.getAll(plugin))
             {
-                VoteFile voteFile = new VoteFile(playerFile.getUuid(), plugin);
-                voteFile.setVotes(0, true);
+                if (plugin.hasDatabaseConnection())
+                {
+                    PlayerRow playerRow = new PlayerRow(plugin, playerFile.getUuid());
+                    playerRow.setVotes(0, true);
+                } else
+                {
+                    VoteFile voteFile = new VoteFile(playerFile.getUuid(), plugin);
+                    voteFile.setVotes(0, true);
+                }
             }
             plugin.getServer().broadcastMessage(Messages.MONTHLY_RESET.getMessage(plugin));
         }
