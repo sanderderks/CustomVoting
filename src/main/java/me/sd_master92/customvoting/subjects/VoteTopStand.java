@@ -212,7 +212,7 @@ public class VoteTopStand
 
     private void update()
     {
-        Voter voteFile = plugin.useDatabase() ? PlayerTable.getTopVoter(plugin, top) : VoteFile.getTopVoter(plugin,
+        Voter voteFile = plugin.hasDatabaseConnection() ? PlayerTable.getTopVoter(plugin, top) : VoteFile.getTopVoter(plugin,
                 top);
 
         Map<String, String> placeholders = new HashMap<>();

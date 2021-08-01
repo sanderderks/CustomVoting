@@ -92,7 +92,7 @@ public class CustomVote extends Vote
             queue();
         } else
         {
-            if(plugin.useDatabase())
+            if(plugin.hasDatabaseConnection())
             {
                 new PlayerRow(plugin, player.getUniqueId().toString()).addVote(true);
             } else
@@ -111,7 +111,7 @@ public class CustomVote extends Vote
 
     private void queue()
     {
-        if (plugin.useDatabase())
+        if (plugin.hasDatabaseConnection())
         {
             new PlayerRow(plugin, plugin.getPlayerTable().getUuid(getUsername())).addQueue();
         } else

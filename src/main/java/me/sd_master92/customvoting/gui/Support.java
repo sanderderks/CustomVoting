@@ -28,7 +28,7 @@ public class Support extends GUI
         getInventory().setItem(2, createItem(Material.ENCHANTED_BOOK, ChatColor.LIGHT_PURPLE + "Discord",
                 ChatColor.GRAY + "Join the discord server"));
         getInventory().setItem(3, createItem(Material.ENCHANTING_TABLE, ChatColor.LIGHT_PURPLE + "Database",
-                ChatColor.GRAY + "Status: " + (plugin.useDatabase() ? ChatColor.GREEN + "Connected" :
+                ChatColor.GRAY + "Status: " + (plugin.hasDatabaseConnection() ? ChatColor.GREEN + "Connected" :
                         ChatColor.RED + "Disabled")));
         getInventory().setItem(8, BACK_ITEM);
     }

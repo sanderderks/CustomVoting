@@ -31,7 +31,7 @@ public class VotesCommand extends SimpleCommand
             {
                 Player player = (Player) sender;
                 HashMap<String, String> placeholders = new HashMap<>();
-                placeholders.put("%VOTES%", "" + (plugin.useDatabase() ?
+                placeholders.put("%VOTES%", "" + (plugin.hasDatabaseConnection() ?
                                 new PlayerRow(plugin, player).getVotes() :
                                 new VoteFile(player, plugin).getVotes()));
                 placeholders.put("%s%", new VoteFile(player, plugin).getVotes() == 1 ? "" : "s");
@@ -43,7 +43,7 @@ public class VotesCommand extends SimpleCommand
             PlayerFile playerFile = PlayerFile.getByName(name, plugin);
             if (playerFile != null)
             {
-                Voter voteFile = plugin.useDatabase() ?
+                Voter voteFile = plugin.hasDatabaseConnection() ?
                         new PlayerRow(plugin, playerFile.getUuid()) :
                         new VoteFile(playerFile.getUuid(), plugin);
                 HashMap<String, String> placeholders = new HashMap<>();

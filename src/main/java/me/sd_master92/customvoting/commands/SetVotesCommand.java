@@ -35,7 +35,7 @@ public class SetVotesCommand extends SimpleCommand
                     int n = Integer.parseInt(amount);
                     if (n >= 0)
                     {
-                        if(plugin.useDatabase())
+                        if(plugin.hasDatabaseConnection())
                         {
                             PlayerRow playerRow = new PlayerRow(plugin, player);
                             playerRow.setVotes(n, true);
@@ -69,7 +69,7 @@ public class SetVotesCommand extends SimpleCommand
                     PlayerFile playerFile = PlayerFile.getByName(name, plugin);
                     if (playerFile != null)
                     {
-                        if(plugin.useDatabase())
+                        if(plugin.hasDatabaseConnection())
                         {
                             PlayerRow playerRow = new PlayerRow(plugin, playerFile.getUuid());
                             playerRow.setVotes(n, true);

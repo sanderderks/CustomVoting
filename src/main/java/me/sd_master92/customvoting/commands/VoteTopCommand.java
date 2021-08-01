@@ -28,7 +28,7 @@ public class VoteTopCommand extends SimpleCommand
     @Override
     public void onCommand(CommandSender sender, String[] args)
     {
-        List<? extends Voter> topVoters = plugin.useDatabase() ? PlayerTable.getTopVoters(plugin) :
+        List<? extends Voter> topVoters = plugin.hasDatabaseConnection() ? PlayerTable.getTopVoters(plugin) :
                 VoteFile.getTopVoters(plugin);
         if (topVoters.size() > 0)
         {

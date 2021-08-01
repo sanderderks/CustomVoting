@@ -135,7 +135,7 @@ public class VoteTopSign
         if (loc.getBlock().getState() instanceof Sign)
         {
             Sign sign = (Sign) loc.getBlock().getState();
-            Voter topVoter = plugin.useDatabase() ? PlayerTable.getTopVoter(plugin, top) : VoteFile.getTopVoter(plugin,
+            Voter topVoter = plugin.hasDatabaseConnection() ? PlayerTable.getTopVoter(plugin, top) : VoteFile.getTopVoter(plugin,
                 top);
             if (topVoter != null)
             {

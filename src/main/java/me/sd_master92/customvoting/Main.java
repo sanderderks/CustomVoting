@@ -44,7 +44,10 @@ public class Main extends CustomPlugin
     @Override
     protected void disable()
     {
-        players.getTable().getDatabase().disconnect();
+        if (hasDatabaseConnection())
+        {
+            players.getTable().getDatabase().disconnect();
+        }
     }
 
     private boolean checkVotifier()
@@ -118,19 +121,23 @@ public class Main extends CustomPlugin
             }
         } else
         {
-            print("|");
             print("|___database is disabled in the config");
         }
     }
 
     public boolean useDatabase()
     {
-        if (players != null)
+        return getConfig().getBoolean(Settings.USE_DATABASE);
+    }
+
+    public boolean hasDatabaseConnection()
+    {
+        if (useDatabase())
         {
-            return getConfig().getBoolean(Settings.USE_DATABASE) && players.getTable().getDatabase().isConnected();
+            return players != null && players.getTable().getDatabase().isConnected();
         } else
         {
-            return getConfig().getBoolean(Settings.USE_DATABASE);
+            return false;
         }
     }
 

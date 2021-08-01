@@ -45,7 +45,7 @@ public class PlayerListener implements Listener
     public void onPlayerJoin(PlayerJoinEvent event)
     {
         Player player = event.getPlayer();
-        if (plugin.useDatabase())
+        if (plugin.hasDatabaseConnection())
         {
             List<String> queue = new ArrayList<>();
             PlayerRow playerRow = new PlayerRow(plugin, player);
