@@ -135,7 +135,7 @@ public class Settings
     public static ItemStack getExperienceRewardSetting(Main plugin)
     {
         return createItem(Material.EXPERIENCE_BOTTLE, ChatColor.LIGHT_PURPLE + "XP Reward",
-                ChatColor.GRAY + "Currently: " + ChatColor.AQUA + plugin.getConfig().getNumber(VOTE_REWARD_EXPERIENCE) + " levels");
+                ChatColor.GRAY + "Currently: " + ChatColor.AQUA + plugin.getConfig().getNumber(VOTE_REWARD_EXPERIENCE) + ChatColor.GRAY + " levels");
     }
 
     public static ItemStack getDoIngameUpdatesSetting(Main plugin)
