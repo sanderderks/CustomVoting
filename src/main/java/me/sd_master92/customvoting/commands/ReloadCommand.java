@@ -20,8 +20,7 @@ public class ReloadCommand extends SimpleCommand
         this.plugin = plugin;
     }
 
-    @Override
-    public void onCommand(CommandSender sender, String[] args)
+    public static boolean reload(Main plugin)
     {
         if (plugin.getConfig().reloadConfig() && plugin.getData().reloadConfig() && plugin.getMessages().reloadConfig())
         {
@@ -29,11 +28,21 @@ public class ReloadCommand extends SimpleCommand
             {
                 VoteTopSign.updateAll(plugin);
                 VoteTopStand.updateAll(plugin);
-                sender.sendMessage(ChatColor.GREEN + "Configuration files reloaded!");
-            } else
-            {
-                sender.sendMessage(ChatColor.RED + "Could not reload configuration files!");
+                return true;
             }
+        }
+        return false;
+    }
+
+    @Override
+    public void onCommand(CommandSender sender, String[] args)
+    {
+        if (reload(plugin))
+        {
+            sender.sendMessage(ChatColor.GREEN + "Configuration files reloaded!");
+        } else
+        {
+            sender.sendMessage(ChatColor.RED + "Could not reload configuration files!");
         }
     }
 

@@ -16,6 +16,8 @@ public class Data
     public static final String VOTE_TOP_SIGNS = "vote_top";
     public static final String VOTE_TOP_STANDS = "armor_stands";
     public static final String VOTE_COMMANDS = "vote_commands";
+    public static final String VOTE_LINK_ITEMS = "vote_link_items";
+    public static final String VOTE_LINKS = "vote_links";
 
     public static ItemStack getCommandRewardSetting(Main plugin)
     {

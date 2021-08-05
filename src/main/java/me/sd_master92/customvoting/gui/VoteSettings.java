@@ -17,6 +17,8 @@ public class VoteSettings extends GUI
             null, true);
     public static final ItemStack REWARD_SETTINGS = createItem(Material.DIAMOND, ChatColor.LIGHT_PURPLE + "Rewards",
             null, true);
+    public static final ItemStack MESSAGES = createItem(Material.WRITABLE_BOOK, ChatColor.YELLOW + "Messages",
+            null, true);
     public static final ItemStack SUPPORT = createItem(Material.SPYGLASS, ChatColor.GREEN + "Support",
             null, true);
 
@@ -26,7 +28,7 @@ public class VoteSettings extends GUI
 
         getInventory().setItem(1, GENERAL_SETTINGS);
         getInventory().setItem(3, REWARD_SETTINGS);
-        getInventory().setItem(5, UNDER_CONSTRUCTION);
+        getInventory().setItem(5, MESSAGES);
         getInventory().setItem(7, SUPPORT);
     }
 
@@ -45,13 +47,15 @@ public class VoteSettings extends GUI
                 cancelCloseEvent();
                 player.openInventory(new RewardSettings(plugin).getInventory());
                 break;
+            case WRITABLE_BOOK:
+                SoundType.CLICK.play(plugin, player);
+                cancelCloseEvent();
+                player.openInventory(new MessageSettings(plugin).getInventory());
+                break;
             case SPYGLASS:
                 SoundType.CLICK.play(plugin, player);
                 cancelCloseEvent();
                 player.openInventory(new Support(plugin).getInventory());
-                break;
-            case IRON_SHOVEL:
-                SoundType.NOT_ALLOWED.play(plugin, player);
                 break;
         }
     }

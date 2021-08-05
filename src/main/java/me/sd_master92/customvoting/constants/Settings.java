@@ -21,6 +21,7 @@ public class Settings
     public static final String VOTE_REWARD_EXPERIENCE = "vote_reward_xp";
     public static final String LUCKY_VOTE = "lucky_vote";
     public static final String LUCKY_VOTE_CHANCE = "lucky_vote_chance";
+    public static final String VOTE_LINK_INVENTORY = "vote_link_inventory";
     public static final String FORBIDDEN_COMMANDS = "forbidden_commands";
     public static final String INGAME_UPDATES = "ingame_updates";
     public static final String USE_DATABASE = "use_database";
@@ -43,6 +44,7 @@ public class Settings
         setDefault(plugin, VOTE_REWARD_EXPERIENCE, 3);
         setDefault(plugin, LUCKY_VOTE, true);
         setDefault(plugin, LUCKY_VOTE_CHANCE, 50);
+        setDefault(plugin, VOTE_LINK_INVENTORY, false);
         setDefault(plugin, FORBIDDEN_COMMANDS, new String[]{"fakevote", "op", "stop", "restart", "reload"});
         setDefault(plugin, INGAME_UPDATES, true);
         setDefault(plugin, USE_DATABASE, false);
@@ -124,6 +126,11 @@ public class Settings
                 ChatColor.GRAY + "Currently: " + ChatColor.AQUA + plugin.getConfig().getNumber(LUCKY_VOTE_CHANCE) + ChatColor.GRAY + "%");
     }
 
+    public static ItemStack getUseVoteLinksInventory(Main plugin)
+    {
+        return createItem(Material.CHEST, ChatColor.LIGHT_PURPLE + "Vote Links Inventory",
+                ChatColor.GRAY + "Status: " + (plugin.getConfig().getBoolean(VOTE_LINK_INVENTORY) ?
+                        ChatColor.GREEN + "ON" : ChatColor.RED + "OFF"));    }
 
     public static ItemStack getMoneyRewardSetting(Main plugin)
     {

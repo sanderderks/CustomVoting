@@ -6,6 +6,7 @@ import me.sd_master92.customvoting.constants.Data;
 import me.sd_master92.customvoting.constants.Settings;
 import me.sd_master92.customvoting.constants.enumerations.SoundType;
 import me.sd_master92.customvoting.database.PlayerRow;
+import me.sd_master92.customvoting.gui.VoteLinks;
 import me.sd_master92.customvoting.gui.VotePartyRewards;
 import me.sd_master92.customvoting.subjects.CustomVote;
 import me.sd_master92.customvoting.subjects.VoteParty;
@@ -26,6 +27,8 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
@@ -34,6 +37,9 @@ public class PlayerListener implements Listener
 {
     public static List<UUID> moneyInput = new ArrayList<>();
     public static List<UUID> commandInput = new ArrayList<>();
+    public static Map<UUID, Integer> voteLinkInput = new HashMap<>();
+    public static List<UUID> linkVoteLinkInput = new ArrayList<>();
+    public static List<UUID> loreVoteLinkInput = new ArrayList<>();
     private final Main plugin;
 
     public PlayerListener(Main plugin)
@@ -150,8 +156,7 @@ public class PlayerListener implements Listener
                     player.sendMessage(ChatColor.RED + "Enter a number");
                 }
             }
-        }
-        if (commandInput.contains(player.getUniqueId()))
+        } else if (commandInput.contains(player.getUniqueId()))
         {
             event.setCancelled(true);
             if (event.getMessage().equalsIgnoreCase("cancel"))
@@ -162,6 +167,70 @@ public class PlayerListener implements Listener
             {
                 checkCommand(event.getMessage(), player);
             }
+        } else if (loreVoteLinkInput.contains(player.getUniqueId()))
+        {
+            event.setCancelled(true);
+            if (event.getMessage().equalsIgnoreCase("cancel"))
+            {
+                loreVoteLinkInput.remove(player.getUniqueId());
+                linkVoteLinkInput.add(player.getUniqueId());
+                SoundType.SUCCESS.play(plugin, player);
+                player.sendMessage(ChatColor.GREEN + "Add a link to this item", ChatColor.GRAY +
+                        "Type 'cancel' to continue");
+            } else
+            {
+                String message = ChatColor.translateAlternateColorCodes('&', event.getMessage());
+                ItemStack[] items = plugin.getData().getItems(Data.VOTE_LINK_ITEMS);
+                int i = voteLinkInput.get(player.getUniqueId());
+                ItemStack item = items[i];
+                ItemMeta meta = item.getItemMeta();
+                if (meta != null)
+                {
+                    List<String> lore = meta.getLore() != null ? meta.getLore() : new ArrayList<>();
+                    lore.add(message);
+                    meta.setLore(lore);
+                    item.setItemMeta(meta);
+                }
+                items[i] = item;
+                VoteLinks.save(plugin, player, items, false);
+                SoundType.SUCCESS.play(plugin, player);
+                player.sendMessage(ChatColor.GREEN + "Add more lore (subtext) to this item", ChatColor.GRAY +
+                        "Type 'cancel' to continue");
+            }
+        } else if (linkVoteLinkInput.contains(player.getUniqueId()))
+        {
+            event.setCancelled(true);
+            if (!event.getMessage().equalsIgnoreCase("cancel"))
+            {
+                int i = voteLinkInput.get(player.getUniqueId());
+                plugin.getData().set(Data.VOTE_LINKS + "." + i, event.getMessage());
+                plugin.getData().saveConfig();
+            }
+            linkVoteLinkInput.remove(player.getUniqueId());
+            voteLinkInput.remove(player.getUniqueId());
+            SoundType.SUCCESS.play(plugin, player);
+        } else if (voteLinkInput.containsKey(player.getUniqueId()))
+        {
+            event.setCancelled(true);
+            if (!event.getMessage().equalsIgnoreCase("cancel"))
+            {
+                String message = ChatColor.translateAlternateColorCodes('&', event.getMessage());
+                ItemStack[] items = plugin.getData().getItems(Data.VOTE_LINK_ITEMS);
+                int i = voteLinkInput.get(player.getUniqueId());
+                ItemStack item = items[i];
+                ItemMeta meta = item.getItemMeta();
+                if (meta != null)
+                {
+                    meta.setDisplayName(message);
+                    item.setItemMeta(meta);
+                }
+                items[i] = item;
+                VoteLinks.save(plugin, player, items, false);
+            }
+            loreVoteLinkInput.add(player.getUniqueId());
+            SoundType.SUCCESS.play(plugin, player);
+            player.sendMessage(ChatColor.GREEN + "Add lore (subtext) to this item", ChatColor.GRAY +
+                    "Type 'cancel' to continue");
         }
     }
 

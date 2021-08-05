@@ -3,11 +3,10 @@ package me.sd_master92.customvoting.tasks;
 import me.sd_master92.customfile.PlayerFile;
 import me.sd_master92.customvoting.Main;
 import me.sd_master92.customvoting.VoteFile;
+import me.sd_master92.customvoting.commands.ReloadCommand;
 import me.sd_master92.customvoting.constants.Messages;
 import me.sd_master92.customvoting.constants.Settings;
 import me.sd_master92.customvoting.database.PlayerRow;
-import me.sd_master92.customvoting.subjects.VoteTopSign;
-import me.sd_master92.customvoting.subjects.VoteTopStand;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Calendar;
@@ -24,19 +23,13 @@ public class DailyTask
             @Override
             public void run()
             {
+                ReloadCommand.reload(plugin);
                 if (plugin.getConfig().getBoolean(Settings.MONTHLY_RESET))
                 {
-                    reloadVoteTop();
                     checkMonthlyReset();
                 }
             }
         }.runTaskTimer(plugin, 60, 20 * 60 * 60);
-    }
-
-    private void reloadVoteTop()
-    {
-        VoteTopSign.updateAll(plugin);
-        VoteTopStand.updateAll(plugin);
     }
 
     private void checkMonthlyReset()

@@ -24,8 +24,6 @@ public abstract class GUI implements Listener
 {
     public static final ItemStack BACK_ITEM = createItem(Material.BARRIER, ChatColor.RED + "Back");
     public static final ItemStack SAVE_ITEM = createItem(Material.WRITABLE_BOOK, ChatColor.GREEN + "Save");
-    public static final ItemStack UNDER_CONSTRUCTION = createItem(Material.IRON_SHOVEL, ChatColor.RED + "Under " +
-            "Construction");
     protected final Main plugin;
     private final Inventory inventory;
     private final String name;
@@ -145,6 +143,10 @@ public abstract class GUI implements Listener
 
     private boolean isThisInventory(InventoryEvent event)
     {
+        if (event instanceof InventoryClickEvent)
+        {
+            return ((InventoryClickEvent) event).getClickedInventory() == inventory;
+        }
         return event.getInventory() == inventory;
     }
 }
