@@ -83,6 +83,7 @@ public class VoteLinks extends GUI
             }
         } else
         {
+            event.setCancelled(true);
             String voteLink = plugin.getData().getMessage(Data.VOTE_LINKS + "." + event.getSlot());
             if (!voteLink.isEmpty())
             {
@@ -99,6 +100,9 @@ public class VoteLinks extends GUI
         if (!isPublic)
         {
             save(plugin, player, getInventory().getContents(), true);
+        } else
+        {
+            SoundType.CLOSE.play(plugin, player);
         }
     }
 }
