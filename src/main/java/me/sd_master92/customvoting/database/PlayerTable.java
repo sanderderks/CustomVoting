@@ -4,6 +4,8 @@ import me.sd_master92.customfile.database.CustomColumn;
 import me.sd_master92.customfile.database.CustomDatabase;
 import me.sd_master92.customfile.database.CustomTable;
 import me.sd_master92.customvoting.Main;
+import me.sd_master92.customvoting.extensions.CustomPlaceholders;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -68,6 +70,22 @@ public class PlayerTable
             }
             return compare;
         });
+
+        if (plugin.usePlaceholders())
+        {
+            new BukkitRunnable()
+            {
+                @Override
+                public void run()
+                {
+                    for (int i = 0; i < topVoters.size(); i++)
+                    {
+                        CustomPlaceholders.setPlayerVotes(i + 1);
+                    }
+                }
+            }.runTask(plugin);
+        }
+
         return topVoters;
     }
 

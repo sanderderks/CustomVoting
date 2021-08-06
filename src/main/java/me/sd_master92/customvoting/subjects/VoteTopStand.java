@@ -215,11 +215,7 @@ public class VoteTopStand
     {
         Voter voteFile = plugin.hasDatabaseConnection() ? PlayerTable.getTopVoter(plugin, top) : VoteFile.getTopVoter(plugin,
                 top);
-        if (plugin.usePlaceholders())
-        {
-            CustomPlaceholders.setPlayerVotes(top);
-        }
-        
+
         Map<String, String> placeholders = new HashMap<>();
         placeholders.put("%TOP%", "" + top);
         if (voteFile != null)

@@ -3,9 +3,11 @@ package me.sd_master92.customvoting;
 import me.sd_master92.customfile.PlayerFile;
 import me.sd_master92.customvoting.constants.Data;
 import me.sd_master92.customvoting.constants.Voter;
+import me.sd_master92.customvoting.extensions.CustomPlaceholders;
 import me.sd_master92.customvoting.subjects.VoteTopSign;
 import me.sd_master92.customvoting.subjects.VoteTopStand;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +46,22 @@ public class VoteFile extends PlayerFile implements Voter
             }
             return compare;
         });
+
+        if (plugin.usePlaceholders())
+        {
+            new BukkitRunnable()
+            {
+                @Override
+                public void run()
+                {
+                    for (int i = 0; i < topVoters.size(); i++)
+                    {
+                        CustomPlaceholders.setPlayerVotes(i + 1);
+                    }
+                }
+            }.runTask(plugin);
+        }
+
         return topVoters;
     }
 
@@ -75,7 +93,7 @@ public class VoteFile extends PlayerFile implements Voter
     {
         setTimeStamp("last");
         setNumber("votes", n);
-        if(update)
+        if (update)
         {
             VoteTopSign.updateAll(plugin);
             VoteTopStand.updateAll(plugin);
@@ -86,7 +104,7 @@ public class VoteFile extends PlayerFile implements Voter
     {
         setTimeStamp("last");
         addNumber("votes", 1);
-        if(update)
+        if (update)
         {
             VoteTopSign.updateAll(plugin);
             VoteTopStand.updateAll(plugin);

@@ -6,7 +6,7 @@ import me.sd_master92.customvoting.Main;
 import me.sd_master92.customvoting.VoteFile;
 import me.sd_master92.customvoting.constants.Voter;
 import me.sd_master92.customvoting.database.PlayerTable;
-import org.bukkit.entity.Player;
+import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 
 public class CustomPlaceholders extends PlaceholderExpansion
@@ -58,7 +58,7 @@ public class CustomPlaceholders extends PlaceholderExpansion
     }
 
     @Override
-    public String onPlaceholderRequest(Player player, @NotNull String params)
+    public String onRequest(OfflinePlayer player, @NotNull String params)
     {
         try
         {
@@ -78,7 +78,13 @@ public class CustomPlaceholders extends PlaceholderExpansion
                 ) : VoteFile.getTopVoter(plugin, key);
                 if (topVoter != null)
                 {
-                    return "" + topVoter.getVotes();
+                    if (params.endsWith("NAME"))
+                    {
+                        return topVoter.getName();
+                    } else
+                    {
+                        return "" + topVoter.getVotes();
+                    }
                 }
             }
         } catch (Exception e)
