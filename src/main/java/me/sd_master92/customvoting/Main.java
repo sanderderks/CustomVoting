@@ -6,6 +6,7 @@ import me.sd_master92.customvoting.commands.*;
 import me.sd_master92.customvoting.commands.voteparty.VotePartyCommand;
 import me.sd_master92.customvoting.constants.Settings;
 import me.sd_master92.customvoting.database.PlayerTable;
+import me.sd_master92.customvoting.extensions.CustomPlaceholders;
 import me.sd_master92.customvoting.listeners.PlayerListener;
 import me.sd_master92.customvoting.listeners.VoteTopListener;
 import me.sd_master92.customvoting.listeners.VotifierListener;
@@ -76,9 +77,21 @@ public class Main extends CustomPlugin
         if (!setupEconomy())
         {
             error("|___economy hook not found");
-            return;
+        } else
+        {
+            print("|___successfully hooked into '" + economy.getName() + "'");
         }
-        print("|___successfully hooked into '" + economy.getName() + "'");
+        print("");
+        print("| checking for PlaceholderAPI hook");
+        print("|");
+        if (getServer().getPluginManager().getPlugin("PlaceholderAPI") == null)
+        {
+            error("|___PlaceholderAPI hook not found");
+        } else
+        {
+            new CustomPlaceholders(this).register();
+            print("|___successfully hooked into PlaceholderAPI");
+        }
     }
 
     private boolean setupEconomy()
