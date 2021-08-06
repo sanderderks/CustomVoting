@@ -138,7 +138,10 @@ public class VoteTopSign
             Sign sign = (Sign) loc.getBlock().getState();
             Voter topVoter = plugin.hasDatabaseConnection() ? PlayerTable.getTopVoter(plugin, top) : VoteFile.getTopVoter(plugin,
                     top);
-            CustomPlaceholders.setPlayerVotes(top);
+            if (plugin.usePlaceholders())
+            {
+                CustomPlaceholders.setPlayerVotes(top);
+            }
 
             if (topVoter != null)
             {
