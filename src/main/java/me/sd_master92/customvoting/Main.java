@@ -21,7 +21,6 @@ public class Main extends CustomPlugin
     private PlayerTable players;
     private CustomFile messages;
     private CustomFile data;
-    private boolean usePlaceholders;
 
     public Main()
     {
@@ -87,12 +86,10 @@ public class Main extends CustomPlugin
         print("|");
         if (getServer().getPluginManager().getPlugin("PlaceholderAPI") == null)
         {
-            usePlaceholders = false;
             error("|___PlaceholderAPI hook not found");
         } else
         {
             new CustomPlaceholders(this).register();
-            usePlaceholders = true;
             print("|___successfully hooked into PlaceholderAPI");
         }
     }
@@ -155,11 +152,6 @@ public class Main extends CustomPlugin
         {
             return false;
         }
-    }
-
-    public boolean usePlaceholders()
-    {
-        return usePlaceholders;
     }
 
     public PlayerTable getPlayerTable()

@@ -47,21 +47,6 @@ public class VoteFile extends PlayerFile implements Voter
             return compare;
         });
 
-        if (plugin.usePlaceholders())
-        {
-            new BukkitRunnable()
-            {
-                @Override
-                public void run()
-                {
-                    for (int i = 0; i < topVoters.size(); i++)
-                    {
-                        CustomPlaceholders.setPlayerVotes(i + 1);
-                    }
-                }
-            }.runTask(plugin);
-        }
-
         return topVoters;
     }
 
