@@ -134,12 +134,15 @@ class PlayerTable(private val plugin: Main, database: CustomDatabase)
             val topVoters: MutableList<PlayerData> = ArrayList()
             try
             {
-                val all = plugin.playerTable.all
-                while (all.next())
+                val all = plugin.playerTable?.all
+                if(all != null)
                 {
-                    topVoters.add(PlayerData(all.getString("uuid"), all.getString("name"), all.getInt("votes"),
-                            all.getLong("last"),
-                            all.getInt("queue")))
+                    while (all.next())
+                    {
+                        topVoters.add(PlayerData(all.getString("uuid"), all.getString("name"), all.getInt("votes"),
+                                all.getLong("last"),
+                                all.getInt("queue")))
+                    }
                 }
             } catch (e: Exception)
             {

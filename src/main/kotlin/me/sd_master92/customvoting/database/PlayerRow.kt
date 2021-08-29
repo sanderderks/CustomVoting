@@ -8,27 +8,27 @@ import org.bukkit.entity.Player
 
 class PlayerRow(private val plugin: Main, override val uniqueId: String) : Voter
 {
-    private val players: PlayerTable = plugin.playerTable
+    private val players: PlayerTable? = plugin.playerTable
 
     constructor(plugin: Main, player: Player) : this(plugin, player.uniqueId.toString())
     {
-        players.setName(player.uniqueId.toString(), player.name)
+        players?.setName(player.uniqueId.toString(), player.name)
     }
 
     private fun register()
     {
-        players.getVotes(uniqueId)
+        players?.getVotes(uniqueId)
     }
 
     override val userName: String
-        get() = players.getName(uniqueId)
+        get() = players?.getName(uniqueId) ?: "Unknown"
     override val votes: Int
-        get() = players.getVotes(uniqueId)
+        get() = players?.getVotes(uniqueId) ?: 0
 
     fun setVotes(n: Int, update: Boolean)
     {
-        players.setVotes(uniqueId, n)
-        players.setLast(uniqueId)
+        players?.setVotes(uniqueId, n)
+        players?.setLast(uniqueId)
         if (update)
         {
             VoteTopSign.updateAll(plugin)
@@ -38,8 +38,8 @@ class PlayerRow(private val plugin: Main, override val uniqueId: String) : Voter
 
     fun addVote(update: Boolean)
     {
-        players.setVotes(uniqueId, votes + 1)
-        players.setLast(uniqueId)
+        players?.setVotes(uniqueId, votes + 1)
+        players?.setLast(uniqueId)
         if (update)
         {
             VoteTopSign.updateAll(plugin)
@@ -48,16 +48,16 @@ class PlayerRow(private val plugin: Main, override val uniqueId: String) : Voter
     }
 
     val queue: Int
-        get() = players.getQueue(uniqueId)
+        get() = players?.getQueue(uniqueId) ?: 0
 
     fun clearQueue(): Boolean
     {
-        return players.setQueue(uniqueId, 0)
+        return players?.setQueue(uniqueId, 0) ?: false
     }
 
     fun addQueue(): Boolean
     {
-        return players.setQueue(uniqueId, queue + 1)
+        return players?.setQueue(uniqueId, queue + 1) ?: false
     }
 
     init

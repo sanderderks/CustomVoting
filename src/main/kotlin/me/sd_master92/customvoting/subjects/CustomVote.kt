@@ -51,9 +51,9 @@ class CustomVote(private val plugin: Main, vote: Vote) : Vote()
 
     private fun queue()
     {
-        if (plugin.hasDatabaseConnection())
+        if (plugin.hasDatabaseConnection() && plugin.playerTable != null)
         {
-            PlayerRow(plugin, plugin.playerTable.getUuid(username)).addQueue()
+            PlayerRow(plugin, plugin.playerTable!!.getUuid(username)).addQueue()
         } else
         {
             val playerFile = PlayerFile.getByName(username, plugin)

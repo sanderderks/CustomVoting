@@ -16,7 +16,7 @@ import net.milkbowl.vault.economy.Economy
 
 class Main : CustomPlugin(28103, "settings.yml")
 {
-    lateinit var playerTable: PlayerTable
+    var playerTable: PlayerTable? = null
         private set
     lateinit var messages: CustomFile
         private set
@@ -41,7 +41,7 @@ class Main : CustomPlugin(28103, "settings.yml")
     {
         if (hasDatabaseConnection())
         {
-            playerTable.table.database.disconnect()
+            playerTable!!.table.database.disconnect()
         }
     }
 
@@ -136,7 +136,7 @@ class Main : CustomPlugin(28103, "settings.yml")
     {
         return if (useDatabase())
         {
-            playerTable.table.database.isConnected
+            playerTable?.table?.database?.isConnected ?: false
         } else
         {
             false
