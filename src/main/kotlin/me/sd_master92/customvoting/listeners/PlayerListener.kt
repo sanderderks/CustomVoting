@@ -28,6 +28,7 @@ import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.scheduler.BukkitRunnable
 import java.util.*
+import kotlin.collections.ArrayList
 
 class PlayerListener(private val plugin: Main) : Listener
 {
@@ -212,6 +213,44 @@ class PlayerListener(private val plugin: Main) : Listener
             SoundType.SUCCESS.play(plugin, player)
             player.sendMessage(ChatColor.GREEN.toString() + "Add lore (subtext) to this item", ChatColor.GRAY.toString() +
                     "Type 'cancel' to continue")
+        } else if (streakInput.contains(player.uniqueId))
+        {
+            event.isCancelled = true
+            if (event.message.equals("cancel", ignoreCase = true))
+            {
+                streakInput.remove(player.uniqueId)
+                SoundType.FAILURE.play(plugin, player)
+            } else
+            {
+                try
+                {
+                    val number = event.message.toInt()
+                    if(plugin.data.contains(Data.VOTE_STREAKS + "." + number))
+                    {
+                        player.sendMessage(ChatColor.RED.toString() + "That streak already exists.")
+                    } else
+                    {
+                        plugin.data.set(Data.VOTE_STREAKS + "." + number + ".permissions", ArrayList<String>())
+                        plugin.data.saveConfig()
+                        player.sendMessage(ChatColor.GREEN.toString() + "Streak #" + number + " created!")
+                        streakInput.remove(player.uniqueId)
+                    }
+                } catch (e: Exception)
+                {
+                    player.sendMessage(ChatColor.RED.toString() + "Streak must be a number.")
+                }
+            }
+        } else if (streakPermissionInput.containsKey(player.uniqueId))
+        {
+            event.isCancelled = true
+            if (event.message.equals("cancel", ignoreCase = true))
+            {
+                streakPermissionInput.remove(player.uniqueId)
+                SoundType.FAILURE.play(plugin, player)
+            } else
+            {
+                checkPermission(event.message, player)
+            }
         }
     }
 
@@ -244,7 +283,7 @@ class PlayerListener(private val plugin: Main) : Listener
             }
         } else if (block.state is Sign)
         {
-            val voteTop = VoteTopSign.get(block.location)
+            val voteTop = VoteTopSign[block.location]
             voteTop?.delete(player)
         } else
         {
@@ -261,7 +300,7 @@ class PlayerListener(private val plugin: Main) : Listener
             {
                 for (loc in locations)
                 {
-                    val voteTop = VoteTopSign.get(loc)
+                    val voteTop = VoteTopSign[loc]
                     voteTop?.delete(player)
                 }
             }
@@ -350,10 +389,29 @@ class PlayerListener(private val plugin: Main) : Listener
         commandInput.remove(player.uniqueId)
     }
 
+    private fun checkPermission(permission: String, player: Player)
+    {
+        val permissions = plugin.data.getStringList(Data.VOTE_STREAKS + "." + streakPermissionInput[player.uniqueId] + ".permissions")
+        if (permissions.contains(permission))
+        {
+            permissions.remove(permission)
+            player.sendMessage(ChatColor.RED.toString() + "Removed " + permission + " from permissions")
+        } else
+        {
+            permissions.add(permission)
+            player.sendMessage(ChatColor.GREEN.toString() + "Added " + permission + " to permissions")
+        }
+        plugin.data[Data.VOTE_STREAKS + "." + streakPermissionInput[player.uniqueId] + ".permissions"] = permissions
+        plugin.data.saveConfig()
+        streakPermissionInput.remove(player.uniqueId)
+    }
+
     companion object
     {
         var moneyInput: MutableList<UUID> = ArrayList()
         var commandInput: MutableList<UUID> = ArrayList()
+        var streakInput: MutableList<UUID> = ArrayList()
+        var streakPermissionInput: MutableMap<UUID, Int> = HashMap()
         var voteLinkInput: MutableMap<UUID, Int> = HashMap()
         var linkVoteLinkInput: MutableList<UUID> = ArrayList()
         var loreVoteLinkInput: MutableList<UUID> = ArrayList()

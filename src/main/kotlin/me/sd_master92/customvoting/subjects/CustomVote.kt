@@ -11,10 +11,7 @@ import me.sd_master92.customvoting.constants.Settings
 import me.sd_master92.customvoting.database.PlayerRow
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
-import org.bukkit.Bukkit
-import org.bukkit.Color
-import org.bukkit.FireworkEffect
-import org.bukkit.Location
+import org.bukkit.*
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Firework
 import org.bukkit.entity.Player
@@ -120,6 +117,7 @@ class CustomVote(private val plugin: Main, vote: Vote) : Vote()
         giveItems(player)
         giveLuckyReward(player)
         executeCommands(player)
+        giveStreakRewards(player)
         var rewardMessage = ""
         val money = giveMoney(player)
         if (Main.economy != null && money > 0)
@@ -212,6 +210,29 @@ class CustomVote(private val plugin: Main, vote: Vote) : Vote()
         {
             plugin.server.dispatchCommand(plugin.server.consoleSender, command.replace("%PLAYER%",
                     player.name))
+        }
+    }
+
+    private fun giveStreakRewards(player: Player)
+    {
+        val votes = VoteFile(player, plugin).votes
+        if (plugin.data.contains(Data.VOTE_STREAKS + "." + votes))
+        {
+            val permissions = plugin.data.getStringList(Data.VOTE_STREAKS + "." + votes + ".permissions")
+            if (permissions.isNotEmpty() && Main.permission != null)
+            {
+                plugin.server.broadcastMessage(ChatColor.AQUA.toString() + player.name + ChatColor.LIGHT_PURPLE.toString() + " reached vote streak #" + ChatColor.AQUA.toString() + votes + ChatColor.LIGHT_PURPLE.toString() + "!")
+                for (permission in permissions)
+                {
+                    if (Main.permission!!.playerAdd(null, player, permission))
+                    {
+                        val placeholders = HashMap<String, String>()
+                        placeholders["%PLAYER%"] = player.name
+                        placeholders["%STREAK%"] = "" + votes
+                        player.sendMessage(Messages.VOTE_STREAK_REACHED.getMessage(plugin, placeholders))
+                    }
+                }
+            }
         }
     }
 

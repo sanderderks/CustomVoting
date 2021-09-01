@@ -25,11 +25,11 @@ object Settings
     const val INGAME_UPDATES = "ingame_updates"
     const val USE_DATABASE = "use_database"
     const val DATABASE = "database"
-    const val DATABASE_HOST = "$DATABASE.host"
-    const val DATABASE_PORT = "$DATABASE.port"
-    const val DATABASE_DATABASE = "$DATABASE.database"
-    const val DATABASE_USER = "$DATABASE.user"
-    const val DATABASE_PASSWORD = "$DATABASE.password"
+    private const val DATABASE_HOST = "$DATABASE.host"
+    private const val DATABASE_PORT = "$DATABASE.port"
+    private const val DATABASE_DATABASE = "$DATABASE.database"
+    private const val DATABASE_USER = "$DATABASE.user"
+    private const val DATABASE_PASSWORD = "$DATABASE.password"
     fun initialize(plugin: Main)
     {
         setDefault(plugin, MONTHLY_RESET, false)

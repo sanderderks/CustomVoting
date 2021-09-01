@@ -90,3 +90,8 @@ vote_party:
   countdown_ending: '&aVote Party starting in &b%TIME%'
   start: '&aThe Vote Party has begun!'
   end: '&7The Vote Party has ended!'
+
+# %PLAYER% name of the player
+# %STREAK% streak reached
+vote_streak:
+  streak_reached: '&b%PLAYER% &dreached vote streak #&b%STREAK%&d!'

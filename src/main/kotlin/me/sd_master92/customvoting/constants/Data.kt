@@ -18,11 +18,18 @@ object Data
     const val VOTE_COMMANDS = "vote_commands"
     const val VOTE_LINK_ITEMS = "vote_link_items"
     const val VOTE_LINKS = "vote_links"
+    const val VOTE_STREAKS = "vote_streaks"
 
     fun getCommandRewardSetting(plugin: Main): ItemStack
     {
-        return GUI.createItem(Material.COMMAND_BLOCK, ChatColor.LIGHT_PURPLE.toString() + "Command Reward",
+        return GUI.createItem(Material.COMMAND_BLOCK, ChatColor.LIGHT_PURPLE.toString() + "Command Rewards",
                 ChatColor.GRAY.toString() + "Currently: " + ChatColor.AQUA + plugin.data.getStringList(VOTE_COMMANDS).size + ChatColor.GRAY + " commands")
+    }
+
+    fun getStreakPermissionRewardSetting(plugin: Main, number: Int): ItemStack
+    {
+        return GUI.createItem(Material.DIAMOND_SWORD, ChatColor.LIGHT_PURPLE.toString() + "Permission Rewards",
+                ChatColor.GRAY.toString() + "Currently: " + ChatColor.AQUA + plugin.data.getStringList("$VOTE_STREAKS.$number.permissions").size + ChatColor.GRAY + " permissions")
     }
 
     fun getItemRewardSetting(plugin: Main): ItemStack
@@ -37,5 +44,17 @@ object Data
         return GUI.createItem(Material.ENDER_CHEST, ChatColor.LIGHT_PURPLE.toString() +
                 "Lucky Rewards",
                 ChatColor.GRAY.toString() + "Currently: " + ChatColor.AQUA + plugin.data.getItems(LUCKY_REWARDS).size + ChatColor.GRAY + " item stacks")
+    }
+
+    fun getVoteStreakInventorySize(plugin: Main): Int
+    {
+        val streaks = (plugin.data.getConfigurationSection(VOTE_STREAKS)?.getKeys(false)?.size ?: 0) + 2
+        return if (streaks % 9 == 0)
+        {
+            streaks
+        } else
+        {
+            streaks + (9 - (streaks % 9))
+        }
     }
 }

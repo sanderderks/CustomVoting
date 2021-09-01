@@ -32,7 +32,8 @@ enum class Messages(private val path: String)
     VOTE_PARTY_COUNTDOWN("vote_party.countdown"),
     VOTE_PARTY_COUNTDOWN_ENDING("vote_party.countdown_ending"),
     VOTE_PARTY_START("vote_party.start"),
-    VOTE_PARTY_END("vote_party.end");
+    VOTE_PARTY_END("vote_party.end"),
+    VOTE_STREAK_REACHED("vote_streak.streak_reached");
 
     fun getMessage(plugin: Main, placeholders: Map<String, String>?): String
     {

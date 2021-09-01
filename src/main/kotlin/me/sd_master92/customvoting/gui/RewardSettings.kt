@@ -137,6 +137,12 @@ class RewardSettings(private val plugin: Main) : GUI(plugin, NAME, 9, true, true
                 }
                 event.currentItem = Settings.getLuckyVoteChanceSetting(plugin)
             }
+            Material.NETHER_STAR ->
+            {
+                SoundType.CLICK.play(plugin, player)
+                cancelCloseEvent()
+                player.openInventory(VoteStreakSettings(plugin).inventory)
+            }
             else ->
             {
             }
@@ -161,6 +167,7 @@ class RewardSettings(private val plugin: Main) : GUI(plugin, NAME, 9, true, true
         inventory.setItem(3, getCommandRewardSetting(plugin))
         inventory.setItem(4, getLuckyRewardSetting(plugin))
         inventory.setItem(5, Settings.getLuckyVoteChanceSetting(plugin))
+        inventory.setItem(6, createItem(Material.NETHER_STAR, ChatColor.LIGHT_PURPLE.toString() + "Vote Streak"))
         inventory.setItem(8, BACK_ITEM)
     }
 }

@@ -13,6 +13,7 @@ import me.sd_master92.customvoting.listeners.VotifierListener
 import me.sd_master92.customvoting.tasks.DailyTask
 import me.sd_master92.plugin.CustomPlugin
 import net.milkbowl.vault.economy.Economy
+import net.milkbowl.vault.permission.Permission
 
 class Main : CustomPlugin(28103, "settings.yml")
 {
@@ -65,15 +66,34 @@ class Main : CustomPlugin(28103, "settings.yml")
 
     private fun checkHooks()
     {
-        print("")
-        print("| checking for economy hook")
-        print("|")
-        if (!setupEconomy())
+        if(checkVault())
         {
-            error("|___economy hook not found")
+            print("")
+            print("| checking for economy hook")
+            print("|")
+            if (!setupEconomy())
+            {
+                error("|___economy hook not found")
+            } else
+            {
+                print("|___successfully hooked into '" + economy!!.name + "'")
+            }
+            print("")
+            print("| checking for permission hook")
+            print("|")
+            if (!setupPermission())
+            {
+                error("|___permission hook not found")
+            } else
+            {
+                print("|___successfully hooked into '" + permission!!.name + "'")
+            }
         } else
         {
-            print("|___successfully hooked into '" + economy!!.name + "'")
+            print("")
+            print("| Vault not found! ")
+            print("|")
+            print("|___Economy and permissions disabled'")
         }
         print("")
         print("| checking for PlaceholderAPI hook")
@@ -88,15 +108,21 @@ class Main : CustomPlugin(28103, "settings.yml")
         }
     }
 
+    private fun checkVault(): Boolean
+    {
+        return server.pluginManager.getPlugin("Vault") != null
+    }
+
     private fun setupEconomy(): Boolean
     {
-        if (server.pluginManager.getPlugin("Vault") == null)
-        {
-            return false
-        }
-        val rsp = server.servicesManager.getRegistration(Economy::class.java) ?: return false
-        economy = rsp.provider
-        return true
+        economy = server.servicesManager.getRegistration(Economy::class.java)?.provider ?: return false
+        return economy != null
+    }
+
+    private fun setupPermission(): Boolean
+    {
+        permission = server.servicesManager.getRegistration(Permission::class.java)?.provider ?: return false
+        return permission != null
     }
 
     private fun registerFiles()
@@ -172,5 +198,6 @@ class Main : CustomPlugin(28103, "settings.yml")
     companion object
     {
         var economy: Economy? = null
+        var permission: Permission? = null
     }
 }

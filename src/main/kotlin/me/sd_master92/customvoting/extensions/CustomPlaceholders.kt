@@ -57,7 +57,7 @@ class CustomPlaceholders(private val plugin: Main) : PlaceholderExpansion()
                 ) else VoteFile.getTopVoter(plugin, key)
                 return if (params.endsWith("NAME"))
                 {
-                    if (topVoter == null) "Unknown" else topVoter.userName!!
+                    if (topVoter == null) "Unknown" else topVoter.userName
                 } else
                 {
                     if (topVoter == null) "0" else "" + topVoter.votes
