@@ -41,38 +41,42 @@ class VoteTopStand @JvmOverloads constructor(private val plugin: Main, private v
         val world = player.location.world
         if (world != null)
         {
-            topStand = world.spawnEntity(player.location.add(0.0, 1.0, 0.0),
+            val topStand = world.spawnEntity(player.location.add(0.0, 1.0, 0.0),
                     EntityType.ARMOR_STAND) as ArmorStand
-            plugin.data[Data.VOTE_TOP_STANDS + "." + top + ".top"] = topStand!!.uniqueId.toString()
-            topStand!!.isVisible = false
-            topStand!!.removeWhenFarAway = false
-            topStand!!.isSilent = true
-            topStand!!.isPersistent = true
-            topStand!!.setGravity(false)
-            topStand!!.isCustomNameVisible = true
-            nameStand = world.spawnEntity(player.location.add(0.0, 0.5, 0.0),
+            plugin.data[Data.VOTE_TOP_STANDS + "." + top + ".top"] = topStand.uniqueId.toString()
+            topStand.isVisible = false
+            topStand.removeWhenFarAway = false
+            topStand.isSilent = true
+            topStand.isPersistent = true
+            topStand.setGravity(false)
+            topStand.isCustomNameVisible = true
+            this.topStand = topStand
+
+            val nameStand = world.spawnEntity(player.location.add(0.0, 0.5, 0.0),
                     EntityType.ARMOR_STAND) as ArmorStand
-            plugin.data[Data.VOTE_TOP_STANDS + "." + top + ".name"] = nameStand!!.uniqueId.toString()
-            nameStand!!.isVisible = false
-            nameStand!!.removeWhenFarAway = false
-            nameStand!!.isSilent = true
-            nameStand!!.isPersistent = true
-            nameStand!!.setGravity(false)
-            nameStand!!.isCustomNameVisible = true
-            votesStand = world.spawnEntity(player.location, EntityType.ARMOR_STAND) as ArmorStand
-            plugin.data[Data.VOTE_TOP_STANDS + "." + top + ".votes"] = votesStand!!.uniqueId.toString()
+            plugin.data[Data.VOTE_TOP_STANDS + "." + top + ".name"] = nameStand.uniqueId.toString()
+            nameStand.isVisible = false
+            nameStand.removeWhenFarAway = false
+            nameStand.isSilent = true
+            nameStand.isPersistent = true
+            nameStand.setGravity(false)
+            nameStand.isCustomNameVisible = true
+            this.nameStand = nameStand
+
+            val votesStand = world.spawnEntity(player.location, EntityType.ARMOR_STAND) as ArmorStand
+            plugin.data[Data.VOTE_TOP_STANDS + "." + top + ".votes"] = votesStand.uniqueId.toString()
             plugin.data.saveConfig()
-            votesStand!!.removeWhenFarAway = false
-            votesStand!!.isSilent = true
-            votesStand!!.isPersistent = true
-            votesStand!!.setGravity(false)
-            votesStand!!.isCustomNameVisible = true
-            votesStand!!.addEquipmentLock(EquipmentSlot.HEAD, ArmorStand.LockType.REMOVING_OR_CHANGING)
-            votesStand!!.addEquipmentLock(EquipmentSlot.CHEST, ArmorStand.LockType.REMOVING_OR_CHANGING)
-            votesStand!!.addEquipmentLock(EquipmentSlot.LEGS, ArmorStand.LockType.REMOVING_OR_CHANGING)
-            votesStand!!.addEquipmentLock(EquipmentSlot.FEET, ArmorStand.LockType.REMOVING_OR_CHANGING)
-            votesStand!!.addEquipmentLock(EquipmentSlot.HAND, ArmorStand.LockType.REMOVING_OR_CHANGING)
-            val entityEquipment = votesStand!!.equipment
+            votesStand.removeWhenFarAway = false
+            votesStand.isSilent = true
+            votesStand.isPersistent = true
+            votesStand.setGravity(false)
+            votesStand.isCustomNameVisible = true
+            votesStand.addEquipmentLock(EquipmentSlot.HEAD, ArmorStand.LockType.REMOVING_OR_CHANGING)
+            votesStand.addEquipmentLock(EquipmentSlot.CHEST, ArmorStand.LockType.REMOVING_OR_CHANGING)
+            votesStand.addEquipmentLock(EquipmentSlot.LEGS, ArmorStand.LockType.REMOVING_OR_CHANGING)
+            votesStand.addEquipmentLock(EquipmentSlot.FEET, ArmorStand.LockType.REMOVING_OR_CHANGING)
+            votesStand.addEquipmentLock(EquipmentSlot.HAND, ArmorStand.LockType.REMOVING_OR_CHANGING)
+            val entityEquipment = votesStand.equipment
             if (entityEquipment != null)
             {
                 when (top)
@@ -110,6 +114,7 @@ class VoteTopStand @JvmOverloads constructor(private val plugin: Main, private v
                     }
                 }
             }
+            this.votesStand = votesStand
         }
         player.sendMessage(ChatColor.GREEN.toString() + "Registered Vote Stand #" + top)
     }
@@ -127,11 +132,11 @@ class VoteTopStand @JvmOverloads constructor(private val plugin: Main, private v
         } else
         {
             placeholders["%PLAYER%"] = ChatColor.RED.toString() + "Unknown"
-            placeholders["%VOTES%"] = "" + 0
+            placeholders["%VOTES%"] = "0"
         }
-        topStand!!.customName = Messages.VOTE_TOP_STANDS_TOP.getMessage(plugin, placeholders)
-        nameStand!!.customName = Messages.VOTE_TOP_STANDS_CENTER.getMessage(plugin, placeholders)
-        votesStand!!.customName = Messages.VOTE_TOP_STANDS_BOTTOM.getMessage(plugin, placeholders)
+        topStand?.customName = Messages.VOTE_TOP_STANDS_TOP.getMessage(plugin, placeholders)
+        nameStand?.customName = Messages.VOTE_TOP_STANDS_CENTER.getMessage(plugin, placeholders)
+        votesStand?.customName = Messages.VOTE_TOP_STANDS_BOTTOM.getMessage(plugin, placeholders)
         val skull = ItemStack(Material.PLAYER_HEAD)
         val skullMeta = skull.itemMeta as SkullMeta?
         if (skullMeta != null && voteFile != null)
@@ -153,9 +158,9 @@ class VoteTopStand @JvmOverloads constructor(private val plugin: Main, private v
 
     fun delete(player: Player)
     {
-        topStand!!.remove()
-        nameStand!!.remove()
-        votesStand!!.remove()
+        topStand?.remove()
+        nameStand?.remove()
+        votesStand?.remove()
         plugin.data[Data.VOTE_TOP_STANDS + "." + top] = null
         plugin.data.saveConfig()
         voteTops.remove(top)

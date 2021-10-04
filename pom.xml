@@ -6,7 +6,7 @@
 
     <groupId>me.sd_master92</groupId>
     <artifactId>CustomVoting</artifactId>
-    <version>7.1.0</version>
+    <version>7.1.1</version>
     <name>CustomVoting</name>
     <description>Voting on its best. Totally customizable!</description>
 
@@ -14,7 +14,7 @@
         <author>sd_master92</author>
         <mainClass>me.sd_master92.customvoting.Main</mainClass>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <kotlin.version>1.5.30</kotlin.version>
+        <kotlin.version>1.5.31</kotlin.version>
     </properties>
 
     <build>
