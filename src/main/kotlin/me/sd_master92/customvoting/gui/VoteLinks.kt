@@ -69,7 +69,7 @@ class VoteLinks @JvmOverloads constructor(private val plugin: Main, private val 
 
     companion object
     {
-        fun save(plugin: Main, player: Player, items: Array<ItemStack?>?, notify: Boolean)
+        fun save(plugin: Main, player: Player, items: Array<ItemStack?>, notify: Boolean)
         {
             if (plugin.data.setItemsWithNull(Data.VOTE_LINK_ITEMS, items))
             {

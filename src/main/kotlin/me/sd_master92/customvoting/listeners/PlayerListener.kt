@@ -26,6 +26,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent
 import org.bukkit.event.player.PlayerCommandPreprocessEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerJoinEvent
+import org.bukkit.inventory.ItemStack
 import org.bukkit.scheduler.BukkitRunnable
 import java.util.*
 import kotlin.collections.ArrayList
@@ -165,7 +166,7 @@ class PlayerListener(private val plugin: Main) : Listener
                 val items = plugin.data.getItems(Data.VOTE_LINK_ITEMS)
                 val i = voteLinkInput[player.uniqueId]!!
                 val item = items[i]
-                val meta = item!!.itemMeta
+                val meta = item.itemMeta
                 if (meta != null)
                 {
                     val lore = if (meta.lore != null) meta.lore else ArrayList()
@@ -174,7 +175,7 @@ class PlayerListener(private val plugin: Main) : Listener
                     item.itemMeta = meta
                 }
                 items[i] = item
-                VoteLinks.save(plugin, player, items, false)
+                VoteLinks.save(plugin, player, items as Array<ItemStack?>, false)
                 SoundType.SUCCESS.play(plugin, player)
                 player.sendMessage(ChatColor.GREEN.toString() + "Add more lore (subtext) to this item", ChatColor.GRAY.toString() +
                         "Type 'cancel' to continue")
@@ -200,14 +201,14 @@ class PlayerListener(private val plugin: Main) : Listener
                 val items = plugin.data.getItems(Data.VOTE_LINK_ITEMS)
                 val i = voteLinkInput[player.uniqueId]!!
                 val item = items[i]
-                val meta = item!!.itemMeta
+                val meta = item.itemMeta
                 if (meta != null)
                 {
                     meta.setDisplayName(message)
                     item.itemMeta = meta
                 }
                 items[i] = item
-                VoteLinks.save(plugin, player, items, false)
+                VoteLinks.save(plugin, player, items as Array<ItemStack?>, false)
             }
             loreVoteLinkInput.add(player.uniqueId)
             SoundType.SUCCESS.play(plugin, player)
