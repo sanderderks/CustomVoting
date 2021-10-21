@@ -5,6 +5,7 @@ import me.sd_master92.customvoting.Main
 import me.sd_master92.customvoting.VoteFile
 import me.sd_master92.customvoting.database.PlayerRow
 import me.sd_master92.customvoting.database.PlayerTable
+import me.sd_master92.plugin.CustomPlugin
 import org.bukkit.entity.Player
 
 class CustomPlaceholders(private val plugin: Main) : PlaceholderExpansion()
@@ -16,12 +17,12 @@ class CustomPlaceholders(private val plugin: Main) : PlaceholderExpansion()
 
     override fun getAuthor(): String
     {
-        return plugin.AUTHOR
+        return CustomPlugin.AUTHOR
     }
 
     override fun getVersion(): String
     {
-        return plugin.VERSION
+        return CustomPlugin.VERSION
     }
 
     override fun canRegister(): Boolean
@@ -57,7 +58,7 @@ class CustomPlaceholders(private val plugin: Main) : PlaceholderExpansion()
                 ) else VoteFile.getTopVoter(plugin, key)
                 return if (params.endsWith("NAME"))
                 {
-                    if (topVoter == null) "Unknown" else topVoter.userName
+                    topVoter?.userName ?: "Unknown"
                 } else
                 {
                     if (topVoter == null) "0" else "" + topVoter.votes

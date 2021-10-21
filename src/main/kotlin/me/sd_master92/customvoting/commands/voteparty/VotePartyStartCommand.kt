@@ -10,7 +10,7 @@ import org.bukkit.entity.Player
 
 class VotePartyStartCommand(private val plugin: Main) : SimpleSubCommand("start")
 {
-    override fun onCommand(sender: CommandSender, strings: Array<String>)
+    override fun onCommand(sender: CommandSender, args: Array<String>)
     {
         if (plugin.data.getLocations(Data.VOTE_PARTY).isNotEmpty())
         {
@@ -21,7 +21,7 @@ class VotePartyStartCommand(private val plugin: Main) : SimpleSubCommand("start"
         }
     }
 
-    override fun onCommand(player: Player, strings: Array<String>)
+    override fun onCommand(player: Player, args: Array<String>)
     {
     }
 }

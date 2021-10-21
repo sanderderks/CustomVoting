@@ -121,13 +121,13 @@
         </dependency>
         <dependency>
             <groupId>me.sd_master92</groupId>
-            <artifactId>CustomPlugin</artifactId>
-            <version>1.2</version>
+            <artifactId>CustomFile</artifactId>
+            <version>4.0</version>
         </dependency>
         <dependency>
             <groupId>me.sd_master92</groupId>
-            <artifactId>CustomFile</artifactId>
-            <version>4.0</version>
+            <artifactId>CustomPlugin</artifactId>
+            <version>2.0</version>
         </dependency>
         <dependency>
             <groupId>com.vexsoftware</groupId>

@@ -9,11 +9,11 @@ import org.bukkit.entity.Player
 
 class SettingsCommand(private val plugin: Main) : SimpleCommand(plugin, "votesettings")
 {
-    override fun onCommand(commandSender: CommandSender, strings: Array<String>)
+    override fun onCommand(sender: CommandSender, args: Array<String>)
     {
     }
 
-    override fun onCommand(player: Player, strings: Array<String>)
+    override fun onCommand(player: Player, args: Array<String>)
     {
         val settings = VoteSettings(plugin).inventory
         SoundType.OPEN.play(plugin, player)

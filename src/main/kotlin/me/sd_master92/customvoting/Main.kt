@@ -15,7 +15,7 @@ import me.sd_master92.plugin.CustomPlugin
 import net.milkbowl.vault.economy.Economy
 import net.milkbowl.vault.permission.Permission
 
-class Main : CustomPlugin(28103, "settings.yml")
+class Main : CustomPlugin("settings.yml", 28103)
 {
     var playerTable: PlayerTable? = null
         private set
@@ -178,16 +178,16 @@ class Main : CustomPlugin(28103, "settings.yml")
 
     private fun registerCommands()
     {
-        CreateTopCommand(this)
-        DeleteTopCommand(this)
-        FakeVoteCommand(this)
-        ReloadCommand(this)
-        SettingsCommand(this)
-        SetVotesCommand(this)
-        VoteCommand(this)
-        VotePartyCommand(this)
-        VotesCommand(this)
-        VoteTopCommand(this)
+        CreateTopCommand(this).register()
+        DeleteTopCommand(this).register()
+        FakeVoteCommand(this).register()
+        ReloadCommand(this).register()
+        SettingsCommand(this).register()
+        SetVotesCommand(this).register()
+        VoteCommand(this).register()
+        VotePartyCommand(this).register()
+        VotesCommand(this).register()
+        VoteTopCommand(this).register()
     }
 
     private fun startTasks()

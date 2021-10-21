@@ -10,7 +10,7 @@ import java.lang.Exception
 
 class DeleteTopCommand(plugin: Main) : SimpleCommand(plugin, "deletetop", false)
 {
-    override fun onCommand(commandSender: CommandSender, args: Array<String>)
+    override fun onCommand(sender: CommandSender, args: Array<String>)
     {
     }
 

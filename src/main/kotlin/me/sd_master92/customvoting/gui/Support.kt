@@ -3,6 +3,7 @@ package me.sd_master92.customvoting.gui
 import me.sd_master92.customvoting.Main
 import me.sd_master92.customvoting.constants.Settings
 import me.sd_master92.customvoting.constants.enumerations.SoundType
+import me.sd_master92.plugin.CustomPlugin
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -64,7 +65,7 @@ class Support(private val plugin: Main) : GUI(plugin, NAME, 9, false, true)
     init
     {
         inventory.setItem(0, createItem(Material.CLOCK, ChatColor.LIGHT_PURPLE.toString() + "Up to date?",
-                if (plugin.isUpToDate) ChatColor.GREEN.toString() + "Yes" else ChatColor.GRAY.toString() + "Currently: " + ChatColor.RED + plugin.VERSION + ";" + ChatColor.GRAY +
+                if (plugin.isUpToDate) ChatColor.GREEN.toString() + "Yes" else ChatColor.GRAY.toString() + "Currently: " + ChatColor.RED + CustomPlugin.VERSION + ";" + ChatColor.GRAY +
                         "Latest: " + ChatColor.GREEN + plugin.latestVersion + ";;" + ChatColor.GRAY + "Click to " +
                         "download"))
         inventory.setItem(1, Settings.getDoIngameUpdatesSetting(plugin))

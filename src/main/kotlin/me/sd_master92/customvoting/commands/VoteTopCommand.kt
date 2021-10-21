@@ -44,7 +44,7 @@ class VoteTopCommand(private val plugin: Main) : SimpleCommand(plugin, "votetop"
         }
     }
 
-    override fun onCommand(player: Player, strings: Array<String>)
+    override fun onCommand(player: Player, args: Array<String>)
     {
     }
 }

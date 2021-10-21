@@ -22,7 +22,7 @@ class ReloadCommand(private val plugin: Main) : SimpleCommand(plugin, "votereloa
         }
     }
 
-    override fun onCommand(player: Player, strings: Array<String>)
+    override fun onCommand(player: Player, args: Array<String>)
     {
     }
 
