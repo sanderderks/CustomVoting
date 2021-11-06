@@ -63,11 +63,14 @@ class CustomVote(private val plugin: Main, vote: Vote) : Vote()
 
     private fun broadcast()
     {
-        val placeholders = HashMap<String, String>()
-        placeholders["%PLAYER%"] = username
-        placeholders["%SERVICE%"] = serviceName
-        val message = Messages.VOTE_BROADCAST.getMessage(plugin, placeholders)
-        plugin.server.broadcastMessage(message)
+        if (!plugin.config.getBoolean(Settings.DISABLED_BROADCAST_VOTE))
+        {
+            val placeholders = HashMap<String, String>()
+            placeholders["%PLAYER%"] = username
+            placeholders["%SERVICE%"] = serviceName
+            val message = Messages.VOTE_BROADCAST.getMessage(plugin, placeholders)
+            plugin.server.broadcastMessage(message)
+        }
     }
 
     private fun subtractVotesUntilVoteParty()
