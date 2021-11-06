@@ -97,12 +97,17 @@ class CustomVote(private val plugin: Main, vote: Vote) : Vote()
                         override fun run()
                         {
                             val updatedVotesUntil = votesRequired - plugin.data.getNumber(Data.CURRENT_VOTES)
-                            if (updatedVotesUntil != votesRequired)
+                            if (updatedVotesUntil != votesRequired && !plugin.config.getBoolean(Settings.DISABLED_BROADCAST_VOTE_PARTY_UNTIL))
                             {
                                 val placeholders = HashMap<String, String>()
                                 placeholders["%VOTES%"] = "" + updatedVotesUntil
                                 placeholders["%s%"] = if (updatedVotesUntil == 1) "" else "s"
-                                plugin.server.broadcastMessage(Messages.VOTE_PARTY_UNTIL.getMessage(plugin, placeholders))
+                                plugin.server.broadcastMessage(
+                                    Messages.VOTE_PARTY_UNTIL.getMessage(
+                                        plugin,
+                                        placeholders
+                                    )
+                                )
                             }
                             isAwaitingBroadcast = false
                         }
@@ -143,8 +148,10 @@ class CustomVote(private val plugin: Main, vote: Vote) : Vote()
                 var i = 40
                 override fun run()
                 {
-                    player.spigot().sendMessage(ChatMessageType.ACTION_BAR,
-                            TextComponent(Messages.VOTE_REWARD_PREFIX.getMessage(plugin) + message))
+                    player.spigot().sendMessage(
+                        ChatMessageType.ACTION_BAR,
+                        TextComponent(Messages.VOTE_REWARD_PREFIX.getMessage(plugin) + message)
+                    )
                     if (i == 0)
                     {
                         cancel()
@@ -208,8 +215,12 @@ class CustomVote(private val plugin: Main, vote: Vote) : Vote()
     {
         for (command in plugin.data.getStringList(Data.VOTE_COMMANDS))
         {
-            plugin.server.dispatchCommand(plugin.server.consoleSender, command.replace("%PLAYER%",
-                    player.name))
+            plugin.server.dispatchCommand(
+                plugin.server.consoleSender, command.replace(
+                    "%PLAYER%",
+                    player.name
+                )
+            )
         }
     }
 
@@ -249,17 +260,21 @@ class CustomVote(private val plugin: Main, vote: Vote) : Vote()
                     val firework = world.spawnEntity(loc, EntityType.FIREWORK) as Firework
                     val fireworkMeta = firework.fireworkMeta
                     val random = Random()
-                    val colors = arrayOf(Color.AQUA, Color.BLUE, Color.FUCHSIA, Color.GREEN, Color.LIME, Color.MAROON,
-                            Color.NAVY,
-                            Color.OLIVE, Color.ORANGE, Color.PURPLE, Color.RED, Color.TEAL)
-                    val fireworkEffects = arrayOf(FireworkEffect.Type.BALL, FireworkEffect.Type.BALL_LARGE,
-                            FireworkEffect.Type.BURST, FireworkEffect.Type.STAR)
+                    val colors = arrayOf(
+                        Color.AQUA, Color.BLUE, Color.FUCHSIA, Color.GREEN, Color.LIME, Color.MAROON,
+                        Color.NAVY,
+                        Color.OLIVE, Color.ORANGE, Color.PURPLE, Color.RED, Color.TEAL
+                    )
+                    val fireworkEffects = arrayOf(
+                        FireworkEffect.Type.BALL, FireworkEffect.Type.BALL_LARGE,
+                        FireworkEffect.Type.BURST, FireworkEffect.Type.STAR
+                    )
                     val effect = FireworkEffect.builder()
-                            .flicker(random.nextBoolean())
-                            .withColor(colors[random.nextInt(colors.size)])
-                            .withFade(colors[random.nextInt(colors.size)])
-                            .with(fireworkEffects[random.nextInt(fireworkEffects.size)])
-                            .trail(random.nextBoolean()).build()
+                        .flicker(random.nextBoolean())
+                        .withColor(colors[random.nextInt(colors.size)])
+                        .withFade(colors[random.nextInt(colors.size)])
+                        .with(fireworkEffects[random.nextInt(fireworkEffects.size)])
+                        .trail(random.nextBoolean()).build()
                     fireworkMeta.addEffect(effect)
                     fireworkMeta.power = random.nextInt(2) + 1
                     firework.fireworkMeta = fireworkMeta

@@ -35,18 +35,34 @@ class VoteParty(private val plugin: Main)
                     {
                         30, 15, 10 ->
                         {
-                            val placeholders = HashMap<String, String>()
-                            placeholders["%TIME%"] = "" + count
-                            SoundType.NOTIFY.playForAll(plugin)
-                            plugin.server.broadcastMessage(Messages.VOTE_PARTY_COUNTDOWN.getMessage(plugin, placeholders))
+                            if (!plugin.config.getBoolean(Settings.DISABLED_BROADCAST_VOTE_PARTY_COUNTDOWN))
+                            {
+                                val placeholders = HashMap<String, String>()
+                                placeholders["%TIME%"] = "" + count
+                                SoundType.NOTIFY.playForAll(plugin)
+                                plugin.server.broadcastMessage(
+                                    Messages.VOTE_PARTY_COUNTDOWN.getMessage(
+                                        plugin,
+                                        placeholders
+                                    )
+                                )
+                            }
                         }
                         5, 4, 3, 2, 1 ->
                         {
-                            val placeholders = HashMap<String, String>()
-                            placeholders["%TIME%"] = "" + count
-                            placeholders["%s%"] = if (count == 1) "" else "s"
-                            SoundType.NOTIFY.playForAll(plugin)
-                            plugin.server.broadcastMessage(Messages.VOTE_PARTY_COUNTDOWN_ENDING.getMessage(plugin, placeholders))
+                            if (!plugin.config.getBoolean(Settings.DISABLED_BROADCAST_VOTE_PARTY_COUNTDOWN_ENDING))
+                            {
+                                val placeholders = HashMap<String, String>()
+                                placeholders["%TIME%"] = "" + count
+                                placeholders["%s%"] = if (count == 1) "" else "s"
+                                SoundType.NOTIFY.playForAll(plugin)
+                                plugin.server.broadcastMessage(
+                                    Messages.VOTE_PARTY_COUNTDOWN_ENDING.getMessage(
+                                        plugin,
+                                        placeholders
+                                    )
+                                )
+                            }
                         }
                         0 ->
                         {
@@ -58,11 +74,11 @@ class VoteParty(private val plugin: Main)
                                 {
                                     dropChestsRandomly()
                                 }
-                                VotePartyType.ADD_TO_INVENTORY.value ->
+                                VotePartyType.ADD_TO_INVENTORY.value       ->
                                 {
                                     addToInventory()
                                 }
-                                else ->
+                                else                                       ->
                                 {
                                     dropChests()
                                 }
@@ -145,7 +161,8 @@ class VoteParty(private val plugin: Main)
         val keys: MutableList<String> = ArrayList(locations.keys)
         keys.forEach(Consumer { key: String ->
             val items = plugin.data.getItems(
-                    Data.VOTE_PARTY + "." + key)
+                Data.VOTE_PARTY + "." + key
+            )
             if (items.isNotEmpty())
             {
                 chests[key] = ArrayList(listOf(*items))
@@ -234,11 +251,13 @@ class VoteParty(private val plugin: Main)
 
     companion object
     {
-        val VOTE_PARTY_ITEM = GUI.createItem(Material.ENDER_CHEST, ChatColor.LIGHT_PURPLE.toString() +
-                "Vote Party Chest",
-                ChatColor.GRAY.toString() + "Place this chest somewhere in the sky.;" + ChatColor.GRAY + "The contents of this chest" +
-                        " will;" +
-                        ChatColor.GRAY + "start dropping when the voteparty starts.")
+        val VOTE_PARTY_ITEM = GUI.createItem(
+            Material.ENDER_CHEST, ChatColor.LIGHT_PURPLE.toString() +
+                    "Vote Party Chest",
+            ChatColor.GRAY.toString() + "Place this chest somewhere in the sky.;" + ChatColor.GRAY + "The contents of this chest" +
+                    " will;" +
+                    ChatColor.GRAY + "start dropping when the voteparty starts."
+        )
         private val queue: MutableList<VoteParty> = ArrayList()
         private var isActive = false
     }

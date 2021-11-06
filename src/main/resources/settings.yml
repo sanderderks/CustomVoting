@@ -26,3 +26,9 @@ database:
   database: customvoting
   user: root
   password: root
+disabled_broadcasts:
+    vote: false
+    vote_party:
+      until: false
+      countdown: false
+      countdown_ending: false
