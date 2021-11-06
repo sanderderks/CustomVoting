@@ -101,7 +101,7 @@ object Settings
     fun getVotesUntilVotePartySetting(plugin: Main): ItemStack
     {
         val votesRequired = plugin.config.getNumber(VOTES_REQUIRED_FOR_VOTE_PARTY)
-        val votesUntil = votesRequired - plugin.data.getNumber("current_votes")
+        val votesUntil = votesRequired - plugin.data.getNumber(Data.CURRENT_VOTES)
         return createItem(Material.ENCHANTED_BOOK, ChatColor.LIGHT_PURPLE.toString() + "Votes until Vote Party",
                 ChatColor.GRAY.toString() + "Required: " + ChatColor.AQUA + votesRequired + ";" + ChatColor.GRAY + "Votes left:" +
                         " " + ChatColor.GREEN + votesUntil)

@@ -3,6 +3,8 @@ package me.sd_master92.customvoting.extensions
 import me.clip.placeholderapi.expansion.PlaceholderExpansion
 import me.sd_master92.customvoting.Main
 import me.sd_master92.customvoting.VoteFile
+import me.sd_master92.customvoting.constants.Data
+import me.sd_master92.customvoting.constants.Settings
 import me.sd_master92.customvoting.database.PlayerRow
 import me.sd_master92.customvoting.database.PlayerTable
 import me.sd_master92.plugin.CustomPlugin
@@ -39,29 +41,53 @@ class CustomPlaceholders(private val plugin: Main) : PlaceholderExpansion()
     {
         try
         {
-            if (params == SERVER_VOTES)
+            when (params)
             {
-                var total = 0
-                for (voter in if (plugin.hasDatabaseConnection()) PlayerTable.getTopVoters(plugin) else VoteFile.getTopVoters(plugin))
+                SERVER_VOTES     ->
                 {
-                    total += voter.votes
+                    var total = 0
+                    for (voter in if (plugin.hasDatabaseConnection()) PlayerTable.getTopVoters(plugin) else VoteFile.getTopVoters(
+                        plugin
+                    ))
+                    {
+                        total += voter.votes
+                    }
+                    return "$total"
                 }
-                return "" + total
-            } else if (params == PLAYER_VOTES)
-            {
-                val voter = if (plugin.hasDatabaseConnection()) PlayerRow(plugin, player) else VoteFile(player, plugin)
-                return "" + voter.votes
-            } else if (params.contains(PLAYER_VOTES))
-            {
-                val key = params.split("_".toRegex()).toTypedArray()[2].toInt()
-                val topVoter = if (plugin.hasDatabaseConnection()) PlayerTable.getTopVoter(plugin, key
-                ) else VoteFile.getTopVoter(plugin, key)
-                return if (params.endsWith("NAME"))
+                PLAYER_VOTES     ->
                 {
-                    topVoter?.userName ?: "Unknown"
-                } else
+                    val voter =
+                        if (plugin.hasDatabaseConnection()) PlayerRow(plugin, player) else VoteFile(player, plugin)
+                    return "" + voter.votes
+                }
+                VOTE_PARTY_TOTAL ->
                 {
-                    if (topVoter == null) "0" else "" + topVoter.votes
+                    val total = plugin.config.getInt(Settings.VOTES_REQUIRED_FOR_VOTE_PARTY)
+                    return "$total"
+                }
+                VOTE_PARTY_UNTIL ->
+                {
+                    val total = plugin.config.getInt(Settings.VOTES_REQUIRED_FOR_VOTE_PARTY)
+                    val current = plugin.data.getInt(Data.CURRENT_VOTES)
+                    val until = total - current
+                    return "$until"
+                }
+                else             ->
+                {
+                    if (params.contains(PLAYER_VOTES))
+                    {
+                        val key = params.split("_".toRegex()).toTypedArray()[2].toInt()
+                        val topVoter = if (plugin.hasDatabaseConnection()) PlayerTable.getTopVoter(
+                            plugin, key
+                        ) else VoteFile.getTopVoter(plugin, key)
+                        return if (params.endsWith("NAME"))
+                        {
+                            topVoter?.userName ?: "Unknown"
+                        } else
+                        {
+                            if (topVoter == null) "0" else "" + topVoter.votes
+                        }
+                    }
                 }
             }
         } catch (e: Exception)
@@ -76,5 +102,7 @@ class CustomPlaceholders(private val plugin: Main) : PlaceholderExpansion()
         const val IDENTIFIER = "CV"
         const val SERVER_VOTES = "SERVER_VOTES"
         const val PLAYER_VOTES = "PLAYER_VOTES"
+        const val VOTE_PARTY_TOTAL = "VOTE_PARTY_TOTAL"
+        const val VOTE_PARTY_UNTIL = "VOTE_PARTY_UNTIL"
     }
 }
