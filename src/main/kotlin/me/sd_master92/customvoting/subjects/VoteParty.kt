@@ -33,7 +33,7 @@ class VoteParty(private val plugin: Main)
                 {
                     when (count)
                     {
-                        30, 15, 10 ->
+                        30, 15, 10    ->
                         {
                             if (!plugin.config.getBoolean(Settings.DISABLED_BROADCAST_VOTE_PARTY_COUNTDOWN))
                             {
@@ -64,7 +64,7 @@ class VoteParty(private val plugin: Main)
                                 )
                             }
                         }
-                        0 ->
+                        0             ->
                         {
                             SoundType.VOTE_PARTY_START.playForAll(plugin)
                             plugin.server.broadcastMessage(Messages.VOTE_PARTY_START.getMessage(plugin))
@@ -95,8 +95,8 @@ class VoteParty(private val plugin: Main)
     private fun stop()
     {
         isActive = false
-        queue.removeAt(0)
-        if (queue.size > 0)
+        queue.removeFirstOrNull()
+        if (queue.isNotEmpty())
         {
             queue[0].start()
         }
