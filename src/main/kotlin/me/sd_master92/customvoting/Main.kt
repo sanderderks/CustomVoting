@@ -93,7 +93,7 @@ class Main : CustomPlugin("settings.yml", 28103)
             print("")
             print("| Vault not found! ")
             print("|")
-            print("|___Economy and permissions disabled'")
+            print("|___Economy and permissions disabled")
         }
         print("")
         print("| checking for PlaceholderAPI hook")

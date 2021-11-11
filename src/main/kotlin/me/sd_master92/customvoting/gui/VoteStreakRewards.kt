@@ -18,13 +18,13 @@ class VoteStreakRewards(private val plugin: Main, private val number: Int) : GUI
     {
         when (item.type)
         {
-            Material.BARRIER ->
+            Material.BARRIER       ->
             {
                 SoundType.CLICK.play(plugin, player)
                 cancelCloseEvent()
                 player.openInventory(VoteStreakSettings(plugin).inventory)
             }
-            Material.RED_WOOL ->
+            Material.RED_WOOL      ->
             {
                 SoundType.FAILURE.play(plugin, player)
                 plugin.data.delete(Data.VOTE_STREAKS + "." + number)
@@ -37,11 +37,14 @@ class VoteStreakRewards(private val plugin: Main, private val number: Int) : GUI
                 PlayerListener.streakPermissionInput[player.uniqueId] = number
                 cancelCloseEvent()
                 player.closeInventory()
-                player.sendMessage(ChatColor.GREEN.toString() + "Please enter a permission to add or remove from " +
-                        "the list")
+                player.sendMessage(
+                    ChatColor.GREEN.toString() + "Please enter a permission to add or remove from " +
+                            "the list"
+                )
                 player.sendMessage(ChatColor.GRAY.toString() + "Type 'cancel' to go back")
                 player.sendMessage("")
-                val permissions: List<String> = plugin.data.getStringList(Data.VOTE_STREAKS + "." + PlayerListener.streakPermissionInput[player.uniqueId] + ".permissions")
+                val permissions: List<String> =
+                    plugin.data.getStringList(Data.VOTE_STREAKS + "." + PlayerListener.streakPermissionInput[player.uniqueId] + ".permissions")
                 if (permissions.isEmpty())
                 {
                     player.sendMessage(ChatColor.RED.toString() + "There are currently no permissions.")
@@ -70,7 +73,50 @@ class VoteStreakRewards(private val plugin: Main, private val number: Int) : GUI
                     }
                 }.runTaskTimer(plugin, 0, 10)
             }
-            else ->
+            Material.SHIELD        ->
+            {
+                SoundType.CHANGE.play(plugin, player)
+                PlayerListener.streakCommandInput[player.uniqueId] = number
+                cancelCloseEvent()
+                player.closeInventory()
+                player.sendMessage(
+                    ChatColor.GREEN.toString() + "Please enter a command to add or remove from " +
+                            "the list"
+                )
+                player.sendMessage(ChatColor.GREEN.toString() + "(with %PLAYER% as placeholder)")
+                player.sendMessage(ChatColor.GRAY.toString() + "Type 'cancel' to go back")
+                player.sendMessage("")
+                val commands: List<String> =
+                    plugin.data.getStringList(Data.VOTE_STREAKS + "." + PlayerListener.streakCommandInput[player.uniqueId] + ".commands")
+                if (commands.isEmpty())
+                {
+                    player.sendMessage(ChatColor.RED.toString() + "There are currently no commands.")
+                } else
+                {
+                    player.sendMessage(ChatColor.GRAY.toString() + "Commands:")
+                    for (command in commands)
+                    {
+                        player.sendMessage(ChatColor.GRAY.toString() + "-" + ChatColor.GREEN + command)
+                    }
+                }
+                object : BukkitRunnable()
+                {
+                    override fun run()
+                    {
+                        if (!PlayerListener.streakCommandInput.containsKey(player.uniqueId))
+                        {
+                            player.openInventory(VoteStreakRewards(plugin, number).inventory)
+                            cancelCloseEvent()
+                            cancel()
+                        } else if (!player.isOnline)
+                        {
+                            PlayerListener.streakCommandInput.remove(player.uniqueId)
+                            cancel()
+                        }
+                    }
+                }.runTaskTimer(plugin, 0, 10)
+            }
+            else                   ->
             {
             }
         }
@@ -89,6 +135,7 @@ class VoteStreakRewards(private val plugin: Main, private val number: Int) : GUI
     init
     {
         inventory.setItem(0, Data.getStreakPermissionRewardSetting(plugin, number))
+        inventory.setItem(1, Data.getStreakCommandRewardSetting(plugin, number))
         inventory.setItem(7, createItem(Material.RED_WOOL, ChatColor.RED.toString() + "Delete"))
         inventory.setItem(8, BACK_ITEM)
     }
