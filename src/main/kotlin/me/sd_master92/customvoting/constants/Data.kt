@@ -32,6 +32,12 @@ object Data
                 ChatColor.GRAY.toString() + "Currently: " + ChatColor.AQUA + plugin.data.getStringList("$VOTE_STREAKS.$number.permissions").size + ChatColor.GRAY + " permissions")
     }
 
+    fun getStreakCommandRewardSetting(plugin: Main, number: Int): ItemStack
+    {
+        return GUI.createItem(Material.SHIELD, ChatColor.LIGHT_PURPLE.toString() + "Command Rewards",
+            ChatColor.GRAY.toString() + "Currently: " + ChatColor.AQUA + plugin.data.getStringList("$VOTE_STREAKS.$number.commands").size + ChatColor.GRAY + " commands")
+    }
+
     fun getItemRewardSetting(plugin: Main): ItemStack
     {
         return GUI.createItem(Material.CHEST, ChatColor.LIGHT_PURPLE.toString() +

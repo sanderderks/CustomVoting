@@ -29,7 +29,6 @@ import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.scheduler.BukkitRunnable
 import java.util.*
-import kotlin.collections.ArrayList
 
 class PlayerListener(private val plugin: Main) : Listener
 {
@@ -71,8 +70,10 @@ class PlayerListener(private val plugin: Main) : Listener
     {
         if (queue.isNotEmpty())
         {
-            plugin.print(queue.size.toString() + " queued votes found for " + player.name + ". Forwarding in 10 seconds.." +
-                    ".")
+            plugin.print(
+                queue.size.toString() + " queued votes found for " + player.name + ". Forwarding in 10 seconds.." +
+                        "."
+            )
             val iterator = queue.iterator()
             object : BukkitRunnable()
             {
@@ -103,7 +104,7 @@ class PlayerListener(private val plugin: Main) : Listener
         {
             event.isCancelled = true
             val command = event.message
-            checkCommand(command, player)
+            checkStreakCommand(command, player)
         }
     }
 
@@ -158,8 +159,10 @@ class PlayerListener(private val plugin: Main) : Listener
                 loreVoteLinkInput.remove(player.uniqueId)
                 linkVoteLinkInput.add(player.uniqueId)
                 SoundType.SUCCESS.play(plugin, player)
-                player.sendMessage(ChatColor.GREEN.toString() + "Add a link to this item", ChatColor.GRAY.toString() +
-                        "Type 'cancel' to continue")
+                player.sendMessage(
+                    ChatColor.GREEN.toString() + "Add a link to this item", ChatColor.GRAY.toString() +
+                            "Type 'cancel' to continue"
+                )
             } else
             {
                 val message = ChatColor.translateAlternateColorCodes('&', event.message)
@@ -177,8 +180,10 @@ class PlayerListener(private val plugin: Main) : Listener
                 items[i] = item
                 VoteLinks.save(plugin, player, items as Array<ItemStack?>, false)
                 SoundType.SUCCESS.play(plugin, player)
-                player.sendMessage(ChatColor.GREEN.toString() + "Add more lore (subtext) to this item", ChatColor.GRAY.toString() +
-                        "Type 'cancel' to continue")
+                player.sendMessage(
+                    ChatColor.GREEN.toString() + "Add more lore (subtext) to this item", ChatColor.GRAY.toString() +
+                            "Type 'cancel' to continue"
+                )
             }
         } else if (linkVoteLinkInput.contains(player.uniqueId))
         {
@@ -212,8 +217,10 @@ class PlayerListener(private val plugin: Main) : Listener
             }
             loreVoteLinkInput.add(player.uniqueId)
             SoundType.SUCCESS.play(plugin, player)
-            player.sendMessage(ChatColor.GREEN.toString() + "Add lore (subtext) to this item", ChatColor.GRAY.toString() +
-                    "Type 'cancel' to continue")
+            player.sendMessage(
+                ChatColor.GREEN.toString() + "Add lore (subtext) to this item", ChatColor.GRAY.toString() +
+                        "Type 'cancel' to continue"
+            )
         } else if (streakInput.contains(player.uniqueId))
         {
             event.isCancelled = true
@@ -226,7 +233,7 @@ class PlayerListener(private val plugin: Main) : Listener
                 try
                 {
                     val number = event.message.toInt()
-                    if(plugin.data.contains(Data.VOTE_STREAKS + "." + number))
+                    if (plugin.data.contains(Data.VOTE_STREAKS + "." + number))
                     {
                         player.sendMessage(ChatColor.RED.toString() + "That streak already exists.")
                     } else
@@ -250,7 +257,18 @@ class PlayerListener(private val plugin: Main) : Listener
                 SoundType.FAILURE.play(plugin, player)
             } else
             {
-                checkPermission(event.message, player)
+                checkStreakPermission(event.message, player)
+            }
+        } else if (streakCommandInput.containsKey(player.uniqueId))
+        {
+            event.isCancelled = true
+            if (event.message.equals("cancel", ignoreCase = true))
+            {
+                streakCommandInput.remove(player.uniqueId)
+                SoundType.FAILURE.play(plugin, player)
+            } else
+            {
+                checkStreakCommand(event.message, player)
             }
         }
     }
@@ -289,8 +307,10 @@ class PlayerListener(private val plugin: Main) : Listener
         } else
         {
             val locations: MutableList<Location> = ArrayList()
-            for (face in arrayOf(BlockFace.UP, BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH,
-                    BlockFace.WEST))
+            for (face in arrayOf(
+                BlockFace.UP, BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH,
+                BlockFace.WEST
+            ))
             {
                 if (block.getRelative(face).state is Sign)
                 {
@@ -390,9 +410,10 @@ class PlayerListener(private val plugin: Main) : Listener
         commandInput.remove(player.uniqueId)
     }
 
-    private fun checkPermission(permission: String, player: Player)
+    private fun checkStreakPermission(permission: String, player: Player)
     {
-        val permissions = plugin.data.getStringList(Data.VOTE_STREAKS + "." + streakPermissionInput[player.uniqueId] + ".permissions")
+        val permissions =
+            plugin.data.getStringList(Data.VOTE_STREAKS + "." + streakPermissionInput[player.uniqueId] + ".permissions")
         if (permissions.contains(permission))
         {
             permissions.remove(permission)
@@ -402,9 +423,40 @@ class PlayerListener(private val plugin: Main) : Listener
             permissions.add(permission)
             player.sendMessage(ChatColor.GREEN.toString() + "Added " + permission + " to permissions")
         }
-        plugin.data[Data.VOTE_STREAKS + "." + streakPermissionInput[player.uniqueId] + ".permissions"] = permissions
+        plugin.data[Data.VOTE_STREAKS + "." + streakPermissionInput.remove(player.uniqueId) + ".permissions"] =
+            permissions
         plugin.data.saveConfig()
-        streakPermissionInput.remove(player.uniqueId)
+
+    }
+
+    private fun checkStreakCommand(command_: String, player: Player)
+    {
+        var command = command_
+        for (forbidden in plugin.config.getStringList(Settings.FORBIDDEN_COMMANDS))
+        {
+            if (command.lowercase().contains(forbidden))
+            {
+                player.sendMessage(ChatColor.RED.toString() + "This command is forbidden.")
+                return
+            }
+        }
+        if (command.startsWith("/"))
+        {
+            command = command.substring(1)
+        }
+        val commands =
+            plugin.data.getStringList(Data.VOTE_STREAKS + "." + streakCommandInput[player.uniqueId] + ".commands")
+        if (commands.contains(command))
+        {
+            commands.remove(command)
+            player.sendMessage(ChatColor.RED.toString() + "Removed /" + command + " from commands")
+        } else
+        {
+            commands.add(command)
+            player.sendMessage(ChatColor.GREEN.toString() + "Added /" + command + " to commands")
+        }
+        plugin.data[Data.VOTE_STREAKS + "." + streakCommandInput.remove(player.uniqueId) + ".commands"] = commands
+        plugin.data.saveConfig()
     }
 
     companion object
@@ -413,6 +465,7 @@ class PlayerListener(private val plugin: Main) : Listener
         var commandInput: MutableList<UUID> = ArrayList()
         var streakInput: MutableList<UUID> = ArrayList()
         var streakPermissionInput: MutableMap<UUID, Int> = HashMap()
+        var streakCommandInput: MutableMap<UUID, Int> = HashMap()
         var voteLinkInput: MutableMap<UUID, Int> = HashMap()
         var linkVoteLinkInput: MutableList<UUID> = ArrayList()
         var loreVoteLinkInput: MutableList<UUID> = ArrayList()

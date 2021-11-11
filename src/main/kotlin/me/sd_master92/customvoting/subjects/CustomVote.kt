@@ -232,10 +232,11 @@ class CustomVote(private val plugin: Main, vote: Vote) : Vote()
         val votes = VoteFile(player, plugin).votes
         if (plugin.data.contains(Data.VOTE_STREAKS + "." + votes))
         {
+            plugin.server.broadcastMessage(ChatColor.AQUA.toString() + player.name + ChatColor.LIGHT_PURPLE.toString() + " reached vote streak #" + ChatColor.AQUA.toString() + votes + ChatColor.LIGHT_PURPLE.toString() + "!")
+
             val permissions = plugin.data.getStringList(Data.VOTE_STREAKS + "." + votes + ".permissions")
             if (permissions.isNotEmpty() && Main.permission != null)
             {
-                plugin.server.broadcastMessage(ChatColor.AQUA.toString() + player.name + ChatColor.LIGHT_PURPLE.toString() + " reached vote streak #" + ChatColor.AQUA.toString() + votes + ChatColor.LIGHT_PURPLE.toString() + "!")
                 for (permission in permissions)
                 {
                     if (Main.permission!!.playerAdd(null, player, permission))
@@ -245,6 +246,19 @@ class CustomVote(private val plugin: Main, vote: Vote) : Vote()
                         placeholders["%STREAK%"] = "" + votes
                         player.sendMessage(Messages.VOTE_STREAK_REACHED.getMessage(plugin, placeholders))
                     }
+                }
+            }
+            val commands = plugin.data.getStringList(Data.VOTE_STREAKS + "." + votes + ".commands")
+            if (commands.isNotEmpty())
+            {
+                for (command in commands)
+                {
+                    plugin.server.dispatchCommand(
+                        plugin.server.consoleSender, command.replace(
+                            "%PLAYER%",
+                            player.name
+                        )
+                    )
                 }
             }
         }
