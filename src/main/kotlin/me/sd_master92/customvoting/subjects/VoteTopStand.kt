@@ -8,6 +8,7 @@ import me.sd_master92.customvoting.database.PlayerTable
 import me.sd_master92.customvoting.gui.GUI
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
+import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.EntityType
@@ -41,36 +42,20 @@ class VoteTopStand @JvmOverloads constructor(private val plugin: Main, private v
         val world = player.location.world
         if (world != null)
         {
-            val topStand = world.spawnEntity(player.location.add(0.0, 1.0, 0.0),
-                    EntityType.ARMOR_STAND) as ArmorStand
+            val topStand = spawnArmorStand(player.location.add(0.0, 1.0, 0.0))
             plugin.data[Data.VOTE_TOP_STANDS + "." + top + ".top"] = topStand.uniqueId.toString()
             topStand.isVisible = false
-            topStand.removeWhenFarAway = false
-            topStand.isSilent = true
-            topStand.isPersistent = true
-            topStand.setGravity(false)
-            topStand.isCustomNameVisible = true
             this.topStand = topStand
 
-            val nameStand = world.spawnEntity(player.location.add(0.0, 0.5, 0.0),
-                    EntityType.ARMOR_STAND) as ArmorStand
+            val nameStand = spawnArmorStand(player.location.add(0.0, 0.5, 0.0))
             plugin.data[Data.VOTE_TOP_STANDS + "." + top + ".name"] = nameStand.uniqueId.toString()
             nameStand.isVisible = false
-            nameStand.removeWhenFarAway = false
-            nameStand.isSilent = true
-            nameStand.isPersistent = true
-            nameStand.setGravity(false)
-            nameStand.isCustomNameVisible = true
             this.nameStand = nameStand
 
-            val votesStand = world.spawnEntity(player.location, EntityType.ARMOR_STAND) as ArmorStand
+            val votesStand = spawnArmorStand(player.location)
             plugin.data[Data.VOTE_TOP_STANDS + "." + top + ".votes"] = votesStand.uniqueId.toString()
             plugin.data.saveConfig()
-            votesStand.removeWhenFarAway = false
-            votesStand.isSilent = true
-            votesStand.isPersistent = true
-            votesStand.setGravity(false)
-            votesStand.isCustomNameVisible = true
+
             votesStand.addEquipmentLock(EquipmentSlot.HEAD, ArmorStand.LockType.REMOVING_OR_CHANGING)
             votesStand.addEquipmentLock(EquipmentSlot.CHEST, ArmorStand.LockType.REMOVING_OR_CHANGING)
             votesStand.addEquipmentLock(EquipmentSlot.LEGS, ArmorStand.LockType.REMOVING_OR_CHANGING)
@@ -117,6 +102,18 @@ class VoteTopStand @JvmOverloads constructor(private val plugin: Main, private v
             this.votesStand = votesStand
         }
         player.sendMessage(ChatColor.GREEN.toString() + "Registered Vote Stand #" + top)
+    }
+
+    private fun spawnArmorStand(loc: Location): ArmorStand
+    {
+        val stand = loc.world!!.spawnEntity(loc, EntityType.ARMOR_STAND) as ArmorStand
+        stand.removeWhenFarAway = false
+        stand.isSilent = true
+        stand.isPersistent = true
+        stand.setGravity(false)
+        stand.isCustomNameVisible = true
+        stand.isInvulnerable = true
+        return stand
     }
 
     private fun update()
