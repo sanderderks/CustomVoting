@@ -27,7 +27,7 @@ class PlayerTable(private val plugin: Main, database: CustomDatabase)
         val result = table.getData("name=\"$name\"")
         try
         {
-            if (result.first())
+            if (result.next())
             {
                 return result.getString("uuid")
             }
@@ -43,7 +43,7 @@ class PlayerTable(private val plugin: Main, database: CustomDatabase)
         val result = table.getData("uuid=\"$uuid\"")
         try
         {
-            if (result.first())
+            if (result.next())
             {
                 return result.getString("name")
             }
@@ -64,7 +64,7 @@ class PlayerTable(private val plugin: Main, database: CustomDatabase)
         val result = table.getData("uuid=\"$uuid\"")
         try
         {
-            if (result.first())
+            if (result.next())
             {
                 return result.getInt("votes")
             } else
@@ -88,7 +88,7 @@ class PlayerTable(private val plugin: Main, database: CustomDatabase)
         val result = table.getData("uuid=\"$uuid\"")
         try
         {
-            if (result.first())
+            if (result.next())
             {
                 return result.getLong("last")
             } else
@@ -112,7 +112,7 @@ class PlayerTable(private val plugin: Main, database: CustomDatabase)
         val result = table.getData("uuid=\"$uuid\"")
         try
         {
-            if (result.first())
+            if (result.next())
             {
                 return result.getInt("queue")
             } else
