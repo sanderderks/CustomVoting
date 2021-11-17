@@ -142,14 +142,14 @@ class VoteTopStand @JvmOverloads constructor(private val plugin: Main, private v
             {
                 skullMeta.owningPlayer = Bukkit.getOfflinePlayer(UUID.fromString(voteFile.uniqueId))
                 skull.itemMeta = skullMeta
+                val entityEquipment = votesStand!!.equipment
+                if (entityEquipment != null)
+                {
+                    entityEquipment.helmet = skull
+                }
             } catch (ignored: Exception)
             {
             }
-        }
-        val entityEquipment = votesStand!!.equipment
-        if (entityEquipment != null)
-        {
-            entityEquipment.helmet = skull
         }
     }
 
