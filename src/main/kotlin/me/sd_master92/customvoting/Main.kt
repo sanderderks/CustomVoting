@@ -48,17 +48,17 @@ class Main : CustomPlugin("settings.yml", 28103)
 
     private fun checkVotifier(): Boolean
     {
-        print("")
-        print("| checking for Votifier")
-        print("|")
+        infoLog("")
+        infoLog("| checking for Votifier")
+        infoLog("|")
         return try
         {
             Class.forName("com.vexsoftware.votifier.model.VotifierEvent")
-            print("|___dependency 'Votifier' found!")
+            infoLog("|___dependency 'Votifier' found!")
             true
         } catch (e: ClassNotFoundException)
         {
-            error("|___dependency 'Votifier' not found, disabling...")
+            errorLog("|___dependency 'Votifier' not found, disabling...")
             isEnabled = false
             false
         }
@@ -66,49 +66,52 @@ class Main : CustomPlugin("settings.yml", 28103)
 
     private fun checkHooks()
     {
-        if(checkVault())
+        infoLog("")
+        infoLog("| checking for Vault")
+        infoLog("|")
+        if (hasVault())
         {
-            print("")
-            print("| checking for economy hook")
-            print("|")
+            infoLog("|___Vault found")
+            infoLog("")
+            infoLog("| checking for economy hook")
+            infoLog("|")
             if (!setupEconomy())
             {
-                error("|___economy hook not found")
+                errorLog("|___economy hook not found")
             } else
             {
-                print("|___successfully hooked into '" + economy!!.name + "'")
+                infoLog("|___successfully hooked into '" + economy!!.name + "'")
             }
-            print("")
-            print("| checking for permission hook")
-            print("|")
+            infoLog("")
+            infoLog("| checking for permission hook")
+            infoLog("|")
             if (!setupPermission())
             {
-                error("|___permission hook not found")
+                errorLog("|___permission hook not found")
             } else
             {
-                print("|___successfully hooked into '" + permission!!.name + "'")
+                infoLog("|___successfully hooked into '" + permission!!.name + "'")
             }
         } else
         {
-            print("")
-            print("| Vault not found! ")
-            print("|")
-            print("|___Economy and permissions disabled")
+            errorLog("| Vault not found")
+            infoLog("|")
+            errorLog("|___Economy and permissions disabled")
         }
-        print("")
-        print("| checking for PlaceholderAPI hook")
-        print("|")
+        infoLog("")
+        infoLog("| checking for PlaceholderAPI hook")
+        infoLog("|")
         if (server.pluginManager.getPlugin("PlaceholderAPI") == null)
         {
-            error("|___PlaceholderAPI hook not found")
+            errorLog("|___PlaceholderAPI hook not found")
         } else
         {
             CustomPlaceholders(this).register()
-            print("|___successfully hooked into PlaceholderAPI")
+            infoLog("|___successfully hooked into PlaceholderAPI")
         }
     }
 
-    private fun checkVault(): Boolean
+    private fun hasVault(): Boolean
     {
         return server.pluginManager.getPlugin("Vault") != null
     }
@@ -134,22 +137,22 @@ class Main : CustomPlugin("settings.yml", 28103)
 
     private fun setupDatabase()
     {
-        print("")
-        print("| connecting to database")
-        print("|")
+        infoLog("")
+        infoLog("| connecting to database")
+        infoLog("|")
         if (useDatabase())
         {
             val database = CustomDatabase(config, Settings.DATABASE)
             if (!database.connect())
             {
-                error("|___could not connect to database")
+                errorLog("|___could not connect to database")
             } else
             {
                 playerTable = PlayerTable(this, database)
             }
         } else
         {
-            print("|___database is disabled in the config")
+            errorLog("|___database is disabled in the config")
         }
     }
 

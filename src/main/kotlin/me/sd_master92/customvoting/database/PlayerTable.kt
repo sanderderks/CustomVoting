@@ -11,8 +11,12 @@ class PlayerTable(private val plugin: Main, database: CustomDatabase)
     val table: CustomTable
     private fun addPlayer(uuid: String): Boolean
     {
-        return table.insertData(arrayOf("uuid", "votes", "last", "queue"), arrayOf("\"" + uuid + "\"", "0",
-                "0", "0"))
+        return table.insertData(
+            arrayOf("uuid", "votes", "last", "queue"), arrayOf(
+                "\"" + uuid + "\"", "0",
+                "0", "0"
+            )
+        )
     }
 
     val all: ResultSet
@@ -29,7 +33,7 @@ class PlayerTable(private val plugin: Main, database: CustomDatabase)
             }
         } catch (e: Exception)
         {
-            plugin.error("Could not retrieve uuid of $name from database")
+            plugin.errorLog("Could not retrieve uuid of $name from database", e)
         }
         return "Unknown"
     }
@@ -45,7 +49,7 @@ class PlayerTable(private val plugin: Main, database: CustomDatabase)
             }
         } catch (e: Exception)
         {
-            plugin.error("Could not retrieve name of $uuid from database")
+            plugin.errorLog("Could not retrieve name of $uuid from database", e)
         }
         return "Unknown"
     }
@@ -69,7 +73,7 @@ class PlayerTable(private val plugin: Main, database: CustomDatabase)
             }
         } catch (e: Exception)
         {
-            plugin.error("Could not retrieve votes of $uuid from database")
+            plugin.errorLog("Could not retrieve votes of $uuid from database", e)
         }
         return 0
     }
@@ -93,7 +97,7 @@ class PlayerTable(private val plugin: Main, database: CustomDatabase)
             }
         } catch (e: Exception)
         {
-            plugin.error("Could not retrieve last timestamp of $uuid from database")
+            plugin.errorLog("Could not retrieve last timestamp of $uuid from database", e)
         }
         return 0
     }
@@ -117,7 +121,7 @@ class PlayerTable(private val plugin: Main, database: CustomDatabase)
             }
         } catch (e: Exception)
         {
-            plugin.error("Could not retrieve queue of $uuid from database")
+            plugin.errorLog("Could not retrieve queue of $uuid from database", e)
         }
         return 0
     }
@@ -135,13 +139,17 @@ class PlayerTable(private val plugin: Main, database: CustomDatabase)
             try
             {
                 val all = plugin.playerTable?.all
-                if(all != null)
+                if (all != null)
                 {
                     while (all.next())
                     {
-                        topVoters.add(PlayerData(all.getString("uuid"), all.getString("name"), all.getInt("votes"),
+                        topVoters.add(
+                            PlayerData(
+                                all.getString("uuid"), all.getString("name"), all.getInt("votes"),
                                 all.getLong("last"),
-                                all.getInt("queue")))
+                                all.getInt("queue")
+                            )
+                        )
                     }
                 }
             } catch (e: Exception)
@@ -178,24 +186,24 @@ class PlayerTable(private val plugin: Main, database: CustomDatabase)
         {
             if (!table.create("uuid", CustomColumn.DataType.VARCHAR_PRIMARY))
             {
-                plugin.print("| could not create table 'players'")
-                plugin.print("|")
-                plugin.print("|___database disabled")
+                plugin.errorLog("| could not create table 'players'")
+                plugin.infoLog("|")
+                plugin.errorLog("|___database disabled")
             } else
             {
                 table.getColumn("name").create(CustomColumn.DataType.VARCHAR)
                 table.getColumn("votes").create(CustomColumn.DataType.INT)
                 table.getColumn("last").create(CustomColumn.DataType.LONG)
                 table.getColumn("queue").create(CustomColumn.DataType.INT)
-                plugin.print("| successfully created table 'players'")
-                plugin.print("|")
-                plugin.print("|___successfully connected to database")
+                plugin.infoLog("| successfully created table 'players'")
+                plugin.infoLog("|")
+                plugin.infoLog("|___successfully connected to database")
             }
         } else
         {
-            plugin.print("| successfully located table 'players'")
-            plugin.print("|")
-            plugin.print("|___successfully connected to database")
+            plugin.infoLog("| successfully located table 'players'")
+            plugin.infoLog("|")
+            plugin.infoLog("|___successfully connected to database")
         }
     }
 }

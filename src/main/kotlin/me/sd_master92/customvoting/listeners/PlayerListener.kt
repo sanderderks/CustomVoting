@@ -70,7 +70,7 @@ class PlayerListener(private val plugin: Main) : Listener
     {
         if (queue.isNotEmpty())
         {
-            plugin.print(
+            plugin.infoLog(
                 queue.size.toString() + " queued votes found for " + player.name + ". Forwarding in 10 seconds.." +
                         "."
             )
