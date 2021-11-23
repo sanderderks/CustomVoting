@@ -95,7 +95,7 @@ class Main : CustomPlugin("settings.yml", 28103)
         } else
         {
             errorLog("| Vault not found")
-            infoLog("|")
+            errorLog("|")
             errorLog("|___Economy and permissions disabled")
         }
         infoLog("")

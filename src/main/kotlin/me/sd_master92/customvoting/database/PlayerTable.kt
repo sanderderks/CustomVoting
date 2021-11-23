@@ -187,7 +187,7 @@ class PlayerTable(private val plugin: Main, database: CustomDatabase)
             if (!table.create("uuid", CustomColumn.DataType.VARCHAR_PRIMARY))
             {
                 plugin.errorLog("| could not create table 'players'")
-                plugin.infoLog("|")
+                plugin.errorLog("|")
                 plugin.errorLog("|___database disabled")
             } else
             {
