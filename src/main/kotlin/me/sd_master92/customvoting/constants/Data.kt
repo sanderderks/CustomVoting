@@ -45,6 +45,13 @@ object Data
                 ChatColor.GRAY.toString() + "Currently: " + ChatColor.AQUA + plugin.data.getItems(ITEM_REWARDS).size + ChatColor.GRAY + " item stacks")
     }
 
+    fun getStreakItemRewardSetting(plugin: Main, streak: Int): ItemStack
+    {
+        return GUI.createItem(Material.CHEST, ChatColor.LIGHT_PURPLE.toString() +
+                "Item Rewards",
+            ChatColor.GRAY.toString() + "Currently: " + ChatColor.AQUA + plugin.data.getItems("$VOTE_STREAKS.$streak.$ITEM_REWARDS").size + ChatColor.GRAY + " item stacks")
+    }
+
     fun getLuckyRewardSetting(plugin: Main): ItemStack
     {
         return GUI.createItem(Material.ENDER_CHEST, ChatColor.LIGHT_PURPLE.toString() +

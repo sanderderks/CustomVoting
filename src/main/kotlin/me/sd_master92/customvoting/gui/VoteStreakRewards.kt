@@ -116,6 +116,12 @@ class VoteStreakRewards(private val plugin: Main, private val number: Int) : GUI
                     }
                 }.runTaskTimer(plugin, 0, 10)
             }
+            Material.CHEST         ->
+            {
+                SoundType.CLICK.play(plugin, player)
+                cancelCloseEvent()
+                player.openInventory(VoteStreakItemRewards(plugin, number).inventory)
+            }
             else                   ->
             {
             }
@@ -136,6 +142,7 @@ class VoteStreakRewards(private val plugin: Main, private val number: Int) : GUI
     {
         inventory.setItem(0, Data.getStreakPermissionRewardSetting(plugin, number))
         inventory.setItem(1, Data.getStreakCommandRewardSetting(plugin, number))
+        inventory.setItem(2, Data.getStreakItemRewardSetting(plugin, number))
         inventory.setItem(7, createItem(Material.RED_WOOL, ChatColor.RED.toString() + "Delete"))
         inventory.setItem(8, BACK_ITEM)
     }

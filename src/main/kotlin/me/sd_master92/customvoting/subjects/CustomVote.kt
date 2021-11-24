@@ -281,6 +281,13 @@ class CustomVote(private val plugin: Main, vote: Vote) : Vote()
                     )
                 }
             }
+            for (reward in plugin.data.getItems("${Data.VOTE_STREAKS}.$votes.${Data.ITEM_REWARDS}"))
+            {
+                for (item in player.inventory.addItem(reward).values)
+                {
+                    player.world.dropItemNaturally(player.location, item)
+                }
+            }
         }
     }
 

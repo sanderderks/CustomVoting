@@ -9,7 +9,7 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 
-class VotePartyRewards(private val plugin: Main, key: String) : GUI(plugin, NAME + key, 54, true)
+class VotePartyRewards(private val plugin: Main, private val key: String) : GUI(plugin, NAME + key, 54, true)
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
     {
@@ -17,7 +17,6 @@ class VotePartyRewards(private val plugin: Main, key: String) : GUI(plugin, NAME
 
     override fun onClose(event: InventoryCloseEvent, player: Player)
     {
-        val key = name.split("#".toRegex()).toTypedArray()[1]
         if (plugin.data.setItems(Data.VOTE_PARTY + "." + key, event.inventory.contents))
         {
             SoundType.SUCCESS.play(plugin, player)
