@@ -32,3 +32,4 @@ disabled_broadcasts:
       until: false
       countdown: false
       countdown_ending: false
+first_vote_broadcast_only: false

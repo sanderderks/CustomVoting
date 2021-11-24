@@ -47,6 +47,11 @@ class PlayerRow(private val plugin: Main, override val uniqueId: String) : Voter
         }
     }
 
+    fun getLast(): Long
+    {
+        return players?.getLast(uniqueId) ?: 0
+    }
+
     val queue: Int
         get() = players?.getQueue(uniqueId) ?: 0
 

@@ -27,6 +27,7 @@ object Settings
     const val DISABLED_BROADCAST_VOTE_PARTY_UNTIL = "disabled_broadcasts.vote_party.until"
     const val DISABLED_BROADCAST_VOTE_PARTY_COUNTDOWN = "disabled_broadcasts.vote_party_countdown"
     const val DISABLED_BROADCAST_VOTE_PARTY_COUNTDOWN_ENDING = "disabled_broadcasts.vote_party.countdown_ending"
+    const val FIRST_VOTE_BROADCAST_ONLY = "first_vote_broadcast_only"
     const val USE_DATABASE = "use_database"
     const val DATABASE = "database"
     private const val DATABASE_HOST = "$DATABASE.host"
@@ -59,6 +60,7 @@ object Settings
         setDefault(plugin, DATABASE_DATABASE, "customvoting")
         setDefault(plugin, DATABASE_USER, "root")
         setDefault(plugin, DATABASE_PASSWORD, "root")
+        setDefault(plugin, FIRST_VOTE_BROADCAST_ONLY, false)
         plugin.config.saveConfig()
     }
 

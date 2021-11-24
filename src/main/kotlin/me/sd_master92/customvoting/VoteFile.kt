@@ -62,6 +62,11 @@ class VoteFile : PlayerFile, Voter
         }
     }
 
+    fun getLast(): Long
+    {
+        return getTimeStamp("last")
+    }
+
     val queue: List<String>
         get() = plugin.data.getStringList(Data.VOTE_QUEUE + "." + uuid)
 

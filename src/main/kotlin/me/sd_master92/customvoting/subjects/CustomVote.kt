@@ -29,6 +29,7 @@ class CustomVote(private val plugin: Main, vote: Vote) : Vote()
             queue()
         } else
         {
+            broadcast(player)
             if (plugin.hasDatabaseConnection())
             {
                 PlayerRow(plugin, player.uniqueId.toString()).addVote(true)
@@ -36,7 +37,6 @@ class CustomVote(private val plugin: Main, vote: Vote) : Vote()
             {
                 VoteFile(player.uniqueId.toString(), plugin).addVote(true)
             }
-            broadcast()
             shootFirework(plugin, player.location)
             giveRewards(player)
             if (plugin.config.getBoolean(Settings.VOTE_PARTY))
@@ -61,10 +61,30 @@ class CustomVote(private val plugin: Main, vote: Vote) : Vote()
         }
     }
 
-    private fun broadcast()
+    private fun broadcast(player: Player)
     {
         if (!plugin.config.getBoolean(Settings.DISABLED_BROADCAST_VOTE))
         {
+            if (plugin.config.getBoolean(Settings.FIRST_VOTE_BROADCAST_ONLY))
+            {
+                val last: Long = if (plugin.hasDatabaseConnection())
+                {
+                    PlayerRow(plugin, player.uniqueId.toString()).getLast()
+                } else
+                {
+                    VoteFile(player.uniqueId.toString(), plugin).getLast()
+                }
+                val date1 = Calendar.getInstance()
+                date1.time = Date(last)
+                val date2 = Calendar.getInstance()
+                date2.time = Date()
+                if (date1.get(Calendar.DAY_OF_YEAR) == date2.get(Calendar.DAY_OF_YEAR) &&
+                    date1.get(Calendar.YEAR) == date2.get(Calendar.YEAR)
+                )
+                {
+                    return
+                }
+            }
             val placeholders = HashMap<String, String>()
             placeholders["%PLAYER%"] = username
             placeholders["%SERVICE%"] = serviceName
