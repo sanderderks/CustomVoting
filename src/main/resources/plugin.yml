@@ -4,7 +4,7 @@ version: ${version}
 author: ${author}
 description: ${description}
 api-version: 1.17
-softdepend: [ NuVotifier, Votifier, Vault, PlaceholderAPI ]
+softdepend: [ NuVotifier, Votifier, Vault, PlaceholderAPI, Multiverse-Core ]
 
 commands:
   vote:
