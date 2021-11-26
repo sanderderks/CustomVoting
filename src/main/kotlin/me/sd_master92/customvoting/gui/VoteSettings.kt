@@ -9,7 +9,7 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 
-class VoteSettings(private val plugin: Main) : GUI(plugin, NAME, 9, false, true)
+class VoteSettings(private val plugin: Main) : GUI(plugin, "Vote Settings", 9, false, true)
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
     {
@@ -52,7 +52,6 @@ class VoteSettings(private val plugin: Main) : GUI(plugin, NAME, 9, false, true)
 
     companion object
     {
-        const val NAME = "Vote Settings"
         val GENERAL_SETTINGS = createItem(Material.COMMAND_BLOCK, ChatColor.AQUA.toString() + "General",
                 null, true)
         val REWARD_SETTINGS = createItem(Material.DIAMOND, ChatColor.LIGHT_PURPLE.toString() + "Rewards",

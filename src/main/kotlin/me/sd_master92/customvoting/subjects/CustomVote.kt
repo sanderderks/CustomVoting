@@ -9,11 +9,11 @@ import me.sd_master92.customvoting.constants.Data
 import me.sd_master92.customvoting.constants.Messages
 import me.sd_master92.customvoting.constants.Settings
 import me.sd_master92.customvoting.database.PlayerRow
+import me.sd_master92.customvoting.helpers.ParticleHelper
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
-import org.bukkit.*
-import org.bukkit.entity.EntityType
-import org.bukkit.entity.Firework
+import org.bukkit.Bukkit
+import org.bukkit.ChatColor
 import org.bukkit.entity.Player
 import org.bukkit.scheduler.BukkitRunnable
 import java.text.DecimalFormat
@@ -37,7 +37,7 @@ class CustomVote(private val plugin: Main, vote: Vote) : Vote()
             {
                 VoteFile(player.uniqueId.toString(), plugin).addVote(true)
             }
-            shootFirework(plugin, player.location)
+            ParticleHelper.shootFirework(plugin, player.location)
             giveRewards(player)
             if (plugin.config.getBoolean(Settings.VOTE_PARTY))
             {
@@ -294,37 +294,6 @@ class CustomVote(private val plugin: Main, vote: Vote) : Vote()
     companion object
     {
         private var isAwaitingBroadcast = false
-        fun shootFirework(plugin: Main, loc: Location)
-        {
-            if (plugin.config.getBoolean(Settings.FIREWORK))
-            {
-                val world = loc.world
-                if (world != null)
-                {
-                    val firework = world.spawnEntity(loc, EntityType.FIREWORK) as Firework
-                    val fireworkMeta = firework.fireworkMeta
-                    val random = Random()
-                    val colors = arrayOf(
-                        Color.AQUA, Color.BLUE, Color.FUCHSIA, Color.GREEN, Color.LIME, Color.MAROON,
-                        Color.NAVY,
-                        Color.OLIVE, Color.ORANGE, Color.PURPLE, Color.RED, Color.TEAL
-                    )
-                    val fireworkEffects = arrayOf(
-                        FireworkEffect.Type.BALL, FireworkEffect.Type.BALL_LARGE,
-                        FireworkEffect.Type.BURST, FireworkEffect.Type.STAR
-                    )
-                    val effect = FireworkEffect.builder()
-                        .flicker(random.nextBoolean())
-                        .withColor(colors[random.nextInt(colors.size)])
-                        .withFade(colors[random.nextInt(colors.size)])
-                        .with(fireworkEffects[random.nextInt(fireworkEffects.size)])
-                        .trail(random.nextBoolean()).build()
-                    fireworkMeta.addEffect(effect)
-                    fireworkMeta.power = random.nextInt(2) + 1
-                    firework.fireworkMeta = fireworkMeta
-                }
-            }
-        }
 
         fun create(plugin: Main, name: String?, service: String?)
         {

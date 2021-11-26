@@ -11,7 +11,7 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 
-class Support(private val plugin: Main) : GUI(plugin, NAME, 9, false, true)
+class Support(private val plugin: Main) : GUI(plugin, "Support", 9, false, true)
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
     {
@@ -55,11 +55,6 @@ class Support(private val plugin: Main) : GUI(plugin, NAME, 9, false, true)
     override fun onClose(event: InventoryCloseEvent, player: Player)
     {
         SoundType.CLOSE.play(plugin, player)
-    }
-
-    companion object
-    {
-        const val NAME = "Support"
     }
 
     init

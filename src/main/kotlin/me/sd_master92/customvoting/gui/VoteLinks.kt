@@ -12,7 +12,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.scheduler.BukkitRunnable
 
-class VoteLinks @JvmOverloads constructor(private val plugin: Main, private val isPublic: Boolean = false) : GUI(plugin, "Vote Links", 27, true)
+class VoteLinks @JvmOverloads constructor(private val plugin: Main, private val isPublic: Boolean = false) : GUI(plugin, NAME, 27, true)
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
     {
@@ -69,6 +69,7 @@ class VoteLinks @JvmOverloads constructor(private val plugin: Main, private val 
 
     companion object
     {
+        const val NAME = "Vote Links"
         fun save(plugin: Main, player: Player, items: Array<ItemStack?>, notify: Boolean)
         {
             if (plugin.data.setItemsWithNull(Data.VOTE_LINK_ITEMS, items))
@@ -76,12 +77,12 @@ class VoteLinks @JvmOverloads constructor(private val plugin: Main, private val 
                 if (notify)
                 {
                     SoundType.SUCCESS.play(plugin, player)
-                    player.sendMessage(ChatColor.GREEN.toString() + "Successfully updated the Vote Links!")
+                    player.sendMessage(ChatColor.GREEN.toString() + "Successfully updated the $NAME!")
                 }
             } else
             {
                 SoundType.FAILURE.play(plugin, player)
-                player.sendMessage(ChatColor.RED.toString() + "Failed to update the Vote Links!")
+                player.sendMessage(ChatColor.RED.toString() + "Failed to update the $NAME!")
             }
         }
     }

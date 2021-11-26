@@ -12,7 +12,10 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.scheduler.BukkitRunnable
 
-class VoteStreakRewards(private val plugin: Main, private val number: Int) : GUI(plugin, NAME + number, 9, false, true)
+class VoteStreakRewards(private val plugin: Main, private val number: Int) : GUI(
+    plugin,
+    "Vote Streak Rewards #$number", 9, false, true
+)
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
     {
@@ -133,16 +136,15 @@ class VoteStreakRewards(private val plugin: Main, private val number: Int) : GUI
         SoundType.CLOSE.play(plugin, player)
     }
 
-    companion object
-    {
-        const val NAME = "Vote Streak Rewards #"
-    }
-
     init
     {
-        inventory.setItem(0, Data.getStreakPermissionRewardSetting(plugin, number))
-        inventory.setItem(1, Data.getStreakCommandRewardSetting(plugin, number))
-        inventory.setItem(2, Data.getStreakItemRewardSetting(plugin, number))
+        inventory.setItem(0, createItem(Material.DIAMOND_SWORD, ChatColor.LIGHT_PURPLE.toString() + "Permission Rewards",
+            ChatColor.GRAY.toString() + "Currently: " + ChatColor.AQUA + plugin.data.getStringList("${Data.VOTE_STREAKS}.$number.permissions").size + ChatColor.GRAY + " permissions"))
+        inventory.setItem(1, createItem(Material.SHIELD, ChatColor.LIGHT_PURPLE.toString() + "Command Rewards",
+            ChatColor.GRAY.toString() + "Currently: " + ChatColor.AQUA + plugin.data.getStringList("${Data.VOTE_STREAKS}.$number.commands").size + ChatColor.GRAY + " commands"))
+        inventory.setItem(2, createItem(Material.CHEST, ChatColor.LIGHT_PURPLE.toString() +
+                "Item Rewards",
+            ChatColor.GRAY.toString() + "Currently: " + ChatColor.AQUA + plugin.data.getItems("${Data.VOTE_STREAKS}.$number.${Data.ITEM_REWARDS}").size + ChatColor.GRAY + " item stacks"))
         inventory.setItem(7, createItem(Material.RED_WOOL, ChatColor.RED.toString() + "Delete"))
         inventory.setItem(8, BACK_ITEM)
     }

@@ -9,7 +9,10 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 
-class VotePartyRewards(private val plugin: Main, private val key: String) : GUI(plugin, NAME + key, 54, true)
+class VotePartyRewards(private val plugin: Main, private val key: String) : GUI(
+    plugin,
+    "Vote Party Chest #$key", 54, true
+)
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
     {
@@ -20,17 +23,12 @@ class VotePartyRewards(private val plugin: Main, private val key: String) : GUI(
         if (plugin.data.setItems(Data.VOTE_PARTY + "." + key, event.inventory.contents))
         {
             SoundType.SUCCESS.play(plugin, player)
-            player.sendMessage(ChatColor.GREEN.toString() + "Successfully updated Vote Party Chest #" + key)
+            player.sendMessage(ChatColor.GREEN.toString() + "Successfully updated " + name)
         } else
         {
             SoundType.FAILURE.play(plugin, player)
-            player.sendMessage(ChatColor.RED.toString() + "Failed to update Vote Party Chest #" + key)
+            player.sendMessage(ChatColor.RED.toString() + "Failed to update " + name)
         }
-    }
-
-    companion object
-    {
-        const val NAME = "Vote Party Chest #"
     }
 
     init

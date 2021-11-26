@@ -10,7 +10,10 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 
-class VoteStreakItemRewards(private val plugin: Main, private val number: Int) : GUI(plugin, NAME + number, 27, true)
+class VoteStreakItemRewards(private val plugin: Main, private val number: Int) : GUI(
+    plugin,
+    "Vote Streak Item Rewards #$number", 27, true
+)
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
     {
@@ -36,7 +39,6 @@ class VoteStreakItemRewards(private val plugin: Main, private val number: Int) :
 
     companion object
     {
-        const val NAME = "Vote Streak Item Rewards #"
         fun save(plugin: Main, player: Player, inv: Inventory, number: Int)
         {
             inv.setItem(25, null)

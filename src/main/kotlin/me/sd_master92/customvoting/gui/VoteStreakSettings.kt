@@ -12,19 +12,20 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.scheduler.BukkitRunnable
 
-class VoteStreakSettings(private val plugin: Main) : GUI(plugin, NAME, Data.getVoteStreakInventorySize(plugin), false, true)
+class VoteStreakSettings(private val plugin: Main) :
+    GUI(plugin, "Vote Streak Settings", getVoteStreakInventorySize(plugin), false, true)
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
     {
         when (item.type)
         {
-            Material.BARRIER ->
+            Material.BARRIER        ->
             {
                 SoundType.CLICK.play(plugin, player)
                 cancelCloseEvent()
                 player.openInventory(RewardSettings(plugin).inventory)
             }
-            Material.ENDER_PEARL ->
+            Material.ENDER_PEARL    ->
             {
                 val key = item.itemMeta?.displayName?.split("#")?.get(1)
                 try
@@ -64,7 +65,7 @@ class VoteStreakSettings(private val plugin: Main) : GUI(plugin, NAME, Data.getV
                     }
                 }.runTaskTimer(plugin, 0, 10)
             }
-            else ->
+            else                    ->
             {
             }
         }
@@ -77,7 +78,17 @@ class VoteStreakSettings(private val plugin: Main) : GUI(plugin, NAME, Data.getV
 
     companion object
     {
-        const val NAME = "Vote Streak Settings"
+        fun getVoteStreakInventorySize(plugin: Main): Int
+        {
+            val streaks = (plugin.data.getConfigurationSection(Data.VOTE_STREAKS)?.getKeys(false)?.size ?: 0) + 2
+            return if (streaks % 9 == 0)
+            {
+                streaks
+            } else
+            {
+                streaks + (9 - (streaks % 9))
+            }
+        }
     }
 
     init
@@ -91,7 +102,12 @@ class VoteStreakSettings(private val plugin: Main) : GUI(plugin, NAME, Data.getV
                 key.toInt()
             } ?: ArrayList<String>())
             {
-                inventory.addItem(createItem(Material.ENDER_PEARL, ChatColor.LIGHT_PURPLE.toString() + "Streak #" + key))
+                inventory.addItem(
+                    createItem(
+                        Material.ENDER_PEARL,
+                        ChatColor.LIGHT_PURPLE.toString() + "Streak #" + key
+                    )
+                )
             }
         } catch (e: Exception)
         {

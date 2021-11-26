@@ -112,163 +112,173 @@ class PlayerListener(private val plugin: Main) : Listener
     fun onPlayerChat(event: AsyncPlayerChatEvent)
     {
         val player = event.player
-        if (moneyInput.contains(player.uniqueId))
+        when (player.uniqueId)
         {
-            event.isCancelled = true
-            if (event.message.equals("cancel", ignoreCase = true))
+            in moneyInput            ->
             {
-                moneyInput.remove(player.uniqueId)
-                SoundType.FAILURE.play(plugin, player)
-            } else
-            {
-                try
+                event.isCancelled = true
+                if (event.message.equals("cancel", ignoreCase = true))
                 {
-                    val input = event.message.toDouble()
-                    if (input < 0 || input > 1000000)
+                    moneyInput.remove(player.uniqueId)
+                    SoundType.FAILURE.play(plugin, player)
+                } else
+                {
+                    try
                     {
-                        player.sendMessage(ChatColor.RED.toString() + "Enter a number between 0 and 1.000.000")
-                    } else
+                        val input = event.message.toDouble()
+                        if (input < 0 || input > 1000000)
+                        {
+                            player.sendMessage(ChatColor.RED.toString() + "Enter a number between 0 and 1.000.000")
+                        } else
+                        {
+                            plugin.config[Settings.VOTE_REWARD_MONEY] = input
+                            plugin.config.saveConfig()
+                            moneyInput.remove(player.uniqueId)
+                            SoundType.SUCCESS.play(plugin, player)
+                            player.sendMessage(ChatColor.GREEN.toString() + "Successfully updated the money reward!")
+                        }
+                    } catch (e: Exception)
                     {
-                        plugin.config[Settings.VOTE_REWARD_MONEY] = input
-                        plugin.config.saveConfig()
-                        moneyInput.remove(player.uniqueId)
-                        SoundType.SUCCESS.play(plugin, player)
-                        player.sendMessage(ChatColor.GREEN.toString() + "Successfully updated the money reward!")
+                        player.sendMessage(ChatColor.RED.toString() + "Enter a number")
                     }
-                } catch (e: Exception)
-                {
-                    player.sendMessage(ChatColor.RED.toString() + "Enter a number")
                 }
             }
-        } else if (commandInput.contains(player.uniqueId))
-        {
-            event.isCancelled = true
-            if (event.message.equals("cancel", ignoreCase = true))
+            in commandInput          ->
             {
-                commandInput.remove(player.uniqueId)
-                SoundType.FAILURE.play(plugin, player)
-            } else
-            {
-                checkCommand(event.message, player)
+                event.isCancelled = true
+                if (event.message.equals("cancel", ignoreCase = true))
+                {
+                    commandInput.remove(player.uniqueId)
+                    SoundType.FAILURE.play(plugin, player)
+                } else
+                {
+                    checkCommand(event.message, player)
+                }
             }
-        } else if (loreVoteLinkInput.contains(player.uniqueId))
-        {
-            event.isCancelled = true
-            if (event.message.equals("cancel", ignoreCase = true))
+            in loreVoteLinkInput     ->
             {
-                loreVoteLinkInput.remove(player.uniqueId)
-                linkVoteLinkInput.add(player.uniqueId)
+                event.isCancelled = true
+                if (event.message.equals("cancel", ignoreCase = true))
+                {
+                    loreVoteLinkInput.remove(player.uniqueId)
+                    linkVoteLinkInput.add(player.uniqueId)
+                    SoundType.SUCCESS.play(plugin, player)
+                    player.sendMessage(
+                        ChatColor.GREEN.toString() + "Add a link to this item", ChatColor.GRAY.toString() +
+                                "Type 'cancel' to continue"
+                    )
+                } else
+                {
+                    val message = ChatColor.translateAlternateColorCodes('&', event.message)
+                    val items = plugin.data.getItems(Data.VOTE_LINK_ITEMS)
+                    val i = voteLinkInput[player.uniqueId]!!
+                    val item = items[i]
+                    val meta = item.itemMeta
+                    if (meta != null)
+                    {
+                        val lore = if (meta.lore != null) meta.lore else ArrayList()
+                        lore!!.add(message)
+                        meta.lore = lore
+                        item.itemMeta = meta
+                    }
+                    items[i] = item
+                    VoteLinks.save(plugin, player, items as Array<ItemStack?>, false)
+                    SoundType.SUCCESS.play(plugin, player)
+                    player.sendMessage(
+                        ChatColor.GREEN.toString() + "Add more lore (subtext) to this item", ChatColor.GRAY.toString() +
+                                "Type 'cancel' to continue"
+                    )
+                }
+            }
+            in linkVoteLinkInput     ->
+            {
+                event.isCancelled = true
+                if (!event.message.equals("cancel", ignoreCase = true))
+                {
+                    val i = voteLinkInput[player.uniqueId]!!
+                    plugin.data[Data.VOTE_LINKS + "." + i] = event.message
+                    plugin.data.saveConfig()
+                }
+                linkVoteLinkInput.remove(player.uniqueId)
+                voteLinkInput.remove(player.uniqueId)
+                SoundType.SUCCESS.play(plugin, player)
+            }
+            in voteLinkInput         ->
+            {
+                event.isCancelled = true
+                if (!event.message.equals("cancel", ignoreCase = true))
+                {
+                    val message = ChatColor.translateAlternateColorCodes('&', event.message)
+                    val items = plugin.data.getItems(Data.VOTE_LINK_ITEMS)
+                    val i = voteLinkInput[player.uniqueId]!!
+                    val item = items[i]
+                    val meta = item.itemMeta
+                    if (meta != null)
+                    {
+                        meta.setDisplayName(message)
+                        item.itemMeta = meta
+                    }
+                    items[i] = item
+                    VoteLinks.save(plugin, player, items as Array<ItemStack?>, false)
+                }
+                loreVoteLinkInput.add(player.uniqueId)
                 SoundType.SUCCESS.play(plugin, player)
                 player.sendMessage(
-                    ChatColor.GREEN.toString() + "Add a link to this item", ChatColor.GRAY.toString() +
-                            "Type 'cancel' to continue"
-                )
-            } else
-            {
-                val message = ChatColor.translateAlternateColorCodes('&', event.message)
-                val items = plugin.data.getItems(Data.VOTE_LINK_ITEMS)
-                val i = voteLinkInput[player.uniqueId]!!
-                val item = items[i]
-                val meta = item.itemMeta
-                if (meta != null)
-                {
-                    val lore = if (meta.lore != null) meta.lore else ArrayList()
-                    lore!!.add(message)
-                    meta.lore = lore
-                    item.itemMeta = meta
-                }
-                items[i] = item
-                VoteLinks.save(plugin, player, items as Array<ItemStack?>, false)
-                SoundType.SUCCESS.play(plugin, player)
-                player.sendMessage(
-                    ChatColor.GREEN.toString() + "Add more lore (subtext) to this item", ChatColor.GRAY.toString() +
+                    ChatColor.GREEN.toString() + "Add lore (subtext) to this item", ChatColor.GRAY.toString() +
                             "Type 'cancel' to continue"
                 )
             }
-        } else if (linkVoteLinkInput.contains(player.uniqueId))
-        {
-            event.isCancelled = true
-            if (!event.message.equals("cancel", ignoreCase = true))
+            in streakInput           ->
             {
-                val i = voteLinkInput[player.uniqueId]!!
-                plugin.data[Data.VOTE_LINKS + "." + i] = event.message
-                plugin.data.saveConfig()
-            }
-            linkVoteLinkInput.remove(player.uniqueId)
-            voteLinkInput.remove(player.uniqueId)
-            SoundType.SUCCESS.play(plugin, player)
-        } else if (voteLinkInput.containsKey(player.uniqueId))
-        {
-            event.isCancelled = true
-            if (!event.message.equals("cancel", ignoreCase = true))
-            {
-                val message = ChatColor.translateAlternateColorCodes('&', event.message)
-                val items = plugin.data.getItems(Data.VOTE_LINK_ITEMS)
-                val i = voteLinkInput[player.uniqueId]!!
-                val item = items[i]
-                val meta = item.itemMeta
-                if (meta != null)
+                event.isCancelled = true
+                if (event.message.equals("cancel", ignoreCase = true))
                 {
-                    meta.setDisplayName(message)
-                    item.itemMeta = meta
-                }
-                items[i] = item
-                VoteLinks.save(plugin, player, items as Array<ItemStack?>, false)
-            }
-            loreVoteLinkInput.add(player.uniqueId)
-            SoundType.SUCCESS.play(plugin, player)
-            player.sendMessage(
-                ChatColor.GREEN.toString() + "Add lore (subtext) to this item", ChatColor.GRAY.toString() +
-                        "Type 'cancel' to continue"
-            )
-        } else if (streakInput.contains(player.uniqueId))
-        {
-            event.isCancelled = true
-            if (event.message.equals("cancel", ignoreCase = true))
-            {
-                streakInput.remove(player.uniqueId)
-                SoundType.FAILURE.play(plugin, player)
-            } else
-            {
-                try
+                    streakInput.remove(player.uniqueId)
+                    SoundType.FAILURE.play(plugin, player)
+                } else
                 {
-                    val number = event.message.toInt()
-                    if (plugin.data.contains(Data.VOTE_STREAKS + "." + number))
+                    try
                     {
-                        player.sendMessage(ChatColor.RED.toString() + "That streak already exists.")
-                    } else
+                        val number = event.message.toInt()
+                        if (plugin.data.contains(Data.VOTE_STREAKS + "." + number))
+                        {
+                            player.sendMessage(ChatColor.RED.toString() + "That streak already exists.")
+                        } else
+                        {
+                            plugin.data.set(Data.VOTE_STREAKS + "." + number + ".permissions", ArrayList<String>())
+                            plugin.data.saveConfig()
+                            player.sendMessage(ChatColor.GREEN.toString() + "Streak #" + number + " created!")
+                            streakInput.remove(player.uniqueId)
+                        }
+                    } catch (e: Exception)
                     {
-                        plugin.data.set(Data.VOTE_STREAKS + "." + number + ".permissions", ArrayList<String>())
-                        plugin.data.saveConfig()
-                        player.sendMessage(ChatColor.GREEN.toString() + "Streak #" + number + " created!")
-                        streakInput.remove(player.uniqueId)
+                        player.sendMessage(ChatColor.RED.toString() + "Streak must be a number.")
                     }
-                } catch (e: Exception)
-                {
-                    player.sendMessage(ChatColor.RED.toString() + "Streak must be a number.")
                 }
             }
-        } else if (streakPermissionInput.containsKey(player.uniqueId))
-        {
-            event.isCancelled = true
-            if (event.message.equals("cancel", ignoreCase = true))
+            in streakPermissionInput ->
             {
-                streakPermissionInput.remove(player.uniqueId)
-                SoundType.FAILURE.play(plugin, player)
-            } else
-            {
-                checkStreakPermission(event.message, player)
+                event.isCancelled = true
+                if (event.message.equals("cancel", ignoreCase = true))
+                {
+                    streakPermissionInput.remove(player.uniqueId)
+                    SoundType.FAILURE.play(plugin, player)
+                } else
+                {
+                    checkStreakPermission(event.message, player)
+                }
             }
-        } else if (streakCommandInput.containsKey(player.uniqueId))
-        {
-            event.isCancelled = true
-            if (event.message.equals("cancel", ignoreCase = true))
+            in streakCommandInput    ->
             {
-                streakCommandInput.remove(player.uniqueId)
-                SoundType.FAILURE.play(plugin, player)
-            } else
-            {
-                checkStreakCommand(event.message, player)
+                event.isCancelled = true
+                if (event.message.equals("cancel", ignoreCase = true))
+                {
+                    streakCommandInput.remove(player.uniqueId)
+                    SoundType.FAILURE.play(plugin, player)
+                } else
+                {
+                    checkStreakCommand(event.message, player)
+                }
             }
         }
     }

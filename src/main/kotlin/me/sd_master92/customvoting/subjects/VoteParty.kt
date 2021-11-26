@@ -7,6 +7,7 @@ import me.sd_master92.customvoting.constants.Settings
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.constants.enumerations.VotePartyType
 import me.sd_master92.customvoting.gui.GUI
+import me.sd_master92.customvoting.helpers.ParticleHelper
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Location
@@ -136,7 +137,7 @@ class VoteParty(private val plugin: Main)
                             }
                             if (random.nextInt(2) == 0)
                             {
-                                CustomVote.shootFirework(plugin, fireworkLoc)
+                                ParticleHelper.shootFirework(plugin, fireworkLoc)
                             }
                         } else
                         {
@@ -193,7 +194,7 @@ class VoteParty(private val plugin: Main)
                     }
                     if (random.nextInt(3) == 0)
                     {
-                        CustomVote.shootFirework(plugin, fireworkLoc)
+                        ParticleHelper.shootFirework(plugin, fireworkLoc)
                     }
                 } else
                 {

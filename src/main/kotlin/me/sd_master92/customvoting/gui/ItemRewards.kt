@@ -44,11 +44,11 @@ class ItemRewards(private val plugin: Main) : GUI(plugin, NAME, 27, true)
             if (plugin.data.setItems(Data.ITEM_REWARDS, inv.contents))
             {
                 SoundType.SUCCESS.play(plugin, player)
-                player.sendMessage(ChatColor.GREEN.toString() + "Successfully updated the Item Rewards!")
+                player.sendMessage(ChatColor.GREEN.toString() + "Successfully updated the $NAME!")
             } else
             {
                 SoundType.FAILURE.play(plugin, player)
-                player.sendMessage(ChatColor.RED.toString() + "Failed to update the Item Rewards!")
+                player.sendMessage(ChatColor.RED.toString() + "Failed to update the $NAME!")
             }
         }
     }

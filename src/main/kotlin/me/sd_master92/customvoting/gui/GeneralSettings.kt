@@ -10,33 +10,33 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 
-class GeneralSettings(private val plugin: Main) : GUI(plugin, NAME, 9, false, true)
+class GeneralSettings(private val plugin: Main) : GUI(plugin, "General Settings", 9, false, true)
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
     {
         when (item.type)
         {
-            Material.BARRIER ->
+            Material.BARRIER           ->
             {
                 SoundType.CLICK.play(plugin, player)
                 cancelCloseEvent()
                 player.openInventory(VoteSettings(plugin).inventory)
             }
-            Material.CLOCK ->
+            Material.CLOCK             ->
             {
                 SoundType.CHANGE.play(plugin, player)
                 plugin.config[Settings.MONTHLY_RESET] = !plugin.config.getBoolean(Settings.MONTHLY_RESET)
                 plugin.config.saveConfig()
                 event.currentItem = Settings.getDoMonthlyResetSetting(plugin)
             }
-            Material.MUSIC_DISC_CAT ->
+            Material.MUSIC_DISC_CAT    ->
             {
                 SoundType.CHANGE.play(plugin, player)
                 plugin.config[Settings.USE_SOUND_EFFECTS] = !plugin.config.getBoolean(Settings.USE_SOUND_EFFECTS)
                 plugin.config.saveConfig()
                 event.currentItem = Settings.getUseSoundEffectsSetting(plugin)
             }
-            Material.FIREWORK_ROCKET ->
+            Material.FIREWORK_ROCKET   ->
             {
                 SoundType.CHANGE.play(plugin, player)
                 plugin.config[Settings.FIREWORK] = !plugin.config.getBoolean(Settings.FIREWORK)
@@ -50,14 +50,16 @@ class GeneralSettings(private val plugin: Main) : GUI(plugin, NAME, 9, false, tr
                 plugin.config.saveConfig()
                 event.currentItem = Settings.getDoVotePartySetting(plugin)
             }
-            Material.SPLASH_POTION ->
+            Material.SPLASH_POTION     ->
             {
                 SoundType.CHANGE.play(plugin, player)
-                plugin.config.setNumber(Settings.VOTE_PARTY_TYPE,
-                        VotePartyType.next(plugin).value)
+                plugin.config.setNumber(
+                    Settings.VOTE_PARTY_TYPE,
+                    VotePartyType.next(plugin).value
+                )
                 event.currentItem = Settings.getVotePartyTypeSetting(plugin)
             }
-            Material.ENCHANTED_BOOK ->
+            Material.ENCHANTED_BOOK    ->
             {
                 SoundType.CHANGE.play(plugin, player)
                 if (plugin.config.getNumber(Settings.VOTES_REQUIRED_FOR_VOTE_PARTY) < 100)
@@ -69,7 +71,7 @@ class GeneralSettings(private val plugin: Main) : GUI(plugin, NAME, 9, false, tr
                 }
                 event.currentItem = Settings.getVotesUntilVotePartySetting(plugin)
             }
-            Material.ENDER_CHEST ->
+            Material.ENDER_CHEST       ->
             {
                 SoundType.CHANGE.play(plugin, player)
                 if (plugin.config.getNumber(Settings.VOTE_PARTY_COUNTDOWN) < 60)
@@ -81,14 +83,14 @@ class GeneralSettings(private val plugin: Main) : GUI(plugin, NAME, 9, false, tr
                 }
                 event.currentItem = Settings.getVotePartyCountdownSetting(plugin)
             }
-            Material.TOTEM_OF_UNDYING ->
+            Material.TOTEM_OF_UNDYING  ->
             {
                 SoundType.CHANGE.play(plugin, player)
                 plugin.config[Settings.LUCKY_VOTE] = !plugin.config.getBoolean(Settings.LUCKY_VOTE)
                 plugin.config.saveConfig()
                 event.currentItem = Settings.getDoLuckyVoteSetting(plugin)
             }
-            else ->
+            else                       ->
             {
             }
         }
@@ -97,11 +99,6 @@ class GeneralSettings(private val plugin: Main) : GUI(plugin, NAME, 9, false, tr
     override fun onClose(event: InventoryCloseEvent, player: Player)
     {
         SoundType.CLOSE.play(plugin, player)
-    }
-
-    companion object
-    {
-        const val NAME = "General Settings"
     }
 
     init
