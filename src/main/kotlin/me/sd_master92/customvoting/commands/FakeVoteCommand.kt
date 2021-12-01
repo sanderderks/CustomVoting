@@ -42,5 +42,6 @@ class FakeVoteCommand(private val plugin: Main) : SimpleCommand(plugin, "fakevot
     private fun fakeVote(name: String)
     {
         CustomVote.create(plugin, name, "fakevote.com")
+        withNoPermMessage(Messages.NO_PERMISSION.getMessage(plugin))
     }
 }

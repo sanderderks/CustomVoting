@@ -1,6 +1,7 @@
 package me.sd_master92.customvoting.commands
 
 import me.sd_master92.customvoting.Main
+import me.sd_master92.customvoting.constants.Messages
 import me.sd_master92.plugin.command.SimpleCommand
 import me.sd_master92.customvoting.gui.VoteSettings
 import me.sd_master92.customvoting.constants.enumerations.SoundType
@@ -22,6 +23,7 @@ class SettingsCommand(private val plugin: Main) : SimpleCommand(plugin, "voteset
 
     init
     {
-        withPlayer()
+        withPlayer(Messages.MUST_BE_PLAYER.getMessage(plugin))
+        withNoPermMessage(Messages.NO_PERMISSION.getMessage(plugin))
     }
 }

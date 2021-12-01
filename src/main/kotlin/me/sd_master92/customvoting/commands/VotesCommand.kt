@@ -45,4 +45,9 @@ class VotesCommand(private val plugin: Main) : SimpleCommand(plugin, "votes")
     override fun onCommand(player: Player, args: Array<String>)
     {
     }
+
+    init
+    {
+        withNoPermMessage(Messages.NO_PERMISSION.getMessage(plugin))
+    }
 }

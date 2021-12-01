@@ -3,7 +3,7 @@ name: ${name}
 version: ${version}
 author: ${author}
 description: ${description}
-api-version: 1.17
+api-version: 1.18
 softdepend: [ NuVotifier, Votifier, Vault, PlaceholderAPI, Multiverse-Core ]
 
 commands:

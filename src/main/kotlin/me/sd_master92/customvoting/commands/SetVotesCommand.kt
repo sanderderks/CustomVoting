@@ -91,5 +91,6 @@ class SetVotesCommand(private val plugin: Main) : SimpleCommand(plugin, "setvote
     init
     {
         withUsage(ChatColor.RED.toString() + "- /setvotes <amount> [name]")
+        withNoPermMessage(Messages.NO_PERMISSION.getMessage(plugin))
     }
 }

@@ -14,7 +14,7 @@ class VoteTopCommand(private val plugin: Main) : SimpleCommand(plugin, "votetop"
     override fun onCommand(sender: CommandSender, args: Array<String>)
     {
         val topVoters = if (plugin.hasDatabaseConnection()) PlayerTable.getTopVoters(plugin) else VoteFile.getTopVoters(plugin)
-        if (topVoters.size > 0)
+        if (topVoters.isNotEmpty())
         {
             val messages: MutableList<String> = ArrayList()
             for (message in Messages.VOTE_TOP_COMMAND_FORMAT.getMessages(plugin))
@@ -46,5 +46,10 @@ class VoteTopCommand(private val plugin: Main) : SimpleCommand(plugin, "votetop"
 
     override fun onCommand(player: Player, args: Array<String>)
     {
+    }
+
+    init
+    {
+        withNoPermMessage(Messages.NO_PERMISSION.getMessage(plugin))
     }
 }

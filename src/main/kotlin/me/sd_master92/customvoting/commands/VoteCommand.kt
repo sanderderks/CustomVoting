@@ -30,6 +30,7 @@ class VoteCommand(private val plugin: Main) : SimpleCommand(plugin, "vote")
 
     init
     {
-        withPlayer()
+        withPlayer(Messages.MUST_BE_PLAYER.getMessage(plugin))
+        withNoPermMessage(Messages.NO_PERMISSION.getMessage(plugin))
     }
 }

@@ -1,6 +1,7 @@
 package me.sd_master92.customvoting.commands
 
 import me.sd_master92.customvoting.Main
+import me.sd_master92.customvoting.constants.Messages
 import me.sd_master92.plugin.command.SimpleCommand
 import me.sd_master92.customvoting.subjects.VoteTopStand
 import org.bukkit.ChatColor
@@ -19,7 +20,7 @@ class DeleteTopCommand(plugin: Main) : SimpleCommand(plugin, "deletetop", false)
         try
         {
             val top = args[0].toInt()
-            val voteTopStand = VoteTopStand.get(top)
+            val voteTopStand = VoteTopStand[top]
             if (voteTopStand != null)
             {
                 voteTopStand.delete(player)
@@ -35,7 +36,8 @@ class DeleteTopCommand(plugin: Main) : SimpleCommand(plugin, "deletetop", false)
 
     init
     {
-        withPlayer()
+        withPlayer(Messages.MUST_BE_PLAYER.getMessage(plugin))
         withUsage(ChatColor.RED.toString() + "- /deletetop <top>")
+        withNoPermMessage(Messages.NO_PERMISSION.getMessage(plugin))
     }
 }

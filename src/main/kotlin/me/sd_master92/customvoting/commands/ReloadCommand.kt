@@ -3,6 +3,7 @@ package me.sd_master92.customvoting.commands
 import me.sd_master92.plugin.command.SimpleCommand
 import me.sd_master92.customfile.PlayerFile
 import me.sd_master92.customvoting.Main
+import me.sd_master92.customvoting.constants.Messages
 import me.sd_master92.customvoting.subjects.VoteTopSign
 import me.sd_master92.customvoting.subjects.VoteTopStand
 import org.bukkit.ChatColor
@@ -41,5 +42,10 @@ class ReloadCommand(private val plugin: Main) : SimpleCommand(plugin, "votereloa
             }
             return false
         }
+    }
+
+    init
+    {
+        withNoPermMessage(Messages.NO_PERMISSION.getMessage(plugin))
     }
 }
