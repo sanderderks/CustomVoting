@@ -5,4 +5,4 @@ Vote your own way! Completely customizable.
 
 Find the overview page here: https://www.spigotmc.org/resources/customvoting.28103/
 
-Discussions can start here: https://discord.gg/WbasVDpA
+Discussions can start here: https://discord.gg/v3qmJu7jWD
