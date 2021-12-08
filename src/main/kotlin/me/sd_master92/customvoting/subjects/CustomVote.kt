@@ -38,7 +38,7 @@ class CustomVote(private val plugin: Main, vote: Vote) : Vote()
                 VoteFile(player.uniqueId.toString(), plugin).addVote(true)
             }
             ParticleHelper.shootFirework(plugin, player.location)
-            giveRewards(player)
+            giveRewards(player, player.hasPermission("customvoting.extra"))
             if (plugin.config.getBoolean(Settings.VOTE_PARTY))
             {
                 subtractVotesUntilVoteParty()
@@ -140,21 +140,19 @@ class CustomVote(private val plugin: Main, vote: Vote) : Vote()
         }
     }
 
-    private fun giveRewards(player: Player)
+    private fun giveRewards(player: Player, op: Boolean)
     {
-        giveItems(player)
-        giveLuckyReward(player)
+        giveItems(player, op)
         executeCommands(player)
-        giveStreakRewards(player)
         var rewardMessage = ""
-        val money = giveMoney(player)
+        val money = giveMoney(player, op)
         if (Main.ECONOMY != null && money > 0)
         {
             val placeholders = HashMap<String, String>()
             placeholders["%MONEY%"] = DecimalFormat("#.##").format(money)
             rewardMessage += Messages.VOTE_REWARD_MONEY.getMessage(plugin, placeholders)
         }
-        val xp = giveExperience(player)
+        val xp = giveExperience(player, op)
         if (xp > 0)
         {
             val placeholders = HashMap<String, String>()
@@ -163,6 +161,9 @@ class CustomVote(private val plugin: Main, vote: Vote) : Vote()
             rewardMessage += if (rewardMessage.isEmpty()) "" else Messages.VOTE_REWARD_DIVIDER.getMessage(plugin)
             rewardMessage += Messages.VOTE_REWARD_XP.getMessage(plugin, placeholders)
         }
+        giveLuckyReward(player)
+        giveStreakRewards(player)
+
         val message = rewardMessage
         if (message.isNotEmpty())
         {
@@ -185,9 +186,14 @@ class CustomVote(private val plugin: Main, vote: Vote) : Vote()
         }
     }
 
-    private fun giveItems(player: Player)
+    private fun giveItems(player: Player, op: Boolean)
     {
-        for (reward in plugin.data.getItems(Data.ITEM_REWARDS))
+        var path = Data.ITEM_REWARDS
+        if (op)
+        {
+            path += Data.OP_REWARDS
+        }
+        for (reward in plugin.data.getItems(path))
         {
             for (item in player.inventory.addItem(reward).values)
             {
@@ -196,21 +202,31 @@ class CustomVote(private val plugin: Main, vote: Vote) : Vote()
         }
     }
 
-    private fun giveMoney(player: Player): Double
+    private fun giveMoney(player: Player, op: Boolean): Double
     {
         val economy = Main.ECONOMY
         if (economy != null && economy.hasAccount(player))
         {
-            val amount = plugin.config.getDouble(Settings.VOTE_REWARD_MONEY)
+            var path = Settings.VOTE_REWARD_MONEY
+            if (op)
+            {
+                path += Data.OP_REWARDS
+            }
+            val amount = plugin.config.getDouble(path)
             economy.depositPlayer(player, amount)
             return amount
         }
         return 0.0
     }
 
-    private fun giveExperience(player: Player): Int
+    private fun giveExperience(player: Player, op: Boolean): Int
     {
-        val amount = plugin.config.getNumber(Settings.VOTE_REWARD_EXPERIENCE)
+        var path = Settings.VOTE_REWARD_EXPERIENCE
+        if (op)
+        {
+            path += Data.OP_REWARDS
+        }
+        val amount = plugin.config.getNumber(path)
         player.level = player.level + amount
         return amount
     }

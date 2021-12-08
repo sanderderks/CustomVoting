@@ -159,21 +159,31 @@ object Settings
         )
     }
 
-    fun getMoneyRewardSetting(plugin: Main): ItemStack
+    fun getMoneyRewardSetting(plugin: Main, op: Boolean): ItemStack
     {
+        var path = VOTE_REWARD_MONEY
+        if (op)
+        {
+            path += Data.OP_REWARDS
+        }
         return createItem(
             Material.GOLD_INGOT, ChatColor.LIGHT_PURPLE.toString() + "Money Reward",
             if (Main.ECONOMY != null) ChatColor.GRAY.toString() + "Currently: " + ChatColor.GREEN + Main.ECONOMY!!.format(
-                plugin.config.getDouble(VOTE_REWARD_MONEY)
+                plugin.config.getDouble(path)
             ) else ChatColor.RED.toString() + "Disabled"
         )
     }
 
-    fun getExperienceRewardSetting(plugin: Main): ItemStack
+    fun getExperienceRewardSetting(plugin: Main, op: Boolean): ItemStack
     {
+        var path = VOTE_REWARD_EXPERIENCE
+        if (op)
+        {
+            path += Data.OP_REWARDS
+        }
         return createItem(
             Material.EXPERIENCE_BOTTLE, ChatColor.LIGHT_PURPLE.toString() + "XP Reward",
-            ChatColor.GRAY.toString() + "Currently: " + ChatColor.AQUA + plugin.config.getNumber(VOTE_REWARD_EXPERIENCE) + ChatColor.GRAY + " levels"
+            ChatColor.GRAY.toString() + "Currently: " + ChatColor.AQUA + plugin.config.getNumber(path) + ChatColor.GRAY + " levels"
         )
     }
 

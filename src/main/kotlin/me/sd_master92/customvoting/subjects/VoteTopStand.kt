@@ -140,7 +140,7 @@ class VoteTopStand @JvmOverloads constructor(private val plugin: Main, private v
             {
             }
         }
-        votesStand!!.equipment?.helmet = skull
+        votesStand?.equipment?.helmet = skull
     }
 
     fun delete(player: Player)

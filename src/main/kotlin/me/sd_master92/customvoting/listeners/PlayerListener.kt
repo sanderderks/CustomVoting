@@ -117,7 +117,7 @@ class PlayerListener(private val plugin: Main) : Listener
             in moneyInput            ->
             {
                 event.isCancelled = true
-                if (event.message.equals("cancel", ignoreCase = true))
+                if (event.message.equals("cancel", true))
                 {
                     moneyInput.remove(player.uniqueId)
                     SoundType.FAILURE.play(plugin, player)
@@ -131,7 +131,12 @@ class PlayerListener(private val plugin: Main) : Listener
                             player.sendMessage(ChatColor.RED.toString() + "Enter a number between 0 and 1.000.000")
                         } else
                         {
-                            plugin.config[Settings.VOTE_REWARD_MONEY] = input
+                            var path = Settings.VOTE_REWARD_MONEY
+                            if (moneyInput[player.uniqueId] == true)
+                            {
+                                path += Data.OP_REWARDS
+                            }
+                            plugin.config[path] = input
                             plugin.config.saveConfig()
                             moneyInput.remove(player.uniqueId)
                             SoundType.SUCCESS.play(plugin, player)
@@ -146,7 +151,7 @@ class PlayerListener(private val plugin: Main) : Listener
             in commandInput          ->
             {
                 event.isCancelled = true
-                if (event.message.equals("cancel", ignoreCase = true))
+                if (event.message.equals("cancel", true))
                 {
                     commandInput.remove(player.uniqueId)
                     SoundType.FAILURE.play(plugin, player)
@@ -158,7 +163,7 @@ class PlayerListener(private val plugin: Main) : Listener
             in loreVoteLinkInput     ->
             {
                 event.isCancelled = true
-                if (event.message.equals("cancel", ignoreCase = true))
+                if (event.message.equals("cancel", true))
                 {
                     loreVoteLinkInput.remove(player.uniqueId)
                     linkVoteLinkInput.add(player.uniqueId)
@@ -198,7 +203,7 @@ class PlayerListener(private val plugin: Main) : Listener
             in linkVoteLinkInput     ->
             {
                 event.isCancelled = true
-                if (!event.message.equals("cancel", ignoreCase = true))
+                if (!event.message.equals("cancel", true))
                 {
                     val i = voteLinkInput[player.uniqueId]!!
                     plugin.data[Data.VOTE_LINKS + "." + i] = event.message
@@ -211,7 +216,7 @@ class PlayerListener(private val plugin: Main) : Listener
             in voteLinkInput         ->
             {
                 event.isCancelled = true
-                if (!event.message.equals("cancel", ignoreCase = true))
+                if (!event.message.equals("cancel", true))
                 {
                     val message = ChatColor.translateAlternateColorCodes('&', event.message)
                     val items = plugin.data.getItems(Data.VOTE_LINK_ITEMS)
@@ -238,7 +243,7 @@ class PlayerListener(private val plugin: Main) : Listener
             in streakInput           ->
             {
                 event.isCancelled = true
-                if (event.message.equals("cancel", ignoreCase = true))
+                if (event.message.equals("cancel", true))
                 {
                     streakInput.remove(player.uniqueId)
                     SoundType.FAILURE.play(plugin, player)
@@ -266,7 +271,7 @@ class PlayerListener(private val plugin: Main) : Listener
             in streakPermissionInput ->
             {
                 event.isCancelled = true
-                if (event.message.equals("cancel", ignoreCase = true))
+                if (event.message.equals("cancel", true))
                 {
                     streakPermissionInput.remove(player.uniqueId)
                     SoundType.FAILURE.play(plugin, player)
@@ -278,7 +283,7 @@ class PlayerListener(private val plugin: Main) : Listener
             in streakCommandInput    ->
             {
                 event.isCancelled = true
-                if (event.message.equals("cancel", ignoreCase = true))
+                if (event.message.equals("cancel", true))
                 {
                     streakCommandInput.remove(player.uniqueId)
                     SoundType.FAILURE.play(plugin, player)
@@ -412,7 +417,14 @@ class PlayerListener(private val plugin: Main) : Listener
         {
             command = command.substring(1)
         }
-        val commands = plugin.data.getStringList(Data.VOTE_COMMANDS)
+
+        var path = Data.VOTE_COMMANDS
+        if (commandInput[player.uniqueId] == true)
+        {
+            path += Data.OP_REWARDS
+        }
+
+        val commands = plugin.data.getStringList(path)
         if (commands.contains(command))
         {
             commands.remove(command)
@@ -422,7 +434,7 @@ class PlayerListener(private val plugin: Main) : Listener
             commands.add(command)
             player.sendMessage(ChatColor.GREEN.toString() + "Added /" + command + " to commands")
         }
-        plugin.data[Data.VOTE_COMMANDS] = commands
+        plugin.data[path] = commands
         plugin.data.saveConfig()
         commandInput.remove(player.uniqueId)
     }
@@ -478,8 +490,8 @@ class PlayerListener(private val plugin: Main) : Listener
 
     companion object
     {
-        var moneyInput: MutableList<UUID> = ArrayList()
-        var commandInput: MutableList<UUID> = ArrayList()
+        var moneyInput: MutableMap<UUID, Boolean> = HashMap()
+        var commandInput: MutableMap<UUID, Boolean> = HashMap()
         var streakInput: MutableList<UUID> = ArrayList()
         var streakPermissionInput: MutableMap<UUID, Int> = HashMap()
         var streakCommandInput: MutableMap<UUID, Int> = HashMap()

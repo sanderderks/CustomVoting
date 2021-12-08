@@ -3,6 +3,7 @@ package me.sd_master92.customvoting.constants
 object Data
 {
     const val VOTE_PARTY = "vote_party"
+    const val OP_REWARDS = "_op"
     const val ITEM_REWARDS = "rewards"
     const val LUCKY_REWARDS = "lucky_rewards"
     const val CURRENT_VOTES = "current_votes"

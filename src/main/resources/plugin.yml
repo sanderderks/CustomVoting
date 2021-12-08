@@ -82,3 +82,5 @@ permissions:
     default: op
   customvoting.settings:
     default: op
+  customvoting.extra:
+    default: false
