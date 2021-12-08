@@ -1,6 +1,7 @@
 package me.sd_master92.customvoting.gui
 
 import me.sd_master92.customvoting.Main
+import me.sd_master92.customvoting.constants.enumerations.Materials
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import org.bukkit.ChatColor
 import org.bukkit.Material
@@ -15,31 +16,31 @@ class VoteSettings(private val plugin: Main) : GUI(plugin, "Vote Settings", 9, f
     {
         when (item.type)
         {
-            Material.COMMAND_BLOCK ->
+            Material.COMMAND_BLOCK   ->
             {
                 SoundType.CLICK.play(plugin, player)
                 cancelCloseEvent()
                 player.openInventory(GeneralSettings(plugin).inventory)
             }
-            Material.DIAMOND ->
+            Material.DIAMOND         ->
             {
                 SoundType.CLICK.play(plugin, player)
                 cancelCloseEvent()
                 player.openInventory(RewardSettings(plugin).inventory)
             }
-            Material.WRITABLE_BOOK ->
+            Material.WRITABLE_BOOK   ->
             {
                 SoundType.CLICK.play(plugin, player)
                 cancelCloseEvent()
                 player.openInventory(MessageSettings(plugin).inventory)
             }
-            Material.SPYGLASS ->
+            Materials.SPYGLASS.get() ->
             {
                 SoundType.CLICK.play(plugin, player)
                 cancelCloseEvent()
                 player.openInventory(Support(plugin).inventory)
             }
-            else ->
+            else                     ->
             {
             }
         }
@@ -52,14 +53,22 @@ class VoteSettings(private val plugin: Main) : GUI(plugin, "Vote Settings", 9, f
 
     companion object
     {
-        val GENERAL_SETTINGS = createItem(Material.COMMAND_BLOCK, ChatColor.AQUA.toString() + "General",
-                null, true)
-        val REWARD_SETTINGS = createItem(Material.DIAMOND, ChatColor.LIGHT_PURPLE.toString() + "Rewards",
-                null, true)
-        val MESSAGES = createItem(Material.WRITABLE_BOOK, ChatColor.YELLOW.toString() + "Messages",
-                null, true)
-        val SUPPORT = createItem(Material.SPYGLASS, ChatColor.GREEN.toString() + "Support",
-                null, true)
+        val GENERAL_SETTINGS = createItem(
+            Material.COMMAND_BLOCK, ChatColor.AQUA.toString() + "General",
+            null, true
+        )
+        val REWARD_SETTINGS = createItem(
+            Material.DIAMOND, ChatColor.LIGHT_PURPLE.toString() + "Rewards",
+            null, true
+        )
+        val MESSAGES = createItem(
+            Material.WRITABLE_BOOK, ChatColor.YELLOW.toString() + "Messages",
+            null, true
+        )
+        val SUPPORT = createItem(
+            Materials.SPYGLASS.get(), ChatColor.GREEN.toString() + "Support",
+            null, true
+        )
     }
 
     init

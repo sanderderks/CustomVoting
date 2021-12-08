@@ -2,6 +2,7 @@ package me.sd_master92.customvoting.gui
 
 import me.sd_master92.customvoting.Main
 import me.sd_master92.customvoting.constants.Settings
+import me.sd_master92.customvoting.constants.enumerations.Materials
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import org.bukkit.ChatColor
 import org.bukkit.Material
@@ -16,13 +17,13 @@ class MessageSettings(private val plugin: Main) : GUI(plugin, "Message Settings"
     {
         when (item.type)
         {
-            Material.SOUL_TORCH ->
+            Materials.SOUL_TORCH.get() ->
             {
                 SoundType.CLICK.play(plugin, player)
                 cancelCloseEvent()
                 player.openInventory(VoteLinks(plugin).inventory)
             }
-            Material.CHEST ->
+            Material.CHEST            ->
             {
                 SoundType.CHANGE.play(plugin, player)
                 plugin.config.set(Settings.VOTE_LINK_INVENTORY, !plugin.config.getBoolean(Settings.VOTE_LINK_INVENTORY))
@@ -48,7 +49,7 @@ class MessageSettings(private val plugin: Main) : GUI(plugin, "Message Settings"
 
     companion object
     {
-        val VOTE_LINKS = createItem(Material.SOUL_TORCH, ChatColor.LIGHT_PURPLE.toString() + "Vote Links",
+        val VOTE_LINKS = createItem(Materials.SOUL_TORCH.get(), ChatColor.LIGHT_PURPLE.toString() + "Vote Links",
                 ChatColor.GRAY.toString() + "Place items in this inventory;;" + ChatColor.GRAY + "Right-click to edit an item")
     }
 

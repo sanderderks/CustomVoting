@@ -16,7 +16,13 @@ import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
 
-abstract class GUI @JvmOverloads constructor(plugin: Main, name: String, size: Int, allowDrag: Boolean, alwaysCancel: Boolean = false) : Listener
+abstract class GUI @JvmOverloads constructor(
+    plugin: Main,
+    name: String,
+    size: Int,
+    allowDrag: Boolean,
+    alwaysCancel: Boolean = false
+) : Listener
 {
     val inventory: Inventory
     val name: String
@@ -98,7 +104,7 @@ abstract class GUI @JvmOverloads constructor(plugin: Main, name: String, size: I
                 }
                 if (enchanted)
                 {
-                    meta.addEnchant(Enchantment.MENDING, 1, true)
+                    meta.addEnchant(Enchantment.LUCK, 1, true)
                 }
                 meta.addItemFlags(*ItemFlag.values())
                 item.itemMeta = meta
@@ -119,6 +125,6 @@ abstract class GUI @JvmOverloads constructor(plugin: Main, name: String, size: I
         this.allowDrag = allowDrag
         cancelCloseEvent = false
         this.alwaysCancel = alwaysCancel
-        plugin.server.pluginManager.registerEvents(this, plugin)
+        plugin.registerListener(this)
     }
 }

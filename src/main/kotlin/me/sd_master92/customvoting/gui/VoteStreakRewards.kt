@@ -138,13 +138,25 @@ class VoteStreakRewards(private val plugin: Main, private val number: Int) : GUI
 
     init
     {
-        inventory.setItem(0, createItem(Material.DIAMOND_SWORD, ChatColor.LIGHT_PURPLE.toString() + "Permission Rewards",
-            ChatColor.GRAY.toString() + "Currently: " + ChatColor.AQUA + plugin.data.getStringList("${Data.VOTE_STREAKS}.$number.permissions").size + ChatColor.GRAY + " permissions"))
-        inventory.setItem(1, createItem(Material.SHIELD, ChatColor.LIGHT_PURPLE.toString() + "Command Rewards",
-            ChatColor.GRAY.toString() + "Currently: " + ChatColor.AQUA + plugin.data.getStringList("${Data.VOTE_STREAKS}.$number.commands").size + ChatColor.GRAY + " commands"))
-        inventory.setItem(2, createItem(Material.CHEST, ChatColor.LIGHT_PURPLE.toString() +
-                "Item Rewards",
-            ChatColor.GRAY.toString() + "Currently: " + ChatColor.AQUA + plugin.data.getItems("${Data.VOTE_STREAKS}.$number.${Data.ITEM_REWARDS}").size + ChatColor.GRAY + " item stacks"))
+        inventory.setItem(
+            0, createItem(
+                Material.DIAMOND_SWORD, ChatColor.LIGHT_PURPLE.toString() + "Permission Rewards",
+                ChatColor.GRAY.toString() + "Currently: " + ChatColor.AQUA + plugin.data.getStringList("${Data.VOTE_STREAKS}.$number.permissions").size + ChatColor.GRAY + " permissions"
+            )
+        )
+        inventory.setItem(
+            1, createItem(
+                Material.SHIELD, ChatColor.LIGHT_PURPLE.toString() + "Command Rewards",
+                ChatColor.GRAY.toString() + "Currently: " + ChatColor.AQUA + plugin.data.getStringList("${Data.VOTE_STREAKS}.$number.commands").size + ChatColor.GRAY + " commands"
+            )
+        )
+        inventory.setItem(
+            2, createItem(
+                Material.CHEST, ChatColor.LIGHT_PURPLE.toString() +
+                        "Item Rewards",
+                ChatColor.GRAY.toString() + "Currently: " + ChatColor.AQUA + plugin.data.getItems("${Data.VOTE_STREAKS}.$number.${Data.ITEM_REWARDS}").size + ChatColor.GRAY + " item stacks"
+            )
+        )
         inventory.setItem(7, createItem(Material.RED_WOOL, ChatColor.RED.toString() + "Delete"))
         inventory.setItem(8, BACK_ITEM)
     }

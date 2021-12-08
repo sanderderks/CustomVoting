@@ -109,7 +109,7 @@ class VoteStreakSettings(private val plugin: Main) :
                     )
                 )
             }
-        } catch (e: Exception)
+        } catch (_: Exception)
         {
         }
     }

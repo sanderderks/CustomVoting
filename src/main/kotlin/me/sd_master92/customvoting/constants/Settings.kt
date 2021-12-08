@@ -163,7 +163,7 @@ object Settings
     {
         return createItem(
             Material.GOLD_INGOT, ChatColor.LIGHT_PURPLE.toString() + "Money Reward",
-            if (Main.economy != null) ChatColor.GRAY.toString() + "Currently: " + ChatColor.GREEN + Main.economy!!.format(
+            if (Main.ECONOMY != null) ChatColor.GRAY.toString() + "Currently: " + ChatColor.GREEN + Main.ECONOMY!!.format(
                 plugin.config.getDouble(VOTE_REWARD_MONEY)
             ) else ChatColor.RED.toString() + "Disabled"
         )

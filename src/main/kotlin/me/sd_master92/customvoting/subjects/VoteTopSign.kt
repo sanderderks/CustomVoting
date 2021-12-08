@@ -17,7 +17,12 @@ import org.bukkit.entity.Player
 import org.bukkit.scheduler.BukkitRunnable
 import java.util.*
 
-class VoteTopSign @JvmOverloads constructor(private val plugin: Main, private val top: Int, val location: Location?, player: Player? = null)
+class VoteTopSign @JvmOverloads constructor(
+    private val plugin: Main,
+    private val top: Int,
+    val location: Location?,
+    player: Player? = null
+)
 {
     private fun update()
     {
@@ -49,8 +54,11 @@ class VoteTopSign @JvmOverloads constructor(private val plugin: Main, private va
         if (location!!.block.state is Sign)
         {
             val sign = location.block.state as Sign
-            val topVoter = if (plugin.hasDatabaseConnection()) PlayerTable.getTopVoter(plugin, top) else VoteFile.getTopVoter(plugin,
-                    top)
+            val topVoter =
+                if (plugin.hasDatabaseConnection()) PlayerTable.getTopVoter(plugin, top) else VoteFile.getTopVoter(
+                    plugin,
+                    top
+                )
             if (topVoter != null)
             {
                 val oldLoc = plugin.data.getLocation(Data.VOTE_TOP_SIGNS + "." + top)
@@ -63,8 +71,10 @@ class VoteTopSign @JvmOverloads constructor(private val plugin: Main, private va
                         {
                             if (i == 1)
                             {
-                                oldSign.setLine(i,
-                                        Messages.VOTE_TOP_SIGNS_PLAYER_SIGNS_OUTDATED.getMessage(plugin))
+                                oldSign.setLine(
+                                    i,
+                                    Messages.VOTE_TOP_SIGNS_PLAYER_SIGNS_OUTDATED.getMessage(plugin)
+                                )
                             } else
                             {
                                 oldSign.setLine(i, "")
@@ -91,8 +101,10 @@ class VoteTopSign @JvmOverloads constructor(private val plugin: Main, private va
                 {
                     if (i == 1)
                     {
-                        sign.setLine(i,
-                                Messages.VOTE_TOP_SIGNS_PLAYER_SIGNS_NOT_FOUND.getMessage(plugin))
+                        sign.setLine(
+                            i,
+                            Messages.VOTE_TOP_SIGNS_PLAYER_SIGNS_NOT_FOUND.getMessage(plugin)
+                        )
                     } else
                     {
                         sign.setLine(i, "")

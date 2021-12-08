@@ -13,11 +13,11 @@ import org.bukkit.Material
 import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
-import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.SkullMeta
 import org.bukkit.scheduler.BukkitRunnable
 import java.util.*
+
 
 class VoteTopStand @JvmOverloads constructor(private val plugin: Main, private val top: Int, player: Player? = null)
 {
@@ -56,39 +56,31 @@ class VoteTopStand @JvmOverloads constructor(private val plugin: Main, private v
             plugin.data[Data.VOTE_TOP_STANDS + "." + top + ".votes"] = votesStand.uniqueId.toString()
             plugin.data.saveConfig()
 
-            votesStand.addEquipmentLock(EquipmentSlot.HEAD, ArmorStand.LockType.REMOVING_OR_CHANGING)
-            votesStand.addEquipmentLock(EquipmentSlot.CHEST, ArmorStand.LockType.REMOVING_OR_CHANGING)
-            votesStand.addEquipmentLock(EquipmentSlot.LEGS, ArmorStand.LockType.REMOVING_OR_CHANGING)
-            votesStand.addEquipmentLock(EquipmentSlot.FEET, ArmorStand.LockType.REMOVING_OR_CHANGING)
-            votesStand.addEquipmentLock(EquipmentSlot.HAND, ArmorStand.LockType.REMOVING_OR_CHANGING)
             val entityEquipment = votesStand.equipment
             if (entityEquipment != null)
             {
                 when (top)
                 {
-                    1 ->
+                    1    ->
                     {
                         entityEquipment.chestplate = GUI.createItem(Material.DIAMOND_CHESTPLATE, true)
                         entityEquipment.leggings = GUI.createItem(Material.DIAMOND_LEGGINGS, true)
                         entityEquipment.boots = GUI.createItem(Material.DIAMOND_BOOTS, true)
-                        entityEquipment.setItemInMainHand(GUI.createItem(Material.DIAMOND_SWORD,
-                                true))
+                        entityEquipment.setItemInMainHand(GUI.createItem(Material.DIAMOND_SWORD, true))
                     }
-                    2 ->
+                    2    ->
                     {
                         entityEquipment.chestplate = GUI.createItem(Material.GOLDEN_CHESTPLATE, true)
                         entityEquipment.leggings = GUI.createItem(Material.GOLDEN_LEGGINGS, true)
                         entityEquipment.boots = GUI.createItem(Material.GOLDEN_BOOTS, true)
-                        entityEquipment.setItemInMainHand(GUI.createItem(Material.GOLDEN_SWORD,
-                                true))
+                        entityEquipment.setItemInMainHand(GUI.createItem(Material.GOLDEN_SWORD, true))
                     }
-                    3 ->
+                    3    ->
                     {
                         entityEquipment.chestplate = GUI.createItem(Material.IRON_CHESTPLATE, true)
                         entityEquipment.leggings = GUI.createItem(Material.IRON_LEGGINGS, true)
                         entityEquipment.boots = GUI.createItem(Material.IRON_BOOTS, true)
-                        entityEquipment.setItemInMainHand(GUI.createItem(Material.IRON_SWORD,
-                                true))
+                        entityEquipment.setItemInMainHand(GUI.createItem(Material.IRON_SWORD, true))
                     }
                     else ->
                     {
@@ -109,7 +101,6 @@ class VoteTopStand @JvmOverloads constructor(private val plugin: Main, private v
         val stand = loc.world!!.spawnEntity(loc, EntityType.ARMOR_STAND) as ArmorStand
         stand.removeWhenFarAway = false
         stand.isSilent = true
-        stand.isPersistent = true
         stand.setGravity(false)
         stand.isCustomNameVisible = true
         stand.isInvulnerable = true
@@ -118,8 +109,11 @@ class VoteTopStand @JvmOverloads constructor(private val plugin: Main, private v
 
     private fun update()
     {
-        val voteFile = if (plugin.hasDatabaseConnection()) PlayerTable.getTopVoter(plugin, top) else VoteFile.getTopVoter(plugin,
-                top)
+        val voteFile =
+            if (plugin.hasDatabaseConnection()) PlayerTable.getTopVoter(plugin, top) else VoteFile.getTopVoter(
+                plugin,
+                top
+            )
         val placeholders: MutableMap<String, String> = HashMap()
         placeholders["%TOP%"] = "" + top
         if (voteFile != null)
@@ -142,15 +136,11 @@ class VoteTopStand @JvmOverloads constructor(private val plugin: Main, private v
             {
                 skullMeta.owningPlayer = Bukkit.getOfflinePlayer(UUID.fromString(voteFile.uniqueId))
                 skull.itemMeta = skullMeta
-                val entityEquipment = votesStand!!.equipment
-                if (entityEquipment != null)
-                {
-                    entityEquipment.helmet = skull
-                }
             } catch (ignored: Exception)
             {
             }
         }
+        votesStand!!.equipment?.helmet = skull
     }
 
     fun delete(player: Player)

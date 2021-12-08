@@ -31,7 +31,7 @@ class RewardSettings(private val plugin: Main) : GUI(plugin, "Vote Rewards", 9, 
                 cancelCloseEvent()
                 player.openInventory(ItemRewards(plugin).inventory)
             }
-            Material.GOLD_INGOT        -> if (Main.economy != null)
+            Material.GOLD_INGOT        -> if (Main.ECONOMY != null)
             {
                 SoundType.CHANGE.play(plugin, player)
                 PlayerListener.moneyInput.add(player.uniqueId)

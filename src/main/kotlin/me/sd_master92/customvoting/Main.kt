@@ -14,6 +14,7 @@ import me.sd_master92.customvoting.tasks.DailyTask
 import me.sd_master92.plugin.CustomPlugin
 import net.milkbowl.vault.economy.Economy
 import net.milkbowl.vault.permission.Permission
+import org.bukkit.Bukkit
 
 class Main : CustomPlugin("settings.yml", 28103)
 {
@@ -26,7 +27,7 @@ class Main : CustomPlugin("settings.yml", 28103)
 
     override fun enable()
     {
-        if (!checkVotifier())
+        if (!checkVotifier() || !checkMCVersion())
         {
             return
         }
@@ -60,8 +61,39 @@ class Main : CustomPlugin("settings.yml", 28103)
         {
             errorLog("|___dependency 'Votifier' not found, disabling...")
             isEnabled = false
+            server.pluginManager.disablePlugin(this)
             false
         }
+    }
+
+    private fun checkMCVersion(): Boolean
+    {
+        infoLog("")
+        infoLog("| checking Minecraft version")
+        infoLog("|")
+        MC_VERSION = with(Bukkit.getBukkitVersion().split("-")[0])
+        {
+            when
+            {
+                contains("1.18") -> 18
+                contains("1.17") -> 17
+                contains("1.16") -> 16
+                contains("1.15") -> 15
+                contains("1.14") -> 14
+                else             -> 0
+            }
+        }
+        if (MC_VERSION == 0)
+        {
+            errorLog("|___detected invalid Minecraft version, disabling...")
+            isEnabled = false
+            server.pluginManager.disablePlugin(this)
+            return false
+        } else
+        {
+            infoLog("|___up to date!")
+        }
+        return true
     }
 
     private fun checkHooks()
@@ -80,7 +112,7 @@ class Main : CustomPlugin("settings.yml", 28103)
                 errorLog("|___economy hook not found")
             } else
             {
-                infoLog("|___successfully hooked into '" + economy!!.name + "'")
+                infoLog("|___successfully hooked into '" + ECONOMY!!.name + "'")
             }
             infoLog("")
             infoLog("| checking for permission hook")
@@ -90,7 +122,7 @@ class Main : CustomPlugin("settings.yml", 28103)
                 errorLog("|___permission hook not found")
             } else
             {
-                infoLog("|___successfully hooked into '" + permission!!.name + "'")
+                infoLog("|___successfully hooked into '" + PERMISSION!!.name + "'")
             }
         } else
         {
@@ -118,14 +150,14 @@ class Main : CustomPlugin("settings.yml", 28103)
 
     private fun setupEconomy(): Boolean
     {
-        economy = server.servicesManager.getRegistration(Economy::class.java)?.provider ?: return false
-        return economy != null
+        ECONOMY = server.servicesManager.getRegistration(Economy::class.java)?.provider ?: return false
+        return ECONOMY != null
     }
 
     private fun setupPermission(): Boolean
     {
-        permission = server.servicesManager.getRegistration(Permission::class.java)?.provider ?: return false
-        return permission != null
+        PERMISSION = server.servicesManager.getRegistration(Permission::class.java)?.provider ?: return false
+        return PERMISSION != null
     }
 
     private fun registerFiles()
@@ -200,7 +232,8 @@ class Main : CustomPlugin("settings.yml", 28103)
 
     companion object
     {
-        var economy: Economy? = null
-        var permission: Permission? = null
+        var ECONOMY: Economy? = null
+        var PERMISSION: Permission? = null
+        var MC_VERSION: Int = 0
     }
 }

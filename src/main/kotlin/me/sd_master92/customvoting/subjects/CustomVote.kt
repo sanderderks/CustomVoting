@@ -148,7 +148,7 @@ class CustomVote(private val plugin: Main, vote: Vote) : Vote()
         giveStreakRewards(player)
         var rewardMessage = ""
         val money = giveMoney(player)
-        if (Main.economy != null && money > 0)
+        if (Main.ECONOMY != null && money > 0)
         {
             val placeholders = HashMap<String, String>()
             placeholders["%MONEY%"] = DecimalFormat("#.##").format(money)
@@ -198,7 +198,7 @@ class CustomVote(private val plugin: Main, vote: Vote) : Vote()
 
     private fun giveMoney(player: Player): Double
     {
-        val economy = Main.economy
+        val economy = Main.ECONOMY
         if (economy != null && economy.hasAccount(player))
         {
             val amount = plugin.config.getDouble(Settings.VOTE_REWARD_MONEY)
@@ -255,11 +255,11 @@ class CustomVote(private val plugin: Main, vote: Vote) : Vote()
             plugin.server.broadcastMessage(ChatColor.AQUA.toString() + player.name + ChatColor.LIGHT_PURPLE.toString() + " reached vote streak #" + ChatColor.AQUA.toString() + votes + ChatColor.LIGHT_PURPLE.toString() + "!")
 
             val permissions = plugin.data.getStringList(Data.VOTE_STREAKS + "." + votes + ".permissions")
-            if (permissions.isNotEmpty() && Main.permission != null)
+            if (permissions.isNotEmpty() && Main.PERMISSION != null)
             {
                 for (permission in permissions)
                 {
-                    if (Main.permission!!.playerAdd(null, player, permission))
+                    if (Main.PERMISSION!!.playerAdd(null, player, permission))
                     {
                         val placeholders = HashMap<String, String>()
                         placeholders["%PLAYER%"] = player.name

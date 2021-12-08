@@ -164,8 +164,10 @@ class PlayerListener(private val plugin: Main) : Listener
                     linkVoteLinkInput.add(player.uniqueId)
                     SoundType.SUCCESS.play(plugin, player)
                     player.sendMessage(
-                        ChatColor.GREEN.toString() + "Add a link to this item", ChatColor.GRAY.toString() +
-                                "Type 'cancel' to continue"
+                        arrayOf(
+                            ChatColor.GREEN.toString() + "Add a link to this item", ChatColor.GRAY.toString() +
+                                    "Type 'cancel' to continue"
+                        )
                     )
                 } else
                 {
@@ -185,8 +187,11 @@ class PlayerListener(private val plugin: Main) : Listener
                     VoteLinks.save(plugin, player, items as Array<ItemStack?>, false)
                     SoundType.SUCCESS.play(plugin, player)
                     player.sendMessage(
-                        ChatColor.GREEN.toString() + "Add more lore (subtext) to this item", ChatColor.GRAY.toString() +
-                                "Type 'cancel' to continue"
+                        arrayOf(
+                            ChatColor.GREEN.toString() + "Add more lore (subtext) to this item",
+                            ChatColor.GRAY.toString() +
+                                    "Type 'cancel' to continue"
+                        )
                     )
                 }
             }
@@ -224,8 +229,10 @@ class PlayerListener(private val plugin: Main) : Listener
                 loreVoteLinkInput.add(player.uniqueId)
                 SoundType.SUCCESS.play(plugin, player)
                 player.sendMessage(
-                    ChatColor.GREEN.toString() + "Add lore (subtext) to this item", ChatColor.GRAY.toString() +
-                            "Type 'cancel' to continue"
+                    arrayOf(
+                        ChatColor.GREEN.toString() + "Add lore (subtext) to this item", ChatColor.GRAY.toString() +
+                                "Type 'cancel' to continue"
+                    )
                 )
             }
             in streakInput           ->

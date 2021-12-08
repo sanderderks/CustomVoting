@@ -6,7 +6,9 @@ import org.bukkit.Location
 import org.bukkit.Sound
 import org.bukkit.entity.Player
 
-enum class SoundType(private val sound: Sound)
+enum class SoundType(
+    private val sound: Sound
+)
 {
     SUCCESS(Sound.ENTITY_EXPERIENCE_ORB_PICKUP),
     FAILURE(Sound.BLOCK_ANVIL_LAND),
@@ -29,11 +31,7 @@ enum class SoundType(private val sound: Sound)
 
     fun play(plugin: Main, player: Player)
     {
-        val loc = player.location
-        if (plugin.config.getBoolean(Settings.USE_SOUND_EFFECTS))
-        {
-            player.playSound(loc, sound, 10f, 1f)
-        }
+        play(plugin, player.location)
     }
 
     fun playForAll(plugin: Main)

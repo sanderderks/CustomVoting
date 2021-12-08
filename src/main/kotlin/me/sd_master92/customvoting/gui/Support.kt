@@ -17,24 +17,26 @@ class Support(private val plugin: Main) : GUI(plugin, "Support", 9, false, true)
     {
         when (item.type)
         {
-            Material.BARRIER ->
+            Material.BARRIER        ->
             {
                 SoundType.CLICK.play(plugin, player)
                 cancelCloseEvent()
                 player.openInventory(VoteSettings(plugin).inventory)
             }
-            Material.CLOCK -> if (!plugin.isUpToDate)
+            Material.CLOCK          -> if (!plugin.isUpToDate)
             {
                 SoundType.CLICK.play(plugin, player)
                 cancelCloseEvent()
                 player.closeInventory()
                 plugin.sendDownloadUrl(player)
             }
-            Material.FILLED_MAP ->
+            Material.FILLED_MAP     ->
             {
                 SoundType.CHANGE.play(plugin, player)
-                plugin.config.set(Settings.INGAME_UPDATES,
-                        !plugin.config.getBoolean(Settings.INGAME_UPDATES))
+                plugin.config.set(
+                    Settings.INGAME_UPDATES,
+                    !plugin.config.getBoolean(Settings.INGAME_UPDATES)
+                )
                 plugin.config.saveConfig()
                 event.currentItem = Settings.getDoIngameUpdatesSetting(plugin)
             }
@@ -46,7 +48,7 @@ class Support(private val plugin: Main) : GUI(plugin, "Support", 9, false, true)
                 player.sendMessage(ChatColor.AQUA.toString() + "Join the Discord server:")
                 player.sendMessage(ChatColor.GREEN.toString() + "https://discord.gg/v3qmJu7jWD")
             }
-            else ->
+            else                    ->
             {
             }
         }
@@ -59,14 +61,29 @@ class Support(private val plugin: Main) : GUI(plugin, "Support", 9, false, true)
 
     init
     {
-        inventory.setItem(0, createItem(Material.CLOCK, ChatColor.LIGHT_PURPLE.toString() + "Up to date?",
+        inventory.setItem(
+            0, createItem(
+                Material.CLOCK, ChatColor.LIGHT_PURPLE.toString() + "Up to date?",
                 if (plugin.isUpToDate) ChatColor.GREEN.toString() + "Yes" else ChatColor.GRAY.toString() + "Currently: " + ChatColor.RED + CustomPlugin.VERSION + ";" + ChatColor.GRAY +
                         "Latest: " + ChatColor.GREEN + plugin.latestVersion + ";;" + ChatColor.GRAY + "Click to " +
-                        "download"))
+                        "download"
+            )
+        )
         inventory.setItem(1, Settings.getDoIngameUpdatesSetting(plugin))
-        inventory.setItem(2, createItem(Material.ENCHANTED_BOOK, ChatColor.LIGHT_PURPLE.toString() + "Discord", ChatColor.GRAY.toString() + "Join the discord server"))
-        inventory.setItem(3, createItem(Material.ENCHANTING_TABLE, ChatColor.LIGHT_PURPLE.toString() + "Database",
-                ChatColor.GRAY.toString() + "Status: " + if (plugin.hasDatabaseConnection()) ChatColor.GREEN.toString() + "Connected" else ChatColor.RED.toString() + "Disabled"))
+        inventory.setItem(
+            2,
+            createItem(
+                Material.ENCHANTED_BOOK,
+                ChatColor.LIGHT_PURPLE.toString() + "Discord",
+                ChatColor.GRAY.toString() + "Join the discord server"
+            )
+        )
+        inventory.setItem(
+            3, createItem(
+                Material.ENCHANTING_TABLE, ChatColor.LIGHT_PURPLE.toString() + "Database",
+                ChatColor.GRAY.toString() + "Status: " + if (plugin.hasDatabaseConnection()) ChatColor.GREEN.toString() + "Connected" else ChatColor.RED.toString() + "Disabled"
+            )
+        )
         inventory.setItem(8, BACK_ITEM)
     }
 }

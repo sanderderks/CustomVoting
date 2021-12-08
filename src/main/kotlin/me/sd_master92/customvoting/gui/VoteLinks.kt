@@ -12,7 +12,8 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.scheduler.BukkitRunnable
 
-class VoteLinks @JvmOverloads constructor(private val plugin: Main, private val isPublic: Boolean = false) : GUI(plugin, NAME, 27, true)
+class VoteLinks @JvmOverloads constructor(private val plugin: Main, private val isPublic: Boolean = false) :
+    GUI(plugin, NAME, 27, true)
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
     {
@@ -24,8 +25,13 @@ class VoteLinks @JvmOverloads constructor(private val plugin: Main, private val 
                 PlayerListener.voteLinkInput[player.uniqueId] = event.slot
                 cancelCloseEvent()
                 player.closeInventory()
-                player.sendMessage(ChatColor.GREEN.toString() + "Enter a title for this item (with & colors)", ChatColor.GRAY.toString() +
-                        "Type 'cancel' to continue")
+                player.sendMessage(
+                    arrayOf(
+                        ChatColor.GREEN.toString() + "Enter a title for this item (with & colors)",
+                        ChatColor.GRAY.toString() +
+                                "Type 'cancel' to continue"
+                    )
+                )
                 object : BukkitRunnable()
                 {
                     override fun run()
