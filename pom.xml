@@ -6,7 +6,7 @@
 
     <groupId>me.sd_master92</groupId>
     <artifactId>CustomVoting</artifactId>
-    <version>8.1.0</version>
+    <version>8.2.0</version>
 
     <name>CustomVoting</name>
     <description>Voting on its best. Totally customizable!</description>
@@ -57,6 +57,12 @@
                 <version>3.2.4</version>
                 <configuration>
                     <createDependencyReducedPom>false</createDependencyReducedPom>
+                    <relocations>
+                        <relocation>
+                            <pattern>org.bstats</pattern>
+                            <shadedPattern>me.sd_master92.customvoting</shadedPattern>
+                        </relocation>
+                    </relocations>
                 </configuration>
                 <executions>
                     <execution>
@@ -111,7 +117,7 @@
         <dependency>
             <groupId>javax.xml.bind</groupId>
             <artifactId>jaxb-api</artifactId>
-            <version>2.3.0</version>
+            <version>2.3.1</version>
         </dependency>
         <dependency>
             <groupId>org.spigotmc</groupId>
@@ -152,6 +158,12 @@
             <artifactId>placeholderapi</artifactId>
             <version>2.10.10</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.bstats</groupId>
+            <artifactId>bstats-bukkit</artifactId>
+            <version>2.2.1</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 </project>

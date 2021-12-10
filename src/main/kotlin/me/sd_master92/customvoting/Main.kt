@@ -14,6 +14,7 @@ import me.sd_master92.customvoting.tasks.DailyTask
 import me.sd_master92.plugin.CustomPlugin
 import net.milkbowl.vault.economy.Economy
 import net.milkbowl.vault.permission.Permission
+import org.bstats.bukkit.Metrics
 import org.bukkit.Bukkit
 
 class Main : CustomPlugin("settings.yml", 28103)
@@ -37,6 +38,7 @@ class Main : CustomPlugin("settings.yml", 28103)
         registerListeners()
         registerCommands()
         startTasks()
+        setupBStatsMetrics()
     }
 
     override fun disable()
@@ -186,6 +188,11 @@ class Main : CustomPlugin("settings.yml", 28103)
         {
             errorLog("|___database is disabled in the config")
         }
+    }
+
+    private fun setupBStatsMetrics()
+    {
+        Metrics(this, 13544)
     }
 
     private fun useDatabase(): Boolean
