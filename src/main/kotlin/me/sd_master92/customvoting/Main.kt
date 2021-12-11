@@ -15,7 +15,9 @@ import me.sd_master92.plugin.CustomPlugin
 import net.milkbowl.vault.economy.Economy
 import net.milkbowl.vault.permission.Permission
 import org.bstats.bukkit.Metrics
+import org.bstats.charts.SimplePie
 import org.bukkit.Bukkit
+
 
 class Main : CustomPlugin("settings.yml", 28103)
 {
@@ -192,7 +194,8 @@ class Main : CustomPlugin("settings.yml", 28103)
 
     private fun setupBStatsMetrics()
     {
-        Metrics(this, 13544)
+        val metrics = Metrics(this, 13544)
+        metrics.addCustomChart(SimplePie("ingame_updates_enabled") { if (config.getBoolean(Settings.INGAME_UPDATES)) "true" else "false" })
     }
 
     private fun useDatabase(): Boolean
