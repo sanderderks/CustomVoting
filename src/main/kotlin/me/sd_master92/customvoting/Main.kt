@@ -196,6 +196,9 @@ class Main : CustomPlugin("settings.yml", 28103)
     {
         val metrics = Metrics(this, 13544)
         metrics.addCustomChart(SimplePie("ingame_updates_enabled") { if (config.getBoolean(Settings.INGAME_UPDATES)) "true" else "false" })
+        metrics.addCustomChart(SimplePie("database_enabled") { if (useDatabase()) "true" else "false" })
+        metrics.addCustomChart(SimplePie("vote_party_enabled") { if (config.getBoolean(Settings.VOTE_PARTY)) "true" else "false" })
+        metrics.addCustomChart(SimplePie("lucky_vote_enabled") { if (config.getBoolean(Settings.LUCKY_VOTE)) "true" else "false" })
     }
 
     private fun useDatabase(): Boolean
