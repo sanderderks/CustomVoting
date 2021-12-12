@@ -199,6 +199,13 @@ class Main : CustomPlugin("settings.yml", 28103)
         metrics.addCustomChart(SimplePie("database_enabled") { if (useDatabase()) "true" else "false" })
         metrics.addCustomChart(SimplePie("vote_party_enabled") { if (config.getBoolean(Settings.VOTE_PARTY)) "true" else "false" })
         metrics.addCustomChart(SimplePie("lucky_vote_enabled") { if (config.getBoolean(Settings.LUCKY_VOTE)) "true" else "false" })
+        if (server.pluginManager.getPlugin("NuVotifier") != null)
+        {
+            metrics.addCustomChart(SimplePie("votifier_plugin") { "NuVotifier" })
+        } else if (server.pluginManager.getPlugin("Votifier") != null)
+        {
+            metrics.addCustomChart(SimplePie("votifier_plugin") { "Votifier" })
+        }
     }
 
     private fun useDatabase(): Boolean
