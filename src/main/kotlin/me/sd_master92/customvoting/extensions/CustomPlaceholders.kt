@@ -37,7 +37,7 @@ class CustomPlaceholders(private val plugin: Main) : PlaceholderExpansion()
         return true
     }
 
-    override fun onPlaceholderRequest(player: Player, params: String): String?
+    override fun onPlaceholderRequest(player: Player?, params: String): String?
     {
         try
         {
@@ -56,9 +56,13 @@ class CustomPlaceholders(private val plugin: Main) : PlaceholderExpansion()
                 }
                 PLAYER_VOTES     ->
                 {
-                    val voter =
-                        if (plugin.hasDatabaseConnection()) PlayerRow(plugin, player) else VoteFile(player, plugin)
-                    return "" + voter.votes
+                    if (player != null)
+                    {
+                        val voter =
+                            if (plugin.hasDatabaseConnection()) PlayerRow(plugin, player) else VoteFile(player, plugin)
+                        return "" + voter.votes
+                    }
+                    return "0"
                 }
                 VOTE_PARTY_TOTAL ->
                 {
