@@ -11,7 +11,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.SkullMeta
 
-class Donators(private val plugin: Main) : GUI(plugin, "Donators", 8, false, true)
+class Donators(private val plugin: Main) : GUI(plugin, "Donators", 9, false, true)
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
     {
@@ -47,6 +47,6 @@ class Donators(private val plugin: Main) : GUI(plugin, "Donators", 8, false, tru
         {
             inventory.addItem(createSkull(donator))
         }
-        inventory.setItem(7, BACK_ITEM)
+        inventory.setItem(8, BACK_ITEM)
     }
 }
