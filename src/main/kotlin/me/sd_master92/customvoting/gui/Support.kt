@@ -48,6 +48,12 @@ class Support(private val plugin: Main) : GUI(plugin, "Support", 9, false, true)
                 player.sendMessage(ChatColor.AQUA.toString() + "Join the Discord server:")
                 player.sendMessage(ChatColor.GREEN.toString() + "https://discord.gg/v3qmJu7jWD")
             }
+            Material.CREEPER_HEAD   ->
+            {
+                SoundType.CLICK.play(plugin, player)
+                cancelCloseEvent()
+                player.openInventory(Donators(plugin).inventory)
+            }
             else                    ->
             {
             }
@@ -82,6 +88,12 @@ class Support(private val plugin: Main) : GUI(plugin, "Support", 9, false, true)
             3, createItem(
                 Material.ENCHANTING_TABLE, ChatColor.LIGHT_PURPLE.toString() + "Database",
                 ChatColor.GRAY.toString() + "Status: " + if (plugin.hasDatabaseConnection()) ChatColor.GREEN.toString() + "Connected" else ChatColor.RED.toString() + "Disabled"
+            )
+        )
+        inventory.setItem(
+            4, createItem(
+                Material.CREEPER_HEAD, ChatColor.LIGHT_PURPLE.toString() + "Donators",
+                ChatColor.GRAY.toString() + "CustomVoting supporters!"
             )
         )
         inventory.setItem(8, BACK_ITEM)

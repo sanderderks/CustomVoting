@@ -17,9 +17,17 @@ import net.milkbowl.vault.permission.Permission
 import org.bstats.bukkit.Metrics
 import org.bstats.charts.SimplePie
 import org.bukkit.Bukkit
+import org.bukkit.ChatColor
 
 
-class Main : CustomPlugin("settings.yml", 28103)
+class Main : CustomPlugin(
+    "settings.yml",
+    28103,
+    BUGFIXES + ChatColor.GRAY + " + " + ChatColor.LIGHT_PURPLE + FEATURES,
+    "Permission based commands now work",
+    "Added update changelog you see :)",
+    "Added donators to Support section"
+)
 {
     var playerTable: PlayerTable? = null
         private set
@@ -255,5 +263,7 @@ class Main : CustomPlugin("settings.yml", 28103)
         var ECONOMY: Economy? = null
         var PERMISSION: Permission? = null
         var MC_VERSION: Int = 0
+        private val BUGFIXES = ChatColor.RED.toString() + "BUGFIXES"
+        private val FEATURES = ChatColor.LIGHT_PURPLE.toString() + "FEATURES"
     }
 }

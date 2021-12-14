@@ -6,7 +6,7 @@
 
     <groupId>me.sd_master92</groupId>
     <artifactId>CustomVoting</artifactId>
-    <version>8.2.2</version>
+    <version>8.3.0</version>
 
     <name>CustomVoting</name>
     <description>Voting on its best. Totally customizable!</description>
@@ -133,7 +133,7 @@
         <dependency>
             <groupId>me.sd_master92</groupId>
             <artifactId>CustomPlugin</artifactId>
-            <version>2.3</version>
+            <version>2.4</version>
         </dependency>
         <dependency>
             <groupId>com.vexsoftware</groupId>

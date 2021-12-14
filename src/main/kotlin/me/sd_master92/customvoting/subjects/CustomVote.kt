@@ -143,7 +143,7 @@ class CustomVote(private val plugin: Main, vote: Vote) : Vote()
     private fun giveRewards(player: Player, op: Boolean)
     {
         giveItems(player, op)
-        executeCommands(player)
+        executeCommands(player, op)
         var rewardMessage = ""
         val money = giveMoney(player, op)
         if (Main.ECONOMY != null && money > 0)
@@ -250,9 +250,14 @@ class CustomVote(private val plugin: Main, vote: Vote) : Vote()
         }
     }
 
-    private fun executeCommands(player: Player)
+    private fun executeCommands(player: Player, op: Boolean)
     {
-        for (command in plugin.data.getStringList(Data.VOTE_COMMANDS))
+        var path = Data.VOTE_COMMANDS
+        if (op)
+        {
+            path += Data.OP_REWARDS
+        }
+        for (command in plugin.data.getStringList(path))
         {
             plugin.server.dispatchCommand(
                 plugin.server.consoleSender, command.replace(
