@@ -23,10 +23,8 @@ import org.bukkit.ChatColor
 class Main : CustomPlugin(
     "settings.yml",
     28103,
-    BUGFIXES + ChatColor.GRAY + " + " + ChatColor.LIGHT_PURPLE + FEATURES,
-    "Permission based commands now work",
-    "Added update changelog you see :)",
-    "Added donators to Support section"
+    FEATURES,
+    "Give players a random item reward"
 )
 {
     var playerTable: PlayerTable? = null
