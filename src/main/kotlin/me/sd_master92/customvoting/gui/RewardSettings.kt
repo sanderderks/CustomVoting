@@ -4,6 +4,7 @@ import me.sd_master92.customvoting.Main
 import me.sd_master92.customvoting.appendWhenTrue
 import me.sd_master92.customvoting.constants.Data
 import me.sd_master92.customvoting.constants.Settings
+import me.sd_master92.customvoting.constants.enumerations.ItemRewardType
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.listeners.PlayerListener
 import org.bukkit.ChatColor
@@ -15,7 +16,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.scheduler.BukkitRunnable
 
 class RewardSettings(private val plugin: Main, private val op: Boolean = false) :
-    GUI(plugin, "Vote Rewards".appendWhenTrue(op, " (permission based)"), 9, true, true)
+    GUI(plugin, "Vote Rewards".appendWhenTrue(op, " (permission based)"), 18, true, true)
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
     {
@@ -38,6 +39,15 @@ class RewardSettings(private val plugin: Main, private val op: Boolean = false) 
                 SoundType.CLICK.play(plugin, player)
                 cancelCloseEvent()
                 player.openInventory(ItemRewards(plugin, op).inventory)
+            }
+            Material.REPEATER          ->
+            {
+                SoundType.CHANGE.play(plugin, player)
+                plugin.config.setNumber(
+                    Settings.ITEM_REWARD_TYPE,
+                    ItemRewardType.next(plugin).value
+                )
+                event.currentItem = Settings.getItemRewardType(plugin)
             }
             Material.GOLD_INGOT        -> if (Main.ECONOMY != null)
             {
@@ -195,10 +205,11 @@ class RewardSettings(private val plugin: Main, private val op: Boolean = false) 
                 ChatColor.GRAY.toString() + "Currently: " + ChatColor.AQUA + plugin.data.getItems(itemsPath).size + ChatColor.GRAY + " item stacks"
             )
         )
-        inventory.setItem(1, Settings.getMoneyRewardSetting(plugin, op))
-        inventory.setItem(2, Settings.getExperienceRewardSetting(plugin, op))
+        inventory.setItem(1, Settings.getItemRewardType(plugin))
+        inventory.setItem(2, Settings.getMoneyRewardSetting(plugin, op))
+        inventory.setItem(3, Settings.getExperienceRewardSetting(plugin, op))
         inventory.setItem(
-            3, createItem(
+            4, createItem(
                 Material.COMMAND_BLOCK, ChatColor.LIGHT_PURPLE.toString() + "Command Rewards",
                 ChatColor.GRAY.toString() + "Currently: " + ChatColor.AQUA + plugin.data.getStringList(commandsPath).size + ChatColor.GRAY + " commands"
             )
@@ -206,19 +217,19 @@ class RewardSettings(private val plugin: Main, private val op: Boolean = false) 
         if (!op)
         {
             inventory.setItem(
-                4, createItem(
+                5, createItem(
                     Material.ENDER_CHEST, ChatColor.LIGHT_PURPLE.toString() +
                             "Lucky Rewards",
                     ChatColor.GRAY.toString() + "Currently: " + ChatColor.AQUA + plugin.data.getItems(Data.LUCKY_REWARDS).size + ChatColor.GRAY + " item stacks"
                 )
             )
-            inventory.setItem(5, Settings.getLuckyVoteChanceSetting(plugin))
-            inventory.setItem(6, createItem(Material.NETHER_STAR, ChatColor.LIGHT_PURPLE.toString() + "Vote Streak"))
+            inventory.setItem(6, Settings.getLuckyVoteChanceSetting(plugin))
+            inventory.setItem(7, createItem(Material.NETHER_STAR, ChatColor.LIGHT_PURPLE.toString() + "Vote Streak"))
             inventory.setItem(
-                7,
+                8,
                 createItem(Material.DIAMOND_BLOCK, ChatColor.LIGHT_PURPLE.toString() + "Permission Rewards", null, true)
             )
         }
-        inventory.setItem(8, BACK_ITEM)
+        inventory.setItem(17, BACK_ITEM)
     }
 }

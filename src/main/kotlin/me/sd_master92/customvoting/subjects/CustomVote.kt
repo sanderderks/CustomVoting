@@ -8,6 +8,7 @@ import me.sd_master92.customvoting.VoteFile
 import me.sd_master92.customvoting.constants.Data
 import me.sd_master92.customvoting.constants.Messages
 import me.sd_master92.customvoting.constants.Settings
+import me.sd_master92.customvoting.constants.enumerations.ItemRewardType
 import me.sd_master92.customvoting.database.PlayerRow
 import me.sd_master92.customvoting.helpers.ParticleHelper
 import net.md_5.bungee.api.ChatMessageType
@@ -193,9 +194,19 @@ class CustomVote(private val plugin: Main, vote: Vote) : Vote()
         {
             path += Data.OP_REWARDS
         }
-        for (reward in plugin.data.getItems(path))
+        val rewards = plugin.data.getItems(path)
+        if (plugin.config.getNumber(Settings.ITEM_REWARD_TYPE) == ItemRewardType.ALL_ITEMS.value)
         {
-            for (item in player.inventory.addItem(reward).values)
+            for (reward in rewards)
+            {
+                for (item in player.inventory.addItem(reward).values)
+                {
+                    player.world.dropItemNaturally(player.location, item)
+                }
+            }
+        } else
+        {
+            for (item in player.inventory.addItem(rewards[Random().nextInt(rewards.size)]).values)
             {
                 player.world.dropItemNaturally(player.location, item)
             }

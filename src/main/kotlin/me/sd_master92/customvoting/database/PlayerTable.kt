@@ -13,7 +13,7 @@ class PlayerTable(private val plugin: Main, database: CustomDatabase)
     {
         return table.insertData(
             arrayOf("uuid", "votes", "last", "queue"), arrayOf(
-                "\"" + uuid + "\"", "0",
+                uuid, "0",
                 "0", "0"
             )
         )

@@ -1,6 +1,7 @@
 package me.sd_master92.customvoting.constants
 
 import me.sd_master92.customvoting.Main
+import me.sd_master92.customvoting.constants.enumerations.ItemRewardType
 import me.sd_master92.customvoting.constants.enumerations.VotePartyType
 import me.sd_master92.customvoting.gui.GUI.Companion.createItem
 import org.bukkit.ChatColor
@@ -15,6 +16,7 @@ object Settings
     const val FIREWORK = "firework"
     const val VOTE_PARTY = "vote_party"
     const val VOTE_PARTY_TYPE = "vote_party_type"
+    const val ITEM_REWARD_TYPE = "item_reward_type"
     const val VOTES_REQUIRED_FOR_VOTE_PARTY = "votes_required_for_vote_party"
     const val VOTE_REWARD_MONEY = "vote_reward_money"
     const val VOTE_REWARD_EXPERIENCE = "vote_reward_xp"
@@ -119,6 +121,18 @@ object Settings
             ChatColor.GRAY.toString() + "Status: " + ChatColor.AQUA + VotePartyType.valueOf(
                 plugin.config.getNumber(
                     VOTE_PARTY_TYPE
+                )
+            ).label
+        )
+    }
+
+    fun getItemRewardType(plugin: Main): ItemStack
+    {
+        return createItem(
+            Material.REPEATER, ChatColor.LIGHT_PURPLE.toString() + "Item Reward Type",
+            ChatColor.GRAY.toString() + "Status: " + ChatColor.AQUA + ItemRewardType.valueOf(
+                plugin.config.getNumber(
+                    ITEM_REWARD_TYPE
                 )
             ).label
         )
