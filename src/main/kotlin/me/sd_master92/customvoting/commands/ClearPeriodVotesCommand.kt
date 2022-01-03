@@ -10,11 +10,11 @@ import org.bukkit.ChatColor
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
-class ClearPeriodVotesCommand(private val plugin: Main) : SimpleCommand(plugin, "clearperiodvotes", false)
+class ClearPeriodVotesCommand(private val plugin: Main) : SimpleCommand(plugin, "clearperiodvotes", true)
 {
     override fun onCommand(sender: CommandSender, args: Array<String>)
     {
-        if (args.size == 1)
+        if (args.isEmpty())
         {
             if (sender is Player)
             {

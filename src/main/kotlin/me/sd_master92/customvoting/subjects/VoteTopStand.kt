@@ -120,7 +120,7 @@ class VoteTopStand @JvmOverloads constructor(private val plugin: Main, private v
         {
             placeholders["%PLAYER%"] = voteFile.userName
             placeholders["%VOTES%"] = "${voteFile.votes}"
-            placeholders["%PERIOD%"] = "${voteFile.votes}"
+            placeholders["%PERIOD%"] = "${voteFile.period}"
         } else
         {
             placeholders["%PLAYER%"] = ChatColor.RED.toString() + "Unknown"
