@@ -28,6 +28,7 @@ database:
   password: root
 disabled_broadcasts:
     vote: false
+    vote_streak: false
     vote_party:
       until: false
       countdown: false

@@ -26,6 +26,8 @@ object Settings
     const val FORBIDDEN_COMMANDS = "forbidden_commands"
     const val INGAME_UPDATES = "ingame_updates"
     const val DISABLED_BROADCAST_VOTE = "disabled_broadcasts.vote"
+    const val DISABLED_BROADCAST_STREAK = "disabled_broadcasts.vote_streak"
+    const val DISABLED_BROADCAST_OFFLINE = "disabled_broadcasts.offline"
     const val DISABLED_BROADCAST_VOTE_PARTY_UNTIL = "disabled_broadcasts.vote_party.until"
     const val DISABLED_BROADCAST_VOTE_PARTY_COUNTDOWN = "disabled_broadcasts.vote_party_countdown"
     const val DISABLED_BROADCAST_VOTE_PARTY_COUNTDOWN_ENDING = "disabled_broadcasts.vote_party.countdown_ending"
@@ -53,6 +55,8 @@ object Settings
         setDefault(plugin, FORBIDDEN_COMMANDS, arrayOf("fakevote", "op", "stop", "restart", "reload"))
         setDefault(plugin, INGAME_UPDATES, true)
         setDefault(plugin, DISABLED_BROADCAST_VOTE, false)
+        setDefault(plugin, DISABLED_BROADCAST_STREAK, false)
+        setDefault(plugin, DISABLED_BROADCAST_OFFLINE, false)
         setDefault(plugin, DISABLED_BROADCAST_VOTE_PARTY_UNTIL, false)
         setDefault(plugin, DISABLED_BROADCAST_VOTE_PARTY_COUNTDOWN, false)
         setDefault(plugin, DISABLED_BROADCAST_VOTE_PARTY_COUNTDOWN_ENDING, false)

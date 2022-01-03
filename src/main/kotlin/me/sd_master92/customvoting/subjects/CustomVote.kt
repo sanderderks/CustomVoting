@@ -1,7 +1,6 @@
 package me.sd_master92.customvoting.subjects
 
 import com.vexsoftware.votifier.model.Vote
-import com.vexsoftware.votifier.model.VotifierEvent
 import me.sd_master92.customfile.PlayerFile
 import me.sd_master92.customvoting.Main
 import me.sd_master92.customvoting.VoteFile
@@ -20,7 +19,7 @@ import org.bukkit.scheduler.BukkitRunnable
 import java.text.DecimalFormat
 import java.util.*
 
-class CustomVote(private val plugin: Main, vote: Vote) : Vote()
+class CustomVote(private val plugin: Main, vote: Vote, private val queued: Boolean = false) : Vote()
 {
     private fun forwardVote()
     {
@@ -86,6 +85,12 @@ class CustomVote(private val plugin: Main, vote: Vote) : Vote()
                     return
                 }
             }
+
+            if (plugin.config.getBoolean(Settings.DISABLED_BROADCAST_OFFLINE) && queued)
+            {
+                return
+            }
+
             val placeholders = HashMap<String, String>()
             placeholders["%PLAYER%"] = username
             placeholders["%SERVICE%"] = serviceName
@@ -284,7 +289,10 @@ class CustomVote(private val plugin: Main, vote: Vote) : Vote()
         val votes = VoteFile(player, plugin).votes
         if (plugin.data.contains(Data.VOTE_STREAKS + "." + votes))
         {
-            plugin.server.broadcastMessage(ChatColor.AQUA.toString() + player.name + ChatColor.LIGHT_PURPLE.toString() + " reached vote streak #" + ChatColor.AQUA.toString() + votes + ChatColor.LIGHT_PURPLE.toString() + "!")
+            if (!plugin.config.getBoolean(Settings.DISABLED_BROADCAST_STREAK))
+            {
+                plugin.server.broadcastMessage(ChatColor.AQUA.toString() + player.name + ChatColor.LIGHT_PURPLE.toString() + " reached vote streak #" + ChatColor.AQUA.toString() + votes + ChatColor.LIGHT_PURPLE.toString() + "!")
+            }
 
             val permissions = plugin.data.getStringList(Data.VOTE_STREAKS + "." + votes + ".permissions")
             if (permissions.isNotEmpty() && Main.PERMISSION != null)
@@ -327,7 +335,7 @@ class CustomVote(private val plugin: Main, vote: Vote) : Vote()
     {
         private var isAwaitingBroadcast = false
 
-        fun create(plugin: Main, name: String?, service: String?)
+        fun create(plugin: Main, name: String?, service: String?, queued: Boolean = false)
         {
             val vote = Vote()
             vote.username = name
@@ -335,7 +343,14 @@ class CustomVote(private val plugin: Main, vote: Vote) : Vote()
             vote.address = "0.0.0.0"
             val date = Date()
             vote.timeStamp = date.time.toString()
-            plugin.server.pluginManager.callEvent(VotifierEvent(vote))
+
+            if (queued)
+            {
+                CustomVote(plugin, vote, true)
+            } else
+            {
+                CustomVote(plugin, vote)
+            }
         }
     }
 
