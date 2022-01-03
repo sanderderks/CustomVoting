@@ -246,6 +246,7 @@ class Main : CustomPlugin(
         ReloadCommand(this).register()
         SettingsCommand(this).register()
         SetVotesCommand(this).register()
+        ClearPeriodVotesCommand(this).register()
         VoteCommand(this).register()
         VotePartyCommand(this).register()
         VotesCommand(this).register()
