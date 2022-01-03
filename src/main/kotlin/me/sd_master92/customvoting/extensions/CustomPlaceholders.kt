@@ -101,6 +101,19 @@ class CustomPlaceholders(private val plugin: Main) : PlaceholderExpansion()
                         {
                             if (topVoter == null) "0" else "" + topVoter.votes
                         }
+                    } else if (params.contains(PLAYER_PERIOD))
+                    {
+                        val key = params.split("_".toRegex()).toTypedArray()[2].toInt()
+                        val topVoter = if (plugin.hasDatabaseConnection()) PlayerTable.getTopVoter(
+                            plugin, key
+                        ) else VoteFile.getTopVoter(plugin, key)
+                        return if (params.endsWith("NAME"))
+                        {
+                            topVoter?.userName ?: "Unknown"
+                        } else
+                        {
+                            if (topVoter == null) "0" else "" + topVoter.period
+                        }
                     }
                 }
             }
