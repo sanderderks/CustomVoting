@@ -32,6 +32,26 @@ class DailyTask(private val plugin: Main)
         }
     }
 
+    private fun checkMonthlyPeriod()
+    {
+        if (Calendar.getInstance()[Calendar.DAY_OF_MONTH] == 1)
+        {
+            for (playerFile in PlayerFile.getAll(plugin))
+            {
+                if (plugin.hasDatabaseConnection())
+                {
+                    val playerRow = PlayerRow(plugin, playerFile.uuid)
+                    playerRow.clearPeriod()
+                } else
+                {
+                    val voteFile = VoteFile(playerFile.uuid, plugin)
+                    voteFile.clearPeriod()
+                }
+            }
+            plugin.server.broadcastMessage(Messages.MONTHLY_RESET.getMessage(plugin))
+        }
+    }
+
     init
     {
         object : BukkitRunnable()
@@ -42,6 +62,10 @@ class DailyTask(private val plugin: Main)
                 if (plugin.config.getBoolean(Settings.MONTHLY_RESET))
                 {
                     checkMonthlyReset()
+                }
+                if (plugin.config.getBoolean(Settings.MONTHLY_PERIOD))
+                {
+                    checkMonthlyPeriod()
                 }
             }
         }.runTaskTimer(plugin, 60, (20 * 60 * 60).toLong())

@@ -2,6 +2,7 @@ package me.sd_master92.customvoting
 
 import me.sd_master92.customfile.PlayerFile
 import me.sd_master92.customvoting.constants.Data
+import me.sd_master92.customvoting.constants.Settings
 import me.sd_master92.customvoting.constants.Voter
 import me.sd_master92.customvoting.subjects.VoteTopSign
 import me.sd_master92.customvoting.subjects.VoteTopStand
@@ -39,32 +40,41 @@ class VoteFile : PlayerFile, Voter
 
     override val votes: Int
         get() = getNumber("votes")
+    override val period: Int
+        get() = getNumber("period")
+
+    val last: Long
+        get() = getTimeStamp("last")
 
     fun setVotes(n: Int, update: Boolean)
     {
         setTimeStamp("last")
         setNumber("votes", n)
+        setNumber("period", n)
         if (update)
         {
             VoteTopSign.updateAll(plugin)
             VoteTopStand.updateAll(plugin)
         }
+    }
+
+    fun clearPeriod()
+    {
+        setNumber("period", 0)
+        VoteTopSign.updateAll(plugin)
+        VoteTopStand.updateAll(plugin)
     }
 
     fun addVote(update: Boolean)
     {
         setTimeStamp("last")
         addNumber("votes", 1)
+        addNumber("period", 1)
         if (update)
         {
             VoteTopSign.updateAll(plugin)
             VoteTopStand.updateAll(plugin)
         }
-    }
-
-    fun getLast(): Long
-    {
-        return getTimeStamp("last")
     }
 
     val queue: List<String>
@@ -93,13 +103,27 @@ class VoteFile : PlayerFile, Voter
             {
                 topVoters.add(VoteFile(playerFile.uuid, plugin))
             }
-            topVoters.sortWith { x: VoteFile, y: VoteFile ->
-                var compare = y.votes.compareTo(x.votes)
-                if (compare == 0)
-                {
-                    compare = x.getTimeStamp("last").compareTo(y.getTimeStamp("last"))
+
+            if (plugin.config.getBoolean(Settings.MONTHLY_PERIOD))
+            {
+                topVoters.sortWith { x: VoteFile, y: VoteFile ->
+                    var compare = y.period.compareTo(x.period)
+                    if (compare == 0)
+                    {
+                        compare = x.last.compareTo(y.last)
+                    }
+                    compare
                 }
-                compare
+            } else
+            {
+                topVoters.sortWith { x: VoteFile, y: VoteFile ->
+                    var compare = y.votes.compareTo(x.votes)
+                    if (compare == 0)
+                    {
+                        compare = x.last.compareTo(y.last)
+                    }
+                    compare
+                }
             }
             return topVoters
         }

@@ -4,6 +4,7 @@ import me.sd_master92.customfile.database.CustomColumn
 import me.sd_master92.customfile.database.CustomDatabase
 import me.sd_master92.customfile.database.CustomTable
 import me.sd_master92.customvoting.Main
+import me.sd_master92.customvoting.constants.Settings
 import java.sql.ResultSet
 
 class PlayerTable(private val plugin: Main, database: CustomDatabase)
@@ -12,9 +13,9 @@ class PlayerTable(private val plugin: Main, database: CustomDatabase)
     private fun addPlayer(uuid: String): Boolean
     {
         return table.insertData(
-            arrayOf("uuid", "votes", "last", "queue"), arrayOf(
+            arrayOf("uuid", "votes", "last", "queue", "period"), arrayOf(
                 uuid, "0",
-                "0", "0"
+                "0", "0", "0"
             )
         )
     }
@@ -83,6 +84,30 @@ class PlayerTable(private val plugin: Main, database: CustomDatabase)
         return table.updateData("uuid=\"$uuid\"", "votes=$votes")
     }
 
+    fun getPeriod(uuid: String): Int
+    {
+        val result = table.getData("uuid=\"$uuid\"")
+        try
+        {
+            if (result.next())
+            {
+                return result.getInt("period")
+            } else
+            {
+                addPlayer(uuid)
+            }
+        } catch (e: Exception)
+        {
+            plugin.errorLog("Could not retrieve period votes of $uuid from database", e)
+        }
+        return 0
+    }
+
+    fun setPeriod(uuid: String, votes: Int): Boolean
+    {
+        return table.updateData("uuid=\"$uuid\"", "period=$votes")
+    }
+
     fun getLast(uuid: String): Long
     {
         val result = table.getData("uuid=\"$uuid\"")
@@ -131,6 +156,17 @@ class PlayerTable(private val plugin: Main, database: CustomDatabase)
         return table.updateData("uuid=\"$uuid\"", "queue=$queue")
     }
 
+    private fun migrate()
+    {
+        if (!table.getColumn("period").exists())
+        {
+            if (!table.create("period", CustomColumn.DataType.INT))
+            {
+                plugin.errorLog("| could not create column 'period'!")
+            }
+        }
+    }
+
     companion object
     {
         fun getTopVoters(plugin: Main): List<PlayerData>
@@ -147,7 +183,8 @@ class PlayerTable(private val plugin: Main, database: CustomDatabase)
                             PlayerData(
                                 all.getString("uuid"), all.getString("name"), all.getInt("votes"),
                                 all.getLong("last"),
-                                all.getInt("queue")
+                                all.getInt("queue"),
+                                all.getInt("period")
                             )
                         )
                     }
@@ -156,13 +193,27 @@ class PlayerTable(private val plugin: Main, database: CustomDatabase)
             {
                 return topVoters
             }
-            topVoters.sortWith { x: PlayerData, y: PlayerData ->
-                var compare = y.votes.compareTo(x.votes)
-                if (compare == 0)
-                {
-                    compare = x.last.compareTo(y.last)
+
+            if (plugin.config.getBoolean(Settings.MONTHLY_PERIOD))
+            {
+                topVoters.sortWith { x: PlayerData, y: PlayerData ->
+                    var compare = y.period.compareTo(x.period)
+                    if (compare == 0)
+                    {
+                        compare = x.last.compareTo(y.last)
+                    }
+                    compare
                 }
-                compare
+            } else
+            {
+                topVoters.sortWith { x: PlayerData, y: PlayerData ->
+                    var compare = y.votes.compareTo(x.votes)
+                    if (compare == 0)
+                    {
+                        compare = x.last.compareTo(y.last)
+                    }
+                    compare
+                }
             }
             return topVoters
         }
@@ -195,6 +246,7 @@ class PlayerTable(private val plugin: Main, database: CustomDatabase)
                 table.getColumn("votes").create(CustomColumn.DataType.INT)
                 table.getColumn("last").create(CustomColumn.DataType.LONG)
                 table.getColumn("queue").create(CustomColumn.DataType.INT)
+                table.getColumn("period").create(CustomColumn.DataType.INT)
                 plugin.infoLog("| successfully created table 'players'")
                 plugin.infoLog("|")
                 plugin.infoLog("|___successfully connected to database")
@@ -204,6 +256,7 @@ class PlayerTable(private val plugin: Main, database: CustomDatabase)
             plugin.infoLog("| successfully located table 'players'")
             plugin.infoLog("|")
             plugin.infoLog("|___successfully connected to database")
+            migrate()
         }
     }
 }

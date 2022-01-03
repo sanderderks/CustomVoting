@@ -11,6 +11,7 @@ import org.bukkit.inventory.ItemStack
 object Settings
 {
     const val MONTHLY_RESET = "monthly_reset"
+    const val MONTHLY_PERIOD = "monthly_period"
     const val USE_SOUND_EFFECTS = "sound_effects"
     const val VOTE_PARTY_COUNTDOWN = "vote_party_countdown"
     const val FIREWORK = "firework"
@@ -42,6 +43,7 @@ object Settings
     fun initialize(plugin: Main)
     {
         setDefault(plugin, MONTHLY_RESET, false)
+        setDefault(plugin, MONTHLY_PERIOD, false)
         setDefault(plugin, USE_SOUND_EFFECTS, true)
         setDefault(plugin, VOTE_PARTY_COUNTDOWN, 30)
         setDefault(plugin, FIREWORK, true)
@@ -83,6 +85,14 @@ object Settings
         return createItem(
             Material.CLOCK, ChatColor.LIGHT_PURPLE.toString() + "Monthly Reset",
             ChatColor.GRAY.toString() + "Status: " + if (plugin.config.getBoolean(MONTHLY_RESET)) ChatColor.GREEN.toString() + "ON" else ChatColor.RED.toString() + "OFF"
+        )
+    }
+
+    fun getDoMonthlyPeriodSetting(plugin: Main): ItemStack
+    {
+        return createItem(
+            Material.TNT, ChatColor.LIGHT_PURPLE.toString() + "Monthly Period",
+            ChatColor.GRAY.toString() + "Status: " + if (plugin.config.getBoolean(MONTHLY_PERIOD)) ChatColor.GREEN.toString() + "ON" else ChatColor.RED.toString() + "OFF"
         )
     }
 

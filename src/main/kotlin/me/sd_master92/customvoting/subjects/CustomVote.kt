@@ -69,10 +69,10 @@ class CustomVote(private val plugin: Main, vote: Vote, private val queued: Boole
             {
                 val last: Long = if (plugin.hasDatabaseConnection())
                 {
-                    PlayerRow(plugin, player.uniqueId.toString()).getLast()
+                    PlayerRow(plugin, player.uniqueId.toString()).last
                 } else
                 {
-                    VoteFile(player.uniqueId.toString(), plugin).getLast()
+                    VoteFile(player.uniqueId.toString(), plugin).last
                 }
                 val date1 = Calendar.getInstance()
                 date1.time = Date(last)

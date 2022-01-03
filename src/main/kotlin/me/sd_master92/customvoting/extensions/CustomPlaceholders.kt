@@ -64,6 +64,16 @@ class CustomPlaceholders(private val plugin: Main) : PlaceholderExpansion()
                     }
                     return "0"
                 }
+                PLAYER_PERIOD    ->
+                {
+                    if (player != null)
+                    {
+                        val voter =
+                            if (plugin.hasDatabaseConnection()) PlayerRow(plugin, player) else VoteFile(player, plugin)
+                        return "" + voter.period
+                    }
+                    return "0"
+                }
                 VOTE_PARTY_TOTAL ->
                 {
                     val total = plugin.config.getInt(Settings.VOTES_REQUIRED_FOR_VOTE_PARTY)
@@ -106,6 +116,7 @@ class CustomPlaceholders(private val plugin: Main) : PlaceholderExpansion()
         const val IDENTIFIER = "CV"
         const val SERVER_VOTES = "SERVER_VOTES"
         const val PLAYER_VOTES = "PLAYER_VOTES"
+        const val PLAYER_PERIOD = "PLAYER_PERIOD"
         const val VOTE_PARTY_TOTAL = "VOTE_PARTY_TOTAL"
         const val VOTE_PARTY_UNTIL = "VOTE_PARTY_UNTIL"
     }

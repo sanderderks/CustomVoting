@@ -4,6 +4,7 @@ import me.sd_master92.customvoting.Main
 import me.sd_master92.customvoting.VoteFile
 import me.sd_master92.customvoting.constants.Data
 import me.sd_master92.customvoting.constants.Messages
+import me.sd_master92.customvoting.constants.Settings
 import me.sd_master92.customvoting.database.PlayerTable
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
@@ -87,8 +88,15 @@ class VoteTopSign @JvmOverloads constructor(
                 val placeholders = HashMap<String, String>()
                 placeholders["%NUMBER%"] = "" + top
                 placeholders["%PLAYER%"] = topVoter.userName
-                placeholders["%VOTES%"] = "" + topVoter.votes
-                placeholders["%s%"] = if (topVoter.votes == 1) "" else "s"
+                placeholders["%VOTES%"] = "${topVoter.votes}"
+                placeholders["%PERIOD%"] = "${topVoter.period}"
+                if (plugin.config.getBoolean(Settings.MONTHLY_PERIOD))
+                {
+                    placeholders["%s%"] = if (topVoter.period == 1) "s" else ""
+                } else
+                {
+                    placeholders["%s%"] = if (topVoter.votes == 1) "s" else ""
+                }
                 val messages = Messages.VOTE_TOP_SIGNS_PLAYER_SIGNS_FORMAT.getMessages(plugin, placeholders)
                 for (i in messages.indices)
                 {

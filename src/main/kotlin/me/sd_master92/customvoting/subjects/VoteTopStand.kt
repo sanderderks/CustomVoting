@@ -119,11 +119,13 @@ class VoteTopStand @JvmOverloads constructor(private val plugin: Main, private v
         if (voteFile != null)
         {
             placeholders["%PLAYER%"] = voteFile.userName
-            placeholders["%VOTES%"] = "" + voteFile.votes
+            placeholders["%VOTES%"] = "${voteFile.votes}"
+            placeholders["%PERIOD%"] = "${voteFile.votes}"
         } else
         {
             placeholders["%PLAYER%"] = ChatColor.RED.toString() + "Unknown"
             placeholders["%VOTES%"] = "0"
+            placeholders["%PERIOD%"] = "0"
         }
         topStand?.customName = Messages.VOTE_TOP_STANDS_TOP.getMessage(plugin, placeholders)
         nameStand?.customName = Messages.VOTE_TOP_STANDS_CENTER.getMessage(plugin, placeholders)

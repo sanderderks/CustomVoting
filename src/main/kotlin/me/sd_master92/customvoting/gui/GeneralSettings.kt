@@ -10,7 +10,7 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 
-class GeneralSettings(private val plugin: Main) : GUI(plugin, "General Settings", 9, false, true)
+class GeneralSettings(private val plugin: Main) : GUI(plugin, "General Settings", 18, false, true)
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
     {
@@ -28,6 +28,13 @@ class GeneralSettings(private val plugin: Main) : GUI(plugin, "General Settings"
                 plugin.config[Settings.MONTHLY_RESET] = !plugin.config.getBoolean(Settings.MONTHLY_RESET)
                 plugin.config.saveConfig()
                 event.currentItem = Settings.getDoMonthlyResetSetting(plugin)
+            }
+            Material.TNT               ->
+            {
+                SoundType.CHANGE.play(plugin, player)
+                plugin.config[Settings.MONTHLY_PERIOD] = !plugin.config.getBoolean(Settings.MONTHLY_PERIOD)
+                plugin.config.saveConfig()
+                event.currentItem = Settings.getDoMonthlyPeriodSetting(plugin)
             }
             Material.MUSIC_DISC_CAT    ->
             {
@@ -103,14 +110,15 @@ class GeneralSettings(private val plugin: Main) : GUI(plugin, "General Settings"
 
     init
     {
-        inventory.setItem(0, Settings.getDoMonthlyResetSetting(plugin))
-        inventory.setItem(1, Settings.getUseSoundEffectsSetting(plugin))
-        inventory.setItem(2, Settings.getUseFireworkSetting(plugin))
-        inventory.setItem(3, Settings.getDoLuckyVoteSetting(plugin))
-        inventory.setItem(4, Settings.getDoVotePartySetting(plugin))
-        inventory.setItem(5, Settings.getVotePartyTypeSetting(plugin))
-        inventory.setItem(6, Settings.getVotesUntilVotePartySetting(plugin))
-        inventory.setItem(7, Settings.getVotePartyCountdownSetting(plugin))
-        inventory.setItem(8, BACK_ITEM)
+        inventory.addItem(Settings.getDoMonthlyResetSetting(plugin))
+        inventory.addItem(Settings.getDoMonthlyPeriodSetting(plugin))
+        inventory.addItem(Settings.getUseSoundEffectsSetting(plugin))
+        inventory.addItem(Settings.getUseFireworkSetting(plugin))
+        inventory.addItem(Settings.getDoLuckyVoteSetting(plugin))
+        inventory.addItem(Settings.getDoVotePartySetting(plugin))
+        inventory.addItem(Settings.getVotePartyTypeSetting(plugin))
+        inventory.addItem(Settings.getVotesUntilVotePartySetting(plugin))
+        inventory.addItem(Settings.getVotePartyCountdownSetting(plugin))
+        inventory.setItem(17, BACK_ITEM)
     }
 }
