@@ -24,7 +24,8 @@ class Main : CustomPlugin(
     "settings.yml",
     28103,
     FEATURES,
-    "Give players a random item reward"
+    "Monthly votes can now be displayed using %PERIOD%",
+    "This also works for PlaceholderAPI with %CV_PLAYER_PERIOD%"
 )
 {
     var playerTable: PlayerTable? = null
