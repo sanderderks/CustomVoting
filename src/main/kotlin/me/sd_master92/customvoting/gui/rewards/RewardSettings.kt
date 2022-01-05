@@ -8,8 +8,10 @@ import me.sd_master92.customvoting.constants.enumerations.ItemRewardType
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.gui.GUI
 import me.sd_master92.customvoting.gui.VoteSettings
+import me.sd_master92.customvoting.gui.items.BaseItem
+import me.sd_master92.customvoting.gui.items.CommandsRewardItem
+import me.sd_master92.customvoting.gui.items.ItemsRewardItem
 import me.sd_master92.customvoting.gui.rewards.streak.VoteStreakSettings
-import me.sd_master92.customvoting.gui.items.*
 import me.sd_master92.customvoting.listeners.PlayerListener
 import org.bukkit.ChatColor
 import org.bukkit.Material
@@ -20,7 +22,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.scheduler.BukkitRunnable
 
 class RewardSettings(private val plugin: CV, private val op: Boolean = false) :
-    GUI(plugin, "Vote Rewards".appendWhenTrue(op, " (permission based)"), 18, true, true)
+    GUI(plugin, "Vote Rewards".appendWhenTrue(op, " (permission based)"), if (op) 9 else 18, true, true)
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
     {

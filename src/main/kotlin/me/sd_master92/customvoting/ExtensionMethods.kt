@@ -8,3 +8,12 @@ fun String.appendWhenTrue(value: Boolean, append: String): String
     }
     return this
 }
+
+fun Boolean.reverseWhenTrue(value: Boolean): Boolean
+{
+    if (value)
+    {
+        return !this
+    }
+    return this
+}

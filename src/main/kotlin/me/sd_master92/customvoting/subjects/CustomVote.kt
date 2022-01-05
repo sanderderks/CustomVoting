@@ -276,14 +276,15 @@ class CustomVote(private val plugin: CV, vote: Vote, private val queued: Boolean
         }
         for (command in plugin.data.getStringList(path))
         {
-            plugin.server.dispatchCommand(
-                plugin.server.consoleSender, PlaceholderAPI.setPlaceholders(
-                    player, command.replace(
-                        "%PLAYER%",
-                        player.name
-                    )
-                )
+            var cmd = command.replace(
+                "%PLAYER%",
+                player.name
             )
+            if (CV.PAPI)
+            {
+                cmd = PlaceholderAPI.setPlaceholders(player, cmd)
+            }
+            plugin.server.dispatchCommand(plugin.server.consoleSender, cmd)
         }
     }
 
@@ -316,14 +317,15 @@ class CustomVote(private val plugin: CV, vote: Vote, private val queued: Boolean
             {
                 for (command in commands)
                 {
-                    plugin.server.dispatchCommand(
-                        plugin.server.consoleSender, PlaceholderAPI.setPlaceholders(
-                            player, command.replace(
-                                "%PLAYER%",
-                                player.name
-                            )
-                        )
+                    var cmd = command.replace(
+                        "%PLAYER%",
+                        player.name
                     )
+                    if (CV.PAPI)
+                    {
+                        cmd = PlaceholderAPI.setPlaceholders(player, cmd)
+                    }
+                    plugin.server.dispatchCommand(plugin.server.consoleSender, cmd)
                 }
             }
             for (reward in plugin.data.getItems("${Data.VOTE_STREAKS}.$votes.${Data.ITEM_REWARDS}"))

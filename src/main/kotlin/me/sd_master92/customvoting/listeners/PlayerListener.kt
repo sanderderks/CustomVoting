@@ -353,7 +353,8 @@ class PlayerListener(private val plugin: CV) : Listener
     @EventHandler
     fun onBlockPlace(event: BlockPlaceEvent)
     {
-        if (event.itemInHand == VoteParty.VOTE_PARTY_ITEM)
+        val item = event.itemInHand
+        if (item.type == VoteParty.VOTE_PARTY_ITEM.type && item.itemMeta?.displayName == VoteParty.VOTE_PARTY_ITEM.itemMeta?.displayName)
         {
             val player = event.player
             if (player.hasPermission("customvoting.voteparty"))

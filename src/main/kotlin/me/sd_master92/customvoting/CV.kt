@@ -146,6 +146,7 @@ class CV : CustomPlugin(
             errorLog("|___PlaceholderAPI hook not found")
         } else
         {
+            PAPI = true
             CustomPlaceholders(this).register()
             infoLog("|___successfully hooked into PlaceholderAPI")
         }
@@ -251,8 +252,13 @@ class CV : CustomPlugin(
 
     companion object
     {
+        var PAPI = false
+            private set
         var ECONOMY: Economy? = null
+            private set
         var PERMISSION: Permission? = null
+            private set
         var MC_VERSION: Int = 0
+            private set
     }
 }
