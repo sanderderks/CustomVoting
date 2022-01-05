@@ -196,12 +196,15 @@ class CustomVote(private val plugin: CV, vote: Vote, private val queued: Boolean
     private fun giveItems(player: Player, op: Boolean)
     {
         var path = Data.ITEM_REWARDS
+        var random = plugin.config.getNumber(Settings.ITEM_REWARD_TYPE) == ItemRewardType.ALL_ITEMS.value
         if (op)
         {
             path += Data.OP_REWARDS
+            random =
+                plugin.config.getNumber(Settings.ITEM_REWARD_TYPE + "." + Data.OP_REWARDS) == ItemRewardType.ALL_ITEMS.value
         }
         val rewards = plugin.data.getItems(path)
-        if (plugin.config.getNumber(Settings.ITEM_REWARD_TYPE) == ItemRewardType.ALL_ITEMS.value)
+        if (!random)
         {
             for (reward in rewards)
             {

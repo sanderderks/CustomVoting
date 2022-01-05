@@ -49,11 +49,13 @@ class RewardSettings(private val plugin: CV, private val op: Boolean = false) :
             Material.REPEATER          ->
             {
                 SoundType.CHANGE.play(plugin, player)
-                plugin.config.setNumber(
-                    Settings.ITEM_REWARD_TYPE,
-                    ItemRewardType.next(plugin).value
-                )
-                event.currentItem = ItemsRewardTypeItem(plugin)
+                var path = Settings.ITEM_REWARD_TYPE
+                if (op)
+                {
+                    path += Data.OP_REWARDS
+                }
+                plugin.config.setNumber(path, ItemRewardType.next(plugin).value)
+                event.currentItem = ItemsRewardTypeItem(plugin, op)
             }
             Material.GOLD_INGOT        -> if (CV.ECONOMY != null)
             {
@@ -205,7 +207,7 @@ class RewardSettings(private val plugin: CV, private val op: Boolean = false) :
             commandsPath += Data.OP_REWARDS
         }
         inventory.setItem(0, ItemsRewardItem(plugin, itemsPath))
-        inventory.setItem(1, ItemsRewardTypeItem(plugin))
+        inventory.setItem(1, ItemsRewardTypeItem(plugin, op))
         inventory.setItem(2, MoneyRewardItem.getInstance(plugin, op))
         inventory.setItem(3, ExperienceRewardItem.getInstance(plugin, op))
         inventory.setItem(4, CommandsRewardItem(plugin, commandsPath))
@@ -255,11 +257,11 @@ class LuckyVoteChanceItem(plugin: CV) : BaseItem(
     ChatColor.GRAY.toString() + "Currently: " + ChatColor.AQUA + plugin.config.getNumber(Settings.LUCKY_VOTE_CHANCE) + ChatColor.GRAY + "%"
 )
 
-class ItemsRewardTypeItem(plugin: CV) : BaseItem(
+class ItemsRewardTypeItem(plugin: CV, op: Boolean) : BaseItem(
     Material.REPEATER, ChatColor.LIGHT_PURPLE.toString() + "Item Reward Type",
     ChatColor.GRAY.toString() + "Status: " + ChatColor.AQUA + ItemRewardType.valueOf(
         plugin.config.getNumber(
-            Settings.ITEM_REWARD_TYPE
+            Settings.ITEM_REWARD_TYPE + (if (op) ".${Data.OP_REWARDS}" else "")
         )
     ).label
 )
