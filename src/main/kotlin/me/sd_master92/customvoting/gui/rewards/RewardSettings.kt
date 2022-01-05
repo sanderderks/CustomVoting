@@ -54,7 +54,7 @@ class RewardSettings(private val plugin: CV, private val op: Boolean = false) :
                 {
                     path += Data.OP_REWARDS
                 }
-                plugin.config.setNumber(path, ItemRewardType.next(plugin).value)
+                plugin.config.setNumber(path, ItemRewardType.next(plugin, op).value)
                 event.currentItem = ItemsRewardTypeItem(plugin, op)
             }
             Material.GOLD_INGOT        -> if (CV.ECONOMY != null)
@@ -260,9 +260,7 @@ class LuckyVoteChanceItem(plugin: CV) : BaseItem(
 class ItemsRewardTypeItem(plugin: CV, op: Boolean) : BaseItem(
     Material.REPEATER, ChatColor.LIGHT_PURPLE.toString() + "Item Reward Type",
     ChatColor.GRAY.toString() + "Status: " + ChatColor.AQUA + ItemRewardType.valueOf(
-        plugin.config.getNumber(
-            Settings.ITEM_REWARD_TYPE + (if (op) ".${Data.OP_REWARDS}" else "")
-        )
+        plugin.config.getNumber(Settings.ITEM_REWARD_TYPE + if (op) Data.OP_REWARDS else "")
     ).label
 )
 
