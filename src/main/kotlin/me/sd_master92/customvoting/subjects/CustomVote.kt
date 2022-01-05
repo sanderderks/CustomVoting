@@ -1,6 +1,7 @@
 package me.sd_master92.customvoting.subjects
 
 import com.vexsoftware.votifier.model.Vote
+import me.clip.placeholderapi.PlaceholderAPI
 import me.sd_master92.customfile.PlayerFile
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.VoteFile
@@ -276,9 +277,11 @@ class CustomVote(private val plugin: CV, vote: Vote, private val queued: Boolean
         for (command in plugin.data.getStringList(path))
         {
             plugin.server.dispatchCommand(
-                plugin.server.consoleSender, command.replace(
-                    "%PLAYER%",
-                    player.name
+                plugin.server.consoleSender, PlaceholderAPI.setPlaceholders(
+                    player, command.replace(
+                        "%PLAYER%",
+                        player.name
+                    )
                 )
             )
         }
@@ -314,9 +317,11 @@ class CustomVote(private val plugin: CV, vote: Vote, private val queued: Boolean
                 for (command in commands)
                 {
                     plugin.server.dispatchCommand(
-                        plugin.server.consoleSender, command.replace(
-                            "%PLAYER%",
-                            player.name
+                        plugin.server.consoleSender, PlaceholderAPI.setPlaceholders(
+                            player, command.replace(
+                                "%PLAYER%",
+                                player.name
+                            )
                         )
                     )
                 }
