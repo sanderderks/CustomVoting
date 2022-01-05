@@ -36,7 +36,7 @@ class VotesCommand(private val plugin: Main) : SimpleCommand(plugin, "votes")
         } else
         {
             val name = args[0]
-            val playerFile = PlayerFile.getByName(name, plugin)
+            val playerFile = PlayerFile.getByName(name)
             if (playerFile != null)
             {
                 val voteFile = if (plugin.hasDatabaseConnection()) PlayerRow(
@@ -44,7 +44,7 @@ class VotesCommand(private val plugin: Main) : SimpleCommand(plugin, "votes")
                     playerFile.uuid
                 ) else VoteFile(playerFile.uuid, plugin)
                 val placeholders = HashMap<String, String>()
-                placeholders["%PLAYER%"] = voteFile.userName
+                placeholders["%PLAYER%"] = voteFile.name
                 placeholders["%VOTES%"] = "${voteFile.votes}"
                 placeholders["%PERIOD%"] = "${voteFile.period}"
                 if (plugin.config.getBoolean(Settings.MONTHLY_PERIOD))

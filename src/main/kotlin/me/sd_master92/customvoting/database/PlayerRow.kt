@@ -6,7 +6,7 @@ import me.sd_master92.customvoting.subjects.VoteTopSign
 import me.sd_master92.customvoting.subjects.VoteTopStand
 import org.bukkit.entity.Player
 
-class PlayerRow(private val plugin: Main, override val uniqueId: String) : Voter
+class PlayerRow(private val plugin: Main, override val uuid: String) : Voter
 {
     private val players: PlayerTable? = plugin.playerTable
 
@@ -17,21 +17,21 @@ class PlayerRow(private val plugin: Main, override val uniqueId: String) : Voter
 
     private fun register()
     {
-        players?.getVotes(uniqueId)
+        players?.getVotes(uuid)
     }
 
-    override val userName: String
-        get() = players?.getName(uniqueId) ?: "Unknown"
+    override val name: String
+        get() = players?.getName(uuid) ?: "Unknown"
     override val votes: Int
-        get() = players?.getVotes(uniqueId) ?: 0
+        get() = players?.getVotes(uuid) ?: 0
     override val period: Int
-        get() = players?.getPeriod(uniqueId) ?: 0
+        get() = players?.getPeriod(uuid) ?: 0
 
     fun setVotes(n: Int, update: Boolean)
     {
-        players?.setVotes(uniqueId, n)
-        players?.setPeriod(uniqueId, 0)
-        players?.setLast(uniqueId)
+        players?.setVotes(uuid, n)
+        players?.setPeriod(uuid, 0)
+        players?.setLast(uuid)
         if (update)
         {
             VoteTopSign.updateAll(plugin)
@@ -41,16 +41,16 @@ class PlayerRow(private val plugin: Main, override val uniqueId: String) : Voter
 
     fun clearPeriod()
     {
-        players?.setPeriod(uniqueId, 0)
+        players?.setPeriod(uuid, 0)
         VoteTopSign.updateAll(plugin)
         VoteTopStand.updateAll(plugin)
     }
 
     fun addVote(update: Boolean)
     {
-        players?.setVotes(uniqueId, votes + 1)
-        players?.setPeriod(uniqueId, period + 1)
-        players?.setLast(uniqueId)
+        players?.setVotes(uuid, votes + 1)
+        players?.setPeriod(uuid, period + 1)
+        players?.setLast(uuid)
         if (update)
         {
             VoteTopSign.updateAll(plugin)
@@ -59,19 +59,19 @@ class PlayerRow(private val plugin: Main, override val uniqueId: String) : Voter
     }
 
     val last: Long
-        get() = players?.getLast(uniqueId) ?: 0
+        get() = players?.getLast(uuid) ?: 0
 
     val queue: Int
-        get() = players?.getQueue(uniqueId) ?: 0
+        get() = players?.getQueue(uuid) ?: 0
 
     fun clearQueue(): Boolean
     {
-        return players?.setQueue(uniqueId, 0) ?: false
+        return players?.setQueue(uuid, 0) ?: false
     }
 
     fun addQueue(): Boolean
     {
-        return players?.setQueue(uniqueId, queue + 1) ?: false
+        return players?.setQueue(uuid, queue + 1) ?: false
     }
 
     init

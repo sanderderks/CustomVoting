@@ -16,16 +16,15 @@ class DailyTask(private val plugin: Main)
     {
         if (Calendar.getInstance()[Calendar.DAY_OF_MONTH] == 1)
         {
-            for (playerFile in PlayerFile.getAll(plugin))
+            for (playerFile in PlayerFile.getAll())
             {
                 if (plugin.hasDatabaseConnection())
                 {
-                    val playerRow = PlayerRow(plugin, playerFile.uuid)
+                    val playerRow = PlayerRow(plugin, playerFile.value.uuid)
                     playerRow.setVotes(0, true)
                 } else
                 {
-                    val voteFile = VoteFile(playerFile.uuid, plugin)
-                    voteFile.setVotes(0, true)
+                    VoteFile(playerFile.value.uuid, plugin).setVotes(0, true)
                 }
             }
             plugin.server.broadcastMessage(Messages.MONTHLY_RESET.getMessage(plugin))
@@ -36,16 +35,15 @@ class DailyTask(private val plugin: Main)
     {
         if (Calendar.getInstance()[Calendar.DAY_OF_MONTH] == 1)
         {
-            for (playerFile in PlayerFile.getAll(plugin))
+            for (playerFile in PlayerFile.getAll())
             {
                 if (plugin.hasDatabaseConnection())
                 {
-                    val playerRow = PlayerRow(plugin, playerFile.uuid)
+                    val playerRow = PlayerRow(plugin, playerFile.value.uuid)
                     playerRow.clearPeriod()
                 } else
                 {
-                    val voteFile = VoteFile(playerFile.uuid, plugin)
-                    voteFile.clearPeriod()
+                    VoteFile(playerFile.value.uuid, plugin).clearPeriod()
                 }
             }
             plugin.server.broadcastMessage(Messages.MONTHLY_RESET.getMessage(plugin))

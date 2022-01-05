@@ -33,7 +33,7 @@ class ReloadCommand(private val plugin: Main) : SimpleCommand(plugin, "votereloa
         {
             if (plugin.config.reloadConfig() && plugin.data.reloadConfig() && plugin.messages.reloadConfig())
             {
-                if (PlayerFile.getAll(plugin).stream().allMatch { obj: PlayerFile -> obj.reloadConfig() })
+                if (PlayerFile.getAll().values.stream().allMatch { obj: PlayerFile -> obj.reloadConfig() })
                 {
                     VoteTopSign.updateAll(plugin)
                     VoteTopStand.updateAll(plugin)

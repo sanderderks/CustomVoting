@@ -29,7 +29,7 @@ class VoteTopCommand(private val plugin: Main) : SimpleCommand(plugin, "votetop"
                     val placeholders: MutableMap<String, String> = HashMap()
                     for (topVoter in topVoters.stream().limit(5).collect(Collectors.toList()))
                     {
-                        placeholders["%PLAYER%"] = topVoter.userName
+                        placeholders["%PLAYER%"] = topVoter.name
                         placeholders["%VOTES%"] = "${topVoter.votes}"
                         placeholders["%PERIOD%"] = "${topVoter.period}"
                         if (plugin.config.getBoolean(Settings.MONTHLY_PERIOD))

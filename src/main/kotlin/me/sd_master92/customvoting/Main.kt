@@ -1,6 +1,7 @@
 package me.sd_master92.customvoting
 
 import me.sd_master92.customfile.CustomFile
+import me.sd_master92.customfile.PlayerFile
 import me.sd_master92.customfile.database.CustomDatabase
 import me.sd_master92.customvoting.commands.*
 import me.sd_master92.customvoting.commands.voteparty.VotePartyCommand
@@ -17,15 +18,11 @@ import net.milkbowl.vault.permission.Permission
 import org.bstats.bukkit.Metrics
 import org.bstats.charts.SimplePie
 import org.bukkit.Bukkit
-import org.bukkit.ChatColor
 
 
 class Main : CustomPlugin(
     "settings.yml",
-    28103,
-    FEATURES,
-    "Monthly votes can now be displayed using %PERIOD%",
-    "This also works for PlaceholderAPI with %CV_PLAYER_PERIOD%"
+    28103
 )
 {
     var playerTable: PlayerTable? = null
@@ -175,6 +172,7 @@ class Main : CustomPlugin(
     {
         messages = CustomFile("messages.yml", this)
         data = CustomFile("data.yml", this)
+        PlayerFile.init(this)
         Settings.initialize(this)
     }
 
@@ -263,7 +261,5 @@ class Main : CustomPlugin(
         var ECONOMY: Economy? = null
         var PERMISSION: Permission? = null
         var MC_VERSION: Int = 0
-        private val BUGFIXES = ChatColor.RED.toString() + "BUGFIXES"
-        private val FEATURES = ChatColor.LIGHT_PURPLE.toString() + "FEATURES"
     }
 }

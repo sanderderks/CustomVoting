@@ -35,7 +35,7 @@ class ClearPeriodVotesCommand(private val plugin: Main) : SimpleCommand(plugin, 
         } else
         {
             val name = args[0]
-            val playerFile = PlayerFile.getByName(name, plugin)
+            val playerFile = PlayerFile.getByName(name)
             if (playerFile != null)
             {
                 if (plugin.hasDatabaseConnection())
@@ -46,7 +46,7 @@ class ClearPeriodVotesCommand(private val plugin: Main) : SimpleCommand(plugin, 
                 {
                     val voteFile = VoteFile(playerFile.uuid, plugin)
                     voteFile.clearPeriod()
-                    sender.sendMessage(ChatColor.AQUA.toString() + voteFile.userName + "'s " + ChatColor.GREEN + "period votes have been reset.")
+                    sender.sendMessage(ChatColor.AQUA.toString() + voteFile.name + "'s " + ChatColor.GREEN + "period votes have been reset.")
                 }
             } else
             {

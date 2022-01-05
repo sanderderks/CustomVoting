@@ -25,7 +25,7 @@ class FakeVoteCommand(private val plugin: Main) : SimpleCommand(plugin, "fakevot
         } else
         {
             val name = args[0]
-            if (PlayerFile.getByName(name, plugin) != null)
+            if (PlayerFile.getByName(name) != null)
             {
                 fakeVote(args[0])
             } else

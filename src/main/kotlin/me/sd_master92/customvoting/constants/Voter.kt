@@ -4,6 +4,6 @@ interface Voter
 {
     val votes: Int
     val period: Int
-    val uniqueId: String
-    val userName: String
+    val uuid: String
+    val name: String
 }

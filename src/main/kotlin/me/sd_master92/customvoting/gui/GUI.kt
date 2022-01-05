@@ -81,6 +81,11 @@ abstract class GUI @JvmOverloads constructor(
         } else event.inventory === inventory
     }
 
+    private fun init(plugin: Main)
+    {
+        plugin.registerListener(this)
+    }
+
     companion object
     {
         val BACK_ITEM = createItem(Material.BARRIER, ChatColor.RED.toString() + "Back")
@@ -125,6 +130,6 @@ abstract class GUI @JvmOverloads constructor(
         this.allowDrag = allowDrag
         cancelCloseEvent = false
         this.alwaysCancel = alwaysCancel
-        plugin.registerListener(this)
+        init(plugin)
     }
 }

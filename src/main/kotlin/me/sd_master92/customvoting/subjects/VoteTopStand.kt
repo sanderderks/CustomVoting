@@ -24,6 +24,18 @@ class VoteTopStand @JvmOverloads constructor(private val plugin: Main, private v
     private var topStand: ArmorStand? = null
     private var nameStand: ArmorStand? = null
     private var votesStand: ArmorStand? = null
+
+    private fun registerArmorStands()
+    {
+        val section = plugin.data.getConfigurationSection(Data.VOTE_TOP_STANDS + "." + top)
+        if (section != null)
+        {
+            topStand = getArmorStand(section.getString("top"))
+            nameStand = getArmorStand(section.getString("name"))
+            votesStand = getArmorStand(section.getString("votes"))
+        }
+    }
+
     private fun getArmorStand(uuid: String?): ArmorStand?
     {
         if (uuid != null)
@@ -93,6 +105,7 @@ class VoteTopStand @JvmOverloads constructor(private val plugin: Main, private v
             }
             this.votesStand = votesStand
         }
+        plugin.data.setLocation(Data.VOTE_TOP_STANDS + "." + top, player.location)
         player.sendMessage(ChatColor.GREEN.toString() + "Registered Vote Stand #" + top)
     }
 
@@ -118,7 +131,7 @@ class VoteTopStand @JvmOverloads constructor(private val plugin: Main, private v
         placeholders["%TOP%"] = "" + top
         if (voteFile != null)
         {
-            placeholders["%PLAYER%"] = voteFile.userName
+            placeholders["%PLAYER%"] = voteFile.name
             placeholders["%VOTES%"] = "${voteFile.votes}"
             placeholders["%PERIOD%"] = "${voteFile.period}"
         } else
@@ -126,6 +139,10 @@ class VoteTopStand @JvmOverloads constructor(private val plugin: Main, private v
             placeholders["%PLAYER%"] = ChatColor.RED.toString() + "Unknown"
             placeholders["%VOTES%"] = "0"
             placeholders["%PERIOD%"] = "0"
+        }
+        if(topStand == null || nameStand == null || votesStand == null)
+        {
+            registerArmorStands()
         }
         topStand?.customName = Messages.VOTE_TOP_STANDS_TOP.getMessage(plugin, placeholders)
         nameStand?.customName = Messages.VOTE_TOP_STANDS_CENTER.getMessage(plugin, placeholders)
@@ -136,7 +153,7 @@ class VoteTopStand @JvmOverloads constructor(private val plugin: Main, private v
         {
             try
             {
-                skullMeta.owningPlayer = Bukkit.getOfflinePlayer(UUID.fromString(voteFile.uniqueId))
+                skullMeta.owningPlayer = Bukkit.getOfflinePlayer(UUID.fromString(voteFile.uuid))
                 skull.itemMeta = skullMeta
             } catch (ignored: Exception)
             {
@@ -211,9 +228,7 @@ class VoteTopStand @JvmOverloads constructor(private val plugin: Main, private v
                 player.sendMessage(ChatColor.RED.toString() + "That Vote Stand already exists.")
             } else
             {
-                topStand = getArmorStand(section.getString("top"))
-                nameStand = getArmorStand(section.getString("name"))
-                votesStand = getArmorStand(section.getString("votes"))
+                registerArmorStands()
                 voteTops[top] = this
                 update()
             }

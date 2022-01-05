@@ -18,7 +18,7 @@ class VoteTopListener(private val plugin: Main) : Listener
             {
                 val line0 = event.getLine(0)
                 var line1 = event.getLine(1)
-                if (line0 != null && line0.equals("[votes]", ignoreCase = true))
+                if (line0 != null && line0.equals("[votes]", true))
                 {
                     event.isCancelled = true
                     val loc = event.block.location

@@ -8,25 +8,28 @@ import me.sd_master92.customvoting.subjects.VoteTopSign
 import me.sd_master92.customvoting.subjects.VoteTopStand
 import org.bukkit.entity.Player
 
-class VoteFile : PlayerFile, Voter
+class VoteFile : Voter
 {
     private val plugin: Main
-    override val uniqueId: String
-    override val userName: String
+    private val playerFile: PlayerFile
+    override val uuid: String
+    override val name: String
 
-    constructor(uuid: String, plugin: Main) : super(uuid, plugin)
+    constructor(uuid: String, plugin: Main)
     {
+        playerFile = PlayerFile.get(plugin, uuid)
         this.plugin = plugin
-        this.uniqueId = uuid
-        this.userName = name
+        this.uuid = uuid
+        this.name = playerFile.name
         register()
     }
 
-    constructor(player: Player, plugin: Main) : super(player, plugin)
+    constructor(player: Player, plugin: Main)
     {
+        playerFile = PlayerFile.get(plugin, player)
         this.plugin = plugin
-        this.uniqueId = player.uniqueId.toString()
-        this.userName = player.name
+        this.uuid = player.uniqueId.toString()
+        this.name = player.name
         register()
     }
 
@@ -39,18 +42,18 @@ class VoteFile : PlayerFile, Voter
     }
 
     override val votes: Int
-        get() = getNumber("votes")
+        get() = playerFile.getNumber("votes")
     override val period: Int
-        get() = getNumber("period")
+        get() = playerFile.getNumber("period")
 
     val last: Long
-        get() = getTimeStamp("last")
+        get() = playerFile.getTimeStamp("last")
 
     fun setVotes(n: Int, update: Boolean)
     {
-        setTimeStamp("last")
-        setNumber("votes", n)
-        setNumber("period", n)
+        playerFile.setTimeStamp("last")
+        playerFile.setNumber("votes", n)
+        playerFile.setNumber("period", n)
         if (update)
         {
             VoteTopSign.updateAll(plugin)
@@ -60,16 +63,16 @@ class VoteFile : PlayerFile, Voter
 
     fun clearPeriod()
     {
-        setNumber("period", 0)
+        playerFile.setNumber("period", 0)
         VoteTopSign.updateAll(plugin)
         VoteTopStand.updateAll(plugin)
     }
 
     fun addVote(update: Boolean)
     {
-        setTimeStamp("last")
-        addNumber("votes", 1)
-        addNumber("period", 1)
+        playerFile.setTimeStamp("last")
+        playerFile.addNumber("votes", 1)
+        playerFile.addNumber("period", 1)
         if (update)
         {
             VoteTopSign.updateAll(plugin)
@@ -99,7 +102,7 @@ class VoteFile : PlayerFile, Voter
         fun getTopVoters(plugin: Main): List<VoteFile>
         {
             val topVoters: MutableList<VoteFile> = ArrayList()
-            for (playerFile in getAll(plugin))
+            for (playerFile in PlayerFile.getAll().values)
             {
                 topVoters.add(VoteFile(playerFile.uuid, plugin))
             }

@@ -53,7 +53,7 @@ class CustomVote(private val plugin: Main, vote: Vote, private val queued: Boole
             PlayerRow(plugin, plugin.playerTable!!.getUuid(username)).addQueue()
         } else
         {
-            val playerFile = PlayerFile.getByName(username, plugin)
+            val playerFile = PlayerFile.getByName(username)
             if (playerFile != null)
             {
                 VoteFile(playerFile.uuid, plugin).addQueue(serviceName)
@@ -344,13 +344,7 @@ class CustomVote(private val plugin: Main, vote: Vote, private val queued: Boole
             val date = Date()
             vote.timeStamp = date.time.toString()
 
-            if (queued)
-            {
-                CustomVote(plugin, vote, true)
-            } else
-            {
-                CustomVote(plugin, vote)
-            }
+            CustomVote(plugin, vote, queued)
         }
     }
 

@@ -87,7 +87,7 @@ class VoteTopSign @JvmOverloads constructor(
                 plugin.data.setLocation(Data.VOTE_TOP_SIGNS + "." + top, location)
                 val placeholders = HashMap<String, String>()
                 placeholders["%NUMBER%"] = "" + top
-                placeholders["%PLAYER%"] = topVoter.userName
+                placeholders["%PLAYER%"] = topVoter.name
                 placeholders["%VOTES%"] = "${topVoter.votes}"
                 placeholders["%PERIOD%"] = "${topVoter.period}"
                 if (plugin.config.getBoolean(Settings.MONTHLY_PERIOD))
@@ -102,7 +102,7 @@ class VoteTopSign @JvmOverloads constructor(
                 {
                     sign.setLine(i, messages[i])
                 }
-                updateSkull(location, topVoter.uniqueId)
+                updateSkull(location, topVoter.uuid)
             } else
             {
                 for (i in 0..3)
