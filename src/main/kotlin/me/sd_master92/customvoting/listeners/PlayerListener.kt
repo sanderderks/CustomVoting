@@ -6,8 +6,8 @@ import me.sd_master92.customvoting.constants.Data
 import me.sd_master92.customvoting.constants.Settings
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.database.PlayerRow
-import me.sd_master92.customvoting.gui.VoteLinks
-import me.sd_master92.customvoting.gui.VotePartyRewards
+import me.sd_master92.customvoting.gui.messages.VoteLinks
+import me.sd_master92.customvoting.gui.voteparty.VotePartyRewards
 import me.sd_master92.customvoting.subjects.CustomVote
 import me.sd_master92.customvoting.subjects.VoteParty
 import me.sd_master92.customvoting.subjects.VoteTopSign

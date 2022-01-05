@@ -1,4 +1,4 @@
-package me.sd_master92.customvoting.gui
+package me.sd_master92.customvoting.gui.rewards
 
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.appendWhenTrue
@@ -6,6 +6,9 @@ import me.sd_master92.customvoting.constants.Data
 import me.sd_master92.customvoting.constants.Settings
 import me.sd_master92.customvoting.constants.enumerations.ItemRewardType
 import me.sd_master92.customvoting.constants.enumerations.SoundType
+import me.sd_master92.customvoting.gui.GUI
+import me.sd_master92.customvoting.gui.VoteSettings
+import me.sd_master92.customvoting.gui.rewards.streak.VoteStreakSettings
 import me.sd_master92.customvoting.gui.items.*
 import me.sd_master92.customvoting.listeners.PlayerListener
 import org.bukkit.ChatColor
@@ -206,11 +209,74 @@ class RewardSettings(private val plugin: CV, private val op: Boolean = false) :
         inventory.setItem(4, CommandsRewardItem(plugin, commandsPath))
         if (!op)
         {
-            inventory.setItem(5, LuckyRewardItem(plugin))
+            inventory.setItem(
+                5, BaseItem(
+                    Material.ENDER_CHEST, ChatColor.LIGHT_PURPLE.toString() +
+                            "Lucky Rewards",
+                    ChatColor.GRAY.toString() + "Currently: " + ChatColor.AQUA + plugin.data.getItems(Data.LUCKY_REWARDS).size + ChatColor.GRAY + " item stacks"
+                )
+            )
             inventory.setItem(6, LuckyVoteChanceItem(plugin))
-            inventory.setItem(7, StreakItem())
-            inventory.setItem(8, PermissionBasedItem())
+            inventory.setItem(7, BaseItem(Material.NETHER_STAR, ChatColor.LIGHT_PURPLE.toString() + "Vote Streak"))
+            inventory.setItem(
+                8,
+                BaseItem(Material.DIAMOND_BLOCK, ChatColor.LIGHT_PURPLE.toString() + "Permission Rewards", null, true)
+            )
         }
         inventory.setItem(17, BACK_ITEM)
+    }
+}
+
+class MoneyRewardItem private constructor(plugin: CV, path: String) : BaseItem(
+    Material.GOLD_INGOT, ChatColor.LIGHT_PURPLE.toString() + "Money Reward",
+    if (CV.ECONOMY != null) ChatColor.GRAY.toString() + "Currently: " + ChatColor.GREEN + CV.ECONOMY!!.format(
+        plugin.config.getDouble(path)
+    ) else ChatColor.RED.toString() + "Disabled"
+)
+{
+    companion object
+    {
+        fun getInstance(plugin: CV, op: Boolean): MoneyRewardItem
+        {
+            var path = Settings.VOTE_REWARD_MONEY
+            if (op)
+            {
+                path += Data.OP_REWARDS
+            }
+            return MoneyRewardItem(plugin, path)
+        }
+    }
+}
+
+class LuckyVoteChanceItem(plugin: CV) : BaseItem(
+    Material.ENDER_EYE, ChatColor.LIGHT_PURPLE.toString() + "Lucky Vote Chance",
+    ChatColor.GRAY.toString() + "Currently: " + ChatColor.AQUA + plugin.config.getNumber(Settings.LUCKY_VOTE_CHANCE) + ChatColor.GRAY + "%"
+)
+
+class ItemsRewardTypeItem(plugin: CV) : BaseItem(
+    Material.REPEATER, ChatColor.LIGHT_PURPLE.toString() + "Item Reward Type",
+    ChatColor.GRAY.toString() + "Status: " + ChatColor.AQUA + ItemRewardType.valueOf(
+        plugin.config.getNumber(
+            Settings.ITEM_REWARD_TYPE
+        )
+    ).label
+)
+
+class ExperienceRewardItem private constructor(plugin: CV, path: String) : BaseItem(
+    Material.EXPERIENCE_BOTTLE, ChatColor.LIGHT_PURPLE.toString() + "XP Reward",
+    ChatColor.GRAY.toString() + "Currently: " + ChatColor.AQUA + plugin.config.getNumber(path) + ChatColor.GRAY + " levels"
+)
+{
+    companion object
+    {
+        fun getInstance(plugin: CV, op: Boolean): ExperienceRewardItem
+        {
+            var path = Settings.VOTE_REWARD_EXPERIENCE
+            if (op)
+            {
+                path += Data.OP_REWARDS
+            }
+            return ExperienceRewardItem(plugin, path)
+        }
     }
 }

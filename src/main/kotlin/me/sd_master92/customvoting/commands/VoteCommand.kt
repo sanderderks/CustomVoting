@@ -4,7 +4,7 @@ import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Messages
 import me.sd_master92.plugin.command.SimpleCommand
 import me.sd_master92.customvoting.constants.Settings
-import me.sd_master92.customvoting.gui.VoteLinks
+import me.sd_master92.customvoting.gui.messages.VoteLinks
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 

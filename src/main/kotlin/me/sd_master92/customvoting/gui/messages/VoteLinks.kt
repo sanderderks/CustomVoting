@@ -1,8 +1,9 @@
-package me.sd_master92.customvoting.gui
+package me.sd_master92.customvoting.gui.messages
 
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Data
 import me.sd_master92.customvoting.constants.enumerations.SoundType
+import me.sd_master92.customvoting.gui.GUI
 import me.sd_master92.customvoting.listeners.PlayerListener
 import org.bukkit.ChatColor
 import org.bukkit.entity.Player

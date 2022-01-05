@@ -1,10 +1,14 @@
-package me.sd_master92.customvoting.gui
+package me.sd_master92.customvoting.gui.general
 
 import me.sd_master92.customvoting.CV
+import me.sd_master92.customvoting.constants.Data
 import me.sd_master92.customvoting.constants.Settings
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.constants.enumerations.VotePartyType
+import me.sd_master92.customvoting.gui.GUI
+import me.sd_master92.customvoting.gui.VoteSettings
 import me.sd_master92.customvoting.gui.items.*
+import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
@@ -123,3 +127,64 @@ class GeneralSettings(private val plugin: CV) : GUI(plugin, "General Settings", 
         inventory.setItem(17, BACK_ITEM)
     }
 }
+
+class VotesUntilItem private constructor(votesRequired: Int, votesUntil: Int) : BaseItem(
+    Material.ENCHANTED_BOOK, ChatColor.LIGHT_PURPLE.toString() + "Votes until Vote Party",
+    ChatColor.GRAY.toString() + "Required: " + ChatColor.AQUA + votesRequired + ";" + ChatColor.GRAY + "Votes left:" +
+            " " + ChatColor.GREEN + votesUntil
+)
+{
+    companion object
+    {
+        fun getInstance(plugin: CV): VotesUntilItem
+        {
+            val votesRequired = plugin.config.getNumber(Settings.VOTES_REQUIRED_FOR_VOTE_PARTY)
+            val votesUntil = votesRequired - plugin.data.getNumber(Data.CURRENT_VOTES)
+            return VotesUntilItem(votesRequired, votesUntil)
+        }
+    }
+}
+
+class VotePartyTypeItem(plugin: CV) : BaseItem(
+    Material.SPLASH_POTION, ChatColor.LIGHT_PURPLE.toString() + "Vote Party Type",
+    ChatColor.GRAY.toString() + "Status: " + ChatColor.AQUA + VotePartyType.valueOf(
+        plugin.config.getNumber(
+            Settings.VOTE_PARTY_TYPE
+        )
+    ).label
+)
+
+class VotePartyCountdownItem(plugin: CV) : BaseItem(
+    Material.ENDER_CHEST, ChatColor.LIGHT_PURPLE.toString() + "Vote Party Countdown",
+    ChatColor.GRAY.toString() + "Currently: " + ChatColor.AQUA + plugin.config.getNumber(Settings.VOTE_PARTY_COUNTDOWN)
+)
+
+class SoundEffectsItem(plugin: CV) : BaseItem(
+    Material.MUSIC_DISC_CAT, ChatColor.LIGHT_PURPLE.toString() + "Sound Effects",
+    ChatColor.GRAY.toString() + "Status: " + if (plugin.config.getBoolean(Settings.USE_SOUND_EFFECTS)) ChatColor.GREEN.toString() + "ON" else ChatColor.RED.toString() + "OFF"
+)
+
+class MonthlyResetItem(plugin: CV) : BaseItem(
+    Material.CLOCK, ChatColor.LIGHT_PURPLE.toString() + "Monthly Reset",
+    ChatColor.GRAY.toString() + "Status: " + if (plugin.config.getBoolean(Settings.MONTHLY_RESET)) ChatColor.GREEN.toString() + "ON" else ChatColor.RED.toString() + "OFF"
+)
+
+class MonthlyPeriodItem(plugin: CV) : BaseItem(
+    Material.TNT, ChatColor.LIGHT_PURPLE.toString() + "Monthly Period",
+    ChatColor.GRAY.toString() + "Status: " + if (plugin.config.getBoolean(Settings.MONTHLY_PERIOD)) ChatColor.GREEN.toString() + "ON" else ChatColor.RED.toString() + "OFF"
+)
+
+class LuckyVoteItem(plugin: CV) : BaseItem(
+    Material.TOTEM_OF_UNDYING, ChatColor.LIGHT_PURPLE.toString() + "Lucky Vote",
+    ChatColor.GRAY.toString() + "Status: " + if (plugin.config.getBoolean(Settings.LUCKY_VOTE)) ChatColor.GREEN.toString() + "ON" else ChatColor.RED.toString() + "OFF"
+)
+
+class FireworkItem(plugin: CV) : BaseItem(
+    Material.FIREWORK_ROCKET, ChatColor.LIGHT_PURPLE.toString() + "Firework",
+    ChatColor.GRAY.toString() + "Status: " + if (plugin.config.getBoolean(Settings.FIREWORK)) ChatColor.GREEN.toString() + "ON" else ChatColor.RED.toString() + "OFF"
+)
+
+class DoVotePartyItem(plugin: CV) : BaseItem(
+    Material.EXPERIENCE_BOTTLE, ChatColor.LIGHT_PURPLE.toString() + "Vote Party",
+    ChatColor.GRAY.toString() + "Status: " + if (plugin.config.getBoolean(Settings.VOTE_PARTY)) ChatColor.GREEN.toString() + "ON" else ChatColor.RED.toString() + "OFF"
+)

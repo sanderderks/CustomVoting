@@ -1,12 +1,12 @@
-package me.sd_master92.customvoting.gui
+package me.sd_master92.customvoting.gui.rewards.streak
 
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Data
 import me.sd_master92.customvoting.constants.enumerations.SoundType
+import me.sd_master92.customvoting.gui.GUI
+import me.sd_master92.customvoting.gui.items.BaseItem
 import me.sd_master92.customvoting.gui.items.CommandsRewardItem
-import me.sd_master92.customvoting.gui.items.DeleteItem
 import me.sd_master92.customvoting.gui.items.ItemsRewardItem
-import me.sd_master92.customvoting.gui.items.PermissionsRewardItem
 import me.sd_master92.customvoting.listeners.PlayerListener
 import org.bukkit.ChatColor
 import org.bukkit.Material
@@ -140,12 +140,22 @@ class VoteStreakRewards(private val plugin: CV, private val number: Int) : GUI(
         SoundType.CLOSE.play(plugin, player)
     }
 
+    companion object
+    {
+        val DELETE_ITEM = BaseItem(Material.RED_WOOL, ChatColor.RED.toString() + "Delete")
+    }
+
     init
     {
         inventory.setItem(0, PermissionsRewardItem(plugin, "${Data.VOTE_STREAKS}.$number.permissions"))
         inventory.setItem(1, CommandsRewardItem(plugin, "${Data.VOTE_STREAKS}.$number.commands"))
         inventory.setItem(2, ItemsRewardItem(plugin, "${Data.VOTE_STREAKS}.$number.${Data.ITEM_REWARDS}"))
-        inventory.setItem(7, DeleteItem())
+        inventory.setItem(7, DELETE_ITEM)
         inventory.setItem(8, BACK_ITEM)
     }
 }
+
+class PermissionsRewardItem(plugin: CV, path: String) : BaseItem(
+    Material.DIAMOND_SWORD, ChatColor.LIGHT_PURPLE.toString() + "Permission Rewards",
+    ChatColor.GRAY.toString() + "Currently: " + ChatColor.AQUA + plugin.data.getStringList(path).size + ChatColor.GRAY + " permissions"
+)

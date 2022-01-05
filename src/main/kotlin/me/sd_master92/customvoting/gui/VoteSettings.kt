@@ -3,10 +3,12 @@ package me.sd_master92.customvoting.gui
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.Materials
 import me.sd_master92.customvoting.constants.enumerations.SoundType
-import me.sd_master92.customvoting.gui.items.GeneralSettingsItem
-import me.sd_master92.customvoting.gui.items.MessagesItem
-import me.sd_master92.customvoting.gui.items.RewardsItem
-import me.sd_master92.customvoting.gui.items.SupportItem
+import me.sd_master92.customvoting.gui.general.GeneralSettings
+import me.sd_master92.customvoting.gui.items.BaseItem
+import me.sd_master92.customvoting.gui.messages.MessageSettings
+import me.sd_master92.customvoting.gui.rewards.RewardSettings
+import me.sd_master92.customvoting.gui.support.Support
+import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
@@ -56,10 +58,22 @@ class VoteSettings(private val plugin: CV) : GUI(plugin, "Vote Settings", 9, fal
 
     companion object
     {
-        val GENERAL_SETTINGS = GeneralSettingsItem()
-        val REWARD_SETTINGS = RewardsItem()
-        val MESSAGES = MessagesItem()
-        val SUPPORT = SupportItem()
+        val GENERAL_SETTINGS = BaseItem(
+            Material.COMMAND_BLOCK, ChatColor.AQUA.toString() + "General",
+            null, true
+        )
+        val REWARD_SETTINGS = BaseItem(
+            Material.DIAMOND, ChatColor.LIGHT_PURPLE.toString() + "Rewards",
+            null, true
+        )
+        val MESSAGES = BaseItem(
+            Material.WRITABLE_BOOK, ChatColor.YELLOW.toString() + "Messages",
+            null, true
+        )
+        val SUPPORT = BaseItem(
+            Materials.SPYGLASS.get(), ChatColor.GREEN.toString() + "Support",
+            null, true
+        )
     }
 
     init

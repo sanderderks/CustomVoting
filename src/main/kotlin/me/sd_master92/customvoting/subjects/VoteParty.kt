@@ -6,7 +6,7 @@ import me.sd_master92.customvoting.constants.Messages
 import me.sd_master92.customvoting.constants.Settings
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.constants.enumerations.VotePartyType
-import me.sd_master92.customvoting.gui.GUI
+import me.sd_master92.customvoting.gui.items.BaseItem
 import me.sd_master92.customvoting.helpers.ParticleHelper
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
@@ -252,7 +252,7 @@ class VoteParty(private val plugin: CV)
 
     companion object
     {
-        val VOTE_PARTY_ITEM = GUI.createItem(
+        val VOTE_PARTY_ITEM = BaseItem(
             Material.ENDER_CHEST, ChatColor.LIGHT_PURPLE.toString() +
                     "Vote Party Chest",
             ChatColor.GRAY.toString() + "Place this chest somewhere in the sky.;" + ChatColor.GRAY + "The contents of this chest" +
@@ -262,5 +262,4 @@ class VoteParty(private val plugin: CV)
         private val queue: MutableList<VoteParty> = ArrayList()
         private var isActive = false
     }
-
 }

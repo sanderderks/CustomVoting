@@ -5,7 +5,7 @@ import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
 
-abstract class BaseItem(mat: Material, name: String?, lore: String? = null, enchanted: Boolean = false) : ItemStack(mat)
+open class BaseItem(mat: Material, name: String?, lore: String? = null, enchanted: Boolean = false) : ItemStack(mat)
 {
     constructor(mat: Material, enchanted: Boolean) : this(mat, null, null, enchanted)
 

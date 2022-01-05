@@ -1,11 +1,13 @@
-package me.sd_master92.customvoting.gui
+package me.sd_master92.customvoting.gui.messages
 
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Settings
 import me.sd_master92.customvoting.constants.enumerations.Materials
 import me.sd_master92.customvoting.constants.enumerations.SoundType
-import me.sd_master92.customvoting.gui.items.UseVoteLinkItem
-import me.sd_master92.customvoting.gui.items.VoteLinksItem
+import me.sd_master92.customvoting.gui.GUI
+import me.sd_master92.customvoting.gui.VoteSettings
+import me.sd_master92.customvoting.gui.items.BaseItem
+import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
@@ -50,7 +52,10 @@ class MessageSettings(private val plugin: CV) : GUI(plugin, "Message Settings", 
 
     companion object
     {
-        val VOTE_LINKS = VoteLinksItem()
+        val VOTE_LINKS = BaseItem(
+            Materials.SOUL_TORCH.get(), ChatColor.LIGHT_PURPLE.toString() + "Vote Links",
+            ChatColor.GRAY.toString() + "Place items in this inventory;;" + ChatColor.GRAY + "Right-click to edit an item"
+        )
     }
 
     init
@@ -60,3 +65,8 @@ class MessageSettings(private val plugin: CV) : GUI(plugin, "Message Settings", 
         inventory.setItem(1, UseVoteLinkItem(plugin))
     }
 }
+
+class UseVoteLinkItem(plugin: CV) : BaseItem(
+    Material.CHEST, ChatColor.LIGHT_PURPLE.toString() + "Vote Links Inventory",
+    ChatColor.GRAY.toString() + "Status: " + if (plugin.config.getBoolean(Settings.VOTE_LINK_INVENTORY)) ChatColor.GREEN.toString() + "ON" else ChatColor.RED.toString() + "OFF"
+)

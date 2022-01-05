@@ -1,8 +1,9 @@
-package me.sd_master92.customvoting.gui
+package me.sd_master92.customvoting.gui.rewards
 
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Data
 import me.sd_master92.customvoting.constants.enumerations.SoundType
+import me.sd_master92.customvoting.gui.GUI
 import org.bukkit.ChatColor
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
@@ -10,10 +11,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 
-class VoteStreakItemRewards(private val plugin: CV, private val number: Int) : GUI(
-    plugin,
-    "Vote Streak Item Rewards #$number", 27, true
-)
+class LuckyRewards(private val plugin: CV) : GUI(plugin, NAME, 27, true)
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
     {
@@ -22,42 +20,43 @@ class VoteStreakItemRewards(private val plugin: CV, private val number: Int) : G
             event.isCancelled = true
             if (event.slot == 26)
             {
-                save(plugin, player, event.inventory, number)
+                save(plugin, player, event.inventory)
             } else
             {
                 SoundType.CLICK.play(plugin, player)
             }
             cancelCloseEvent()
-            player.openInventory(VoteStreakRewards(plugin, number).inventory)
+            player.openInventory(RewardSettings(plugin).inventory)
         }
     }
 
     override fun onClose(event: InventoryCloseEvent, player: Player)
     {
-        save(plugin, player, event.inventory, number)
+        save(plugin, player, event.inventory)
     }
 
     companion object
     {
-        fun save(plugin: CV, player: Player, inv: Inventory, number: Int)
+        const val NAME = "Lucky Rewards"
+        fun save(plugin: CV, player: Player, inv: Inventory)
         {
             inv.setItem(25, null)
             inv.setItem(26, null)
-            if (plugin.data.setItems("${Data.VOTE_STREAKS}.$number.${Data.ITEM_REWARDS}", inv.contents))
+            if (plugin.data.setItems(Data.LUCKY_REWARDS, inv.contents))
             {
                 SoundType.SUCCESS.play(plugin, player)
-                player.sendMessage(ChatColor.GREEN.toString() + "Successfully updated the Item Rewards of Streak #$number!")
+                player.sendMessage(ChatColor.GREEN.toString() + "Successfully updated the $NAME!")
             } else
             {
                 SoundType.FAILURE.play(plugin, player)
-                player.sendMessage(ChatColor.RED.toString() + "Failed to update the Item Rewards of Streak #$number!")
+                player.sendMessage(ChatColor.RED.toString() + "Failed to update the $NAME!")
             }
         }
     }
 
     init
     {
-        for (reward in plugin.data.getItems("${Data.VOTE_STREAKS}.$number.${Data.ITEM_REWARDS}"))
+        for (reward in plugin.data.getItems(Data.LUCKY_REWARDS))
         {
             inventory.addItem(reward)
         }

@@ -1,9 +1,12 @@
-package me.sd_master92.customvoting.gui
+package me.sd_master92.customvoting.gui.support
 
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Settings
 import me.sd_master92.customvoting.constants.enumerations.SoundType
-import me.sd_master92.customvoting.gui.items.*
+import me.sd_master92.customvoting.gui.GUI
+import me.sd_master92.customvoting.gui.VoteSettings
+import me.sd_master92.customvoting.gui.items.BaseItem
+import me.sd_master92.plugin.CustomPlugin
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -69,9 +72,37 @@ class Support(private val plugin: CV) : GUI(plugin, "Support", 9, false, true)
     {
         inventory.setItem(0, UpdateItem(plugin))
         inventory.setItem(1, IngameUpdateItem(plugin))
-        inventory.setItem(2, DiscordItem())
-        inventory.setItem(3, DatabaseItem(plugin))
-        inventory.setItem(4, DonatorsItem())
+        inventory.setItem(
+            2, BaseItem(
+                Material.ENCHANTED_BOOK,
+                ChatColor.LIGHT_PURPLE.toString() + "Discord",
+                ChatColor.GRAY.toString() + "Join the discord server"
+            )
+        )
+        inventory.setItem(
+            3, BaseItem(
+                Material.ENCHANTING_TABLE, ChatColor.LIGHT_PURPLE.toString() + "Database",
+                ChatColor.GRAY.toString() + "Status: " + if (plugin.hasDatabaseConnection()) ChatColor.GREEN.toString() + "Connected" else ChatColor.RED.toString() + "Disabled"
+            )
+        )
+        inventory.setItem(
+            4, BaseItem(
+                Material.CREEPER_HEAD, ChatColor.LIGHT_PURPLE.toString() + "Donators",
+                ChatColor.GRAY.toString() + "CustomVoting supporters!"
+            )
+        )
         inventory.setItem(8, BACK_ITEM)
     }
 }
+
+class UpdateItem(plugin: CV) : BaseItem(
+    Material.CLOCK, ChatColor.LIGHT_PURPLE.toString() + "Up to date?",
+    if (plugin.isUpToDate) ChatColor.GREEN.toString() + "Yes" else ChatColor.GRAY.toString() + "Currently: " + ChatColor.RED + CustomPlugin.VERSION + ";" + ChatColor.GRAY +
+            "Latest: " + ChatColor.GREEN + plugin.latestVersion + ";;" + ChatColor.GRAY + "Click to " +
+            "download"
+)
+
+class IngameUpdateItem(plugin: CV) : BaseItem(
+    Material.FILLED_MAP, ChatColor.LIGHT_PURPLE.toString() + "Ingame Updates",
+    ChatColor.GRAY.toString() + "Status: " + if (plugin.config.getBoolean(Settings.INGAME_UPDATES)) ChatColor.GREEN.toString() + "ON" else ChatColor.RED.toString() + "OFF"
+)

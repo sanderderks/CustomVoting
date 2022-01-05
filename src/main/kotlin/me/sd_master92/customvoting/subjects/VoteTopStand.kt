@@ -5,7 +5,7 @@ import me.sd_master92.customvoting.VoteFile
 import me.sd_master92.customvoting.constants.Data
 import me.sd_master92.customvoting.constants.Messages
 import me.sd_master92.customvoting.database.PlayerTable
-import me.sd_master92.customvoting.gui.GUI
+import me.sd_master92.customvoting.gui.items.BaseItem
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Location
@@ -75,31 +75,31 @@ class VoteTopStand @JvmOverloads constructor(private val plugin: CV, private val
                 {
                     1    ->
                     {
-                        entityEquipment.chestplate = GUI.createItem(Material.DIAMOND_CHESTPLATE, true)
-                        entityEquipment.leggings = GUI.createItem(Material.DIAMOND_LEGGINGS, true)
-                        entityEquipment.boots = GUI.createItem(Material.DIAMOND_BOOTS, true)
-                        entityEquipment.setItemInMainHand(GUI.createItem(Material.DIAMOND_SWORD, true))
+                        entityEquipment.chestplate = BaseItem(Material.DIAMOND_CHESTPLATE, true)
+                        entityEquipment.leggings = BaseItem(Material.DIAMOND_LEGGINGS, true)
+                        entityEquipment.boots = BaseItem(Material.DIAMOND_BOOTS, true)
+                        entityEquipment.setItemInMainHand(BaseItem(Material.DIAMOND_SWORD, true))
                     }
                     2    ->
                     {
-                        entityEquipment.chestplate = GUI.createItem(Material.GOLDEN_CHESTPLATE, true)
-                        entityEquipment.leggings = GUI.createItem(Material.GOLDEN_LEGGINGS, true)
-                        entityEquipment.boots = GUI.createItem(Material.GOLDEN_BOOTS, true)
-                        entityEquipment.setItemInMainHand(GUI.createItem(Material.GOLDEN_SWORD, true))
+                        entityEquipment.chestplate = BaseItem(Material.GOLDEN_CHESTPLATE, true)
+                        entityEquipment.leggings = BaseItem(Material.GOLDEN_LEGGINGS, true)
+                        entityEquipment.boots = BaseItem(Material.GOLDEN_BOOTS, true)
+                        entityEquipment.setItemInMainHand(BaseItem(Material.GOLDEN_SWORD, true))
                     }
                     3    ->
                     {
-                        entityEquipment.chestplate = GUI.createItem(Material.IRON_CHESTPLATE, true)
-                        entityEquipment.leggings = GUI.createItem(Material.IRON_LEGGINGS, true)
-                        entityEquipment.boots = GUI.createItem(Material.IRON_BOOTS, true)
-                        entityEquipment.setItemInMainHand(GUI.createItem(Material.IRON_SWORD, true))
+                        entityEquipment.chestplate = BaseItem(Material.IRON_CHESTPLATE, true)
+                        entityEquipment.leggings = BaseItem(Material.IRON_LEGGINGS, true)
+                        entityEquipment.boots = BaseItem(Material.IRON_BOOTS, true)
+                        entityEquipment.setItemInMainHand(BaseItem(Material.IRON_SWORD, true))
                     }
                     else ->
                     {
-                        entityEquipment.chestplate = GUI.createItem(Material.CHAINMAIL_CHESTPLATE, true)
-                        entityEquipment.leggings = GUI.createItem(Material.CHAINMAIL_LEGGINGS, true)
-                        entityEquipment.boots = GUI.createItem(Material.CHAINMAIL_BOOTS, true)
-                        entityEquipment.setItemInMainHand(GUI.createItem(Material.STONE_SWORD, true))
+                        entityEquipment.chestplate = BaseItem(Material.CHAINMAIL_CHESTPLATE, true)
+                        entityEquipment.leggings = BaseItem(Material.CHAINMAIL_LEGGINGS, true)
+                        entityEquipment.boots = BaseItem(Material.CHAINMAIL_BOOTS, true)
+                        entityEquipment.setItemInMainHand(BaseItem(Material.STONE_SWORD, true))
                     }
                 }
             }
@@ -140,7 +140,7 @@ class VoteTopStand @JvmOverloads constructor(private val plugin: CV, private val
             placeholders["%VOTES%"] = "0"
             placeholders["%PERIOD%"] = "0"
         }
-        if(topStand == null || nameStand == null || votesStand == null)
+        if (topStand == null || nameStand == null || votesStand == null)
         {
             registerArmorStands()
         }

@@ -1,9 +1,10 @@
 package me.sd_master92.customvoting.gui
 
 import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.gui.items.BackItem
-import me.sd_master92.customvoting.gui.items.SaveItem
+import me.sd_master92.customvoting.gui.items.BaseItem
 import org.bukkit.Bukkit
+import org.bukkit.ChatColor
+import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -86,8 +87,8 @@ abstract class GUI @JvmOverloads constructor(
 
     companion object
     {
-        val BACK_ITEM = BackItem()
-        val SAVE_ITEM = SaveItem()
+        val BACK_ITEM = BaseItem(Material.BARRIER, ChatColor.RED.toString() + "Back")
+        val SAVE_ITEM = BaseItem(Material.WRITABLE_BOOK, ChatColor.GREEN.toString() + "Save")
     }
 
     init
