@@ -23,6 +23,7 @@ object Settings
     const val DISABLED_BROADCAST_VOTE = "disabled_broadcasts.vote"
     const val DISABLED_BROADCAST_STREAK = "disabled_broadcasts.vote_streak"
     const val DISABLED_BROADCAST_OFFLINE = "disabled_broadcasts.offline"
+    const val DISABLED_BROADCAST_ARMOR_STAND = "disabled_broadcasts.armor_stand"
     const val DISABLED_BROADCAST_VOTE_PARTY_UNTIL = "disabled_broadcasts.vote_party.until"
     const val DISABLED_BROADCAST_VOTE_PARTY_COUNTDOWN = "disabled_broadcasts.vote_party_countdown"
     const val DISABLED_BROADCAST_VOTE_PARTY_COUNTDOWN_ENDING = "disabled_broadcasts.vote_party.countdown_ending"
@@ -53,6 +54,7 @@ object Settings
         setDefault(plugin, DISABLED_BROADCAST_VOTE, false)
         setDefault(plugin, DISABLED_BROADCAST_STREAK, false)
         setDefault(plugin, DISABLED_BROADCAST_OFFLINE, false)
+        setDefault(plugin, DISABLED_BROADCAST_ARMOR_STAND, false)
         setDefault(plugin, DISABLED_BROADCAST_VOTE_PARTY_UNTIL, false)
         setDefault(plugin, DISABLED_BROADCAST_VOTE_PARTY_COUNTDOWN, false)
         setDefault(plugin, DISABLED_BROADCAST_VOTE_PARTY_COUNTDOWN_ENDING, false)

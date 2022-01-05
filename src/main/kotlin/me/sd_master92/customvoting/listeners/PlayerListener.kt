@@ -3,6 +3,7 @@ package me.sd_master92.customvoting.listeners
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.VoteFile
 import me.sd_master92.customvoting.constants.Data
+import me.sd_master92.customvoting.constants.Messages
 import me.sd_master92.customvoting.constants.Settings
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.database.PlayerRow
@@ -16,16 +17,14 @@ import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.block.BlockFace
 import org.bukkit.block.Sign
+import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.Action
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.block.BlockPlaceEvent
-import org.bukkit.event.player.AsyncPlayerChatEvent
-import org.bukkit.event.player.PlayerCommandPreprocessEvent
-import org.bukkit.event.player.PlayerInteractEvent
-import org.bukkit.event.player.PlayerJoinEvent
+import org.bukkit.event.player.*
 import org.bukkit.inventory.ItemStack
 import org.bukkit.scheduler.BukkitRunnable
 import java.util.*
@@ -105,6 +104,32 @@ class PlayerListener(private val plugin: CV) : Listener
             event.isCancelled = true
             val command = event.message
             checkStreakCommand(command, player)
+        }
+    }
+
+    @EventHandler
+    fun onPlayerInteractEntity(event: PlayerInteractAtEntityEvent)
+    {
+        if (event.rightClicked.type == EntityType.ARMOR_STAND)
+        {
+            if (!plugin.config.getBoolean(Settings.DISABLED_BROADCAST_ARMOR_STAND))
+            {
+                val section = plugin.data.getConfigurationSection(Data.VOTE_TOP_STANDS)
+                if (section != null)
+                {
+                    for (top in section.getKeys(false))
+                    {
+                        for (sub in listOf("top", "name", "votes"))
+                        {
+                            if (section.getString("$top.$sub") == event.rightClicked.uniqueId.toString())
+                            {
+                                event.isCancelled = true
+                                event.player.sendMessage(Messages.VOTE_TOP_STANDS_DONT.getMessage(plugin))
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 

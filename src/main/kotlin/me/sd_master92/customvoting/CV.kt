@@ -5,6 +5,7 @@ import me.sd_master92.customfile.PlayerFile
 import me.sd_master92.customfile.database.CustomDatabase
 import me.sd_master92.customvoting.commands.*
 import me.sd_master92.customvoting.commands.voteparty.VotePartyCommand
+import me.sd_master92.customvoting.constants.Messages
 import me.sd_master92.customvoting.constants.Settings
 import me.sd_master92.customvoting.database.PlayerTable
 import me.sd_master92.customvoting.extensions.CustomPlaceholders
@@ -175,6 +176,7 @@ class CV : CustomPlugin(
         data = CustomFile("data.yml", this)
         PlayerFile.init(this)
         Settings.initialize(this)
+        Messages.initialize(this)
     }
 
     private fun setupDatabase()

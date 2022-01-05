@@ -84,6 +84,16 @@ class MessageSettings(private val plugin: CV) : GUI(plugin, "Message Settings", 
                 plugin.config.saveConfig()
                 event.currentItem = VotePartyCountEndBroadcast(plugin)
             }
+            Material.ARMOR_STAND       ->
+            {
+                SoundType.CHANGE.play(plugin, player)
+                plugin.config.set(
+                    Settings.DISABLED_BROADCAST_ARMOR_STAND,
+                    !plugin.config.getBoolean(Settings.DISABLED_BROADCAST_ARMOR_STAND)
+                )
+                plugin.config.saveConfig()
+                event.currentItem = ArmorStandBreakMessage(plugin)
+            }
             Material.BARRIER           ->
             {
                 SoundType.CLICK.play(plugin, player)
@@ -118,6 +128,7 @@ class MessageSettings(private val plugin: CV) : GUI(plugin, "Message Settings", 
         inventory.addItem(VotePartyUntilBroadcast(plugin))
         inventory.addItem(VotePartyCountBroadcast(plugin))
         inventory.addItem(VotePartyCountEndBroadcast(plugin))
+        inventory.addItem(ArmorStandBreakMessage(plugin))
         inventory.setItem(8, BACK_ITEM)
     }
 }
@@ -160,5 +171,12 @@ class VotePartyCountEndBroadcast(plugin: CV) : StatusItem(
     plugin,
     Material.FIREWORK_ROCKET, "VoteParty Count Ending Broadcast",
     Settings.DISABLED_BROADCAST_VOTE_PARTY_COUNTDOWN_ENDING,
+    true
+)
+
+class ArmorStandBreakMessage(plugin: CV) : StatusItem(
+    plugin,
+    Material.ARMOR_STAND, "Break Armorstand Message",
+    Settings.DISABLED_BROADCAST_ARMOR_STAND,
     true
 )

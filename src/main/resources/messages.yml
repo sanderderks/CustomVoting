@@ -1,7 +1,7 @@
 # CustomVoting by sd_master92
 
 no_permission: '&cYou do not have permission to perform this command.'
-must_be_player: '&cYou must be a player to perform this command'
+must_be_player: '&cYou must be a player to perform this command.'
 invalid_player: '&cThat player does not exist.'
 
 monthly_reset: '&d&lAll votes have been reset, because a new month has started!'
@@ -53,7 +53,7 @@ vote_top_command:
   # %PERIOD% monthly votes of the player
   # %s% extra s for when the VOTES is higher than 1
   players: '&d%PLAYER%&7: &b%VOTES%'
-  not_found: '&cThere are no players to show'
+  not_found: '&cThere are no players to show.'
 
 vote_top_signs:
   title_sign:
@@ -83,6 +83,7 @@ vote_top_stands:
   top: '&a&lTop %TOP%:'
   center: '&b%PLAYER%'
   bottom: '&7Votes: &d%VOTES%'
+  dont: '&cDon''t break me!'
 
 vote_party:
   # %VOTES% votes until the vote party
