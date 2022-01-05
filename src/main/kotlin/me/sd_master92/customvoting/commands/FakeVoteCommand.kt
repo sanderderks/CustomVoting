@@ -1,7 +1,7 @@
 package me.sd_master92.customvoting.commands
 
 import me.sd_master92.customfile.PlayerFile
-import me.sd_master92.customvoting.Main
+import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Messages
 import me.sd_master92.customvoting.subjects.CustomVote
 import me.sd_master92.plugin.command.SimpleCommand
@@ -9,7 +9,7 @@ import org.bukkit.ChatColor
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
-class FakeVoteCommand(private val plugin: Main) : SimpleCommand(plugin, "fakevote")
+class FakeVoteCommand(private val plugin: CV) : SimpleCommand(plugin, "fakevote")
 {
     override fun onCommand(sender: CommandSender, args: Array<String>)
     {

@@ -2,7 +2,7 @@ package me.sd_master92.customvoting.subjects
 
 import com.vexsoftware.votifier.model.Vote
 import me.sd_master92.customfile.PlayerFile
-import me.sd_master92.customvoting.Main
+import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.VoteFile
 import me.sd_master92.customvoting.constants.Data
 import me.sd_master92.customvoting.constants.Messages
@@ -19,7 +19,7 @@ import org.bukkit.scheduler.BukkitRunnable
 import java.text.DecimalFormat
 import java.util.*
 
-class CustomVote(private val plugin: Main, vote: Vote, private val queued: Boolean = false) : Vote()
+class CustomVote(private val plugin: CV, vote: Vote, private val queued: Boolean = false) : Vote()
 {
     private fun forwardVote()
     {
@@ -152,7 +152,7 @@ class CustomVote(private val plugin: Main, vote: Vote, private val queued: Boole
         executeCommands(player, op)
         var rewardMessage = ""
         val money = giveMoney(player, op)
-        if (Main.ECONOMY != null && money > 0)
+        if (CV.ECONOMY != null && money > 0)
         {
             val placeholders = HashMap<String, String>()
             placeholders["%MONEY%"] = DecimalFormat("#.##").format(money)
@@ -220,7 +220,7 @@ class CustomVote(private val plugin: Main, vote: Vote, private val queued: Boole
 
     private fun giveMoney(player: Player, op: Boolean): Double
     {
-        val economy = Main.ECONOMY
+        val economy = CV.ECONOMY
         if (economy != null && economy.hasAccount(player))
         {
             var path = Settings.VOTE_REWARD_MONEY
@@ -295,11 +295,11 @@ class CustomVote(private val plugin: Main, vote: Vote, private val queued: Boole
             }
 
             val permissions = plugin.data.getStringList(Data.VOTE_STREAKS + "." + votes + ".permissions")
-            if (permissions.isNotEmpty() && Main.PERMISSION != null)
+            if (permissions.isNotEmpty() && CV.PERMISSION != null)
             {
                 for (permission in permissions)
                 {
-                    if (Main.PERMISSION!!.playerAdd(null, player, permission))
+                    if (CV.PERMISSION!!.playerAdd(null, player, permission))
                     {
                         val placeholders = HashMap<String, String>()
                         placeholders["%PLAYER%"] = player.name
@@ -335,7 +335,7 @@ class CustomVote(private val plugin: Main, vote: Vote, private val queued: Boole
     {
         private var isAwaitingBroadcast = false
 
-        fun create(plugin: Main, name: String?, service: String?, queued: Boolean = false)
+        fun create(plugin: CV, name: String?, service: String?, queued: Boolean = false)
         {
             val vote = Vote()
             vote.username = name

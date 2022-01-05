@@ -1,6 +1,6 @@
 package me.sd_master92.customvoting.constants.enumerations
 
-import me.sd_master92.customvoting.Main
+import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Settings
 import java.util.*
 
@@ -11,7 +11,7 @@ enum class ItemRewardType(val value: Int, val label: String)
 
     companion object
     {
-        fun next(plugin: Main): ItemRewardType
+        fun next(plugin: CV): ItemRewardType
         {
             val currentValue = valueOf(plugin.config.getNumber(Settings.ITEM_REWARD_TYPE)).value
             return if (currentValue < values().size - 1)

@@ -10,12 +10,12 @@ import org.bukkit.entity.Player
 
 class VoteFile : Voter
 {
-    private val plugin: Main
+    private val plugin: CV
     private val playerFile: PlayerFile
     override val uuid: String
     override val name: String
 
-    constructor(uuid: String, plugin: Main)
+    constructor(uuid: String, plugin: CV)
     {
         playerFile = PlayerFile.get(plugin, uuid)
         this.plugin = plugin
@@ -24,7 +24,7 @@ class VoteFile : Voter
         register()
     }
 
-    constructor(player: Player, plugin: Main)
+    constructor(player: Player, plugin: CV)
     {
         playerFile = PlayerFile.get(plugin, player)
         this.plugin = plugin
@@ -99,7 +99,7 @@ class VoteFile : Voter
 
     companion object
     {
-        fun getTopVoters(plugin: Main): List<VoteFile>
+        fun getTopVoters(plugin: CV): List<VoteFile>
         {
             val topVoters: MutableList<VoteFile> = ArrayList()
             for (playerFile in PlayerFile.getAll().values)
@@ -131,7 +131,7 @@ class VoteFile : Voter
             return topVoters
         }
 
-        fun getTopVoter(plugin: Main, n_: Int): VoteFile?
+        fun getTopVoter(plugin: CV, n_: Int): VoteFile?
         {
             var n = n_
             n--

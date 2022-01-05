@@ -20,7 +20,7 @@ import org.bstats.charts.SimplePie
 import org.bukkit.Bukkit
 
 
-class Main : CustomPlugin(
+class CV : CustomPlugin(
     "settings.yml",
     28103
 )

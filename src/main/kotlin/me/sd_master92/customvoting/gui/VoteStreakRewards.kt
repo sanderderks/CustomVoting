@@ -1,8 +1,12 @@
 package me.sd_master92.customvoting.gui
 
-import me.sd_master92.customvoting.Main
+import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Data
 import me.sd_master92.customvoting.constants.enumerations.SoundType
+import me.sd_master92.customvoting.gui.items.CommandsRewardItem
+import me.sd_master92.customvoting.gui.items.DeleteItem
+import me.sd_master92.customvoting.gui.items.ItemsRewardItem
+import me.sd_master92.customvoting.gui.items.PermissionsRewardItem
 import me.sd_master92.customvoting.listeners.PlayerListener
 import org.bukkit.ChatColor
 import org.bukkit.Material
@@ -12,7 +16,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.scheduler.BukkitRunnable
 
-class VoteStreakRewards(private val plugin: Main, private val number: Int) : GUI(
+class VoteStreakRewards(private val plugin: CV, private val number: Int) : GUI(
     plugin,
     "Vote Streak Rewards #$number", 9, false, true
 )
@@ -138,26 +142,10 @@ class VoteStreakRewards(private val plugin: Main, private val number: Int) : GUI
 
     init
     {
-        inventory.setItem(
-            0, createItem(
-                Material.DIAMOND_SWORD, ChatColor.LIGHT_PURPLE.toString() + "Permission Rewards",
-                ChatColor.GRAY.toString() + "Currently: " + ChatColor.AQUA + plugin.data.getStringList("${Data.VOTE_STREAKS}.$number.permissions").size + ChatColor.GRAY + " permissions"
-            )
-        )
-        inventory.setItem(
-            1, createItem(
-                Material.SHIELD, ChatColor.LIGHT_PURPLE.toString() + "Command Rewards",
-                ChatColor.GRAY.toString() + "Currently: " + ChatColor.AQUA + plugin.data.getStringList("${Data.VOTE_STREAKS}.$number.commands").size + ChatColor.GRAY + " commands"
-            )
-        )
-        inventory.setItem(
-            2, createItem(
-                Material.CHEST, ChatColor.LIGHT_PURPLE.toString() +
-                        "Item Rewards",
-                ChatColor.GRAY.toString() + "Currently: " + ChatColor.AQUA + plugin.data.getItems("${Data.VOTE_STREAKS}.$number.${Data.ITEM_REWARDS}").size + ChatColor.GRAY + " item stacks"
-            )
-        )
-        inventory.setItem(7, createItem(Material.RED_WOOL, ChatColor.RED.toString() + "Delete"))
+        inventory.setItem(0, PermissionsRewardItem(plugin, "${Data.VOTE_STREAKS}.$number.permissions"))
+        inventory.setItem(1, CommandsRewardItem(plugin, "${Data.VOTE_STREAKS}.$number.commands"))
+        inventory.setItem(2, ItemsRewardItem(plugin, "${Data.VOTE_STREAKS}.$number.${Data.ITEM_REWARDS}"))
+        inventory.setItem(7, DeleteItem())
         inventory.setItem(8, BACK_ITEM)
     }
 }

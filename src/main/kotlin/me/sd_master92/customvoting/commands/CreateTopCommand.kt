@@ -1,6 +1,6 @@
 package me.sd_master92.customvoting.commands
 
-import me.sd_master92.customvoting.Main
+import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Messages
 import me.sd_master92.customvoting.subjects.VoteTopStand
 import me.sd_master92.plugin.command.SimpleCommand
@@ -8,7 +8,7 @@ import org.bukkit.ChatColor
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
-class CreateTopCommand(private val plugin: Main) : SimpleCommand(plugin, "createtop", false)
+class CreateTopCommand(private val plugin: CV) : SimpleCommand(plugin, "createtop", false)
 {
     override fun onCommand(sender: CommandSender, args: Array<String>)
     {

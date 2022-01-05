@@ -13,7 +13,7 @@
 
     <properties>
         <author>sd_master92</author>
-        <mainClass>me.sd_master92.customvoting.Main</mainClass>
+        <mainClass>me.sd_master92.customvoting.CV</mainClass>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <kotlin.version>1.6.10</kotlin.version>
     </properties>

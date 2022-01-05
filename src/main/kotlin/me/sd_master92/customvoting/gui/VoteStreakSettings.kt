@@ -1,8 +1,10 @@
 package me.sd_master92.customvoting.gui
 
-import me.sd_master92.customvoting.Main
+import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Data
 import me.sd_master92.customvoting.constants.enumerations.SoundType
+import me.sd_master92.customvoting.gui.items.AddItem
+import me.sd_master92.customvoting.gui.items.StreakKeyItem
 import me.sd_master92.customvoting.listeners.PlayerListener
 import org.bukkit.ChatColor
 import org.bukkit.Material
@@ -12,7 +14,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.scheduler.BukkitRunnable
 
-class VoteStreakSettings(private val plugin: Main) :
+class VoteStreakSettings(private val plugin: CV) :
     GUI(plugin, "Vote Streak Settings", getVoteStreakInventorySize(plugin), false, true)
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
@@ -78,7 +80,7 @@ class VoteStreakSettings(private val plugin: Main) :
 
     companion object
     {
-        fun getVoteStreakInventorySize(plugin: Main): Int
+        fun getVoteStreakInventorySize(plugin: CV): Int
         {
             val streaks = (plugin.data.getConfigurationSection(Data.VOTE_STREAKS)?.getKeys(false)?.size ?: 0) + 2
             return if (streaks % 9 == 0)
@@ -93,7 +95,7 @@ class VoteStreakSettings(private val plugin: Main) :
 
     init
     {
-        inventory.setItem(7, createItem(Material.CRAFTING_TABLE, ChatColor.GREEN.toString() + "Add Streak"))
+        inventory.setItem(7, AddItem())
         inventory.setItem(8, BACK_ITEM)
 
         try
@@ -102,12 +104,7 @@ class VoteStreakSettings(private val plugin: Main) :
                 key.toInt()
             } ?: ArrayList<String>())
             {
-                inventory.addItem(
-                    createItem(
-                        Material.ENDER_PEARL,
-                        ChatColor.LIGHT_PURPLE.toString() + "Streak #" + key
-                    )
-                )
+                inventory.addItem(StreakKeyItem(key))
             }
         } catch (_: Exception)
         {

@@ -1,16 +1,17 @@
 package me.sd_master92.customvoting.gui
 
-import me.sd_master92.customvoting.Main
+import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Settings
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.constants.enumerations.VotePartyType
+import me.sd_master92.customvoting.gui.items.*
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 
-class GeneralSettings(private val plugin: Main) : GUI(plugin, "General Settings", 18, false, true)
+class GeneralSettings(private val plugin: CV) : GUI(plugin, "General Settings", 18, false, true)
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
     {
@@ -27,35 +28,35 @@ class GeneralSettings(private val plugin: Main) : GUI(plugin, "General Settings"
                 SoundType.CHANGE.play(plugin, player)
                 plugin.config[Settings.MONTHLY_RESET] = !plugin.config.getBoolean(Settings.MONTHLY_RESET)
                 plugin.config.saveConfig()
-                event.currentItem = Settings.getDoMonthlyResetSetting(plugin)
+                event.currentItem = MonthlyResetItem(plugin)
             }
             Material.TNT               ->
             {
                 SoundType.CHANGE.play(plugin, player)
                 plugin.config[Settings.MONTHLY_PERIOD] = !plugin.config.getBoolean(Settings.MONTHLY_PERIOD)
                 plugin.config.saveConfig()
-                event.currentItem = Settings.getDoMonthlyPeriodSetting(plugin)
+                event.currentItem = MonthlyPeriodItem(plugin)
             }
             Material.MUSIC_DISC_CAT    ->
             {
                 SoundType.CHANGE.play(plugin, player)
                 plugin.config[Settings.USE_SOUND_EFFECTS] = !plugin.config.getBoolean(Settings.USE_SOUND_EFFECTS)
                 plugin.config.saveConfig()
-                event.currentItem = Settings.getUseSoundEffectsSetting(plugin)
+                event.currentItem = SoundEffectsItem(plugin)
             }
             Material.FIREWORK_ROCKET   ->
             {
                 SoundType.CHANGE.play(plugin, player)
                 plugin.config[Settings.FIREWORK] = !plugin.config.getBoolean(Settings.FIREWORK)
                 plugin.config.saveConfig()
-                event.currentItem = Settings.getUseFireworkSetting(plugin)
+                event.currentItem = FireworkItem(plugin)
             }
             Material.EXPERIENCE_BOTTLE ->
             {
                 SoundType.CHANGE.play(plugin, player)
                 plugin.config[Settings.VOTE_PARTY] = !plugin.config.getBoolean(Settings.VOTE_PARTY)
                 plugin.config.saveConfig()
-                event.currentItem = Settings.getDoVotePartySetting(plugin)
+                event.currentItem = DoVotePartyItem(plugin)
             }
             Material.SPLASH_POTION     ->
             {
@@ -64,7 +65,7 @@ class GeneralSettings(private val plugin: Main) : GUI(plugin, "General Settings"
                     Settings.VOTE_PARTY_TYPE,
                     VotePartyType.next(plugin).value
                 )
-                event.currentItem = Settings.getVotePartyTypeSetting(plugin)
+                event.currentItem = VotePartyTypeItem(plugin)
             }
             Material.ENCHANTED_BOOK    ->
             {
@@ -76,7 +77,7 @@ class GeneralSettings(private val plugin: Main) : GUI(plugin, "General Settings"
                 {
                     plugin.config.setNumber(Settings.VOTES_REQUIRED_FOR_VOTE_PARTY, 10)
                 }
-                event.currentItem = Settings.getVotesUntilVotePartySetting(plugin)
+                event.currentItem = VotesUntilItem.getInstance(plugin)
             }
             Material.ENDER_CHEST       ->
             {
@@ -88,14 +89,14 @@ class GeneralSettings(private val plugin: Main) : GUI(plugin, "General Settings"
                 {
                     plugin.config.setNumber(Settings.VOTE_PARTY_COUNTDOWN, 0)
                 }
-                event.currentItem = Settings.getVotePartyCountdownSetting(plugin)
+                event.currentItem = VotePartyCountdownItem(plugin)
             }
             Material.TOTEM_OF_UNDYING  ->
             {
                 SoundType.CHANGE.play(plugin, player)
                 plugin.config[Settings.LUCKY_VOTE] = !plugin.config.getBoolean(Settings.LUCKY_VOTE)
                 plugin.config.saveConfig()
-                event.currentItem = Settings.getDoLuckyVoteSetting(plugin)
+                event.currentItem = LuckyVoteItem(plugin)
             }
             else                       ->
             {
@@ -110,15 +111,15 @@ class GeneralSettings(private val plugin: Main) : GUI(plugin, "General Settings"
 
     init
     {
-        inventory.addItem(Settings.getDoMonthlyResetSetting(plugin))
-        inventory.addItem(Settings.getDoMonthlyPeriodSetting(plugin))
-        inventory.addItem(Settings.getUseSoundEffectsSetting(plugin))
-        inventory.addItem(Settings.getUseFireworkSetting(plugin))
-        inventory.addItem(Settings.getDoLuckyVoteSetting(plugin))
-        inventory.addItem(Settings.getDoVotePartySetting(plugin))
-        inventory.addItem(Settings.getVotePartyTypeSetting(plugin))
-        inventory.addItem(Settings.getVotesUntilVotePartySetting(plugin))
-        inventory.addItem(Settings.getVotePartyCountdownSetting(plugin))
+        inventory.addItem(MonthlyResetItem(plugin))
+        inventory.addItem(MonthlyPeriodItem(plugin))
+        inventory.addItem(SoundEffectsItem(plugin))
+        inventory.addItem(FireworkItem(plugin))
+        inventory.addItem(LuckyVoteItem(plugin))
+        inventory.addItem(DoVotePartyItem(plugin))
+        inventory.addItem(VotePartyTypeItem(plugin))
+        inventory.addItem(VotesUntilItem.getInstance(plugin))
+        inventory.addItem(VotePartyCountdownItem(plugin))
         inventory.setItem(17, BACK_ITEM)
     }
 }

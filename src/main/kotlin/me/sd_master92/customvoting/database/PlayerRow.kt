@@ -1,16 +1,16 @@
 package me.sd_master92.customvoting.database
 
-import me.sd_master92.customvoting.Main
+import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Voter
 import me.sd_master92.customvoting.subjects.VoteTopSign
 import me.sd_master92.customvoting.subjects.VoteTopStand
 import org.bukkit.entity.Player
 
-class PlayerRow(private val plugin: Main, override val uuid: String) : Voter
+class PlayerRow(private val plugin: CV, override val uuid: String) : Voter
 {
     private val players: PlayerTable? = plugin.playerTable
 
-    constructor(plugin: Main, player: Player) : this(plugin, player.uniqueId.toString())
+    constructor(plugin: CV, player: Player) : this(plugin, player.uniqueId.toString())
     {
         players?.setName(player.uniqueId.toString(), player.name)
     }

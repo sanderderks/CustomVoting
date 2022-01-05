@@ -1,6 +1,6 @@
 package me.sd_master92.customvoting.gui
 
-import me.sd_master92.customvoting.Main
+import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Data
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import org.bukkit.ChatColor
@@ -10,7 +10,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 
-class VoteStreakItemRewards(private val plugin: Main, private val number: Int) : GUI(
+class VoteStreakItemRewards(private val plugin: CV, private val number: Int) : GUI(
     plugin,
     "Vote Streak Item Rewards #$number", 27, true
 )
@@ -39,7 +39,7 @@ class VoteStreakItemRewards(private val plugin: Main, private val number: Int) :
 
     companion object
     {
-        fun save(plugin: Main, player: Player, inv: Inventory, number: Int)
+        fun save(plugin: CV, player: Player, inv: Inventory, number: Int)
         {
             inv.setItem(25, null)
             inv.setItem(26, null)

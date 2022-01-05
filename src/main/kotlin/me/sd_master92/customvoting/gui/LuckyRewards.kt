@@ -1,6 +1,6 @@
 package me.sd_master92.customvoting.gui
 
-import me.sd_master92.customvoting.Main
+import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Data
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import org.bukkit.ChatColor
@@ -10,7 +10,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 
-class LuckyRewards(private val plugin: Main) : GUI(plugin, NAME, 27, true)
+class LuckyRewards(private val plugin: CV) : GUI(plugin, NAME, 27, true)
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
     {
@@ -37,7 +37,7 @@ class LuckyRewards(private val plugin: Main) : GUI(plugin, NAME, 27, true)
     companion object
     {
         const val NAME = "Lucky Rewards"
-        fun save(plugin: Main, player: Player, inv: Inventory)
+        fun save(plugin: CV, player: Player, inv: Inventory)
         {
             inv.setItem(25, null)
             inv.setItem(26, null)

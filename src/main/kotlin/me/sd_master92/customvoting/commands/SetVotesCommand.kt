@@ -4,14 +4,14 @@ import me.sd_master92.plugin.command.SimpleCommand
 import me.sd_master92.customvoting.database.PlayerRow
 import me.sd_master92.customvoting.VoteFile
 import me.sd_master92.customfile.PlayerFile
-import me.sd_master92.customvoting.Main
+import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Messages
 import org.bukkit.ChatColor
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import java.lang.Exception
 
-class SetVotesCommand(private val plugin: Main) : SimpleCommand(plugin, "setvotes", false)
+class SetVotesCommand(private val plugin: CV) : SimpleCommand(plugin, "setvotes", false)
 {
     override fun onCommand(sender: CommandSender, args: Array<String>)
     {

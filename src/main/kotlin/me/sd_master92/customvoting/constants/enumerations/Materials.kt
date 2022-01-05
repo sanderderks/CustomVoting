@@ -1,6 +1,6 @@
 package me.sd_master92.customvoting.constants.enumerations
 
-import me.sd_master92.customvoting.Main
+import me.sd_master92.customvoting.CV
 import org.bukkit.Material
 
 enum class Materials(
@@ -15,11 +15,11 @@ enum class Materials(
     {
         return when
         {
-            Main.MC_VERSION >= 17 ->
+            CV.MC_VERSION >= 17 ->
             {
                 Material.valueOf(material_1_17_plus)
             }
-            else                  ->
+            else                ->
             {
                 Material.valueOf(material_1_13_plus)
             }

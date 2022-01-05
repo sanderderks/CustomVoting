@@ -1,6 +1,6 @@
 package me.sd_master92.customvoting.gui
 
-import me.sd_master92.customvoting.Main
+import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
@@ -11,7 +11,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.SkullMeta
 
-class Donators(private val plugin: Main) : GUI(plugin, "Donators", 9, false, true)
+class Donators(private val plugin: CV) : GUI(plugin, "Donators", 9, false, true)
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
     {

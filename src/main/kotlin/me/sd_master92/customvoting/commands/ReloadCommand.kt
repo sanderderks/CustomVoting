@@ -2,7 +2,7 @@ package me.sd_master92.customvoting.commands
 
 import me.sd_master92.plugin.command.SimpleCommand
 import me.sd_master92.customfile.PlayerFile
-import me.sd_master92.customvoting.Main
+import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Messages
 import me.sd_master92.customvoting.subjects.VoteTopSign
 import me.sd_master92.customvoting.subjects.VoteTopStand
@@ -10,7 +10,7 @@ import org.bukkit.ChatColor
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
-class ReloadCommand(private val plugin: Main) : SimpleCommand(plugin, "votereload")
+class ReloadCommand(private val plugin: CV) : SimpleCommand(plugin, "votereload")
 {
     override fun onCommand(sender: CommandSender, args: Array<String>)
     {
@@ -29,7 +29,7 @@ class ReloadCommand(private val plugin: Main) : SimpleCommand(plugin, "votereloa
 
     companion object
     {
-        fun reload(plugin: Main): Boolean
+        fun reload(plugin: CV): Boolean
         {
             if (plugin.config.reloadConfig() && plugin.data.reloadConfig() && plugin.messages.reloadConfig())
             {

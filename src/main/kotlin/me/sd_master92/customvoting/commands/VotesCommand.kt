@@ -1,7 +1,7 @@
 package me.sd_master92.customvoting.commands
 
 import me.sd_master92.customfile.PlayerFile
-import me.sd_master92.customvoting.Main
+import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.VoteFile
 import me.sd_master92.customvoting.constants.Messages
 import me.sd_master92.customvoting.constants.Settings
@@ -11,7 +11,7 @@ import me.sd_master92.plugin.command.SimpleCommand
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
-class VotesCommand(private val plugin: Main) : SimpleCommand(plugin, "votes")
+class VotesCommand(private val plugin: CV) : SimpleCommand(plugin, "votes")
 {
     override fun onCommand(sender: CommandSender, args: Array<String>)
     {

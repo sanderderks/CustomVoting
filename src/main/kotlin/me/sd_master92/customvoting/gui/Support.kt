@@ -1,9 +1,9 @@
 package me.sd_master92.customvoting.gui
 
-import me.sd_master92.customvoting.Main
+import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Settings
 import me.sd_master92.customvoting.constants.enumerations.SoundType
-import me.sd_master92.plugin.CustomPlugin
+import me.sd_master92.customvoting.gui.items.*
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -11,7 +11,7 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 
-class Support(private val plugin: Main) : GUI(plugin, "Support", 9, false, true)
+class Support(private val plugin: CV) : GUI(plugin, "Support", 9, false, true)
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
     {
@@ -38,7 +38,7 @@ class Support(private val plugin: Main) : GUI(plugin, "Support", 9, false, true)
                     !plugin.config.getBoolean(Settings.INGAME_UPDATES)
                 )
                 plugin.config.saveConfig()
-                event.currentItem = Settings.getDoIngameUpdatesSetting(plugin)
+                event.currentItem = IngameUpdateItem(plugin)
             }
             Material.ENCHANTED_BOOK ->
             {
@@ -67,35 +67,11 @@ class Support(private val plugin: Main) : GUI(plugin, "Support", 9, false, true)
 
     init
     {
-        inventory.setItem(
-            0, createItem(
-                Material.CLOCK, ChatColor.LIGHT_PURPLE.toString() + "Up to date?",
-                if (plugin.isUpToDate) ChatColor.GREEN.toString() + "Yes" else ChatColor.GRAY.toString() + "Currently: " + ChatColor.RED + CustomPlugin.VERSION + ";" + ChatColor.GRAY +
-                        "Latest: " + ChatColor.GREEN + plugin.latestVersion + ";;" + ChatColor.GRAY + "Click to " +
-                        "download"
-            )
-        )
-        inventory.setItem(1, Settings.getDoIngameUpdatesSetting(plugin))
-        inventory.setItem(
-            2,
-            createItem(
-                Material.ENCHANTED_BOOK,
-                ChatColor.LIGHT_PURPLE.toString() + "Discord",
-                ChatColor.GRAY.toString() + "Join the discord server"
-            )
-        )
-        inventory.setItem(
-            3, createItem(
-                Material.ENCHANTING_TABLE, ChatColor.LIGHT_PURPLE.toString() + "Database",
-                ChatColor.GRAY.toString() + "Status: " + if (plugin.hasDatabaseConnection()) ChatColor.GREEN.toString() + "Connected" else ChatColor.RED.toString() + "Disabled"
-            )
-        )
-        inventory.setItem(
-            4, createItem(
-                Material.CREEPER_HEAD, ChatColor.LIGHT_PURPLE.toString() + "Donators",
-                ChatColor.GRAY.toString() + "CustomVoting supporters!"
-            )
-        )
+        inventory.setItem(0, UpdateItem(plugin))
+        inventory.setItem(1, IngameUpdateItem(plugin))
+        inventory.setItem(2, DiscordItem())
+        inventory.setItem(3, DatabaseItem(plugin))
+        inventory.setItem(4, DonatorsItem())
         inventory.setItem(8, BACK_ITEM)
     }
 }

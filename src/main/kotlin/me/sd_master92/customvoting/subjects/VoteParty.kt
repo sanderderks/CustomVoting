@@ -1,6 +1,6 @@
 package me.sd_master92.customvoting.subjects
 
-import me.sd_master92.customvoting.Main
+import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Data
 import me.sd_master92.customvoting.constants.Messages
 import me.sd_master92.customvoting.constants.Settings
@@ -18,7 +18,7 @@ import org.bukkit.scheduler.BukkitRunnable
 import java.util.*
 import java.util.function.Consumer
 
-class VoteParty(private val plugin: Main)
+class VoteParty(private val plugin: CV)
 {
     private val votePartyType: Int = plugin.config.getNumber(Settings.VOTE_PARTY_TYPE)
     private var count: Int = plugin.config.getNumber(Settings.VOTE_PARTY_COUNTDOWN)

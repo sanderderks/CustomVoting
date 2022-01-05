@@ -1,13 +1,13 @@
 package me.sd_master92.customvoting.listeners
 
-import me.sd_master92.customvoting.Main
+import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.subjects.VoteTopSign
 import org.bukkit.block.Sign
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.SignChangeEvent
 
-class VoteTopListener(private val plugin: Main) : Listener
+class VoteTopListener(private val plugin: CV) : Listener
 {
     @EventHandler
     fun onSignChange(event: SignChangeEvent)

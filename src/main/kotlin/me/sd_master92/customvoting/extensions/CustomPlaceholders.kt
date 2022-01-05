@@ -1,7 +1,7 @@
 package me.sd_master92.customvoting.extensions
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion
-import me.sd_master92.customvoting.Main
+import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.VoteFile
 import me.sd_master92.customvoting.constants.Data
 import me.sd_master92.customvoting.constants.Settings
@@ -10,7 +10,7 @@ import me.sd_master92.customvoting.database.PlayerTable
 import me.sd_master92.plugin.CustomPlugin
 import org.bukkit.entity.Player
 
-class CustomPlaceholders(private val plugin: Main) : PlaceholderExpansion()
+class CustomPlaceholders(private val plugin: CV) : PlaceholderExpansion()
 {
     override fun getIdentifier(): String
     {

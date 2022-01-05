@@ -1,6 +1,6 @@
 package me.sd_master92.customvoting.constants.enumerations
 
-import me.sd_master92.customvoting.Main
+import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Settings
 import org.bukkit.Location
 import org.bukkit.Sound
@@ -20,7 +20,7 @@ enum class SoundType(
     VOTE_PARTY_START(Sound.ENTITY_ENDER_DRAGON_GROWL),
     PICKUP(Sound.ENTITY_ITEM_PICKUP);
 
-    fun play(plugin: Main, loc: Location)
+    fun play(plugin: CV, loc: Location)
     {
         if (plugin.config.getBoolean(Settings.USE_SOUND_EFFECTS))
         {
@@ -29,12 +29,12 @@ enum class SoundType(
         }
     }
 
-    fun play(plugin: Main, player: Player)
+    fun play(plugin: CV, player: Player)
     {
         play(plugin, player.location)
     }
 
-    fun playForAll(plugin: Main)
+    fun playForAll(plugin: CV)
     {
         for (player in plugin.server.onlinePlayers)
         {

@@ -1,6 +1,6 @@
 package me.sd_master92.customvoting.listeners
 
-import me.sd_master92.customvoting.Main
+import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.VoteFile
 import me.sd_master92.customvoting.constants.Data
 import me.sd_master92.customvoting.constants.Settings
@@ -30,7 +30,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.scheduler.BukkitRunnable
 import java.util.*
 
-class PlayerListener(private val plugin: Main) : Listener
+class PlayerListener(private val plugin: CV) : Listener
 {
     @EventHandler
     fun onPlayerJoin(event: PlayerJoinEvent)

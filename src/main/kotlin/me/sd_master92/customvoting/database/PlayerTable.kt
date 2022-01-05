@@ -3,11 +3,11 @@ package me.sd_master92.customvoting.database
 import me.sd_master92.customfile.database.CustomColumn
 import me.sd_master92.customfile.database.CustomDatabase
 import me.sd_master92.customfile.database.CustomTable
-import me.sd_master92.customvoting.Main
+import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Settings
 import java.sql.ResultSet
 
-class PlayerTable(private val plugin: Main, database: CustomDatabase)
+class PlayerTable(private val plugin: CV, database: CustomDatabase)
 {
     val table: CustomTable
     private fun addPlayer(uuid: String): Boolean
@@ -169,7 +169,7 @@ class PlayerTable(private val plugin: Main, database: CustomDatabase)
 
     companion object
     {
-        fun getTopVoters(plugin: Main): List<PlayerData>
+        fun getTopVoters(plugin: CV): List<PlayerData>
         {
             val topVoters: MutableList<PlayerData> = ArrayList()
             try
@@ -218,7 +218,7 @@ class PlayerTable(private val plugin: Main, database: CustomDatabase)
             return topVoters
         }
 
-        fun getTopVoter(plugin: Main, _n: Int): PlayerData?
+        fun getTopVoter(plugin: CV, _n: Int): PlayerData?
         {
             var n = _n
             n--

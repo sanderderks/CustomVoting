@@ -1,6 +1,6 @@
 package me.sd_master92.customvoting.gui
 
-import me.sd_master92.customvoting.Main
+import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Data
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.listeners.PlayerListener
@@ -12,7 +12,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.scheduler.BukkitRunnable
 
-class VoteLinks @JvmOverloads constructor(private val plugin: Main, private val isPublic: Boolean = false) :
+class VoteLinks @JvmOverloads constructor(private val plugin: CV, private val isPublic: Boolean = false) :
     GUI(plugin, NAME, 27, true)
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
@@ -76,7 +76,7 @@ class VoteLinks @JvmOverloads constructor(private val plugin: Main, private val 
     companion object
     {
         const val NAME = "Vote Links"
-        fun save(plugin: Main, player: Player, items: Array<ItemStack?>, notify: Boolean)
+        fun save(plugin: CV, player: Player, items: Array<ItemStack?>, notify: Boolean)
         {
             if (plugin.data.setItemsWithNull(Data.VOTE_LINK_ITEMS, items))
             {

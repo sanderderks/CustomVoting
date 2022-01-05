@@ -1,10 +1,9 @@
 package me.sd_master92.customvoting.gui
 
-import me.sd_master92.customvoting.Main
+import me.sd_master92.customvoting.CV
+import me.sd_master92.customvoting.gui.items.BackItem
+import me.sd_master92.customvoting.gui.items.SaveItem
 import org.bukkit.Bukkit
-import org.bukkit.ChatColor
-import org.bukkit.Material
-import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -13,11 +12,10 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.event.inventory.InventoryDragEvent
 import org.bukkit.event.inventory.InventoryEvent
 import org.bukkit.inventory.Inventory
-import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
 
 abstract class GUI @JvmOverloads constructor(
-    plugin: Main,
+    plugin: CV,
     name: String,
     size: Int,
     allowDrag: Boolean,
@@ -81,46 +79,15 @@ abstract class GUI @JvmOverloads constructor(
         } else event.inventory === inventory
     }
 
-    private fun init(plugin: Main)
+    private fun init(plugin: CV)
     {
         plugin.registerListener(this)
     }
 
     companion object
     {
-        val BACK_ITEM = createItem(Material.BARRIER, ChatColor.RED.toString() + "Back")
-        val SAVE_ITEM = createItem(Material.WRITABLE_BOOK, ChatColor.GREEN.toString() + "Save")
-
-        @JvmOverloads
-        fun createItem(mat: Material?, name: String?, lore: String? = null, enchanted: Boolean = false): ItemStack
-        {
-            val item = ItemStack(mat!!)
-            val meta = item.itemMeta
-            if (meta != null)
-            {
-                if (name != null)
-                {
-                    meta.setDisplayName(name)
-                }
-                if (lore != null)
-                {
-                    meta.lore = null
-                    meta.lore = listOf(*lore.split(";".toRegex()).toTypedArray())
-                }
-                if (enchanted)
-                {
-                    meta.addEnchant(Enchantment.LUCK, 1, true)
-                }
-                meta.addItemFlags(*ItemFlag.values())
-                item.itemMeta = meta
-            }
-            return item
-        }
-
-        fun createItem(mat: Material?, enchanted: Boolean): ItemStack
-        {
-            return createItem(mat, null, null, enchanted)
-        }
+        val BACK_ITEM = BackItem()
+        val SAVE_ITEM = SaveItem()
     }
 
     init

@@ -1,6 +1,6 @@
 package me.sd_master92.customvoting.subjects
 
-import me.sd_master92.customvoting.Main
+import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.VoteFile
 import me.sd_master92.customvoting.constants.Data
 import me.sd_master92.customvoting.constants.Messages
@@ -19,7 +19,7 @@ import org.bukkit.scheduler.BukkitRunnable
 import java.util.*
 
 class VoteTopSign @JvmOverloads constructor(
-    private val plugin: Main,
+    private val plugin: CV,
     private val top: Int,
     val location: Location?,
     player: Player? = null
@@ -193,7 +193,7 @@ class VoteTopSign @JvmOverloads constructor(
             return null
         }
 
-        fun updateAll(plugin: Main)
+        fun updateAll(plugin: CV)
         {
             if (voteTops.isEmpty())
             {
@@ -211,7 +211,7 @@ class VoteTopSign @JvmOverloads constructor(
             }.runTaskLater(plugin, 40L)
         }
 
-        private fun initialize(plugin: Main)
+        private fun initialize(plugin: CV)
         {
             val locations = plugin.data.getLocations(Data.VOTE_TOP_SIGNS)
             for (key in locations.keys)

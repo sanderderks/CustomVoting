@@ -1,6 +1,6 @@
 package me.sd_master92.customvoting.gui
 
-import me.sd_master92.customvoting.Main
+import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Data
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import org.bukkit.ChatColor
@@ -9,7 +9,7 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 
-class VotePartyRewards(private val plugin: Main, private val key: String) : GUI(
+class VotePartyRewards(private val plugin: CV, private val key: String) : GUI(
     plugin,
     "Vote Party Chest #$key", 54, true
 )

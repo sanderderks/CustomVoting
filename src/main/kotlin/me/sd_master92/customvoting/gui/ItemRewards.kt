@@ -1,6 +1,6 @@
 package me.sd_master92.customvoting.gui
 
-import me.sd_master92.customvoting.Main
+import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Data
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import org.bukkit.ChatColor
@@ -10,7 +10,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 
-class ItemRewards(private val plugin: Main, private val op: Boolean = false, suffix: String = "") : GUI(
+class ItemRewards(private val plugin: CV, private val op: Boolean = false, suffix: String = "") : GUI(
     plugin,
     "Item Rewards $suffix", 27, true
 )
@@ -38,7 +38,7 @@ class ItemRewards(private val plugin: Main, private val op: Boolean = false, suf
         save(plugin, player, event.inventory)
     }
 
-    private fun save(plugin: Main, player: Player, inv: Inventory)
+    private fun save(plugin: CV, player: Player, inv: Inventory)
     {
         inv.setItem(25, null)
         inv.setItem(26, null)

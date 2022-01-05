@@ -1,7 +1,7 @@
 package me.sd_master92.customvoting.tasks
 
 import me.sd_master92.customfile.PlayerFile
-import me.sd_master92.customvoting.Main
+import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.VoteFile
 import me.sd_master92.customvoting.commands.ReloadCommand
 import me.sd_master92.customvoting.constants.Messages
@@ -10,7 +10,7 @@ import me.sd_master92.customvoting.database.PlayerRow
 import org.bukkit.scheduler.BukkitRunnable
 import java.util.*
 
-class DailyTask(private val plugin: Main)
+class DailyTask(private val plugin: CV)
 {
     private fun checkMonthlyReset()
     {

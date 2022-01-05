@@ -1,6 +1,6 @@
 package me.sd_master92.customvoting.constants.enumerations
 
-import me.sd_master92.customvoting.Main
+import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Settings
 import java.util.*
 
@@ -13,7 +13,7 @@ enum class VotePartyType(val value: Int, val label: String)
 
     companion object
     {
-        fun next(plugin: Main): VotePartyType
+        fun next(plugin: CV): VotePartyType
         {
             val currentValue = valueOf(plugin.config.getNumber(Settings.VOTE_PARTY_TYPE)).value
             return if (currentValue < values().size - 1)

@@ -1,6 +1,6 @@
 package me.sd_master92.customvoting.subjects
 
-import me.sd_master92.customvoting.Main
+import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.VoteFile
 import me.sd_master92.customvoting.constants.Data
 import me.sd_master92.customvoting.constants.Messages
@@ -19,7 +19,7 @@ import org.bukkit.scheduler.BukkitRunnable
 import java.util.*
 
 
-class VoteTopStand @JvmOverloads constructor(private val plugin: Main, private val top: Int, player: Player? = null)
+class VoteTopStand @JvmOverloads constructor(private val plugin: CV, private val top: Int, player: Player? = null)
 {
     private var topStand: ArmorStand? = null
     private var nameStand: ArmorStand? = null
@@ -181,7 +181,7 @@ class VoteTopStand @JvmOverloads constructor(private val plugin: Main, private v
             return voteTops[top]
         }
 
-        fun updateAll(plugin: Main)
+        fun updateAll(plugin: CV)
         {
             if (voteTops.isEmpty())
             {
@@ -199,7 +199,7 @@ class VoteTopStand @JvmOverloads constructor(private val plugin: Main, private v
             }.runTaskLater(plugin, 40L)
         }
 
-        private fun initialize(plugin: Main)
+        private fun initialize(plugin: CV)
         {
             val section = plugin.data.getConfigurationSection(Data.VOTE_TOP_STANDS)
             if (section != null)
