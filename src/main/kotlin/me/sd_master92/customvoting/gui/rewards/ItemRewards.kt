@@ -11,10 +11,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 
-class ItemRewards(private val plugin: CV, private val op: Boolean = false, suffix: String = "") : GUI(
-    plugin,
-    "Item Rewards $suffix", 27, true
-)
+class ItemRewards(private val plugin: CV, private val op: Boolean = false) : GUI(plugin, "Item Rewards", 27, true)
 {
     private var path = Data.ITEM_REWARDS
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
