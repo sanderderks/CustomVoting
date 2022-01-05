@@ -112,18 +112,18 @@ class PlayerListener(private val plugin: CV) : Listener
     {
         if (event.rightClicked.type == EntityType.ARMOR_STAND)
         {
-            if (!plugin.config.getBoolean(Settings.DISABLED_BROADCAST_ARMOR_STAND))
+            val section = plugin.data.getConfigurationSection(Data.VOTE_TOP_STANDS)
+            if (section != null)
             {
-                val section = plugin.data.getConfigurationSection(Data.VOTE_TOP_STANDS)
-                if (section != null)
+                for (top in section.getKeys(false))
                 {
-                    for (top in section.getKeys(false))
+                    for (sub in listOf("top", "name", "votes"))
                     {
-                        for (sub in listOf("top", "name", "votes"))
+                        if (section.getString("$top.$sub") == event.rightClicked.uniqueId.toString())
                         {
-                            if (section.getString("$top.$sub") == event.rightClicked.uniqueId.toString())
+                            event.isCancelled = true
+                            if (!plugin.config.getBoolean(Settings.DISABLED_BROADCAST_ARMOR_STAND))
                             {
-                                event.isCancelled = true
                                 event.player.sendMessage(Messages.VOTE_TOP_STANDS_DONT.getMessage(plugin))
                             }
                         }

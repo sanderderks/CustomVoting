@@ -44,7 +44,7 @@ class Donators(private val plugin: CV) : GUI(plugin, "Donators", 9, false, true)
 
     init
     {
-        for (donator in listOf("Dutchbeard"))
+        for (donator in listOf("Dutchbeard", "Smirren"))
         {
             inventory.addItem(createSkull(donator))
         }
