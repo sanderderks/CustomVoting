@@ -225,7 +225,7 @@ class RewardSettings(private val plugin: CV, private val op: Boolean = false) :
                 BaseItem(Material.DIAMOND_BLOCK, ChatColor.LIGHT_PURPLE.toString() + "Permission Rewards", null, true)
             )
         }
-        inventory.setItem(17, BACK_ITEM)
+        inventory.setItem(if (op) 8 else 17, BACK_ITEM)
     }
 }
 
