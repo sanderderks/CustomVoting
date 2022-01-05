@@ -7,6 +7,7 @@ import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.gui.GUI
 import me.sd_master92.customvoting.gui.VoteSettings
 import me.sd_master92.customvoting.gui.items.BaseItem
+import me.sd_master92.customvoting.gui.items.StatusItem
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -66,7 +67,8 @@ class MessageSettings(private val plugin: CV) : GUI(plugin, "Message Settings", 
     }
 }
 
-class UseVoteLinkItem(plugin: CV) : BaseItem(
-    Material.CHEST, ChatColor.LIGHT_PURPLE.toString() + "Vote Links Inventory",
-    ChatColor.GRAY.toString() + "Status: " + if (plugin.config.getBoolean(Settings.VOTE_LINK_INVENTORY)) ChatColor.GREEN.toString() + "ON" else ChatColor.RED.toString() + "OFF"
+class UseVoteLinkItem(plugin: CV) : StatusItem(
+    plugin,
+    Material.CHEST, "Vote Links Inventory",
+    Settings.VOTE_LINK_INVENTORY
 )

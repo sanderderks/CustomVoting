@@ -6,6 +6,7 @@ import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.gui.GUI
 import me.sd_master92.customvoting.gui.VoteSettings
 import me.sd_master92.customvoting.gui.items.BaseItem
+import me.sd_master92.customvoting.gui.items.StatusItem
 import me.sd_master92.plugin.CustomPlugin
 import org.bukkit.ChatColor
 import org.bukkit.Material
@@ -102,7 +103,8 @@ class UpdateItem(plugin: CV) : BaseItem(
             "download"
 )
 
-class IngameUpdateItem(plugin: CV) : BaseItem(
-    Material.FILLED_MAP, ChatColor.LIGHT_PURPLE.toString() + "Ingame Updates",
-    ChatColor.GRAY.toString() + "Status: " + if (plugin.config.getBoolean(Settings.INGAME_UPDATES)) ChatColor.GREEN.toString() + "ON" else ChatColor.RED.toString() + "OFF"
+class IngameUpdateItem(plugin: CV) : StatusItem(
+    plugin,
+    Material.FILLED_MAP, "Ingame Updates",
+    Settings.INGAME_UPDATES
 )

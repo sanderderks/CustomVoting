@@ -7,7 +7,8 @@ import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.constants.enumerations.VotePartyType
 import me.sd_master92.customvoting.gui.GUI
 import me.sd_master92.customvoting.gui.VoteSettings
-import me.sd_master92.customvoting.gui.items.*
+import me.sd_master92.customvoting.gui.items.BaseItem
+import me.sd_master92.customvoting.gui.items.StatusItem
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -159,32 +160,38 @@ class VotePartyCountdownItem(plugin: CV) : BaseItem(
     ChatColor.GRAY.toString() + "Currently: " + ChatColor.AQUA + plugin.config.getNumber(Settings.VOTE_PARTY_COUNTDOWN)
 )
 
-class SoundEffectsItem(plugin: CV) : BaseItem(
-    Material.MUSIC_DISC_CAT, ChatColor.LIGHT_PURPLE.toString() + "Sound Effects",
-    ChatColor.GRAY.toString() + "Status: " + if (plugin.config.getBoolean(Settings.USE_SOUND_EFFECTS)) ChatColor.GREEN.toString() + "ON" else ChatColor.RED.toString() + "OFF"
+class SoundEffectsItem(plugin: CV) : StatusItem(
+    plugin,
+    Material.MUSIC_DISC_CAT, "Sound Effects",
+    Settings.USE_SOUND_EFFECTS
 )
 
-class MonthlyResetItem(plugin: CV) : BaseItem(
-    Material.CLOCK, ChatColor.LIGHT_PURPLE.toString() + "Monthly Reset",
-    ChatColor.GRAY.toString() + "Status: " + if (plugin.config.getBoolean(Settings.MONTHLY_RESET)) ChatColor.GREEN.toString() + "ON" else ChatColor.RED.toString() + "OFF"
+class MonthlyResetItem(plugin: CV) : StatusItem(
+    plugin,
+    Material.CLOCK, "Monthly Reset",
+    Settings.MONTHLY_RESET
 )
 
-class MonthlyPeriodItem(plugin: CV) : BaseItem(
-    Material.TNT, ChatColor.LIGHT_PURPLE.toString() + "Monthly Period",
-    ChatColor.GRAY.toString() + "Status: " + if (plugin.config.getBoolean(Settings.MONTHLY_PERIOD)) ChatColor.GREEN.toString() + "ON" else ChatColor.RED.toString() + "OFF"
+class MonthlyPeriodItem(plugin: CV) : StatusItem(
+    plugin,
+    Material.TNT, "Monthly Period",
+    Settings.MONTHLY_PERIOD
 )
 
-class LuckyVoteItem(plugin: CV) : BaseItem(
-    Material.TOTEM_OF_UNDYING, ChatColor.LIGHT_PURPLE.toString() + "Lucky Vote",
-    ChatColor.GRAY.toString() + "Status: " + if (plugin.config.getBoolean(Settings.LUCKY_VOTE)) ChatColor.GREEN.toString() + "ON" else ChatColor.RED.toString() + "OFF"
+class LuckyVoteItem(plugin: CV) : StatusItem(
+    plugin,
+    Material.TOTEM_OF_UNDYING, "Lucky Vote",
+    Settings.LUCKY_VOTE
 )
 
-class FireworkItem(plugin: CV) : BaseItem(
-    Material.FIREWORK_ROCKET, ChatColor.LIGHT_PURPLE.toString() + "Firework",
-    ChatColor.GRAY.toString() + "Status: " + if (plugin.config.getBoolean(Settings.FIREWORK)) ChatColor.GREEN.toString() + "ON" else ChatColor.RED.toString() + "OFF"
+class FireworkItem(plugin: CV) : StatusItem(
+    plugin,
+    Material.FIREWORK_ROCKET, "Firework",
+    Settings.FIREWORK
 )
 
-class DoVotePartyItem(plugin: CV) : BaseItem(
-    Material.EXPERIENCE_BOTTLE, ChatColor.LIGHT_PURPLE.toString() + "Vote Party",
-    ChatColor.GRAY.toString() + "Status: " + if (plugin.config.getBoolean(Settings.VOTE_PARTY)) ChatColor.GREEN.toString() + "ON" else ChatColor.RED.toString() + "OFF"
+class DoVotePartyItem(plugin: CV) : StatusItem(
+    plugin,
+    Material.EXPERIENCE_BOTTLE, "Vote Party",
+    Settings.VOTE_PARTY
 )
