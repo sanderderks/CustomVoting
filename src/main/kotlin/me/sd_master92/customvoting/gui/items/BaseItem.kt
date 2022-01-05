@@ -11,22 +11,24 @@ open class BaseItem(mat: Material, name: String?, lore: String? = null, enchante
 
     init
     {
-        if (itemMeta != null)
+        val meta = itemMeta
+        if (meta != null)
         {
             if (name != null)
             {
-                itemMeta!!.setDisplayName(name)
+                meta.setDisplayName(name)
             }
             if (lore != null)
             {
-                itemMeta!!.lore = null
-                itemMeta!!.lore = listOf(*lore.split(";".toRegex()).toTypedArray())
+                meta.lore = null
+                meta.lore = listOf(*lore.split(";".toRegex()).toTypedArray())
             }
             if (enchanted)
             {
-                itemMeta!!.addEnchant(Enchantment.LUCK, 1, true)
+                meta.addEnchant(Enchantment.LUCK, 1, true)
             }
-            itemMeta!!.addItemFlags(*ItemFlag.values())
+            meta.addItemFlags(*ItemFlag.values())
+            itemMeta = meta
         }
     }
 }
