@@ -183,7 +183,7 @@ class CustomVote(private val plugin: CV, vote: Vote, private val queued: Boolean
     {
         val path = Data.ITEM_REWARDS.appendWhenTrue(op, Data.OP_REWARDS)
         val typePath = Settings.ITEM_REWARD_TYPE.appendWhenTrue(op, Data.OP_REWARDS)
-        val random = plugin.config.getNumber(typePath) == ItemRewardType.ALL_ITEMS.value
+        val random = plugin.config.getNumber(typePath) != ItemRewardType.ALL_ITEMS.value
         player.addToInventoryOrDrop(plugin.data.getItems(path), random)
     }
 
