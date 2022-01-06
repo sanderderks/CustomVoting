@@ -204,20 +204,24 @@ class CustomVote(private val plugin: CV, vote: Vote, private val queued: Boolean
                 plugin.config.getNumber(Settings.ITEM_REWARD_TYPE + "." + Data.OP_REWARDS) == ItemRewardType.ALL_ITEMS.value
         }
         val rewards = plugin.data.getItems(path)
-        if (!random)
+
+        if (rewards.isNotEmpty())
         {
-            for (reward in rewards)
+            if (!random)
             {
-                for (item in player.inventory.addItem(reward).values)
+                for (reward in rewards)
+                {
+                    for (item in player.inventory.addItem(reward).values)
+                    {
+                        player.world.dropItemNaturally(player.location, item)
+                    }
+                }
+            } else
+            {
+                for (item in player.inventory.addItem(rewards[Random().nextInt(rewards.size)]).values)
                 {
                     player.world.dropItemNaturally(player.location, item)
                 }
-            }
-        } else
-        {
-            for (item in player.inventory.addItem(rewards[Random().nextInt(rewards.size)]).values)
-            {
-                player.world.dropItemNaturally(player.location, item)
             }
         }
     }
