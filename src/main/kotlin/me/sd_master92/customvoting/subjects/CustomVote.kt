@@ -184,27 +184,7 @@ class CustomVote(private val plugin: CV, vote: Vote, private val queued: Boolean
         val path = Data.ITEM_REWARDS.appendWhenTrue(op, Data.OP_REWARDS)
         val typePath = Settings.ITEM_REWARD_TYPE.appendWhenTrue(op, Data.OP_REWARDS)
         val random = plugin.config.getNumber(typePath) == ItemRewardType.ALL_ITEMS.value
-        val rewards = plugin.data.getItems(path)
-
-        if (rewards.isNotEmpty())
-        {
-            if (!random)
-            {
-                for (reward in rewards)
-                {
-                    for (item in player.inventory.addItem(reward).values)
-                    {
-                        player.world.dropItemNaturally(player.location, item)
-                    }
-                }
-            } else
-            {
-                for (item in player.inventory.addItem(rewards[Random().nextInt(rewards.size)]).values)
-                {
-                    player.world.dropItemNaturally(player.location, item)
-                }
-            }
-        }
+        player.addToInventoryOrDrop(plugin.data.getItems(path), random)
     }
 
     private fun giveMoney(player: Player, op: Boolean): Double
@@ -230,18 +210,12 @@ class CustomVote(private val plugin: CV, vote: Vote, private val queued: Boolean
 
     private fun giveLuckyReward(player: Player)
     {
-        val random = Random()
-        var i = random.nextInt(100)
-        if (i < plugin.config.getNumber(Settings.LUCKY_VOTE_CHANCE))
+        if (Random().nextInt(100) < plugin.config.getNumber(Settings.LUCKY_VOTE_CHANCE))
         {
             val luckyRewards = plugin.data.getItems(Data.LUCKY_REWARDS)
             if (luckyRewards.isNotEmpty())
             {
-                i = random.nextInt(luckyRewards.size)
-                for (item in player.inventory.addItem(luckyRewards[i]).values)
-                {
-                    player.world.dropItemNaturally(player.location, item)
-                }
+                player.addToInventoryOrDrop(luckyRewards, true)
                 player.sendMessage(Messages.VOTE_LUCKY.getMessage(plugin))
             }
         }
@@ -252,12 +226,7 @@ class CustomVote(private val plugin: CV, vote: Vote, private val queued: Boolean
         val path = Data.VOTE_COMMANDS.appendWhenTrue(op, Data.OP_REWARDS)
         for (command in plugin.data.getStringList(path))
         {
-            plugin.server.dispatchCommand(
-                plugin.server.consoleSender, command.replace(
-                    "%PLAYER%",
-                    player.name
-                ).withPlaceholders(player)
-            )
+            runCommand(plugin, command.replace("%PLAYER%", player.name).withPlaceholders(player))
         }
     }
 
@@ -275,7 +244,7 @@ class CustomVote(private val plugin: CV, vote: Vote, private val queued: Boolean
             }
 
             val permissions = plugin.data.getStringList(Data.VOTE_STREAKS + "." + votes + ".permissions")
-            if (permissions.isNotEmpty() && CV.PERMISSION != null)
+            if (CV.PERMISSION != null)
             {
                 for (permission in permissions)
                 {
@@ -283,25 +252,11 @@ class CustomVote(private val plugin: CV, vote: Vote, private val queued: Boolean
                 }
             }
             val commands = plugin.data.getStringList(Data.VOTE_STREAKS + "." + votes + ".commands")
-            if (commands.isNotEmpty())
+            for (command in commands)
             {
-                for (command in commands)
-                {
-                    plugin.server.dispatchCommand(
-                        plugin.server.consoleSender, command.replace(
-                            "%PLAYER%",
-                            player.name
-                        ).withPlaceholders(player)
-                    )
-                }
+                runCommand(plugin, command.replace("%PLAYER%", player.name).withPlaceholders(player))
             }
-            for (reward in plugin.data.getItems("${Data.VOTE_STREAKS}.$votes.${Data.ITEM_REWARDS}"))
-            {
-                for (item in player.inventory.addItem(reward).values)
-                {
-                    player.world.dropItemNaturally(player.location, item)
-                }
-            }
+            player.addToInventoryOrDrop(plugin.data.getItems("${Data.VOTE_STREAKS}.$votes.${Data.ITEM_REWARDS}"))
         }
     }
 

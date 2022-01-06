@@ -6,6 +6,8 @@ import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
+import org.bukkit.inventory.ItemStack
+import java.util.*
 
 fun String.appendWhenTrue(value: Boolean, append: String): String
 {
@@ -34,6 +36,11 @@ fun String.withPlaceholders(player: Player): String
     {
         this
     }
+}
+
+fun runCommand(plugin: CV, command: String)
+{
+    plugin.server.dispatchCommand(plugin.server.consoleSender, command)
 }
 
 fun broadcastText(plugin: CV, message: Messages, placeholders: Map<String, String> = HashMap())
@@ -90,4 +97,23 @@ fun Player?.sendActionBar(message: String)
 fun Player?.sendActionBar(plugin: CV, message: Messages, placeholders: Map<String, String> = HashMap())
 {
     this?.sendActionBar(message.getMessage(plugin, placeholders))
+}
+
+fun Player.addToInventoryOrDrop(items: Array<ItemStack>, random: Boolean = false)
+{
+    if (items.isNotEmpty())
+    {
+        if (random)
+        {
+            this.addToInventoryOrDrop(items[Random().nextInt(items.size)])
+        } else
+        {
+            items.forEach { this.addToInventoryOrDrop(it) }
+        }
+    }
+}
+
+fun Player.addToInventoryOrDrop(item: ItemStack)
+{
+    this.inventory.addItem(item).values.forEach { this.world.dropItemNaturally(this.location, it) }
 }
