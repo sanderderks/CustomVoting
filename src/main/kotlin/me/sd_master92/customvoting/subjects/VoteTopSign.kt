@@ -97,10 +97,10 @@ class VoteTopSign @JvmOverloads constructor(
                 {
                     placeholders["%s%"] = if (topVoter.votes == 1) "s" else ""
                 }
-                val messages = Messages.VOTE_TOP_SIGNS_PLAYER_SIGNS_FORMAT.getMessages(plugin, placeholders)
-                for (i in messages.indices)
+                for ((i, message) in Messages.VOTE_TOP_SIGNS_PLAYER_SIGNS_FORMAT.getMessages(plugin, placeholders)
+                    .withIndex())
                 {
-                    sign.setLine(i, messages[i])
+                    sign.setLine(i, message)
                 }
                 updateSkull(location, topVoter.uuid)
             } else

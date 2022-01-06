@@ -3,6 +3,7 @@ package me.sd_master92.customvoting.commands
 import me.sd_master92.customfile.PlayerFile
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Messages
+import me.sd_master92.customvoting.sendText
 import me.sd_master92.customvoting.subjects.CustomVote
 import me.sd_master92.plugin.command.SimpleCommand
 import org.bukkit.ChatColor
@@ -30,7 +31,7 @@ class FakeVoteCommand(private val plugin: CV) : SimpleCommand(plugin, "fakevote"
                 fakeVote(args[0])
             } else
             {
-                sender.sendMessage(Messages.INVALID_PLAYER.getMessage(plugin))
+                sender.sendText(plugin, Messages.INVALID_PLAYER)
             }
         }
     }

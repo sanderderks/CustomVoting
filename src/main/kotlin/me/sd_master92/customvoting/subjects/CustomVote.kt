@@ -1,20 +1,15 @@
 package me.sd_master92.customvoting.subjects
 
 import com.vexsoftware.votifier.model.Vote
-import me.clip.placeholderapi.PlaceholderAPI
 import me.sd_master92.customfile.PlayerFile
-import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.VoteFile
+import me.sd_master92.customvoting.*
 import me.sd_master92.customvoting.constants.Data
 import me.sd_master92.customvoting.constants.Messages
 import me.sd_master92.customvoting.constants.Settings
 import me.sd_master92.customvoting.constants.enumerations.ItemRewardType
 import me.sd_master92.customvoting.database.PlayerRow
 import me.sd_master92.customvoting.helpers.ParticleHelper
-import net.md_5.bungee.api.ChatMessageType
-import net.md_5.bungee.api.chat.TextComponent
 import org.bukkit.Bukkit
-import org.bukkit.ChatColor
 import org.bukkit.entity.Player
 import org.bukkit.scheduler.BukkitRunnable
 import java.text.DecimalFormat
@@ -95,8 +90,7 @@ class CustomVote(private val plugin: CV, vote: Vote, private val queued: Boolean
             val placeholders = HashMap<String, String>()
             placeholders["%PLAYER%"] = username
             placeholders["%SERVICE%"] = serviceName
-            val message = Messages.VOTE_BROADCAST.getMessage(plugin, placeholders)
-            plugin.server.broadcastMessage(message)
+            broadcastText(plugin, Messages.VOTE_BROADCAST, placeholders)
         }
     }
 
@@ -132,12 +126,7 @@ class CustomVote(private val plugin: CV, vote: Vote, private val queued: Boolean
                                 val placeholders = HashMap<String, String>()
                                 placeholders["%VOTES%"] = "" + updatedVotesUntil
                                 placeholders["%s%"] = if (updatedVotesUntil == 1) "" else "s"
-                                plugin.server.broadcastMessage(
-                                    Messages.VOTE_PARTY_UNTIL.getMessage(
-                                        plugin,
-                                        placeholders
-                                    )
-                                )
+                                broadcastText(plugin, Messages.VOTE_PARTY_UNTIL, placeholders)
                             }
                             isAwaitingBroadcast = false
                         }
@@ -179,10 +168,7 @@ class CustomVote(private val plugin: CV, vote: Vote, private val queued: Boolean
                 var i = 40
                 override fun run()
                 {
-                    player.spigot().sendMessage(
-                        ChatMessageType.ACTION_BAR,
-                        TextComponent(Messages.VOTE_REWARD_PREFIX.getMessage(plugin) + message)
-                    )
+                    player.sendActionBar(Messages.VOTE_REWARD_PREFIX.getMessage(plugin) + message)
                     if (i == 0)
                     {
                         cancel()
@@ -195,14 +181,9 @@ class CustomVote(private val plugin: CV, vote: Vote, private val queued: Boolean
 
     private fun giveItems(player: Player, op: Boolean)
     {
-        var path = Data.ITEM_REWARDS
-        var random = plugin.config.getNumber(Settings.ITEM_REWARD_TYPE) == ItemRewardType.ALL_ITEMS.value
-        if (op)
-        {
-            path += Data.OP_REWARDS
-            random =
-                plugin.config.getNumber(Settings.ITEM_REWARD_TYPE + "." + Data.OP_REWARDS) == ItemRewardType.ALL_ITEMS.value
-        }
+        val path = Data.ITEM_REWARDS.appendWhenTrue(op, Data.OP_REWARDS)
+        val typePath = Settings.ITEM_REWARD_TYPE.appendWhenTrue(op, Data.OP_REWARDS)
+        val random = plugin.config.getNumber(typePath) == ItemRewardType.ALL_ITEMS.value
         val rewards = plugin.data.getItems(path)
 
         if (rewards.isNotEmpty())
@@ -231,11 +212,7 @@ class CustomVote(private val plugin: CV, vote: Vote, private val queued: Boolean
         val economy = CV.ECONOMY
         if (economy != null && economy.hasAccount(player))
         {
-            var path = Settings.VOTE_REWARD_MONEY
-            if (op)
-            {
-                path += Data.OP_REWARDS
-            }
+            val path = Settings.VOTE_REWARD_MONEY.appendWhenTrue(op, Data.OP_REWARDS)
             val amount = plugin.config.getDouble(path)
             economy.depositPlayer(player, amount)
             return amount
@@ -245,11 +222,7 @@ class CustomVote(private val plugin: CV, vote: Vote, private val queued: Boolean
 
     private fun giveExperience(player: Player, op: Boolean): Int
     {
-        var path = Settings.VOTE_REWARD_EXPERIENCE
-        if (op)
-        {
-            path += Data.OP_REWARDS
-        }
+        val path = Settings.VOTE_REWARD_EXPERIENCE.appendWhenTrue(op, Data.OP_REWARDS)
         val amount = plugin.config.getNumber(path)
         player.level = player.level + amount
         return amount
@@ -276,22 +249,15 @@ class CustomVote(private val plugin: CV, vote: Vote, private val queued: Boolean
 
     private fun executeCommands(player: Player, op: Boolean)
     {
-        var path = Data.VOTE_COMMANDS
-        if (op)
-        {
-            path += Data.OP_REWARDS
-        }
+        val path = Data.VOTE_COMMANDS.appendWhenTrue(op, Data.OP_REWARDS)
         for (command in plugin.data.getStringList(path))
         {
-            var cmd = command.replace(
-                "%PLAYER%",
-                player.name
+            plugin.server.dispatchCommand(
+                plugin.server.consoleSender, command.replace(
+                    "%PLAYER%",
+                    player.name
+                ).withPlaceholders(player)
             )
-            if (CV.PAPI)
-            {
-                cmd = PlaceholderAPI.setPlaceholders(player, cmd)
-            }
-            plugin.server.dispatchCommand(plugin.server.consoleSender, cmd)
         }
     }
 
@@ -302,7 +268,10 @@ class CustomVote(private val plugin: CV, vote: Vote, private val queued: Boolean
         {
             if (!plugin.config.getBoolean(Settings.DISABLED_BROADCAST_STREAK))
             {
-                plugin.server.broadcastMessage(ChatColor.AQUA.toString() + player.name + ChatColor.LIGHT_PURPLE.toString() + " reached vote streak #" + ChatColor.AQUA.toString() + votes + ChatColor.LIGHT_PURPLE.toString() + "!")
+                val placeholders = HashMap<String, String>()
+                placeholders["%PLAYER%"] = player.name
+                placeholders["%STREAK%"] = "" + votes
+                player.sendText(plugin, Messages.VOTE_STREAK_REACHED, placeholders)
             }
 
             val permissions = plugin.data.getStringList(Data.VOTE_STREAKS + "." + votes + ".permissions")
@@ -310,13 +279,7 @@ class CustomVote(private val plugin: CV, vote: Vote, private val queued: Boolean
             {
                 for (permission in permissions)
                 {
-                    if (CV.PERMISSION!!.playerAdd(null, player, permission))
-                    {
-                        val placeholders = HashMap<String, String>()
-                        placeholders["%PLAYER%"] = player.name
-                        placeholders["%STREAK%"] = "" + votes
-                        player.sendMessage(Messages.VOTE_STREAK_REACHED.getMessage(plugin, placeholders))
-                    }
+                    CV.PERMISSION!!.playerAdd(null, player, permission)
                 }
             }
             val commands = plugin.data.getStringList(Data.VOTE_STREAKS + "." + votes + ".commands")
@@ -324,15 +287,12 @@ class CustomVote(private val plugin: CV, vote: Vote, private val queued: Boolean
             {
                 for (command in commands)
                 {
-                    var cmd = command.replace(
-                        "%PLAYER%",
-                        player.name
+                    plugin.server.dispatchCommand(
+                        plugin.server.consoleSender, command.replace(
+                            "%PLAYER%",
+                            player.name
+                        ).withPlaceholders(player)
                     )
-                    if (CV.PAPI)
-                    {
-                        cmd = PlaceholderAPI.setPlaceholders(player, cmd)
-                    }
-                    plugin.server.dispatchCommand(plugin.server.consoleSender, cmd)
                 }
             }
             for (reward in plugin.data.getItems("${Data.VOTE_STREAKS}.$votes.${Data.ITEM_REWARDS}"))

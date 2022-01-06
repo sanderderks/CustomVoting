@@ -7,6 +7,7 @@ import me.sd_master92.customvoting.constants.Messages
 import me.sd_master92.customvoting.constants.Settings
 import me.sd_master92.customvoting.constants.Voter
 import me.sd_master92.customvoting.database.PlayerRow
+import me.sd_master92.customvoting.sendText
 import me.sd_master92.plugin.command.SimpleCommand
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -31,7 +32,7 @@ class VotesCommand(private val plugin: CV) : SimpleCommand(plugin, "votes")
                 {
                     placeholders["%s%"] = if (VoteFile(sender, plugin).votes == 1) "s" else ""
                 }
-                sender.sendMessage(Messages.VOTES_COMMAND_SELF.getMessage(plugin, placeholders))
+                sender.sendText(plugin, Messages.VOTES_COMMAND_SELF, placeholders)
             }
         } else
         {
@@ -54,10 +55,10 @@ class VotesCommand(private val plugin: CV) : SimpleCommand(plugin, "votes")
                 {
                     placeholders["%s%"] = if (voteFile.votes == 1) "s" else ""
                 }
-                sender.sendMessage(Messages.VOTES_COMMAND_OTHERS.getMessage(plugin, placeholders))
+                sender.sendText(plugin, Messages.VOTES_COMMAND_OTHERS, placeholders)
             } else
             {
-                sender.sendMessage(Messages.VOTES_COMMAND_NOT_FOUND.getMessage(plugin))
+                sender.sendText(plugin, Messages.VOTES_COMMAND_NOT_FOUND)
             }
         }
     }

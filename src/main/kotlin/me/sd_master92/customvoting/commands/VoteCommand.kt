@@ -5,6 +5,7 @@ import me.sd_master92.customvoting.constants.Messages
 import me.sd_master92.plugin.command.SimpleCommand
 import me.sd_master92.customvoting.constants.Settings
 import me.sd_master92.customvoting.gui.messages.VoteLinks
+import me.sd_master92.customvoting.sendTexts
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
@@ -21,10 +22,7 @@ class VoteCommand(private val plugin: CV) : SimpleCommand(plugin, "vote")
             player.openInventory(VoteLinks(plugin, true).inventory)
         } else
         {
-            for (message in Messages.VOTE_COMMAND.getMessages(plugin))
-            {
-                player.sendMessage(message)
-            }
+            player.sendTexts(plugin, Messages.VOTE_COMMAND)
         }
     }
 

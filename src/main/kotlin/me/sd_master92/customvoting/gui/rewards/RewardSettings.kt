@@ -49,11 +49,7 @@ class RewardSettings(private val plugin: CV, private val op: Boolean = false) :
             Material.REPEATER          ->
             {
                 SoundType.CHANGE.play(plugin, player)
-                var path = Settings.ITEM_REWARD_TYPE
-                if (op)
-                {
-                    path += Data.OP_REWARDS
-                }
+                val path = Settings.ITEM_REWARD_TYPE.appendWhenTrue(op, Data.OP_REWARDS)
                 plugin.config.setNumber(path, ItemRewardType.next(plugin, op).value)
                 event.currentItem = ItemsRewardTypeItem(plugin, op)
             }
@@ -91,11 +87,7 @@ class RewardSettings(private val plugin: CV, private val op: Boolean = false) :
             Material.EXPERIENCE_BOTTLE ->
             {
                 SoundType.CHANGE.play(plugin, player)
-                var path = Settings.VOTE_REWARD_EXPERIENCE
-                if (op)
-                {
-                    path += Data.OP_REWARDS
-                }
+                val path = Settings.VOTE_REWARD_EXPERIENCE.appendWhenTrue(op, Data.OP_REWARDS)
                 if (plugin.config.getNumber(path) < 10)
                 {
                     plugin.config.addNumber(path, 1)
@@ -103,7 +95,7 @@ class RewardSettings(private val plugin: CV, private val op: Boolean = false) :
                 {
                     plugin.config.setNumber(path, 0)
                 }
-                event.currentItem = ExperienceRewardItem.getInstance(plugin, op)
+                event.currentItem = ExperienceRewardItem(plugin, op)
             }
             Material.COMMAND_BLOCK     ->
             {
@@ -118,11 +110,7 @@ class RewardSettings(private val plugin: CV, private val op: Boolean = false) :
                 player.sendMessage(ChatColor.GREEN.toString() + "(with %PLAYER% as placeholder)")
                 player.sendMessage(ChatColor.GRAY.toString() + "Type 'cancel' to go back")
                 player.sendMessage("")
-                var path = Data.VOTE_COMMANDS
-                if (op)
-                {
-                    path += Data.OP_REWARDS
-                }
+                val path = Data.VOTE_COMMANDS.appendWhenTrue(op, Data.OP_REWARDS)
                 val commands: List<String> = plugin.data.getStringList(path)
                 if (commands.isEmpty())
                 {
@@ -199,17 +187,12 @@ class RewardSettings(private val plugin: CV, private val op: Boolean = false) :
 
     init
     {
-        var itemsPath = Data.ITEM_REWARDS
-        var commandsPath = Data.VOTE_COMMANDS
-        if (op)
-        {
-            itemsPath += Data.OP_REWARDS
-            commandsPath += Data.OP_REWARDS
-        }
-        inventory.setItem(0, ItemsRewardItem(plugin, itemsPath))
+        val path = Data.ITEM_REWARDS.appendWhenTrue(op, Data.OP_REWARDS)
+        val commandsPath = Data.VOTE_COMMANDS.appendWhenTrue(op, Data.OP_REWARDS)
+        inventory.setItem(0, ItemsRewardItem(plugin, path))
         inventory.setItem(1, ItemsRewardTypeItem(plugin, op))
-        inventory.setItem(2, MoneyRewardItem.getInstance(plugin, op))
-        inventory.setItem(3, ExperienceRewardItem.getInstance(plugin, op))
+        inventory.setItem(2, MoneyRewardItem(plugin, op))
+        inventory.setItem(3, ExperienceRewardItem(plugin, op))
         inventory.setItem(4, CommandsRewardItem(plugin, commandsPath))
         if (!op)
         {
@@ -231,26 +214,12 @@ class RewardSettings(private val plugin: CV, private val op: Boolean = false) :
     }
 }
 
-class MoneyRewardItem private constructor(plugin: CV, path: String) : BaseItem(
+class MoneyRewardItem(plugin: CV, op: Boolean) : BaseItem(
     Material.GOLD_INGOT, ChatColor.LIGHT_PURPLE.toString() + "Money Reward",
     if (CV.ECONOMY != null) ChatColor.GRAY.toString() + "Currently: " + ChatColor.GREEN + CV.ECONOMY!!.format(
-        plugin.config.getDouble(path)
+        plugin.config.getDouble(Settings.VOTE_REWARD_MONEY.appendWhenTrue(op, Data.OP_REWARDS))
     ) else ChatColor.RED.toString() + "Disabled"
 )
-{
-    companion object
-    {
-        fun getInstance(plugin: CV, op: Boolean): MoneyRewardItem
-        {
-            var path = Settings.VOTE_REWARD_MONEY
-            if (op)
-            {
-                path += Data.OP_REWARDS
-            }
-            return MoneyRewardItem(plugin, path)
-        }
-    }
-}
 
 class LuckyVoteChanceItem(plugin: CV) : BaseItem(
     Material.ENDER_EYE, ChatColor.LIGHT_PURPLE.toString() + "Lucky Vote Chance",
@@ -264,21 +233,12 @@ class ItemsRewardTypeItem(plugin: CV, op: Boolean) : BaseItem(
     ).label
 )
 
-class ExperienceRewardItem private constructor(plugin: CV, path: String) : BaseItem(
+class ExperienceRewardItem(plugin: CV, op: Boolean) : BaseItem(
     Material.EXPERIENCE_BOTTLE, ChatColor.LIGHT_PURPLE.toString() + "XP Reward",
-    ChatColor.GRAY.toString() + "Currently: " + ChatColor.AQUA + plugin.config.getNumber(path) + ChatColor.GRAY + " levels"
+    ChatColor.GRAY.toString() + "Currently: " + ChatColor.AQUA + plugin.config.getNumber(
+        Settings.VOTE_REWARD_EXPERIENCE.appendWhenTrue(
+            op,
+            Data.OP_REWARDS
+        )
+    ) + ChatColor.GRAY + " levels"
 )
-{
-    companion object
-    {
-        fun getInstance(plugin: CV, op: Boolean): ExperienceRewardItem
-        {
-            var path = Settings.VOTE_REWARD_EXPERIENCE
-            if (op)
-            {
-                path += Data.OP_REWARDS
-            }
-            return ExperienceRewardItem(plugin, path)
-        }
-    }
-}

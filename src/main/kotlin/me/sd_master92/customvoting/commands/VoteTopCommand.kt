@@ -5,6 +5,8 @@ import me.sd_master92.customvoting.VoteFile
 import me.sd_master92.customvoting.constants.Messages
 import me.sd_master92.customvoting.constants.Settings
 import me.sd_master92.customvoting.database.PlayerTable
+import me.sd_master92.customvoting.sendText
+import me.sd_master92.customvoting.sendTexts
 import me.sd_master92.plugin.command.SimpleCommand
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -43,13 +45,10 @@ class VoteTopCommand(private val plugin: CV) : SimpleCommand(plugin, "votetop")
                     }
                 }
             }
-            for (message in messages)
-            {
-                sender.sendMessage(message)
-            }
+            sender.sendTexts(messages)
         } else
         {
-            sender.sendMessage(Messages.VOTE_TOP_COMMAND_NOT_FOUND.getMessage(plugin))
+            sender.sendText(plugin, Messages.VOTE_TOP_COMMAND_NOT_FOUND)
         }
     }
 

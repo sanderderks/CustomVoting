@@ -1,6 +1,7 @@
 package me.sd_master92.customvoting.gui.rewards
 
 import me.sd_master92.customvoting.CV
+import me.sd_master92.customvoting.appendWhenTrue
 import me.sd_master92.customvoting.constants.Data
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.gui.GUI
@@ -53,10 +54,7 @@ class ItemRewards(private val plugin: CV, private val op: Boolean = false) : GUI
 
     init
     {
-        if (op)
-        {
-            path += Data.OP_REWARDS
-        }
+        val path = Data.ITEM_REWARDS.appendWhenTrue(op, Data.OP_REWARDS)
         for (reward in plugin.data.getItems(path))
         {
             inventory.addItem(reward)

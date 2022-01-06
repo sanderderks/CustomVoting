@@ -60,7 +60,7 @@ class CustomPlaceholders(private val plugin: CV) : PlaceholderExpansion()
                     {
                         val voter =
                             if (plugin.hasDatabaseConnection()) PlayerRow(plugin, player) else VoteFile(player, plugin)
-                        return "" + voter.votes
+                        return "${voter.votes}"
                     }
                     return "0"
                 }
@@ -70,7 +70,7 @@ class CustomPlaceholders(private val plugin: CV) : PlaceholderExpansion()
                     {
                         val voter =
                             if (plugin.hasDatabaseConnection()) PlayerRow(plugin, player) else VoteFile(player, plugin)
-                        return "" + voter.period
+                        return "${voter.period}"
                     }
                     return "0"
                 }
@@ -99,7 +99,7 @@ class CustomPlaceholders(private val plugin: CV) : PlaceholderExpansion()
                             topVoter?.name ?: "Unknown"
                         } else
                         {
-                            if (topVoter == null) "0" else "" + topVoter.votes
+                            if (topVoter == null) "0" else "${topVoter.votes}"
                         }
                     } else if (params.contains(PLAYER_PERIOD))
                     {
@@ -112,7 +112,7 @@ class CustomPlaceholders(private val plugin: CV) : PlaceholderExpansion()
                             topVoter?.name ?: "Unknown"
                         } else
                         {
-                            if (topVoter == null) "0" else "" + topVoter.period
+                            if (topVoter == null) "0" else "${topVoter.period}"
                         }
                     }
                 }

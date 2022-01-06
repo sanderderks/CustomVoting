@@ -1,6 +1,7 @@
 package me.sd_master92.customvoting.subjects
 
 import me.sd_master92.customvoting.CV
+import me.sd_master92.customvoting.broadcastText
 import me.sd_master92.customvoting.constants.Data
 import me.sd_master92.customvoting.constants.Messages
 import me.sd_master92.customvoting.constants.Settings
@@ -41,12 +42,7 @@ class VoteParty(private val plugin: CV)
                                 val placeholders = HashMap<String, String>()
                                 placeholders["%TIME%"] = "" + count
                                 SoundType.NOTIFY.playForAll(plugin)
-                                plugin.server.broadcastMessage(
-                                    Messages.VOTE_PARTY_COUNTDOWN.getMessage(
-                                        plugin,
-                                        placeholders
-                                    )
-                                )
+                                broadcastText(plugin, Messages.VOTE_PARTY_COUNTDOWN, placeholders)
                             }
                         }
                         5, 4, 3, 2, 1 ->
@@ -57,12 +53,7 @@ class VoteParty(private val plugin: CV)
                                 placeholders["%TIME%"] = "" + count
                                 placeholders["%s%"] = if (count == 1) "" else "s"
                                 SoundType.NOTIFY.playForAll(plugin)
-                                plugin.server.broadcastMessage(
-                                    Messages.VOTE_PARTY_COUNTDOWN_ENDING.getMessage(
-                                        plugin,
-                                        placeholders
-                                    )
-                                )
+                                broadcastText(plugin, Messages.VOTE_PARTY_COUNTDOWN_ENDING, placeholders)
                             }
                         }
                         0             ->
@@ -144,7 +135,7 @@ class VoteParty(private val plugin: CV)
                             tasks.remove(taskId)
                             if (tasks.isEmpty())
                             {
-                                plugin.server.broadcastMessage(Messages.VOTE_PARTY_END.getMessage(plugin))
+                                broadcastText(plugin, Messages.VOTE_PARTY_END)
                                 stop()
                             }
                             cancel()

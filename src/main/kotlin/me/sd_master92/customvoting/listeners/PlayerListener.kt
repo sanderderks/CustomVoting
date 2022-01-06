@@ -9,6 +9,7 @@ import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.database.PlayerRow
 import me.sd_master92.customvoting.gui.messages.VoteLinks
 import me.sd_master92.customvoting.gui.voteparty.VotePartyRewards
+import me.sd_master92.customvoting.sendText
 import me.sd_master92.customvoting.subjects.CustomVote
 import me.sd_master92.customvoting.subjects.VoteParty
 import me.sd_master92.customvoting.subjects.VoteTopSign
@@ -124,7 +125,7 @@ class PlayerListener(private val plugin: CV) : Listener
                             event.isCancelled = true
                             if (!plugin.config.getBoolean(Settings.DISABLED_BROADCAST_ARMOR_STAND))
                             {
-                                event.player.sendMessage(Messages.VOTE_TOP_STANDS_DONT.getMessage(plugin))
+                                event.player.sendText(plugin, Messages.VOTE_TOP_STANDS_DONT)
                             }
                         }
                     }

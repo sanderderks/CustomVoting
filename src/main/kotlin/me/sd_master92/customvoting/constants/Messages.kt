@@ -36,24 +36,14 @@ enum class Messages(private val path: String)
     VOTE_PARTY_END("vote_party.end"),
     VOTE_STREAK_REACHED("vote_streak.streak_reached");
 
-    fun getMessage(plugin: CV, placeholders: Map<String, String>?): String
+    fun getMessage(plugin: CV, placeholders: Map<String, String> = HashMap()): String
     {
         return plugin.messages.getMessage(path, placeholders)
     }
 
-    fun getMessage(plugin: CV): String
-    {
-        return plugin.messages.getMessage(path)
-    }
-
-    fun getMessages(plugin: CV, placeholders: Map<String, String>?): List<String>
+    fun getMessages(plugin: CV, placeholders: Map<String, String> = HashMap()): List<String>
     {
         return plugin.messages.getMessages(path, placeholders)
-    }
-
-    fun getMessages(plugin: CV): List<String>
-    {
-        return plugin.messages.getMessages(path)
     }
 
     companion object
