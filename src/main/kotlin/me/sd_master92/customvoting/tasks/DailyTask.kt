@@ -14,39 +14,43 @@ class DailyTask(private val plugin: CV)
 {
     private fun checkMonthlyReset()
     {
-        if (Calendar.getInstance()[Calendar.DAY_OF_MONTH] == 1)
+        if (plugin.config.getBoolean(Settings.MONTHLY_RESET))
         {
-            for (playerFile in PlayerFile.getAll())
+            if (Calendar.getInstance()[Calendar.DAY_OF_MONTH] == 1)
             {
-                if (plugin.hasDatabaseConnection())
+                for (playerFile in PlayerFile.getAll())
                 {
-                    val playerRow = PlayerRow(plugin, playerFile.value.uuid)
-                    playerRow.setVotes(0, true)
-                } else
-                {
-                    VoteFile(playerFile.value.uuid, plugin).setVotes(0, true)
+                    if (plugin.hasDatabaseConnection())
+                    {
+                        PlayerRow(plugin, playerFile.value.uuid).setVotes(0, true)
+                    } else
+                    {
+                        VoteFile(playerFile.value.uuid, plugin).setVotes(0, true)
+                    }
                 }
+                plugin.server.broadcastMessage(Messages.MONTHLY_RESET.getMessage(plugin))
             }
-            plugin.server.broadcastMessage(Messages.MONTHLY_RESET.getMessage(plugin))
         }
     }
 
     private fun checkMonthlyPeriod()
     {
-        if (Calendar.getInstance()[Calendar.DAY_OF_MONTH] == 1)
+        if (plugin.config.getBoolean(Settings.MONTHLY_PERIOD))
         {
-            for (playerFile in PlayerFile.getAll())
+            if (Calendar.getInstance()[Calendar.DAY_OF_MONTH] == 1)
             {
-                if (plugin.hasDatabaseConnection())
+                for (playerFile in PlayerFile.getAll())
                 {
-                    val playerRow = PlayerRow(plugin, playerFile.value.uuid)
-                    playerRow.clearPeriod()
-                } else
-                {
-                    VoteFile(playerFile.value.uuid, plugin).clearPeriod()
+                    if (plugin.hasDatabaseConnection())
+                    {
+                        PlayerRow(plugin, playerFile.value.uuid).clearPeriod()
+                    } else
+                    {
+                        VoteFile(playerFile.value.uuid, plugin).clearPeriod()
+                    }
                 }
+                plugin.server.broadcastMessage(Messages.MONTHLY_RESET.getMessage(plugin))
             }
-            plugin.server.broadcastMessage(Messages.MONTHLY_RESET.getMessage(plugin))
         }
     }
 
@@ -57,14 +61,8 @@ class DailyTask(private val plugin: CV)
             override fun run()
             {
                 ReloadCommand.reload(plugin)
-                if (plugin.config.getBoolean(Settings.MONTHLY_RESET))
-                {
-                    checkMonthlyReset()
-                }
-                if (plugin.config.getBoolean(Settings.MONTHLY_PERIOD))
-                {
-                    checkMonthlyPeriod()
-                }
+                checkMonthlyReset()
+                checkMonthlyPeriod()
             }
         }.runTaskTimer(plugin, 60, (20 * 60 * 60).toLong())
     }
