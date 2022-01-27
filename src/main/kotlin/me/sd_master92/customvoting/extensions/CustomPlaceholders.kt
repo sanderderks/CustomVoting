@@ -43,56 +43,62 @@ class CustomPlaceholders(private val plugin: CV) : PlaceholderExpansion()
         {
             when (params)
             {
-                SERVER_VOTES     ->
+                SERVER_VOTES       ->
                 {
                     var total = 0
                     for (voter in if (plugin.hasDatabaseConnection()) PlayerTable.getTopVoters(plugin) else VoteFile.getTopVoters(
-                        plugin
+                            plugin
                     ))
                     {
                         total += voter.votes
                     }
                     return "$total"
                 }
-                PLAYER_VOTES     ->
+                PLAYER_VOTES       ->
                 {
                     if (player != null)
                     {
                         val voter =
-                            if (plugin.hasDatabaseConnection()) PlayerRow(plugin, player) else VoteFile(player, plugin)
+                                if (plugin.hasDatabaseConnection()) PlayerRow(plugin, player) else VoteFile(player, plugin)
                         return "${voter.votes}"
                     }
                     return "0"
                 }
-                PLAYER_PERIOD    ->
+                PLAYER_PERIOD      ->
                 {
                     if (player != null)
                     {
                         val voter =
-                            if (plugin.hasDatabaseConnection()) PlayerRow(plugin, player) else VoteFile(player, plugin)
+                                if (plugin.hasDatabaseConnection()) PlayerRow(plugin, player) else VoteFile(player, plugin)
                         return "${voter.period}"
                     }
                     return "0"
                 }
-                VOTE_PARTY_TOTAL ->
+                VOTE_PARTY_TOTAL   ->
                 {
                     val total = plugin.config.getInt(Settings.VOTES_REQUIRED_FOR_VOTE_PARTY)
                     return "$total"
                 }
-                VOTE_PARTY_UNTIL ->
+                VOTE_PARTY_CURRENT ->
+                {
+                    val current = plugin.data.getInt(Data.CURRENT_VOTES)
+                    return "$current"
+                }
+                VOTE_PARTY_UNTIL   ->
                 {
                     val total = plugin.config.getInt(Settings.VOTES_REQUIRED_FOR_VOTE_PARTY)
                     val current = plugin.data.getInt(Data.CURRENT_VOTES)
                     val until = total - current
                     return "$until"
                 }
-                else             ->
+                else               ->
                 {
                     if (params.contains(PLAYER_VOTES))
                     {
-                        val key = params.split("_".toRegex()).toTypedArray()[2].toInt()
+                        val key = params.split("_".toRegex())
+                                .toTypedArray()[2].toInt()
                         val topVoter = if (plugin.hasDatabaseConnection()) PlayerTable.getTopVoter(
-                            plugin, key
+                                plugin, key
                         ) else VoteFile.getTopVoter(plugin, key)
                         return if (params.endsWith("NAME"))
                         {
@@ -103,9 +109,10 @@ class CustomPlaceholders(private val plugin: CV) : PlaceholderExpansion()
                         }
                     } else if (params.contains(PLAYER_PERIOD))
                     {
-                        val key = params.split("_".toRegex()).toTypedArray()[2].toInt()
+                        val key = params.split("_".toRegex())
+                                .toTypedArray()[2].toInt()
                         val topVoter = if (plugin.hasDatabaseConnection()) PlayerTable.getTopVoter(
-                            plugin, key
+                                plugin, key
                         ) else VoteFile.getTopVoter(plugin, key)
                         return if (params.endsWith("NAME"))
                         {
@@ -131,6 +138,7 @@ class CustomPlaceholders(private val plugin: CV) : PlaceholderExpansion()
         const val PLAYER_VOTES = "PLAYER_VOTES"
         const val PLAYER_PERIOD = "PLAYER_PERIOD"
         const val VOTE_PARTY_TOTAL = "VOTE_PARTY_TOTAL"
+        const val VOTE_PARTY_CURRENT = "VOTE_PARTY_CURRENT"
         const val VOTE_PARTY_UNTIL = "VOTE_PARTY_UNTIL"
     }
 }
