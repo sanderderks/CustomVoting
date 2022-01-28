@@ -17,8 +17,8 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.scheduler.BukkitRunnable
 
 class VoteStreakRewards(private val plugin: CV, private val number: Int) : GUI(
-    plugin,
-    "Vote Streak Rewards #$number", 9, false, true
+        plugin,
+        "Vote Streak Rewards #$number", 9, false, true
 )
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
@@ -45,13 +45,13 @@ class VoteStreakRewards(private val plugin: CV, private val number: Int) : GUI(
                 cancelCloseEvent()
                 player.closeInventory()
                 player.sendMessage(
-                    ChatColor.GREEN.toString() + "Please enter a permission to add or remove from " +
-                            "the list"
+                        ChatColor.GREEN.toString() + "Please enter a permission to add or remove from " +
+                                "the list"
                 )
                 player.sendMessage(ChatColor.GRAY.toString() + "Type 'cancel' to go back")
                 player.sendMessage("")
                 val permissions: List<String> =
-                    plugin.data.getStringList(Data.VOTE_STREAKS + "." + PlayerListener.streakPermissionInput[player.uniqueId] + ".permissions")
+                        plugin.data.getStringList(Data.VOTE_STREAKS + "." + PlayerListener.streakPermissionInput[player.uniqueId] + ".permissions")
                 if (permissions.isEmpty())
                 {
                     player.sendMessage(ChatColor.RED.toString() + "There are currently no permissions.")
@@ -87,14 +87,14 @@ class VoteStreakRewards(private val plugin: CV, private val number: Int) : GUI(
                 cancelCloseEvent()
                 player.closeInventory()
                 player.sendMessage(
-                    ChatColor.GREEN.toString() + "Please enter a command to add or remove from " +
-                            "the list"
+                        ChatColor.GREEN.toString() + "Please enter a command to add or remove from " +
+                                "the list"
                 )
                 player.sendMessage(ChatColor.GREEN.toString() + "(with %PLAYER% as placeholder)")
                 player.sendMessage(ChatColor.GRAY.toString() + "Type 'cancel' to go back")
                 player.sendMessage("")
                 val commands: List<String> =
-                    plugin.data.getStringList(Data.VOTE_STREAKS + "." + PlayerListener.streakCommandInput[player.uniqueId] + ".commands")
+                        plugin.data.getStringList(Data.VOTE_STREAKS + "." + PlayerListener.streakCommandInput[player.uniqueId] + ".commands")
                 if (commands.isEmpty())
                 {
                     player.sendMessage(ChatColor.RED.toString() + "There are currently no commands.")
@@ -148,7 +148,7 @@ class VoteStreakRewards(private val plugin: CV, private val number: Int) : GUI(
     init
     {
         inventory.setItem(0, PermissionsRewardItem(plugin, "${Data.VOTE_STREAKS}.$number.permissions"))
-        inventory.setItem(1, CommandsRewardItem(plugin, "${Data.VOTE_STREAKS}.$number.commands"))
+        inventory.setItem(1, CommandsRewardItem(plugin, "${Data.VOTE_STREAKS}.$number.commands", Material.SHIELD))
         inventory.setItem(2, ItemsRewardItem(plugin, "${Data.VOTE_STREAKS}.$number.${Data.ITEM_REWARDS}"))
         inventory.setItem(7, DELETE_ITEM)
         inventory.setItem(8, BACK_ITEM)
@@ -156,6 +156,6 @@ class VoteStreakRewards(private val plugin: CV, private val number: Int) : GUI(
 }
 
 class PermissionsRewardItem(plugin: CV, path: String) : BaseItem(
-    Material.DIAMOND_SWORD, ChatColor.LIGHT_PURPLE.toString() + "Permission Rewards",
-    ChatColor.GRAY.toString() + "Currently: " + ChatColor.AQUA + plugin.data.getStringList(path).size + ChatColor.GRAY + " permissions"
+        Material.DIAMOND_SWORD, ChatColor.LIGHT_PURPLE.toString() + "Permission Rewards",
+        ChatColor.GRAY.toString() + "Currently: " + ChatColor.AQUA + plugin.data.getStringList(path).size + ChatColor.GRAY + " permissions"
 )

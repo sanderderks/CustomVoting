@@ -9,6 +9,8 @@ import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.constants.enumerations.VotePartyType
 import me.sd_master92.customvoting.gui.items.BaseItem
 import me.sd_master92.customvoting.helpers.ParticleHelper
+import me.sd_master92.customvoting.runCommand
+import me.sd_master92.customvoting.withPlaceholders
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Location
@@ -60,6 +62,7 @@ class VoteParty(private val plugin: CV)
                         {
                             SoundType.VOTE_PARTY_START.playForAll(plugin)
                             plugin.server.broadcastMessage(Messages.VOTE_PARTY_START.getMessage(plugin))
+                            executeCommands()
                             when (votePartyType)
                             {
                                 VotePartyType.RANDOM_CHEST_AT_A_TIME.value ->
@@ -94,6 +97,24 @@ class VoteParty(private val plugin: CV)
         }
     }
 
+    private fun executeCommands()
+    {
+        for (command in plugin.data.getStringList(Data.VOTE_PARTY_COMMANDS))
+        {
+            if (command.contains("%PLAYER%"))
+            {
+                for (player in Bukkit.getOnlinePlayers())
+                {
+                    runCommand(plugin, command.replace("%PLAYER%", player.name)
+                            .withPlaceholders(player))
+                }
+            } else
+            {
+                runCommand(plugin, command)
+            }
+        }
+    }
+
     private fun dropChests()
     {
         val locations = plugin.data.getLocations(Data.VOTE_PARTY)
@@ -102,7 +123,8 @@ class VoteParty(private val plugin: CV)
         for (key in locations.keys)
         {
             val chest: MutableList<ItemStack> = ArrayList(listOf(*plugin.data.getItems(Data.VOTE_PARTY + "." + key)))
-            val loc = locations[key]!!.clone().add(0.5, 0.0, 0.5)
+            val loc = locations[key]!!.clone()
+                    .add(0.5, 0.0, 0.5)
             val dropLoc = Location(loc.world, loc.x, loc.y - 1, loc.z)
             val fireworkLoc = Location(loc.world, loc.x, loc.y + 1, loc.z)
             object : BukkitRunnable()
@@ -153,7 +175,7 @@ class VoteParty(private val plugin: CV)
         val keys: MutableList<String> = ArrayList(locations.keys)
         keys.forEach(Consumer { key: String ->
             val items = plugin.data.getItems(
-                Data.VOTE_PARTY + "." + key
+                    Data.VOTE_PARTY + "." + key
             )
             if (items.isNotEmpty())
             {
@@ -169,7 +191,8 @@ class VoteParty(private val plugin: CV)
                 {
                     val key = keys[random.nextInt(keys.size)]
                     val chest = chests[key]!!
-                    val loc = locations[key]!!.clone().add(0.5, 0.0, 0.5)
+                    val loc = locations[key]!!.clone()
+                            .add(0.5, 0.0, 0.5)
                     val dropLoc = Location(loc.world, loc.x, loc.y - 1, loc.z)
                     val fireworkLoc = Location(loc.world, loc.x, loc.y + 1, loc.z)
                     if (dropLoc.world != null)
@@ -244,11 +267,11 @@ class VoteParty(private val plugin: CV)
     companion object
     {
         val VOTE_PARTY_ITEM = BaseItem(
-            Material.ENDER_CHEST, ChatColor.LIGHT_PURPLE.toString() +
-                    "Vote Party Chest",
-            ChatColor.GRAY.toString() + "Place this chest somewhere in the sky.;" + ChatColor.GRAY + "The contents of this chest" +
-                    " will;" +
-                    ChatColor.GRAY + "start dropping when the voteparty starts."
+                Material.ENDER_CHEST, ChatColor.LIGHT_PURPLE.toString() +
+                "Vote Party Chest",
+                ChatColor.GRAY.toString() + "Place this chest somewhere in the sky.;" + ChatColor.GRAY + "The contents of this chest" +
+                        " will;" +
+                        ChatColor.GRAY + "start dropping when the voteparty starts."
         )
         private val queue: MutableList<VoteParty> = ArrayList()
         private var isActive = false

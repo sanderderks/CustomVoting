@@ -11,6 +11,7 @@ object Data
     const val VOTE_TOP_SIGNS = "vote_top"
     const val VOTE_TOP_STANDS = "armor_stands"
     const val VOTE_COMMANDS = "vote_commands"
+    const val VOTE_PARTY_COMMANDS = "vote_party_commands"
     const val VOTE_LINK_ITEMS = "vote_link_items"
     const val VOTE_LINKS = "vote_links"
     const val VOTE_STREAKS = "vote_streaks"

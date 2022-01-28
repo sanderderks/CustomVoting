@@ -15,7 +15,7 @@ import org.bukkit.scheduler.BukkitRunnable
 import java.text.DecimalFormat
 import java.util.*
 
-class CustomVote(private val plugin: CV, vote: Vote, private val queued: Boolean = false) : Vote()
+class CustomVote(private val plugin: CV, vote: Vote, private val queued: Boolean = false) : Vote(vote)
 {
     private fun forwardVote()
     {
@@ -266,23 +266,13 @@ class CustomVote(private val plugin: CV, vote: Vote, private val queued: Boolean
 
         fun create(plugin: CV, name: String?, service: String?, queued: Boolean = false)
         {
-            val vote = Vote()
-            vote.username = name
-            vote.serviceName = service
-            vote.address = "0.0.0.0"
-            val date = Date()
-            vote.timeStamp = date.time.toString()
-
+            val vote = Vote(service, name, "0.0.0.0", Date().time.toString())
             CustomVote(plugin, vote, queued)
         }
     }
 
     init
     {
-        username = vote.username
-        serviceName = vote.serviceName
-        address = vote.address
-        timeStamp = vote.timeStamp
         forwardVote()
     }
 }
