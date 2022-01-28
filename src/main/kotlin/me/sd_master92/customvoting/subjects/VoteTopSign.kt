@@ -19,10 +19,10 @@ import org.bukkit.scheduler.BukkitRunnable
 import java.util.*
 
 class VoteTopSign @JvmOverloads constructor(
-    private val plugin: CV,
-    private val top: Int,
-    val location: Location?,
-    player: Player? = null
+        private val plugin: CV,
+        private val top: Int,
+        val location: Location?,
+        player: Player? = null
 )
 {
     private fun update()
@@ -56,10 +56,10 @@ class VoteTopSign @JvmOverloads constructor(
         {
             val sign = location.block.state as Sign
             val topVoter =
-                if (plugin.hasDatabaseConnection()) PlayerTable.getTopVoter(plugin, top) else VoteFile.getTopVoter(
-                    plugin,
-                    top
-                )
+                    if (plugin.hasDatabaseConnection()) PlayerTable.getTopVoter(plugin, top) else VoteFile.getTopVoter(
+                            plugin,
+                            top
+                    )
             if (topVoter != null)
             {
                 val oldLoc = plugin.data.getLocation(Data.VOTE_TOP_SIGNS + "." + top)
@@ -73,8 +73,8 @@ class VoteTopSign @JvmOverloads constructor(
                             if (i == 1)
                             {
                                 oldSign.setLine(
-                                    i,
-                                    Messages.VOTE_TOP_SIGNS_PLAYER_SIGNS_OUTDATED.getMessage(plugin)
+                                        i,
+                                        Messages.VOTE_TOP_SIGNS_PLAYER_SIGNS_OUTDATED.getMessage(plugin)
                                 )
                             } else
                             {
@@ -92,13 +92,13 @@ class VoteTopSign @JvmOverloads constructor(
                 placeholders["%PERIOD%"] = "${topVoter.period}"
                 if (plugin.config.getBoolean(Settings.MONTHLY_PERIOD))
                 {
-                    placeholders["%s%"] = if (topVoter.period == 1) "s" else ""
+                    placeholders["%s%"] = if (topVoter.period == 1) "" else "s"
                 } else
                 {
-                    placeholders["%s%"] = if (topVoter.votes == 1) "s" else ""
+                    placeholders["%s%"] = if (topVoter.votes == 1) "" else "s"
                 }
                 for ((i, message) in Messages.VOTE_TOP_SIGNS_PLAYER_SIGNS_FORMAT.getMessages(plugin, placeholders)
-                    .withIndex())
+                        .withIndex())
                 {
                     sign.setLine(i, message)
                 }
@@ -110,8 +110,8 @@ class VoteTopSign @JvmOverloads constructor(
                     if (i == 1)
                     {
                         sign.setLine(
-                            i,
-                            Messages.VOTE_TOP_SIGNS_PLAYER_SIGNS_NOT_FOUND.getMessage(plugin)
+                                i,
+                                Messages.VOTE_TOP_SIGNS_PLAYER_SIGNS_NOT_FOUND.getMessage(plugin)
                         )
                     } else
                     {
@@ -129,7 +129,8 @@ class VoteTopSign @JvmOverloads constructor(
         if (sign is WallSign)
         {
             val block1 = loc.block.getRelative(BlockFace.UP)
-            val block2 = loc.block.getRelative(sign.facing.oppositeFace).getRelative(BlockFace.UP)
+            val block2 = loc.block.getRelative(sign.facing.oppositeFace)
+                    .getRelative(BlockFace.UP)
             for (block in arrayOf(block1, block2))
             {
                 if (block.state is Skull)
