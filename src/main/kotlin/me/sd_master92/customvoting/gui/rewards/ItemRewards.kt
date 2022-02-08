@@ -14,7 +14,7 @@ import org.bukkit.inventory.ItemStack
 
 class ItemRewards(private val plugin: CV, private val op: Boolean = false) : GUI(plugin, "Item Rewards", 27, true)
 {
-    private var path = Data.ITEM_REWARDS
+    private var path = Data.ITEM_REWARDS.appendWhenTrue(op, Data.OP_REWARDS)
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
     {
         if (event.slot >= 25)
@@ -54,7 +54,6 @@ class ItemRewards(private val plugin: CV, private val op: Boolean = false) : GUI
 
     init
     {
-        val path = Data.ITEM_REWARDS.appendWhenTrue(op, Data.OP_REWARDS)
         for (reward in plugin.data.getItems(path))
         {
             inventory.addItem(reward)
