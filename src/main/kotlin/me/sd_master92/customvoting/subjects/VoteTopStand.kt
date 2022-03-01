@@ -153,7 +153,8 @@ class VoteTopStand @JvmOverloads constructor(private val plugin: CV, private val
         {
             try
             {
-                skullMeta.owningPlayer = Bukkit.getOfflinePlayer(UUID.fromString(voteFile.uuid))
+                val uuid = UUID.fromString(voteFile.uuid)
+                skullMeta.owningPlayer = Bukkit.getPlayer(uuid) ?: Bukkit.getOfflinePlayer(uuid)
                 skull.itemMeta = skullMeta
             } catch (ignored: Exception)
             {
