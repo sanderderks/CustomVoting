@@ -6,7 +6,7 @@
 
     <groupId>me.sd_master92</groupId>
     <artifactId>CustomVoting</artifactId>
-    <version>8.6.3</version>
+    <version>8.6.4</version>
 
     <name>CustomVoting</name>
     <description>Voting on its best. Totally customizable!</description>
@@ -58,6 +58,10 @@
                 <configuration>
                     <createDependencyReducedPom>false</createDependencyReducedPom>
                     <relocations>
+                        <relocation>
+                            <pattern>kotlin</pattern>
+                            <shadedPattern>me.sd_master92.kotlin</shadedPattern>
+                        </relocation>
                         <relocation>
                             <pattern>org.bstats</pattern>
                             <shadedPattern>me.sd_master92.customvoting</shadedPattern>
