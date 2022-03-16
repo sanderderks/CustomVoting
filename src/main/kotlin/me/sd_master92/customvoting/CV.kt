@@ -151,6 +151,17 @@ class CV : CustomPlugin(
             CustomPlaceholders(this).register()
             infoLog("|___successfully hooked into PlaceholderAPI")
         }
+        infoLog("")
+        infoLog("| checking for Citizens hook")
+        infoLog("|")
+        if (server.pluginManager.getPlugin("Citizens") == null)
+        {
+            errorLog("|___Citizens hook not found")
+        } else
+        {
+            CITIZENS = true
+            infoLog("|___successfully hooked into Citizens")
+        }
     }
 
     private fun hasVault(): Boolean
@@ -255,6 +266,8 @@ class CV : CustomPlugin(
     companion object
     {
         var PAPI = false
+            private set
+        var CITIZENS = false
             private set
         var ECONOMY: Economy? = null
             private set

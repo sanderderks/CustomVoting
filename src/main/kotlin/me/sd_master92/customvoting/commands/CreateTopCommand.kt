@@ -2,6 +2,7 @@ package me.sd_master92.customvoting.commands
 
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Messages
+import me.sd_master92.customvoting.subjects.CitizenStand
 import me.sd_master92.customvoting.subjects.VoteTopStand
 import me.sd_master92.plugin.command.SimpleCommand
 import org.bukkit.ChatColor
@@ -21,14 +22,24 @@ class CreateTopCommand(private val plugin: CV) : SimpleCommand(plugin, "createto
             val top = args[0].toInt()
             if (top > 0)
             {
-                VoteTopStand(plugin, top, player)
+                if (CV.CITIZENS)
+                {
+                    CitizenStand(plugin, top, player)
+                } else
+                {
+                    VoteTopStand(plugin, top, player)
+                }
             } else
             {
                 player.sendMessage(ChatColor.RED.toString() + "Invalid argument: 'top' must be a positive number.")
             }
-        } catch (e: Exception)
+        } catch (e: NumberFormatException)
         {
             player.sendMessage(ChatColor.RED.toString() + "Invalid argument: 'top' must be a number.")
+        } catch (e: Exception)
+        {
+            player.sendMessage(ChatColor.RED.toString() + "Something went wrong!")
+            plugin.errorLog("Error while creating vote top", e)
         }
     }
 
