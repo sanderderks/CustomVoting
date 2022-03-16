@@ -121,6 +121,9 @@ class CitizenStand @JvmOverloads constructor(private val plugin: CV, private val
             if (citizen != null && citizen!!.name != voteFile.name)
             {
                 citizen!!.name = voteFile.name
+                citizen!!.despawn()
+                citizen!!.data()?.setPersistent(NPC.NAMEPLATE_VISIBLE_METADATA, false)
+                citizen!!.spawn(plugin.data.getLocation(Data.CITIZENS + "." + top))
             }
         } else
         {
@@ -130,6 +133,9 @@ class CitizenStand @JvmOverloads constructor(private val plugin: CV, private val
             if (citizen != null && citizen!!.name != "Unknown")
             {
                 citizen!!.name = "Unknown"
+                citizen!!.despawn()
+                citizen!!.data()?.setPersistent(NPC.NAMEPLATE_VISIBLE_METADATA, false)
+                citizen!!.spawn(plugin.data.getLocation(Data.CITIZENS + "." + top))
             }
         }
         if (topStand == null || nameStand == null || votesStand == null || citizen == null || !citizen!!.isSpawned)
@@ -174,9 +180,6 @@ class CitizenStand @JvmOverloads constructor(private val plugin: CV, private val
                     for (voteTop in voteTops.values)
                     {
                         voteTop.update()
-                        voteTop.citizen?.despawn()
-                        voteTop.citizen?.data()?.setPersistent(NPC.NAMEPLATE_VISIBLE_METADATA, false)
-                        voteTop.citizen?.spawn(plugin.data.getLocation(Data.CITIZENS + "." + voteTop.top))
                     }
                 }
             }.runTaskLater(plugin, 40L)
