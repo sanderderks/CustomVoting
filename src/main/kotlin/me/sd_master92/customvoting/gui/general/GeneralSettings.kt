@@ -103,6 +103,12 @@ class GeneralSettings(private val plugin: CV) : GUI(plugin, "General Settings", 
                 plugin.config.saveConfig()
                 event.currentItem = LuckyVoteItem(plugin)
             }
+            Material.GRASS_BLOCK       ->
+            {
+                SoundType.CLICK.play(plugin, player)
+                cancelCloseEvent()
+                player.openInventory(DisabledWorlds(plugin).inventory)
+            }
             else                       ->
             {
             }
@@ -125,6 +131,7 @@ class GeneralSettings(private val plugin: CV) : GUI(plugin, "General Settings", 
         inventory.addItem(VotePartyTypeItem(plugin))
         inventory.addItem(VotesUntilItem.getInstance(plugin))
         inventory.addItem(VotePartyCountdownItem(plugin))
+        inventory.addItem(BaseItem(Material.GRASS_BLOCK, ChatColor.LIGHT_PURPLE.toString() + "Disabled Worlds"))
         inventory.setItem(17, BACK_ITEM)
     }
 }

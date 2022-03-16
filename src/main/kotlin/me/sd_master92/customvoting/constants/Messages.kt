@@ -8,6 +8,7 @@ enum class Messages(private val path: String)
     MUST_BE_PLAYER("must_be_player"),
     INVALID_PLAYER("invalid_player"),
     MONTHLY_RESET("monthly_reset"),
+    DISABLED_WORLD("disabled_world"),
     VOTE_BROADCAST("vote_broadcast"),
     VOTE_LUCKY("lucky_vote"),
     VOTE_COMMAND("vote_command"),
@@ -58,7 +59,7 @@ enum class Messages(private val path: String)
 
             setDefault(plugin, VOTE_BROADCAST, "&d%PLAYER% &7just voted at &d%SERVICE%&7!")
             setDefault(plugin, VOTE_LUCKY, "&aYou received a &dLucky Reward&a!")
-
+            setDefault(plugin, DISABLED_WORLD, "&cPlease go to another world to receive your rewards.")
             setDefault(
                 plugin,
                 VOTE_COMMAND,

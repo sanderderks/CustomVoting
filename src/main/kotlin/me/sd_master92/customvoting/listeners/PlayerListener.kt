@@ -37,22 +37,7 @@ class PlayerListener(private val plugin: CV) : Listener
     fun onPlayerJoin(event: PlayerJoinEvent)
     {
         val player = event.player
-        if (plugin.hasDatabaseConnection())
-        {
-            val queue: MutableList<String> = ArrayList()
-            val playerRow = PlayerRow(plugin, player)
-            for (i in 0 until playerRow.queue)
-            {
-                queue.add("unknown.com")
-            }
-            executeQueue(queue, player)
-            playerRow.clearQueue()
-        } else
-        {
-            val voteFile = VoteFile(player, plugin)
-            executeQueue(voteFile.queue, player)
-            voteFile.clearQueue()
-        }
+        executeQueue(player)
         if (player.isOp && plugin.config.getBoolean(Settings.INGAME_UPDATES) && !plugin.isUpToDate)
         {
             object : BukkitRunnable()
@@ -67,13 +52,34 @@ class PlayerListener(private val plugin: CV) : Listener
         }
     }
 
-    private fun executeQueue(queue: List<String>, player: Player)
+    @EventHandler
+    fun onWorldChange(event: PlayerChangedWorldEvent)
     {
+        executeQueue(event.player)
+    }
+
+    private fun executeQueue(player: Player)
+    {
+        val queue: MutableList<String> = ArrayList()
+        if (plugin.hasDatabaseConnection())
+        {
+            val playerRow = PlayerRow(plugin, player)
+            for (i in 0 until playerRow.queue)
+            {
+                queue.add("unknown.com")
+            }
+            playerRow.clearQueue()
+        } else
+        {
+            val voteFile = VoteFile(player, plugin)
+            queue.addAll(voteFile.queue)
+            voteFile.clearQueue()
+        }
         if (queue.isNotEmpty())
         {
             plugin.infoLog(
-                    queue.size.toString() + " queued votes found for " + player.name + ". Forwarding in 10 seconds.." +
-                            "."
+                queue.size.toString() + " queued votes found for " + player.name + ". Forwarding in 10 seconds.." +
+                        "."
             )
             val iterator = queue.iterator()
             object : BukkitRunnable()
@@ -104,13 +110,21 @@ class PlayerListener(private val plugin: CV) : Listener
         if (commandInput.contains(player.uniqueId))
         {
             event.isCancelled = true
-            checkCommand(event.message, player, Data.VOTE_COMMANDS.appendWhenTrue(commandInput[player.uniqueId]
-                    ?: false, Data.OP_REWARDS))
+            checkCommand(
+                event.message, player, Data.VOTE_COMMANDS.appendWhenTrue(
+                    commandInput[player.uniqueId]
+                        ?: false, Data.OP_REWARDS
+                )
+            )
             commandInput.remove(player.uniqueId)
         }
         if (streakCommandInput.contains(player.uniqueId))
         {
-            checkCommand(event.message, player, Data.VOTE_STREAKS + "." + streakCommandInput[player.uniqueId] + ".commands")
+            checkCommand(
+                event.message,
+                player,
+                Data.VOTE_STREAKS + "." + streakCommandInput[player.uniqueId] + ".commands"
+            )
             streakCommandInput.remove(player.uniqueId)
         }
         if (votePartyCommandInput.contains(player.uniqueId))
@@ -135,7 +149,7 @@ class PlayerListener(private val plugin: CV) : Listener
                         if (section.getString("$top.$sub") == event.rightClicked.uniqueId.toString())
                         {
                             event.isCancelled = true
-                            if (!plugin.config.getBoolean(Settings.DISABLED_BROADCAST_ARMOR_STAND))
+                            if (!plugin.config.getBoolean(Settings.DISABLED_MESSAGE_ARMOR_STAND))
                             {
                                 event.player.sendText(plugin, Messages.VOTE_TOP_STANDS_DONT)
                             }
@@ -194,8 +208,12 @@ class PlayerListener(private val plugin: CV) : Listener
                     SoundType.FAILURE.play(plugin, player)
                 } else
                 {
-                    checkCommand(event.message, player, Data.VOTE_COMMANDS.appendWhenTrue(commandInput[player.uniqueId]
-                            ?: false, Data.OP_REWARDS))
+                    checkCommand(
+                        event.message, player, Data.VOTE_COMMANDS.appendWhenTrue(
+                            commandInput[player.uniqueId]
+                                ?: false, Data.OP_REWARDS
+                        )
+                    )
                 }
                 commandInput.remove(player.uniqueId)
             }
@@ -208,10 +226,10 @@ class PlayerListener(private val plugin: CV) : Listener
                     linkVoteLinkInput.add(player.uniqueId)
                     SoundType.SUCCESS.play(plugin, player)
                     player.sendMessage(
-                            arrayOf(
-                                    ChatColor.GREEN.toString() + "Add a link to this item", ChatColor.GRAY.toString() +
+                        arrayOf(
+                            ChatColor.GREEN.toString() + "Add a link to this item", ChatColor.GRAY.toString() +
                                     "Type 'cancel' to continue"
-                            )
+                        )
                     )
                 } else
                 {
@@ -231,11 +249,11 @@ class PlayerListener(private val plugin: CV) : Listener
                     VoteLinks.save(plugin, player, items as Array<ItemStack?>, false)
                     SoundType.SUCCESS.play(plugin, player)
                     player.sendMessage(
-                            arrayOf(
-                                    ChatColor.GREEN.toString() + "Add more lore (subtext) to this item",
-                                    ChatColor.GRAY.toString() +
-                                            "Type 'cancel' to continue"
-                            )
+                        arrayOf(
+                            ChatColor.GREEN.toString() + "Add more lore (subtext) to this item",
+                            ChatColor.GRAY.toString() +
+                                    "Type 'cancel' to continue"
+                        )
                     )
                 }
             }
@@ -273,10 +291,10 @@ class PlayerListener(private val plugin: CV) : Listener
                 loreVoteLinkInput.add(player.uniqueId)
                 SoundType.SUCCESS.play(plugin, player)
                 player.sendMessage(
-                        arrayOf(
-                                ChatColor.GREEN.toString() + "Add lore (subtext) to this item", ChatColor.GRAY.toString() +
+                    arrayOf(
+                        ChatColor.GREEN.toString() + "Add lore (subtext) to this item", ChatColor.GRAY.toString() +
                                 "Type 'cancel' to continue"
-                        )
+                    )
                 )
             }
             in streakInput           ->
@@ -327,7 +345,11 @@ class PlayerListener(private val plugin: CV) : Listener
                     SoundType.FAILURE.play(plugin, player)
                 } else
                 {
-                    checkCommand(event.message, player, Data.VOTE_STREAKS + "." + streakCommandInput[player.uniqueId] + ".commands")
+                    checkCommand(
+                        event.message,
+                        player,
+                        Data.VOTE_STREAKS + "." + streakCommandInput[player.uniqueId] + ".commands"
+                    )
                 }
                 streakCommandInput.remove(player.uniqueId)
             }
@@ -381,8 +403,8 @@ class PlayerListener(private val plugin: CV) : Listener
         {
             val locations: MutableList<Location> = ArrayList()
             for (face in arrayOf(
-                    BlockFace.UP, BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH,
-                    BlockFace.WEST
+                BlockFace.UP, BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH,
+                BlockFace.WEST
             ))
             {
                 if (block.getRelative(face).state is Sign)
@@ -460,7 +482,8 @@ class PlayerListener(private val plugin: CV) : Listener
         for (forbidden in plugin.config.getStringList(Settings.FORBIDDEN_COMMANDS))
         {
             if (command.lowercase()
-                            .contains(forbidden))
+                    .contains(forbidden)
+            )
             {
                 player.sendMessage(ChatColor.RED.toString() + "This command is forbidden.")
                 return
@@ -488,7 +511,7 @@ class PlayerListener(private val plugin: CV) : Listener
     private fun checkStreakPermission(permission: String, player: Player)
     {
         val permissions =
-                plugin.data.getStringList(Data.VOTE_STREAKS + "." + streakPermissionInput[player.uniqueId] + ".permissions")
+            plugin.data.getStringList(Data.VOTE_STREAKS + "." + streakPermissionInput[player.uniqueId] + ".permissions")
         if (permissions.contains(permission))
         {
             permissions.remove(permission)
@@ -499,7 +522,7 @@ class PlayerListener(private val plugin: CV) : Listener
             player.sendMessage(ChatColor.GREEN.toString() + "Added " + permission + " to permissions")
         }
         plugin.data[Data.VOTE_STREAKS + "." + streakPermissionInput.remove(player.uniqueId) + ".permissions"] =
-                permissions
+            permissions
         plugin.data.saveConfig()
 
     }

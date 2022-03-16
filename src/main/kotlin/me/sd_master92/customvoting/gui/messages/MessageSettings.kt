@@ -15,7 +15,7 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 
-class MessageSettings(private val plugin: CV) : GUI(plugin, "Message Settings", 9, false, true)
+class MessageSettings(private val plugin: CV) : GUI(plugin, "Message Settings", 18, false, true)
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
     {
@@ -88,11 +88,21 @@ class MessageSettings(private val plugin: CV) : GUI(plugin, "Message Settings", 
             {
                 SoundType.CHANGE.play(plugin, player)
                 plugin.config.set(
-                    Settings.DISABLED_BROADCAST_ARMOR_STAND,
-                    !plugin.config.getBoolean(Settings.DISABLED_BROADCAST_ARMOR_STAND)
+                    Settings.DISABLED_MESSAGE_ARMOR_STAND,
+                    !plugin.config.getBoolean(Settings.DISABLED_MESSAGE_ARMOR_STAND)
                 )
                 plugin.config.saveConfig()
                 event.currentItem = ArmorStandBreakMessage(plugin)
+            }
+            Material.GRASS_BLOCK       ->
+            {
+                SoundType.CHANGE.play(plugin, player)
+                plugin.config.set(
+                    Settings.DISABLED_MESSAGE_DISABLED_WORLD,
+                    !plugin.config.getBoolean(Settings.DISABLED_MESSAGE_DISABLED_WORLD)
+                )
+                plugin.config.saveConfig()
+                event.currentItem = DisabledWorldMessage(plugin)
             }
             Material.BARRIER           ->
             {
@@ -129,7 +139,8 @@ class MessageSettings(private val plugin: CV) : GUI(plugin, "Message Settings", 
         inventory.addItem(VotePartyCountBroadcast(plugin))
         inventory.addItem(VotePartyCountEndBroadcast(plugin))
         inventory.addItem(ArmorStandBreakMessage(plugin))
-        inventory.setItem(8, BACK_ITEM)
+        inventory.addItem(DisabledWorldMessage(plugin))
+        inventory.setItem(17, BACK_ITEM)
     }
 }
 
@@ -177,6 +188,13 @@ class VotePartyCountEndBroadcast(plugin: CV) : StatusItem(
 class ArmorStandBreakMessage(plugin: CV) : StatusItem(
     plugin,
     Material.ARMOR_STAND, "Break Armorstand Message",
-    Settings.DISABLED_BROADCAST_ARMOR_STAND,
+    Settings.DISABLED_MESSAGE_ARMOR_STAND,
+    true
+)
+
+class DisabledWorldMessage(plugin: CV) : StatusItem(
+    plugin,
+    Material.GRASS_BLOCK, "Disabled World Message",
+    Settings.DISABLED_MESSAGE_DISABLED_WORLD,
     true
 )

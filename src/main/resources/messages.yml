@@ -8,6 +8,7 @@ monthly_reset: '&d&lAll votes have been reset, because a new month has started!'
 
 vote_broadcast: '&d%PLAYER% &7just voted at &d%SERVICE%&7!'
 lucky_vote: '&aYou received a &dLucky Reward&a!'
+disabled_world: '&cPlease go to another world to receive your rewards.'
 
 vote_command:
   - '&bVote for &dServerName &b!'

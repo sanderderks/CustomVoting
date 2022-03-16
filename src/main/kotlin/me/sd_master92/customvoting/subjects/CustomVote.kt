@@ -23,6 +23,13 @@ class CustomVote(private val plugin: CV, vote: Vote, private val queued: Boolean
         if (player == null)
         {
             queue()
+        } else if (plugin.config.getStringList(Settings.DISABLED_WORLDS).contains(player.world.name))
+        {
+            if (!plugin.config.getBoolean(Settings.DISABLED_MESSAGE_DISABLED_WORLD))
+            {
+                player.sendText(plugin, Messages.DISABLED_WORLD)
+            }
+            queue()
         } else
         {
             broadcast(player)
