@@ -33,9 +33,9 @@ class CitizenStand @JvmOverloads constructor(private val plugin: CV, private val
             nameStand = getArmorStand(section.getString("name"))
             votesStand = getArmorStand(section.getString("votes"))
             citizen = CitizensAPI.getNPCRegistry().getByUniqueId(UUID.fromString(section.getString("citizen")))
-            if (citizen != null)
+            if (citizen != null && !citizen!!.isSpawned)
             {
-                citizen!!.data().set(NPC.NAMEPLATE_VISIBLE_METADATA, false)
+                citizen!!.spawn(plugin.data.getLocation(Data.CITIZENS + "." + top))
             }
         }
     }
@@ -76,7 +76,7 @@ class CitizenStand @JvmOverloads constructor(private val plugin: CV, private val
             val citizen = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, "Unknown")
             plugin.data[Data.CITIZENS + "." + top + ".citizen"] = citizen.uniqueId.toString()
             citizen.isProtected = true
-            citizen.data().set(NPC.NAMEPLATE_VISIBLE_METADATA, false)
+            citizen.data().setPersistent(NPC.NAMEPLATE_VISIBLE_METADATA, false)
             citizen.spawn(votesStand.location)
             if (citizen.isSpawned)
             {
@@ -132,7 +132,7 @@ class CitizenStand @JvmOverloads constructor(private val plugin: CV, private val
                 citizen!!.name = "Unknown"
             }
         }
-        if (topStand == null || nameStand == null || votesStand == null)
+        if (topStand == null || nameStand == null || votesStand == null || citizen == null || !citizen!!.isSpawned)
         {
             registerArmorStands()
         }
@@ -174,6 +174,9 @@ class CitizenStand @JvmOverloads constructor(private val plugin: CV, private val
                     for (voteTop in voteTops.values)
                     {
                         voteTop.update()
+                        voteTop.citizen?.despawn()
+                        voteTop.citizen?.data()?.setPersistent(NPC.NAMEPLATE_VISIBLE_METADATA, false)
+                        voteTop.citizen?.spawn(plugin.data.getLocation(Data.CITIZENS + "." + voteTop.top))
                     }
                 }
             }.runTaskLater(plugin, 40L)
