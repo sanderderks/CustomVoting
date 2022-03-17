@@ -1,9 +1,9 @@
 package me.sd_master92.customvoting.gui.rewards
 
+import me.sd_master92.core.appendWhenTrue
 import me.sd_master92.core.inventory.BaseItem
 import me.sd_master92.core.inventory.GUI
 import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.appendWhenTrue
 import me.sd_master92.customvoting.constants.Data
 import me.sd_master92.customvoting.constants.Settings
 import me.sd_master92.customvoting.constants.enumerations.ItemRewardType

@@ -2,11 +2,11 @@ package me.sd_master92.customvoting.gui.support
 
 import me.sd_master92.core.inventory.BaseItem
 import me.sd_master92.core.inventory.GUI
+import me.sd_master92.core.inventory.StatusItem
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Settings
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.gui.VoteSettings
-import me.sd_master92.customvoting.gui.items.StatusItem
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -103,7 +103,6 @@ class UpdateItem(plugin: CV) : BaseItem(
 )
 
 class IngameUpdateItem(plugin: CV) : StatusItem(
-    plugin,
     Material.FILLED_MAP, "Ingame Updates",
-    Settings.INGAME_UPDATES
+    plugin.config, Settings.INGAME_UPDATES
 )

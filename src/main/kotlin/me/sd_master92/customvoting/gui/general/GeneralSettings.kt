@@ -2,13 +2,13 @@ package me.sd_master92.customvoting.gui.general
 
 import me.sd_master92.core.inventory.BaseItem
 import me.sd_master92.core.inventory.GUI
+import me.sd_master92.core.inventory.StatusItem
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Data
 import me.sd_master92.customvoting.constants.Settings
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.constants.enumerations.VotePartyType
 import me.sd_master92.customvoting.gui.VoteSettings
-import me.sd_master92.customvoting.gui.items.StatusItem
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -168,37 +168,31 @@ class VotePartyCountdownItem(plugin: CV) : BaseItem(
 )
 
 class SoundEffectsItem(plugin: CV) : StatusItem(
-    plugin,
     Material.MUSIC_DISC_CAT, "Sound Effects",
-    Settings.USE_SOUND_EFFECTS
+    plugin.config, Settings.USE_SOUND_EFFECTS
 )
 
 class MonthlyResetItem(plugin: CV) : StatusItem(
-    plugin,
     Material.CLOCK, "Monthly Reset",
-    Settings.MONTHLY_RESET
+    plugin.config, Settings.MONTHLY_RESET
 )
 
 class MonthlyPeriodItem(plugin: CV) : StatusItem(
-    plugin,
     Material.TNT, "Monthly Period",
-    Settings.MONTHLY_PERIOD
+    plugin.config, Settings.MONTHLY_PERIOD
 )
 
 class LuckyVoteItem(plugin: CV) : StatusItem(
-    plugin,
     Material.TOTEM_OF_UNDYING, "Lucky Vote",
-    Settings.LUCKY_VOTE
+    plugin.config, Settings.LUCKY_VOTE
 )
 
 class FireworkItem(plugin: CV) : StatusItem(
-    plugin,
     Material.FIREWORK_ROCKET, "Firework",
-    Settings.FIREWORK
+    plugin.config, Settings.FIREWORK
 )
 
 class DoVotePartyItem(plugin: CV) : StatusItem(
-    plugin,
     Material.EXPERIENCE_BOTTLE, "Vote Party",
-    Settings.VOTE_PARTY
+    plugin.config, Settings.VOTE_PARTY
 )

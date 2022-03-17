@@ -2,12 +2,12 @@ package me.sd_master92.customvoting.gui.messages
 
 import me.sd_master92.core.inventory.BaseItem
 import me.sd_master92.core.inventory.GUI
+import me.sd_master92.core.inventory.StatusItem
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Settings
 import me.sd_master92.customvoting.constants.enumerations.Materials
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.gui.VoteSettings
-import me.sd_master92.customvoting.gui.items.StatusItem
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -145,56 +145,48 @@ class MessageSettings(private val plugin: CV) : GUI(plugin, "Message Settings", 
 }
 
 class UseVoteLinkItem(plugin: CV) : StatusItem(
-    plugin,
     Material.CHEST, "Vote Links Inventory",
-    Settings.VOTE_LINK_INVENTORY
+    plugin.config, Settings.VOTE_LINK_INVENTORY
 )
 
 class VoteBroadcast(plugin: CV) : StatusItem(
-    plugin,
     Material.DIAMOND, "Vote Broadcast",
-    Settings.DISABLED_BROADCAST_VOTE,
+    plugin.config, Settings.DISABLED_BROADCAST_VOTE,
     true
 )
 
 class StreakBroadcast(plugin: CV) : StatusItem(
-    plugin,
     Material.ENDER_PEARL, "Streak Broadcast",
-    Settings.DISABLED_BROADCAST_STREAK,
+    plugin.config, Settings.DISABLED_BROADCAST_STREAK,
     true
 )
 
 class VotePartyUntilBroadcast(plugin: CV) : StatusItem(
-    plugin,
     Material.BOOKSHELF, "VoteParty Votes Broadcast",
-    Settings.DISABLED_BROADCAST_VOTE_PARTY_UNTIL,
+    plugin.config, Settings.DISABLED_BROADCAST_VOTE_PARTY_UNTIL,
     true
 )
 
 class VotePartyCountBroadcast(plugin: CV) : StatusItem(
-    plugin,
     Material.NOTE_BLOCK, "VoteParty Count Broadcast",
-    Settings.DISABLED_BROADCAST_VOTE_PARTY_COUNTDOWN,
+    plugin.config, Settings.DISABLED_BROADCAST_VOTE_PARTY_COUNTDOWN,
     true
 )
 
 class VotePartyCountEndBroadcast(plugin: CV) : StatusItem(
-    plugin,
     Material.FIREWORK_ROCKET, "VoteParty Count Ending Broadcast",
-    Settings.DISABLED_BROADCAST_VOTE_PARTY_COUNTDOWN_ENDING,
+    plugin.config, Settings.DISABLED_BROADCAST_VOTE_PARTY_COUNTDOWN_ENDING,
     true
 )
 
 class ArmorStandBreakMessage(plugin: CV) : StatusItem(
-    plugin,
     Material.ARMOR_STAND, "Break Armorstand Message",
-    Settings.DISABLED_MESSAGE_ARMOR_STAND,
+    plugin.config, Settings.DISABLED_MESSAGE_ARMOR_STAND,
     true
 )
 
 class DisabledWorldMessage(plugin: CV) : StatusItem(
-    plugin,
     Material.GRASS_BLOCK, "Disabled World Message",
-    Settings.DISABLED_MESSAGE_DISABLED_WORLD,
+    plugin.config, Settings.DISABLED_MESSAGE_DISABLED_WORLD,
     true
 )
