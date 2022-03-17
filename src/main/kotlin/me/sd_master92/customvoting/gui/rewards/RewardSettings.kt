@@ -1,14 +1,14 @@
 package me.sd_master92.customvoting.gui.rewards
 
+import me.sd_master92.core.inventory.BaseItem
+import me.sd_master92.core.inventory.GUI
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.appendWhenTrue
 import me.sd_master92.customvoting.constants.Data
 import me.sd_master92.customvoting.constants.Settings
 import me.sd_master92.customvoting.constants.enumerations.ItemRewardType
 import me.sd_master92.customvoting.constants.enumerations.SoundType
-import me.sd_master92.customvoting.gui.GUI
 import me.sd_master92.customvoting.gui.VoteSettings
-import me.sd_master92.customvoting.gui.items.BaseItem
 import me.sd_master92.customvoting.gui.items.CommandsRewardItem
 import me.sd_master92.customvoting.gui.items.ItemsRewardItem
 import me.sd_master92.customvoting.gui.rewards.streak.VoteStreakSettings
@@ -22,7 +22,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.scheduler.BukkitRunnable
 
 class RewardSettings(private val plugin: CV, private val op: Boolean = false) :
-        GUI(plugin, "Vote Rewards".appendWhenTrue(op, " (permission based)"), if (op) 9 else 18, true, true)
+    GUI(plugin, "Vote Rewards".appendWhenTrue(op, " (permission based)"), if (op) 9 else 18, true, true)
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
     {
@@ -60,8 +60,8 @@ class RewardSettings(private val plugin: CV, private val op: Boolean = false) :
                 cancelCloseEvent()
                 player.closeInventory()
                 player.sendMessage(
-                        ChatColor.GREEN.toString() + "Please enter a number between 0 and 1.000" +
-                                ".000"
+                    ChatColor.GREEN.toString() + "Please enter a number between 0 and 1.000" +
+                            ".000"
                 )
                 player.sendMessage(ChatColor.GRAY.toString() + "Type 'cancel' to go back")
                 object : BukkitRunnable()
@@ -104,8 +104,8 @@ class RewardSettings(private val plugin: CV, private val op: Boolean = false) :
                 cancelCloseEvent()
                 player.closeInventory()
                 player.sendMessage(
-                        ChatColor.GREEN.toString() + "Please enter a command to add or remove from " +
-                                "the list"
+                    ChatColor.GREEN.toString() + "Please enter a command to add or remove from " +
+                            "the list"
                 )
                 player.sendMessage(ChatColor.GREEN.toString() + "(with %PLAYER% as placeholder)")
                 player.sendMessage(ChatColor.GRAY.toString() + "Type 'cancel' to go back")
@@ -181,8 +181,8 @@ class RewardSettings(private val plugin: CV, private val op: Boolean = false) :
                 cancelCloseEvent()
                 player.closeInventory()
                 player.sendMessage(
-                        ChatColor.GREEN.toString() + "Please enter a command to add or remove from " +
-                                "the list"
+                    ChatColor.GREEN.toString() + "Please enter a command to add or remove from " +
+                            "the list"
                 )
                 player.sendMessage(ChatColor.GREEN.toString() + "(with %PLAYER% as placeholder)")
                 player.sendMessage(ChatColor.GRAY.toString() + "Type 'cancel' to go back")
@@ -240,45 +240,52 @@ class RewardSettings(private val plugin: CV, private val op: Boolean = false) :
         if (!op)
         {
             inventory.addItem(
-                    BaseItem(
-                            Material.ENDER_CHEST, ChatColor.LIGHT_PURPLE.toString() +
+                BaseItem(
+                    Material.ENDER_CHEST, ChatColor.LIGHT_PURPLE.toString() +
                             "Lucky Rewards",
-                            ChatColor.GRAY.toString() + "Currently: " + ChatColor.AQUA + plugin.data.getItems(Data.LUCKY_REWARDS).size + ChatColor.GRAY + " item stacks"
-                    )
+                    ChatColor.GRAY.toString() + "Currently: " + ChatColor.AQUA + plugin.data.getItems(Data.LUCKY_REWARDS).size + ChatColor.GRAY + " item stacks"
+                )
             )
             inventory.addItem(LuckyVoteChanceItem(plugin))
             inventory.addItem(BaseItem(Material.NETHER_STAR, ChatColor.LIGHT_PURPLE.toString() + "Vote Streak"))
-            inventory.addItem(BaseItem(Material.DIAMOND_BLOCK, ChatColor.LIGHT_PURPLE.toString() + "Permission Rewards", null, true))
+            inventory.addItem(
+                BaseItem(
+                    Material.DIAMOND_BLOCK,
+                    ChatColor.LIGHT_PURPLE.toString() + "Permission Rewards",
+                    null,
+                    true
+                )
+            )
         }
         inventory.setItem(if (op) 8 else 17, BACK_ITEM)
     }
 }
 
 class MoneyRewardItem(plugin: CV, op: Boolean) : BaseItem(
-        Material.GOLD_INGOT, ChatColor.LIGHT_PURPLE.toString() + "Money Reward",
-        if (CV.ECONOMY != null) ChatColor.GRAY.toString() + "Currently: " + ChatColor.GREEN + CV.ECONOMY!!.format(
-                plugin.config.getDouble(Settings.VOTE_REWARD_MONEY.appendWhenTrue(op, Data.OP_REWARDS))
-        ) else ChatColor.RED.toString() + "Disabled"
+    Material.GOLD_INGOT, ChatColor.LIGHT_PURPLE.toString() + "Money Reward",
+    if (CV.ECONOMY != null) ChatColor.GRAY.toString() + "Currently: " + ChatColor.GREEN + CV.ECONOMY!!.format(
+        plugin.config.getDouble(Settings.VOTE_REWARD_MONEY.appendWhenTrue(op, Data.OP_REWARDS))
+    ) else ChatColor.RED.toString() + "Disabled"
 )
 
 class LuckyVoteChanceItem(plugin: CV) : BaseItem(
-        Material.ENDER_EYE, ChatColor.LIGHT_PURPLE.toString() + "Lucky Vote Chance",
-        ChatColor.GRAY.toString() + "Currently: " + ChatColor.AQUA + plugin.config.getNumber(Settings.LUCKY_VOTE_CHANCE) + ChatColor.GRAY + "%"
+    Material.ENDER_EYE, ChatColor.LIGHT_PURPLE.toString() + "Lucky Vote Chance",
+    ChatColor.GRAY.toString() + "Currently: " + ChatColor.AQUA + plugin.config.getNumber(Settings.LUCKY_VOTE_CHANCE) + ChatColor.GRAY + "%"
 )
 
 class ItemsRewardTypeItem(plugin: CV, op: Boolean) : BaseItem(
-        Material.REPEATER, ChatColor.LIGHT_PURPLE.toString() + "Item Reward Type",
-        ChatColor.GRAY.toString() + "Status: " + ChatColor.AQUA + ItemRewardType.valueOf(
-                plugin.config.getNumber(Settings.ITEM_REWARD_TYPE + if (op) Data.OP_REWARDS else "")
-        ).label
+    Material.REPEATER, ChatColor.LIGHT_PURPLE.toString() + "Item Reward Type",
+    ChatColor.GRAY.toString() + "Status: " + ChatColor.AQUA + ItemRewardType.valueOf(
+        plugin.config.getNumber(Settings.ITEM_REWARD_TYPE + if (op) Data.OP_REWARDS else "")
+    ).label
 )
 
 class ExperienceRewardItem(plugin: CV, op: Boolean) : BaseItem(
-        Material.EXPERIENCE_BOTTLE, ChatColor.LIGHT_PURPLE.toString() + "XP Reward",
-        ChatColor.GRAY.toString() + "Currently: " + ChatColor.AQUA + plugin.config.getNumber(
-                Settings.VOTE_REWARD_EXPERIENCE.appendWhenTrue(
-                        op,
-                        Data.OP_REWARDS
-                )
-        ) + ChatColor.GRAY + " levels"
+    Material.EXPERIENCE_BOTTLE, ChatColor.LIGHT_PURPLE.toString() + "XP Reward",
+    ChatColor.GRAY.toString() + "Currently: " + ChatColor.AQUA + plugin.config.getNumber(
+        Settings.VOTE_REWARD_EXPERIENCE.appendWhenTrue(
+            op,
+            Data.OP_REWARDS
+        )
+    ) + ChatColor.GRAY + " levels"
 )

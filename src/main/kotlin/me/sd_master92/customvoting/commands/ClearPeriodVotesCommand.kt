@@ -1,12 +1,12 @@
 package me.sd_master92.customvoting.commands
 
-import me.sd_master92.customfile.PlayerFile
+import me.sd_master92.core.command.SimpleCommand
+import me.sd_master92.core.file.PlayerFile
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.VoteFile
 import me.sd_master92.customvoting.constants.Messages
 import me.sd_master92.customvoting.database.PlayerRow
 import me.sd_master92.customvoting.sendText
-import me.sd_master92.plugin.command.SimpleCommand
 import org.bukkit.ChatColor
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player

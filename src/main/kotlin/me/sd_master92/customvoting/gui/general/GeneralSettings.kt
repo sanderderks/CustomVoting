@@ -1,13 +1,13 @@
 package me.sd_master92.customvoting.gui.general
 
+import me.sd_master92.core.inventory.BaseItem
+import me.sd_master92.core.inventory.GUI
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Data
 import me.sd_master92.customvoting.constants.Settings
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.constants.enumerations.VotePartyType
-import me.sd_master92.customvoting.gui.GUI
 import me.sd_master92.customvoting.gui.VoteSettings
-import me.sd_master92.customvoting.gui.items.BaseItem
 import me.sd_master92.customvoting.gui.items.StatusItem
 import org.bukkit.ChatColor
 import org.bukkit.Material

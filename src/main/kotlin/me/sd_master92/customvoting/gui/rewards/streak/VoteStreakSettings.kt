@@ -1,10 +1,10 @@
 package me.sd_master92.customvoting.gui.rewards.streak
 
+import me.sd_master92.core.inventory.BaseItem
+import me.sd_master92.core.inventory.GUI
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Data
 import me.sd_master92.customvoting.constants.enumerations.SoundType
-import me.sd_master92.customvoting.gui.GUI
-import me.sd_master92.customvoting.gui.items.BaseItem
 import me.sd_master92.customvoting.gui.rewards.RewardSettings
 import me.sd_master92.customvoting.listeners.PlayerListener
 import org.bukkit.ChatColor
@@ -105,10 +105,12 @@ class VoteStreakSettings(private val plugin: CV) :
                 key.toInt()
             } ?: ArrayList<String>())
             {
-                inventory.addItem(BaseItem(
-                    Material.ENDER_PEARL,
-                    ChatColor.LIGHT_PURPLE.toString() + "Streak #" + key
-                ))
+                inventory.addItem(
+                    BaseItem(
+                        Material.ENDER_PEARL,
+                        ChatColor.LIGHT_PURPLE.toString() + "Streak #" + key
+                    )
+                )
             }
         } catch (_: Exception)
         {

@@ -1,13 +1,14 @@
 package me.sd_master92.customvoting.commands.voteparty
 
+import me.sd_master92.core.command.SimpleCommand
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Messages
-import me.sd_master92.plugin.command.SimpleCommand
 import org.bukkit.ChatColor
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
-class VotePartyCommand(plugin: CV) : SimpleCommand(plugin, "voteparty", false, VotePartyCreateCommand(), VotePartyStartCommand(plugin))
+class VotePartyCommand(plugin: CV) :
+    SimpleCommand(plugin, "voteparty", false, VotePartyCreateCommand(), VotePartyStartCommand(plugin))
 {
     override fun onCommand(sender: CommandSender, args: Array<String>)
     {

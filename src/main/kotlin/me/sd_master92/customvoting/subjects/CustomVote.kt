@@ -1,7 +1,7 @@
 package me.sd_master92.customvoting.subjects
 
 import com.vexsoftware.votifier.model.Vote
-import me.sd_master92.customfile.PlayerFile
+import me.sd_master92.core.file.PlayerFile
 import me.sd_master92.customvoting.*
 import me.sd_master92.customvoting.constants.Data
 import me.sd_master92.customvoting.constants.Messages

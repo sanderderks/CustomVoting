@@ -1,13 +1,12 @@
 package me.sd_master92.customvoting.gui.support
 
+import me.sd_master92.core.inventory.BaseItem
+import me.sd_master92.core.inventory.GUI
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Settings
 import me.sd_master92.customvoting.constants.enumerations.SoundType
-import me.sd_master92.customvoting.gui.GUI
 import me.sd_master92.customvoting.gui.VoteSettings
-import me.sd_master92.customvoting.gui.items.BaseItem
 import me.sd_master92.customvoting.gui.items.StatusItem
-import me.sd_master92.plugin.CustomPlugin
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -27,7 +26,7 @@ class Support(private val plugin: CV) : GUI(plugin, "Support", 9, false, true)
                 cancelCloseEvent()
                 player.openInventory(VoteSettings(plugin).inventory)
             }
-            Material.CLOCK          -> if (!plugin.isUpToDate)
+            Material.CLOCK          -> if (!plugin.isUpToDate())
             {
                 SoundType.CLICK.play(plugin, player)
                 cancelCloseEvent()
@@ -98,7 +97,7 @@ class Support(private val plugin: CV) : GUI(plugin, "Support", 9, false, true)
 
 class UpdateItem(plugin: CV) : BaseItem(
     Material.CLOCK, ChatColor.LIGHT_PURPLE.toString() + "Up to date?",
-    if (plugin.isUpToDate) ChatColor.GREEN.toString() + "Yes" else ChatColor.GRAY.toString() + "Currently: " + ChatColor.RED + CustomPlugin.VERSION + ";" + ChatColor.GRAY +
+    if (plugin.isUpToDate()) ChatColor.GREEN.toString() + "Yes" else ChatColor.GRAY.toString() + "Currently: " + ChatColor.RED + plugin.version + ";" + ChatColor.GRAY +
             "Latest: " + ChatColor.GREEN + plugin.latestVersion + ";;" + ChatColor.GRAY + "Click to " +
             "download"
 )

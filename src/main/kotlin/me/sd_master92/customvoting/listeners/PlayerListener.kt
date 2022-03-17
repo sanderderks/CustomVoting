@@ -38,7 +38,7 @@ class PlayerListener(private val plugin: CV) : Listener
     {
         val player = event.player
         executeQueue(player)
-        if (player.isOp && plugin.config.getBoolean(Settings.INGAME_UPDATES) && !plugin.isUpToDate)
+        if (player.isOp && plugin.config.getBoolean(Settings.INGAME_UPDATES) && !plugin.isUpToDate())
         {
             object : BukkitRunnable()
             {

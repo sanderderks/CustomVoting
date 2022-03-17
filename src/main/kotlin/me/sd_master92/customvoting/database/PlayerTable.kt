@@ -1,8 +1,8 @@
 package me.sd_master92.customvoting.database
 
-import me.sd_master92.customfile.database.CustomColumn
-import me.sd_master92.customfile.database.CustomDatabase
-import me.sd_master92.customfile.database.CustomTable
+import me.sd_master92.core.database.CustomColumn
+import me.sd_master92.core.database.CustomDatabase
+import me.sd_master92.core.database.CustomTable
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Settings
 import java.sql.ResultSet

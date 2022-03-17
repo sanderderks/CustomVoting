@@ -1,8 +1,9 @@
 package me.sd_master92.customvoting.gui
 
+import me.sd_master92.core.inventory.BaseItem
+import me.sd_master92.core.inventory.GUI
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.SoundType
-import me.sd_master92.customvoting.gui.items.BaseItem
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -15,7 +16,7 @@ abstract class ConfirmGUI(private val plugin: CV, name: String) : GUI(plugin, na
 {
     abstract fun onConfirm(event: InventoryClickEvent, player: Player)
     abstract fun onCancel(event: InventoryClickEvent, player: Player)
-    
+
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
     {
         when (item.type)

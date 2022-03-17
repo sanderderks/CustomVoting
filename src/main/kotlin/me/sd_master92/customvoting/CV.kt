@@ -1,8 +1,9 @@
 package me.sd_master92.customvoting
 
-import me.sd_master92.customfile.CustomFile
-import me.sd_master92.customfile.PlayerFile
-import me.sd_master92.customfile.database.CustomDatabase
+import me.sd_master92.core.database.CustomDatabase
+import me.sd_master92.core.file.CustomFile
+import me.sd_master92.core.file.PlayerFile
+import me.sd_master92.core.plugin.CustomPlugin
 import me.sd_master92.customvoting.commands.*
 import me.sd_master92.customvoting.commands.voteparty.VotePartyCommand
 import me.sd_master92.customvoting.constants.Messages
@@ -13,7 +14,6 @@ import me.sd_master92.customvoting.listeners.PlayerListener
 import me.sd_master92.customvoting.listeners.VoteTopListener
 import me.sd_master92.customvoting.listeners.VotifierListener
 import me.sd_master92.customvoting.tasks.DailyTask
-import me.sd_master92.plugin.CustomPlugin
 import net.milkbowl.vault.economy.Economy
 import net.milkbowl.vault.permission.Permission
 import org.bstats.bukkit.Metrics

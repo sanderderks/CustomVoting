@@ -1,8 +1,8 @@
 package me.sd_master92.customvoting.commands
 
+import me.sd_master92.core.command.SimpleCommand
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Messages
-import me.sd_master92.plugin.command.SimpleCommand
 import me.sd_master92.customvoting.constants.Settings
 import me.sd_master92.customvoting.gui.messages.VoteLinks
 import me.sd_master92.customvoting.sendTexts

@@ -2,7 +2,6 @@ package me.sd_master92.customvoting.database
 
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Voter
-import me.sd_master92.customvoting.subjects.CitizenStand
 import me.sd_master92.customvoting.subjects.VoteTopSign
 import me.sd_master92.customvoting.subjects.VoteTopStand
 import org.bukkit.entity.Player
@@ -37,7 +36,6 @@ class PlayerRow(private val plugin: CV, override val uuid: String) : Voter
         {
             VoteTopSign.updateAll(plugin)
             VoteTopStand.updateAll(plugin)
-            CitizenStand.updateAll(plugin)
         }
     }
 
@@ -46,7 +44,6 @@ class PlayerRow(private val plugin: CV, override val uuid: String) : Voter
         players?.setPeriod(uuid, 0)
         VoteTopSign.updateAll(plugin)
         VoteTopStand.updateAll(plugin)
-        CitizenStand.updateAll(plugin)
     }
 
     fun addVote(update: Boolean)
@@ -58,7 +55,6 @@ class PlayerRow(private val plugin: CV, override val uuid: String) : Voter
         {
             VoteTopSign.updateAll(plugin)
             VoteTopStand.updateAll(plugin)
-            CitizenStand.updateAll(plugin)
         }
     }
 

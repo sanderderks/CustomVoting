@@ -7,7 +7,6 @@ import me.sd_master92.customvoting.constants.Data
 import me.sd_master92.customvoting.constants.Settings
 import me.sd_master92.customvoting.database.PlayerRow
 import me.sd_master92.customvoting.database.PlayerTable
-import me.sd_master92.plugin.CustomPlugin
 import org.bukkit.entity.Player
 
 class CustomPlaceholders(private val plugin: CV) : PlaceholderExpansion()
@@ -19,12 +18,12 @@ class CustomPlaceholders(private val plugin: CV) : PlaceholderExpansion()
 
     override fun getAuthor(): String
     {
-        return CustomPlugin.AUTHOR
+        return plugin.author
     }
 
     override fun getVersion(): String
     {
-        return CustomPlugin.VERSION
+        return plugin.version
     }
 
     override fun canRegister(): Boolean
@@ -47,7 +46,7 @@ class CustomPlaceholders(private val plugin: CV) : PlaceholderExpansion()
                 {
                     var total = 0
                     for (voter in if (plugin.hasDatabaseConnection()) PlayerTable.getTopVoters(plugin) else VoteFile.getTopVoters(
-                            plugin
+                        plugin
                     ))
                     {
                         total += voter.votes
@@ -59,7 +58,7 @@ class CustomPlaceholders(private val plugin: CV) : PlaceholderExpansion()
                     if (player != null)
                     {
                         val voter =
-                                if (plugin.hasDatabaseConnection()) PlayerRow(plugin, player) else VoteFile(player, plugin)
+                            if (plugin.hasDatabaseConnection()) PlayerRow(plugin, player) else VoteFile(player, plugin)
                         return "${voter.votes}"
                     }
                     return "0"
@@ -69,7 +68,7 @@ class CustomPlaceholders(private val plugin: CV) : PlaceholderExpansion()
                     if (player != null)
                     {
                         val voter =
-                                if (plugin.hasDatabaseConnection()) PlayerRow(plugin, player) else VoteFile(player, plugin)
+                            if (plugin.hasDatabaseConnection()) PlayerRow(plugin, player) else VoteFile(player, plugin)
                         return "${voter.period}"
                     }
                     return "0"
@@ -96,9 +95,9 @@ class CustomPlaceholders(private val plugin: CV) : PlaceholderExpansion()
                     if (params.contains(PLAYER_VOTES))
                     {
                         val key = params.split("_".toRegex())
-                                .toTypedArray()[2].toInt()
+                            .toTypedArray()[2].toInt()
                         val topVoter = if (plugin.hasDatabaseConnection()) PlayerTable.getTopVoter(
-                                plugin, key
+                            plugin, key
                         ) else VoteFile.getTopVoter(plugin, key)
                         return if (params.endsWith("NAME"))
                         {
@@ -110,9 +109,9 @@ class CustomPlaceholders(private val plugin: CV) : PlaceholderExpansion()
                     } else if (params.contains(PLAYER_PERIOD))
                     {
                         val key = params.split("_".toRegex())
-                                .toTypedArray()[2].toInt()
+                            .toTypedArray()[2].toInt()
                         val topVoter = if (plugin.hasDatabaseConnection()) PlayerTable.getTopVoter(
-                                plugin, key
+                            plugin, key
                         ) else VoteFile.getTopVoter(plugin, key)
                         return if (params.endsWith("NAME"))
                         {

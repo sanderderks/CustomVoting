@@ -1,10 +1,9 @@
 package me.sd_master92.customvoting
 
-import me.sd_master92.customfile.PlayerFile
+import me.sd_master92.core.file.PlayerFile
 import me.sd_master92.customvoting.constants.Data
 import me.sd_master92.customvoting.constants.Settings
 import me.sd_master92.customvoting.constants.Voter
-import me.sd_master92.customvoting.subjects.CitizenStand
 import me.sd_master92.customvoting.subjects.VoteTopSign
 import me.sd_master92.customvoting.subjects.VoteTopStand
 import org.bukkit.entity.Player
@@ -59,7 +58,6 @@ class VoteFile : Voter
         {
             VoteTopSign.updateAll(plugin)
             VoteTopStand.updateAll(plugin)
-            CitizenStand.updateAll(plugin)
         }
     }
 
@@ -68,7 +66,6 @@ class VoteFile : Voter
         playerFile.setNumber("period", 0)
         VoteTopSign.updateAll(plugin)
         VoteTopStand.updateAll(plugin)
-        CitizenStand.updateAll(plugin)
     }
 
     fun addVote(update: Boolean)
@@ -80,7 +77,6 @@ class VoteFile : Voter
         {
             VoteTopSign.updateAll(plugin)
             VoteTopStand.updateAll(plugin)
-            CitizenStand.updateAll(plugin)
         }
     }
 

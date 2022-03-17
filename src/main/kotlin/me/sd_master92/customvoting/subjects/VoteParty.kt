@@ -1,5 +1,6 @@
 package me.sd_master92.customvoting.subjects
 
+import me.sd_master92.core.inventory.BaseItem
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.broadcastText
 import me.sd_master92.customvoting.constants.Data
@@ -7,7 +8,6 @@ import me.sd_master92.customvoting.constants.Messages
 import me.sd_master92.customvoting.constants.Settings
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.constants.enumerations.VotePartyType
-import me.sd_master92.customvoting.gui.items.BaseItem
 import me.sd_master92.customvoting.helpers.ParticleHelper
 import me.sd_master92.customvoting.runCommand
 import me.sd_master92.customvoting.withPlaceholders
@@ -105,8 +105,10 @@ class VoteParty(private val plugin: CV)
             {
                 for (player in Bukkit.getOnlinePlayers())
                 {
-                    runCommand(plugin, command.replace("%PLAYER%", player.name)
-                            .withPlaceholders(player))
+                    runCommand(
+                        plugin, command.replace("%PLAYER%", player.name)
+                            .withPlaceholders(player)
+                    )
                 }
             } else
             {
@@ -124,7 +126,7 @@ class VoteParty(private val plugin: CV)
         {
             val chest: MutableList<ItemStack> = ArrayList(listOf(*plugin.data.getItems(Data.VOTE_PARTY + "." + key)))
             val loc = locations[key]!!.clone()
-                    .add(0.5, 0.0, 0.5)
+                .add(0.5, 0.0, 0.5)
             val dropLoc = Location(loc.world, loc.x, loc.y - 1, loc.z)
             val fireworkLoc = Location(loc.world, loc.x, loc.y + 1, loc.z)
             object : BukkitRunnable()
@@ -175,7 +177,7 @@ class VoteParty(private val plugin: CV)
         val keys: MutableList<String> = ArrayList(locations.keys)
         keys.forEach(Consumer { key: String ->
             val items = plugin.data.getItems(
-                    Data.VOTE_PARTY + "." + key
+                Data.VOTE_PARTY + "." + key
             )
             if (items.isNotEmpty())
             {
@@ -192,7 +194,7 @@ class VoteParty(private val plugin: CV)
                     val key = keys[random.nextInt(keys.size)]
                     val chest = chests[key]!!
                     val loc = locations[key]!!.clone()
-                            .add(0.5, 0.0, 0.5)
+                        .add(0.5, 0.0, 0.5)
                     val dropLoc = Location(loc.world, loc.x, loc.y - 1, loc.z)
                     val fireworkLoc = Location(loc.world, loc.x, loc.y + 1, loc.z)
                     if (dropLoc.world != null)
@@ -267,11 +269,11 @@ class VoteParty(private val plugin: CV)
     companion object
     {
         val VOTE_PARTY_ITEM = BaseItem(
-                Material.ENDER_CHEST, ChatColor.LIGHT_PURPLE.toString() +
-                "Vote Party Chest",
-                ChatColor.GRAY.toString() + "Place this chest somewhere in the sky.;" + ChatColor.GRAY + "The contents of this chest" +
-                        " will;" +
-                        ChatColor.GRAY + "start dropping when the voteparty starts."
+            Material.ENDER_CHEST, ChatColor.LIGHT_PURPLE.toString() +
+                    "Vote Party Chest",
+            ChatColor.GRAY.toString() + "Place this chest somewhere in the sky.;" + ChatColor.GRAY + "The contents of this chest" +
+                    " will;" +
+                    ChatColor.GRAY + "start dropping when the voteparty starts."
         )
         private val queue: MutableList<VoteParty> = ArrayList()
         private var isActive = false

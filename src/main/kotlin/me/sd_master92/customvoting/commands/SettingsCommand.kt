@@ -1,12 +1,12 @@
 package me.sd_master92.customvoting.commands
 
+import me.sd_master92.core.command.SimpleCommand
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Messages
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.gui.ConfirmVotesReset
 import me.sd_master92.customvoting.gui.VoteSettings
 import me.sd_master92.customvoting.tasks.DailyTask
-import me.sd_master92.plugin.command.SimpleCommand
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 

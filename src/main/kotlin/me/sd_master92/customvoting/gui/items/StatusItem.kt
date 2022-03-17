@@ -1,5 +1,6 @@
 package me.sd_master92.customvoting.gui.items
 
+import me.sd_master92.core.inventory.BaseItem
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.reverseWhenTrue
 import org.bukkit.ChatColor

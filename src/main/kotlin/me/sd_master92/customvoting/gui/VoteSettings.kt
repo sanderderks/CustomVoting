@@ -1,10 +1,11 @@
 package me.sd_master92.customvoting.gui
 
+import me.sd_master92.core.inventory.BaseItem
+import me.sd_master92.core.inventory.GUI
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.Materials
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.gui.general.GeneralSettings
-import me.sd_master92.customvoting.gui.items.BaseItem
 import me.sd_master92.customvoting.gui.messages.MessageSettings
 import me.sd_master92.customvoting.gui.rewards.RewardSettings
 import me.sd_master92.customvoting.gui.support.Support

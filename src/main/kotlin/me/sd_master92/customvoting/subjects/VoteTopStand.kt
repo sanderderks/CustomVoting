@@ -1,18 +1,22 @@
 package me.sd_master92.customvoting.subjects
 
+import me.sd_master92.core.inventory.BaseItem
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.VoteFile
 import me.sd_master92.customvoting.constants.Data
 import me.sd_master92.customvoting.constants.Messages
 import me.sd_master92.customvoting.database.PlayerTable
-import me.sd_master92.customvoting.helpers.EntityHelper
+import net.citizensnpcs.api.CitizensAPI
+import net.citizensnpcs.api.npc.NPC
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.EntityType
+import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
+import org.bukkit.inventory.EntityEquipment
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.SkullMeta
 import org.bukkit.scheduler.BukkitRunnable
@@ -24,15 +28,25 @@ class VoteTopStand @JvmOverloads constructor(private val plugin: CV, private val
     private var topStand: ArmorStand? = null
     private var nameStand: ArmorStand? = null
     private var votesStand: ArmorStand? = null
+    private var citizen: NPC? = null
+    private val path = Data.VOTE_TOP_STANDS + "." + top
 
     private fun registerArmorStands()
     {
-        val section = plugin.data.getConfigurationSection(Data.VOTE_TOP_STANDS + "." + top)
+        val section = plugin.data.getConfigurationSection(path)
         if (section != null)
         {
             topStand = getArmorStand(section.getString("top"))
             nameStand = getArmorStand(section.getString("name"))
             votesStand = getArmorStand(section.getString("votes"))
+            if (CV.CITIZENS && citizen == null)
+            {
+                citizen = CitizensAPI.getNPCRegistry().getByUniqueId(UUID.fromString(section.getString("citizen")))
+                if (citizen != null && !citizen!!.isSpawned)
+                {
+                    citizen!!.spawn(plugin.data.getLocation(path))
+                }
+            }
         }
     }
 
@@ -55,28 +69,81 @@ class VoteTopStand @JvmOverloads constructor(private val plugin: CV, private val
         if (world != null)
         {
             val topStand = spawnArmorStand(player.location.add(0.0, 1.0, 0.0))
-            plugin.data[Data.VOTE_TOP_STANDS + "." + top + ".top"] = topStand.uniqueId.toString()
-            topStand.isVisible = false
+            plugin.data["$path.top"] = topStand.uniqueId.toString()
             this.topStand = topStand
 
             val nameStand = spawnArmorStand(player.location.add(0.0, 0.5, 0.0))
-            plugin.data[Data.VOTE_TOP_STANDS + "." + top + ".name"] = nameStand.uniqueId.toString()
-            nameStand.isVisible = false
+            plugin.data["$path.name"] = nameStand.uniqueId.toString()
             this.nameStand = nameStand
 
             val votesStand = spawnArmorStand(player.location)
-            plugin.data[Data.VOTE_TOP_STANDS + "." + top + ".votes"] = votesStand.uniqueId.toString()
+            plugin.data["$path.votes"] = votesStand.uniqueId.toString()
             plugin.data.saveConfig()
-
-            val entityEquipment = votesStand.equipment
-            if (entityEquipment != null)
-            {
-                EntityHelper.setEntityEquipment(entityEquipment, top)
-            }
             this.votesStand = votesStand
+
+            if (CV.CITIZENS)
+            {
+                val citizen = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, "Unknown")
+                plugin.data["$path.citizen"] = citizen.uniqueId.toString()
+                citizen.isProtected = true
+                citizen.data().setPersistent(NPC.NAMEPLATE_VISIBLE_METADATA, false)
+                citizen.spawn(player.location)
+                if (citizen.isSpawned)
+                {
+                    val entityEquipment = (citizen.entity as LivingEntity).equipment
+                    if (entityEquipment != null)
+                    {
+                        setEntityEquipment(entityEquipment)
+                    }
+                }
+                this.citizen = citizen
+            } else
+            {
+                votesStand.isVisible = true
+                val entityEquipment = votesStand.equipment
+                if (entityEquipment != null)
+                {
+                    setEntityEquipment(entityEquipment)
+                }
+            }
         }
-        plugin.data.setLocation(Data.VOTE_TOP_STANDS + "." + top, player.location)
+        plugin.data.setLocation(path, player.location)
         player.sendMessage(ChatColor.GREEN.toString() + "Registered Vote Stand #" + top)
+    }
+
+    private fun setEntityEquipment(equipment: EntityEquipment)
+    {
+        when (top)
+        {
+            1    ->
+            {
+                equipment.chestplate = BaseItem(Material.DIAMOND_CHESTPLATE, true)
+                equipment.leggings = BaseItem(Material.DIAMOND_LEGGINGS, true)
+                equipment.boots = BaseItem(Material.DIAMOND_BOOTS, true)
+                equipment.setItemInMainHand(BaseItem(Material.DIAMOND_SWORD, true))
+            }
+            2    ->
+            {
+                equipment.chestplate = BaseItem(Material.GOLDEN_CHESTPLATE, true)
+                equipment.leggings = BaseItem(Material.GOLDEN_LEGGINGS, true)
+                equipment.boots = BaseItem(Material.GOLDEN_BOOTS, true)
+                equipment.setItemInMainHand(BaseItem(Material.GOLDEN_SWORD, true))
+            }
+            3    ->
+            {
+                equipment.chestplate = BaseItem(Material.IRON_CHESTPLATE, true)
+                equipment.leggings = BaseItem(Material.IRON_LEGGINGS, true)
+                equipment.boots = BaseItem(Material.IRON_BOOTS, true)
+                equipment.setItemInMainHand(BaseItem(Material.IRON_SWORD, true))
+            }
+            else ->
+            {
+                equipment.chestplate = BaseItem(Material.CHAINMAIL_CHESTPLATE, true)
+                equipment.leggings = BaseItem(Material.CHAINMAIL_LEGGINGS, true)
+                equipment.boots = BaseItem(Material.CHAINMAIL_BOOTS, true)
+                equipment.setItemInMainHand(BaseItem(Material.STONE_SWORD, true))
+            }
+        }
     }
 
     private fun spawnArmorStand(loc: Location): ArmorStand
@@ -87,6 +154,7 @@ class VoteTopStand @JvmOverloads constructor(private val plugin: CV, private val
         stand.setGravity(false)
         stand.isCustomNameVisible = true
         stand.isInvulnerable = true
+        stand.isVisible = false
         return stand
     }
 
@@ -104,33 +172,50 @@ class VoteTopStand @JvmOverloads constructor(private val plugin: CV, private val
             placeholders["%PLAYER%"] = voteFile.name
             placeholders["%VOTES%"] = "${voteFile.votes}"
             placeholders["%PERIOD%"] = "${voteFile.period}"
+            if (CV.CITIZENS && citizen != null && citizen!!.name != voteFile.name)
+            {
+                citizen!!.name = voteFile.name
+                citizen!!.despawn()
+                citizen!!.data()?.setPersistent(NPC.NAMEPLATE_VISIBLE_METADATA, false)
+                citizen!!.spawn(plugin.data.getLocation(path))
+            }
         } else
         {
             placeholders["%PLAYER%"] = ChatColor.RED.toString() + "Unknown"
             placeholders["%VOTES%"] = "0"
             placeholders["%PERIOD%"] = "0"
+            if (CV.CITIZENS && citizen != null && citizen!!.name != "Unknown")
+            {
+                citizen!!.name = "Unknown"
+                citizen!!.despawn()
+                citizen!!.data()?.setPersistent(NPC.NAMEPLATE_VISIBLE_METADATA, false)
+                citizen!!.spawn(plugin.data.getLocation(path))
+            }
         }
-        if (topStand == null || nameStand == null || votesStand == null)
+        if (topStand == null || nameStand == null || votesStand == null || CV.CITIZENS && (citizen == null || !citizen!!.isSpawned))
         {
             registerArmorStands()
+        }
+        if (!CV.CITIZENS)
+        {
+            val skull = ItemStack(Material.PLAYER_HEAD)
+            val skullMeta = skull.itemMeta as SkullMeta?
+            if (skullMeta != null && voteFile != null)
+            {
+                try
+                {
+                    val uuid = UUID.fromString(voteFile.uuid)
+                    skullMeta.owningPlayer = Bukkit.getPlayer(uuid) ?: Bukkit.getOfflinePlayer(uuid)
+                    skull.itemMeta = skullMeta
+                } catch (ignored: Exception)
+                {
+                }
+            }
+            votesStand?.equipment?.helmet = skull
         }
         topStand?.customName = Messages.VOTE_TOP_STANDS_TOP.getMessage(plugin, placeholders)
         nameStand?.customName = Messages.VOTE_TOP_STANDS_CENTER.getMessage(plugin, placeholders)
         votesStand?.customName = Messages.VOTE_TOP_STANDS_BOTTOM.getMessage(plugin, placeholders)
-        val skull = ItemStack(Material.PLAYER_HEAD)
-        val skullMeta = skull.itemMeta as SkullMeta?
-        if (skullMeta != null && voteFile != null)
-        {
-            try
-            {
-                val uuid = UUID.fromString(voteFile.uuid)
-                skullMeta.owningPlayer = Bukkit.getPlayer(uuid) ?: Bukkit.getOfflinePlayer(uuid)
-                skull.itemMeta = skullMeta
-            } catch (ignored: Exception)
-            {
-            }
-        }
-        votesStand?.equipment?.helmet = skull
     }
 
     fun delete(player: Player)
@@ -138,7 +223,8 @@ class VoteTopStand @JvmOverloads constructor(private val plugin: CV, private val
         topStand?.remove()
         nameStand?.remove()
         votesStand?.remove()
-        plugin.data[Data.VOTE_TOP_STANDS + "." + top] = null
+        citizen?.let { CitizensAPI.getNPCRegistry().deregister(citizen) }
+        plugin.data[path] = null
         plugin.data.saveConfig()
         voteTops.remove(top)
         player.sendMessage(ChatColor.GREEN.toString() + "Successfully deleted Vote Stand #" + top)
@@ -191,7 +277,7 @@ class VoteTopStand @JvmOverloads constructor(private val plugin: CV, private val
 
     init
     {
-        val section = plugin.data.getConfigurationSection(Data.VOTE_TOP_STANDS + "." + top)
+        val section = plugin.data.getConfigurationSection(path)
         if (section != null)
         {
             if (player != null)

@@ -1,6 +1,6 @@
 package me.sd_master92.customvoting.gui
 
-import me.sd_master92.customfile.PlayerFile.Companion.getAll
+import me.sd_master92.core.file.PlayerFile.Companion.getAll
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.VoteFile
 import me.sd_master92.customvoting.broadcastText
@@ -13,7 +13,8 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import kotlin.jvm.internal.Intrinsics
 
 
-class ConfirmVotesReset(private val plugin: CV, private val period: Boolean) : ConfirmGUI(plugin, if (period) "Reset monthly votes?" else "Reset ALL votes?")
+class ConfirmVotesReset(private val plugin: CV, private val period: Boolean) :
+    ConfirmGUI(plugin, if (period) "Reset monthly votes?" else "Reset ALL votes?")
 {
     override fun onConfirm(event: InventoryClickEvent, player: Player)
     {
