@@ -39,13 +39,24 @@ class VoteTopStand @JvmOverloads constructor(private val plugin: CV, private val
             topStand = getArmorStand(section.getString("top"))
             nameStand = getArmorStand(section.getString("name"))
             votesStand = getArmorStand(section.getString("votes"))
-            if (CV.CITIZENS && citizen == null)
+            if (CV.CITIZENS)
             {
-                citizen = CitizensAPI.getNPCRegistry().getByUniqueId(UUID.fromString(section.getString("citizen")))
-                if (citizen != null && !citizen!!.isSpawned)
+                if (votesStand?.isVisible == true)
                 {
-                    citizen!!.spawn(plugin.data.getLocation(path))
+                    votesStand?.isVisible = false
+                    votesStand?.equipment?.clear()
                 }
+                if (citizen == null)
+                {
+                    citizen = CitizensAPI.getNPCRegistry().getByUniqueId(UUID.fromString(section.getString("citizen")))
+                    if (citizen != null && !citizen!!.isSpawned)
+                    {
+                        citizen!!.spawn(plugin.data.getLocation(path))
+                    }
+                }
+            } else
+            {
+                votesStand?.isVisible = true
             }
         }
     }
@@ -192,7 +203,11 @@ class VoteTopStand @JvmOverloads constructor(private val plugin: CV, private val
                 citizen!!.spawn(plugin.data.getLocation(path))
             }
         }
-        if (topStand == null || nameStand == null || votesStand == null || CV.CITIZENS && (citizen == null || !citizen!!.isSpawned))
+        if (topStand == null
+            || nameStand == null
+            || votesStand == null
+            || CV.CITIZENS && (citizen == null || !citizen!!.isSpawned)
+        )
         {
             registerArmorStands()
         }
