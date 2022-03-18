@@ -26,11 +26,11 @@ abstract class PlayerPermissionInput(
         if (permissions.contains(permission))
         {
             permissions.remove(permission)
-            player.sendMessage(ChatColor.RED.toString() + "Removed /" + permission + " from permissions")
+            player.sendMessage(ChatColor.RED.toString() + "Removed " + permission + " from permissions")
         } else
         {
             permissions.add(permission)
-            player.sendMessage(ChatColor.GREEN.toString() + "Added /" + permission + " to permissions")
+            player.sendMessage(ChatColor.GREEN.toString() + "Added " + permission + " to permissions")
         }
         plugin.data[path] = permissions
         plugin.data.saveConfig()
@@ -51,7 +51,7 @@ abstract class PlayerPermissionInput(
             player.sendMessage(ChatColor.GRAY.toString() + "Permissions:")
             for (permission in permissions)
             {
-                player.sendMessage(ChatColor.GRAY.toString() + "/" + ChatColor.GREEN + permission)
+                player.sendMessage(ChatColor.GREEN.toString() + permission)
             }
         }
     }
