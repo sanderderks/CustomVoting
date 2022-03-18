@@ -1,19 +1,18 @@
 package me.sd_master92.customvoting.gui.rewards.streak
 
+import me.sd_master92.core.input.PlayerNumberInput
 import me.sd_master92.core.inventory.BaseItem
 import me.sd_master92.core.inventory.GUI
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Data
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.gui.rewards.RewardSettings
-import me.sd_master92.customvoting.listeners.PlayerListener
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
-import org.bukkit.scheduler.BukkitRunnable
 
 class VoteStreakSettings(private val plugin: CV) :
     GUI(plugin, "Vote Streak Settings", getVoteStreakInventorySize(plugin), false, true)
@@ -45,28 +44,33 @@ class VoteStreakSettings(private val plugin: CV) :
             Material.CRAFTING_TABLE ->
             {
                 SoundType.CHANGE.play(plugin, player)
-                PlayerListener.streakInput.add(player.uniqueId)
                 cancelCloseEvent()
                 player.closeInventory()
                 player.sendMessage(ChatColor.GREEN.toString() + "Please enter a streak number")
                 player.sendMessage(ChatColor.GRAY.toString() + "Type 'cancel' to go back")
-                player.sendMessage("")
-                object : BukkitRunnable()
+                object : PlayerNumberInput(plugin, player)
                 {
-                    override fun run()
+                    override fun onNumberReceived(input: Int)
                     {
-                        if (!PlayerListener.streakInput.contains(player.uniqueId))
+                        if (plugin.data.contains(Data.VOTE_STREAKS + ".$input"))
                         {
-                            player.openInventory(VoteStreakSettings(plugin).inventory)
-                            cancelCloseEvent()
-                            cancel()
-                        } else if (!player.isOnline)
+                            player.sendMessage(ChatColor.RED.toString() + "That streak already exists.")
+                        } else
                         {
-                            PlayerListener.streakInput.remove(player.uniqueId)
+                            SoundType.SUCCESS.play(plugin, player)
+                            plugin.data.set(Data.VOTE_STREAKS + "." + input + ".permissions", ArrayList<String>())
+                            plugin.data.saveConfig()
+                            player.sendMessage(ChatColor.GREEN.toString() + "Streak #$input created!")
                             cancel()
                         }
                     }
-                }.runTaskTimer(plugin, 0, 10)
+
+                    override fun onCancel()
+                    {
+                        SoundType.FAILURE.play(plugin, player)
+                        player.openInventory(VoteStreakSettings(plugin).inventory)
+                    }
+                }
             }
             else                    ->
             {

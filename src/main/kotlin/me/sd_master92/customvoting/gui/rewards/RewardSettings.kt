@@ -1,6 +1,7 @@
 package me.sd_master92.customvoting.gui.rewards
 
 import me.sd_master92.core.appendWhenTrue
+import me.sd_master92.core.input.PlayerNumberInput
 import me.sd_master92.core.inventory.BaseItem
 import me.sd_master92.core.inventory.GUI
 import me.sd_master92.customvoting.CV
@@ -12,14 +13,13 @@ import me.sd_master92.customvoting.gui.VoteSettings
 import me.sd_master92.customvoting.gui.items.CommandsRewardItem
 import me.sd_master92.customvoting.gui.items.ItemsRewardItem
 import me.sd_master92.customvoting.gui.rewards.streak.VoteStreakSettings
-import me.sd_master92.customvoting.listeners.PlayerListener
+import me.sd_master92.customvoting.listeners.PlayerCommandInput
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
-import org.bukkit.scheduler.BukkitRunnable
 
 class RewardSettings(private val plugin: CV, private val op: Boolean = false) :
     GUI(plugin, "Vote Rewards".appendWhenTrue(op, " (permission based)"), if (op) 9 else 18, true, true)
@@ -56,30 +56,29 @@ class RewardSettings(private val plugin: CV, private val op: Boolean = false) :
             Material.GOLD_INGOT        -> if (CV.ECONOMY != null)
             {
                 SoundType.CHANGE.play(plugin, player)
-                PlayerListener.moneyInput[player.uniqueId] = op
                 cancelCloseEvent()
                 player.closeInventory()
-                player.sendMessage(
-                    ChatColor.GREEN.toString() + "Please enter a number between 0 and 1.000" +
-                            ".000"
-                )
+                player.sendMessage(ChatColor.GREEN.toString() + "Please enter a number")
                 player.sendMessage(ChatColor.GRAY.toString() + "Type 'cancel' to go back")
-                object : BukkitRunnable()
+                object : PlayerNumberInput(plugin, player)
                 {
-                    override fun run()
+                    override fun onNumberReceived(input: Int)
                     {
-                        if (!PlayerListener.moneyInput.containsKey(player.uniqueId))
-                        {
-                            player.openInventory(RewardSettings(plugin, op).inventory)
-                            cancelCloseEvent()
-                            cancel()
-                        } else if (!player.isOnline)
-                        {
-                            PlayerListener.moneyInput.remove(player.uniqueId)
-                            cancel()
-                        }
+                        SoundType.SUCCESS.play(plugin, player)
+                        val path = Settings.VOTE_REWARD_MONEY.appendWhenTrue(op, Data.OP_REWARDS)
+                        plugin.config[path] = input
+                        plugin.config.saveConfig()
+                        player.sendMessage(ChatColor.GREEN.toString() + "Successfully updated the money reward!")
+                        player.openInventory(RewardSettings(plugin, op).inventory)
+                        cancel()
                     }
-                }.runTaskTimer(plugin, 0, 10)
+
+                    override fun onCancel()
+                    {
+                        SoundType.FAILURE.play(plugin, player)
+                        player.openInventory(RewardSettings(plugin, op).inventory)
+                    }
+                }
             } else
             {
                 SoundType.FAILURE.play(plugin, player)
@@ -100,45 +99,22 @@ class RewardSettings(private val plugin: CV, private val op: Boolean = false) :
             Material.COMMAND_BLOCK     ->
             {
                 SoundType.CHANGE.play(plugin, player)
-                PlayerListener.commandInput[player.uniqueId] = op
                 cancelCloseEvent()
                 player.closeInventory()
-                player.sendMessage(
-                    ChatColor.GREEN.toString() + "Please enter a command to add or remove from " +
-                            "the list"
-                )
-                player.sendMessage(ChatColor.GREEN.toString() + "(with %PLAYER% as placeholder)")
-                player.sendMessage(ChatColor.GRAY.toString() + "Type 'cancel' to go back")
-                player.sendMessage("")
-                val path = Data.VOTE_COMMANDS.appendWhenTrue(op, Data.OP_REWARDS)
-                val commands: List<String> = plugin.data.getStringList(path)
-                if (commands.isEmpty())
+                object : PlayerCommandInput(plugin, player, Data.VOTE_COMMANDS.appendWhenTrue(op, Data.OP_REWARDS))
                 {
-                    player.sendMessage(ChatColor.RED.toString() + "There are currently no commands.")
-                } else
-                {
-                    player.sendMessage(ChatColor.GRAY.toString() + "Commands:")
-                    for (command in commands)
+                    override fun onCommandReceived()
                     {
-                        player.sendMessage(ChatColor.GRAY.toString() + "/" + ChatColor.GREEN + command)
+                        SoundType.SUCCESS.play(plugin, player)
+                        player.openInventory(RewardSettings(plugin, op).inventory)
+                    }
+
+                    override fun onCancel()
+                    {
+                        SoundType.FAILURE.play(plugin, player)
+                        player.openInventory(RewardSettings(plugin, op).inventory)
                     }
                 }
-                object : BukkitRunnable()
-                {
-                    override fun run()
-                    {
-                        if (!PlayerListener.commandInput.contains(player.uniqueId))
-                        {
-                            player.openInventory(RewardSettings(plugin, op).inventory)
-                            cancelCloseEvent()
-                            cancel()
-                        } else if (!player.isOnline)
-                        {
-                            PlayerListener.commandInput.remove(player.uniqueId)
-                            cancel()
-                        }
-                    }
-                }.runTaskTimer(plugin, 0, 10)
             }
             Material.ENDER_CHEST       ->
             {
@@ -177,44 +153,22 @@ class RewardSettings(private val plugin: CV, private val op: Boolean = false) :
             Material.TNT               ->
             {
                 SoundType.CHANGE.play(plugin, player)
-                PlayerListener.votePartyCommandInput.add(player.uniqueId)
                 cancelCloseEvent()
                 player.closeInventory()
-                player.sendMessage(
-                    ChatColor.GREEN.toString() + "Please enter a command to add or remove from " +
-                            "the list"
-                )
-                player.sendMessage(ChatColor.GREEN.toString() + "(with %PLAYER% as placeholder)")
-                player.sendMessage(ChatColor.GRAY.toString() + "Type 'cancel' to go back")
-                player.sendMessage("")
-                val commands: List<String> = plugin.data.getStringList(Data.VOTE_PARTY_COMMANDS)
-                if (commands.isEmpty())
+                object : PlayerCommandInput(plugin, player, Data.VOTE_PARTY_COMMANDS)
                 {
-                    player.sendMessage(ChatColor.RED.toString() + "There are currently no commands.")
-                } else
-                {
-                    player.sendMessage(ChatColor.GRAY.toString() + "Commands:")
-                    for (command in commands)
+                    override fun onCommandReceived()
                     {
-                        player.sendMessage(ChatColor.GRAY.toString() + "/" + ChatColor.GREEN + command)
+                        SoundType.SUCCESS.play(plugin, player)
+                        player.openInventory(RewardSettings(plugin, op).inventory)
+                    }
+
+                    override fun onCancel()
+                    {
+                        SoundType.FAILURE.play(plugin, player)
+                        player.openInventory(RewardSettings(plugin, op).inventory)
                     }
                 }
-                object : BukkitRunnable()
-                {
-                    override fun run()
-                    {
-                        if (!PlayerListener.votePartyCommandInput.contains(player.uniqueId))
-                        {
-                            player.openInventory(RewardSettings(plugin).inventory)
-                            cancelCloseEvent()
-                            cancel()
-                        } else if (!player.isOnline)
-                        {
-                            PlayerListener.votePartyCommandInput.remove(player.uniqueId)
-                            cancel()
-                        }
-                    }
-                }.runTaskTimer(plugin, 0, 10)
             }
             else                       ->
             {
@@ -229,13 +183,17 @@ class RewardSettings(private val plugin: CV, private val op: Boolean = false) :
 
     init
     {
-        val path = Data.ITEM_REWARDS.appendWhenTrue(op, Data.OP_REWARDS)
-        val commandsPath = Data.VOTE_COMMANDS.appendWhenTrue(op, Data.OP_REWARDS)
-        inventory.addItem(ItemsRewardItem(plugin, path))
+        inventory.addItem(ItemsRewardItem(plugin, Data.ITEM_REWARDS.appendWhenTrue(op, Data.OP_REWARDS)))
         inventory.addItem(ItemsRewardTypeItem(plugin, op))
         inventory.addItem(MoneyRewardItem(plugin, op))
         inventory.addItem(ExperienceRewardItem(plugin, op))
-        inventory.addItem(CommandsRewardItem(plugin, commandsPath, Material.COMMAND_BLOCK))
+        inventory.addItem(
+            CommandsRewardItem(
+                plugin,
+                Data.VOTE_COMMANDS.appendWhenTrue(op, Data.OP_REWARDS),
+                Material.COMMAND_BLOCK
+            )
+        )
         inventory.addItem(CommandsRewardItem(plugin, Data.VOTE_PARTY_COMMANDS, Material.TNT, "Vote Party Commands"))
         if (!op)
         {

@@ -7,14 +7,14 @@ import me.sd_master92.customvoting.constants.Data
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.gui.items.CommandsRewardItem
 import me.sd_master92.customvoting.gui.items.ItemsRewardItem
-import me.sd_master92.customvoting.listeners.PlayerListener
+import me.sd_master92.customvoting.listeners.PlayerCommandInput
+import me.sd_master92.customvoting.listeners.PlayerPermissionInput
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
-import org.bukkit.scheduler.BukkitRunnable
 
 class VoteStreakRewards(private val plugin: CV, private val number: Int) : GUI(
     plugin,
@@ -34,94 +34,49 @@ class VoteStreakRewards(private val plugin: CV, private val number: Int) : GUI(
             Material.RED_WOOL      ->
             {
                 SoundType.FAILURE.play(plugin, player)
-                plugin.data.delete(Data.VOTE_STREAKS + "." + number)
+                plugin.data.delete(Data.VOTE_STREAKS + ".$number")
                 cancelCloseEvent()
                 player.openInventory(VoteStreakSettings(plugin).inventory)
             }
             Material.DIAMOND_SWORD ->
             {
                 SoundType.CHANGE.play(plugin, player)
-                PlayerListener.streakPermissionInput[player.uniqueId] = number
                 cancelCloseEvent()
                 player.closeInventory()
-                player.sendMessage(
-                    ChatColor.GREEN.toString() + "Please enter a permission to add or remove from " +
-                            "the list"
-                )
-                player.sendMessage(ChatColor.GRAY.toString() + "Type 'cancel' to go back")
-                player.sendMessage("")
-                val permissions: List<String> =
-                    plugin.data.getStringList(Data.VOTE_STREAKS + "." + PlayerListener.streakPermissionInput[player.uniqueId] + ".permissions")
-                if (permissions.isEmpty())
+                object : PlayerPermissionInput(plugin, player, Data.VOTE_STREAKS + ".$number.permissions")
                 {
-                    player.sendMessage(ChatColor.RED.toString() + "There are currently no permissions.")
-                } else
-                {
-                    player.sendMessage(ChatColor.GRAY.toString() + "Permissions:")
-                    for (permission in permissions)
+                    override fun onPermissionReceived()
                     {
-                        player.sendMessage(ChatColor.GRAY.toString() + "-" + ChatColor.GREEN + permission)
+                        SoundType.SUCCESS.play(plugin, player)
+                        player.openInventory(VoteStreakRewards(plugin, number).inventory)
+                    }
+
+                    override fun onCancel()
+                    {
+                        SoundType.FAILURE.play(plugin, player)
+                        player.openInventory(VoteStreakRewards(plugin, number).inventory)
                     }
                 }
-                object : BukkitRunnable()
-                {
-                    override fun run()
-                    {
-                        if (!PlayerListener.streakPermissionInput.containsKey(player.uniqueId))
-                        {
-                            player.openInventory(VoteStreakRewards(plugin, number).inventory)
-                            cancelCloseEvent()
-                            cancel()
-                        } else if (!player.isOnline)
-                        {
-                            PlayerListener.streakPermissionInput.remove(player.uniqueId)
-                            cancel()
-                        }
-                    }
-                }.runTaskTimer(plugin, 0, 10)
             }
             Material.SHIELD        ->
             {
                 SoundType.CHANGE.play(plugin, player)
-                PlayerListener.streakCommandInput[player.uniqueId] = number
                 cancelCloseEvent()
                 player.closeInventory()
-                player.sendMessage(
-                    ChatColor.GREEN.toString() + "Please enter a command to add or remove from " +
-                            "the list"
-                )
-                player.sendMessage(ChatColor.GREEN.toString() + "(with %PLAYER% as placeholder)")
-                player.sendMessage(ChatColor.GRAY.toString() + "Type 'cancel' to go back")
-                player.sendMessage("")
-                val commands: List<String> =
-                    plugin.data.getStringList(Data.VOTE_STREAKS + "." + PlayerListener.streakCommandInput[player.uniqueId] + ".commands")
-                if (commands.isEmpty())
+                object : PlayerCommandInput(plugin, player, Data.VOTE_STREAKS + ".$number.commands")
                 {
-                    player.sendMessage(ChatColor.RED.toString() + "There are currently no commands.")
-                } else
-                {
-                    player.sendMessage(ChatColor.GRAY.toString() + "Commands:")
-                    for (command in commands)
+                    override fun onCommandReceived()
                     {
-                        player.sendMessage(ChatColor.GRAY.toString() + "-" + ChatColor.GREEN + command)
+                        SoundType.SUCCESS.play(plugin, player)
+                        player.openInventory(VoteStreakRewards(plugin, number).inventory)
+                    }
+
+                    override fun onCancel()
+                    {
+                        SoundType.FAILURE.play(plugin, player)
+                        player.openInventory(VoteStreakRewards(plugin, number).inventory)
                     }
                 }
-                object : BukkitRunnable()
-                {
-                    override fun run()
-                    {
-                        if (!PlayerListener.streakCommandInput.containsKey(player.uniqueId))
-                        {
-                            player.openInventory(VoteStreakRewards(plugin, number).inventory)
-                            cancelCloseEvent()
-                            cancel()
-                        } else if (!player.isOnline)
-                        {
-                            PlayerListener.streakCommandInput.remove(player.uniqueId)
-                            cancel()
-                        }
-                    }
-                }.runTaskTimer(plugin, 0, 10)
             }
             Material.CHEST         ->
             {
