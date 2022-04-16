@@ -28,6 +28,7 @@ object Settings
     const val DISABLED_BROADCAST_VOTE_PARTY_COUNTDOWN_ENDING = "disabled_broadcasts.vote_party.countdown_ending"
     const val DISABLED_MESSAGE_ARMOR_STAND = "disabled_broadcasts.armor_stand"
     const val DISABLED_MESSAGE_DISABLED_WORLD = "disabled_broadcasts.disabled_world"
+    const val DISABLED_MESSAGE_VOTE_REMINDER = "disabled_broadcasts.vote_reminder"
     const val FIRST_VOTE_BROADCAST_ONLY = "first_vote_broadcast_only"
     const val DISABLED_WORLDS = "disabled_worlds"
     const val USE_DATABASE = "use_database"
@@ -61,6 +62,7 @@ object Settings
         setDefault(plugin, DISABLED_BROADCAST_VOTE_PARTY_COUNTDOWN_ENDING, false)
         setDefault(plugin, DISABLED_MESSAGE_ARMOR_STAND, false)
         setDefault(plugin, DISABLED_MESSAGE_DISABLED_WORLD, false)
+        setDefault(plugin, DISABLED_MESSAGE_VOTE_REMINDER, false)
         setDefault(plugin, USE_DATABASE, false)
         setDefault(plugin, DATABASE_HOST, "localhost")
         setDefault(plugin, DATABASE_PORT, 3306)

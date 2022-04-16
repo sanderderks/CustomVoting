@@ -104,6 +104,16 @@ class MessageSettings(private val plugin: CV) : GUI(plugin, "Message Settings", 
                 plugin.config.saveConfig()
                 event.currentItem = DisabledWorldMessage(plugin)
             }
+            Material.OAK_SIGN          ->
+            {
+                SoundType.CHANGE.play(plugin, player)
+                plugin.config.set(
+                    Settings.DISABLED_MESSAGE_VOTE_REMINDER,
+                    !plugin.config.getBoolean(Settings.DISABLED_MESSAGE_VOTE_REMINDER)
+                )
+                plugin.config.saveConfig()
+                event.currentItem = VoteRemindMessage(plugin)
+            }
             Material.BARRIER           ->
             {
                 SoundType.CLICK.play(plugin, player)
@@ -140,6 +150,7 @@ class MessageSettings(private val plugin: CV) : GUI(plugin, "Message Settings", 
         inventory.addItem(VotePartyCountEndBroadcast(plugin))
         inventory.addItem(ArmorStandBreakMessage(plugin))
         inventory.addItem(DisabledWorldMessage(plugin))
+        inventory.addItem(VoteRemindMessage(plugin))
         inventory.setItem(17, BACK_ITEM)
     }
 }
@@ -188,5 +199,11 @@ class ArmorStandBreakMessage(plugin: CV) : StatusItem(
 class DisabledWorldMessage(plugin: CV) : StatusItem(
     Material.GRASS_BLOCK, "Disabled World Message",
     plugin.config, Settings.DISABLED_MESSAGE_DISABLED_WORLD,
+    true
+)
+
+class VoteRemindMessage(plugin: CV) : StatusItem(
+    Material.OAK_SIGN, "Hourly Vote Reminder",
+    plugin.config, Settings.DISABLED_MESSAGE_VOTE_REMINDER,
     true
 )

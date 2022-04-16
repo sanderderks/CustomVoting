@@ -35,7 +35,8 @@ enum class Messages(private val path: String)
     VOTE_PARTY_COUNTDOWN_ENDING("vote_party.countdown_ending"),
     VOTE_PARTY_START("vote_party.start"),
     VOTE_PARTY_END("vote_party.end"),
-    VOTE_STREAK_REACHED("vote_streak.streak_reached");
+    VOTE_STREAK_REACHED("vote_streak.streak_reached"),
+    VOTE_REMINDER("vote_reminder");
 
     fun getMessage(plugin: CV, placeholders: Map<String, String> = HashMap()): String
     {
@@ -113,6 +114,11 @@ enum class Messages(private val path: String)
             setDefault(plugin, VOTE_PARTY_END, "&7The Vote Party has ended!")
 
             setDefault(plugin, VOTE_STREAK_REACHED, "&b%PLAYER% &dreached vote streak #&b%STREAK%&d!")
+            setDefault(
+                plugin,
+                VOTE_REMINDER,
+                listOf("&bYou haven't voted for our server yet today.", "&dUse /vote for nice rewards!")
+            )
             plugin.messages.saveConfig()
         }
 

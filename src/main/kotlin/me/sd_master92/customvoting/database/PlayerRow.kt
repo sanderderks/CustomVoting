@@ -58,7 +58,7 @@ class PlayerRow(private val plugin: CV, override val uuid: String) : Voter
         }
     }
 
-    val last: Long
+    override val last: Long
         get() = players?.getLast(uuid) ?: 0
 
     val queue: Int

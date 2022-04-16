@@ -12,6 +12,8 @@ import me.sd_master92.customvoting.sendText
 import me.sd_master92.customvoting.subjects.CustomVote
 import me.sd_master92.customvoting.subjects.VoteParty
 import me.sd_master92.customvoting.subjects.VoteTopSign
+import me.sd_master92.customvoting.tasks.UpdateChecker
+import me.sd_master92.customvoting.tasks.VoteReminder
 import org.bukkit.ChatColor
 import org.bukkit.Location
 import org.bukkit.Material
@@ -37,18 +39,8 @@ class PlayerListener(private val plugin: CV) : Listener
     {
         val player = event.player
         executeQueue(player)
-        if (player.isOp && plugin.config.getBoolean(Settings.INGAME_UPDATES) && !plugin.isUpToDate())
-        {
-            object : BukkitRunnable()
-            {
-                override fun run()
-                {
-                    plugin.sendDownloadUrl(player)
-                    player.sendMessage("")
-                    player.sendMessage(ChatColor.GRAY.toString() + "Updates can be turned off in the /votesettings")
-                }
-            }.runTaskLater(plugin, (20 * 5).toLong())
-        }
+        VoteReminder.remindPlayer(plugin, player)
+        UpdateChecker.checkUpdates(plugin, player)
     }
 
     @EventHandler

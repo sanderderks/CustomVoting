@@ -45,8 +45,7 @@ class VoteFile : Voter
         get() = playerFile.getNumber("votes")
     override val period: Int
         get() = playerFile.getNumber("period")
-
-    val last: Long
+    override val last: Long
         get() = playerFile.getTimeStamp("last")
 
     fun setVotes(n: Int, update: Boolean)
@@ -107,26 +106,19 @@ class VoteFile : Voter
                 topVoters.add(VoteFile(playerFile.uuid, plugin))
             }
 
-            if (plugin.config.getBoolean(Settings.MONTHLY_PERIOD))
-            {
-                topVoters.sortWith { x: VoteFile, y: VoteFile ->
-                    var compare = y.period.compareTo(x.period)
-                    if (compare == 0)
-                    {
-                        compare = x.last.compareTo(y.last)
-                    }
-                    compare
+            topVoters.sortWith { x: VoteFile, y: VoteFile ->
+                var compare = if (plugin.config.getBoolean(Settings.MONTHLY_PERIOD))
+                {
+                    y.period.compareTo(x.period)
+                } else
+                {
+                    y.votes.compareTo(x.votes)
                 }
-            } else
-            {
-                topVoters.sortWith { x: VoteFile, y: VoteFile ->
-                    var compare = y.votes.compareTo(x.votes)
-                    if (compare == 0)
-                    {
-                        compare = x.last.compareTo(y.last)
-                    }
-                    compare
+                if (compare == 0)
+                {
+                    compare = x.last.compareTo(y.last)
                 }
+                compare
             }
             return topVoters
         }

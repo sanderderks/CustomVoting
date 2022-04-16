@@ -5,13 +5,13 @@ import me.sd_master92.customvoting.commands.ReloadCommand
 import org.bukkit.scheduler.BukkitRunnable
 import java.util.*
 
-class DailyTask(private val plugin: CV)
+class ResetChecker(private val plugin: CV)
 {
     companion object
     {
         var FIRST_OF_MONTH = false
     }
-    
+
     init
     {
         object : BukkitRunnable()

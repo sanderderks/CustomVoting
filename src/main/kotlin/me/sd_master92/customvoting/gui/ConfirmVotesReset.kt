@@ -8,7 +8,7 @@ import me.sd_master92.customvoting.broadcastText
 import me.sd_master92.customvoting.constants.Messages
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.database.PlayerRow
-import me.sd_master92.customvoting.tasks.DailyTask
+import me.sd_master92.customvoting.tasks.ResetChecker
 import org.bukkit.ChatColor
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
@@ -42,7 +42,7 @@ class ConfirmVotesReset(private val plugin: CV, private val period: Boolean) :
                 VoteFile(value.uuid, plugin).setVotes(0, true)
             }
         }
-        DailyTask.FIRST_OF_MONTH = false
+        ResetChecker.FIRST_OF_MONTH = false
         broadcastText(plugin, Messages.MONTHLY_RESET)
         player.openInventory(VoteSettings(plugin).inventory)
     }
@@ -50,7 +50,7 @@ class ConfirmVotesReset(private val plugin: CV, private val period: Boolean) :
     override fun onCancel(event: InventoryClickEvent, player: Player)
     {
         SoundType.CLICK.play(plugin, player)
-        DailyTask.FIRST_OF_MONTH = false
+        ResetChecker.FIRST_OF_MONTH = false
         player.sendMessage(Intrinsics.stringPlus(ChatColor.RED.toString(), "Votes are not reset."))
         player.openInventory(VoteSettings(plugin).inventory)
     }

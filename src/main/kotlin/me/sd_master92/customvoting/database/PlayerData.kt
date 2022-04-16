@@ -6,7 +6,7 @@ class PlayerData(
     override val uuid: String,
     override val name: String,
     override val votes: Int,
-    val last: Long,
+    override val last: Long,
     val queue: Int,
     override val period: Int
 ) : Voter

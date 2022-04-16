@@ -6,7 +6,7 @@ import me.sd_master92.customvoting.constants.Messages
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.gui.ConfirmVotesReset
 import me.sd_master92.customvoting.gui.VoteSettings
-import me.sd_master92.customvoting.tasks.DailyTask
+import me.sd_master92.customvoting.tasks.ResetChecker
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
@@ -19,7 +19,7 @@ class SettingsCommand(private val plugin: CV) : SimpleCommand(plugin, "votesetti
     override fun onCommand(player: Player, args: Array<String>)
     {
         SoundType.OPEN.play(plugin, player)
-        if (DailyTask.FIRST_OF_MONTH)
+        if (ResetChecker.FIRST_OF_MONTH)
         {
             player.openInventory(ConfirmVotesReset(plugin, plugin.config.getBoolean("monthly_period")).inventory)
         } else

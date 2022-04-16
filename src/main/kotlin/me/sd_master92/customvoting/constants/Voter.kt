@@ -6,4 +6,5 @@ interface Voter
     val period: Int
     val uuid: String
     val name: String
+    val last: Long
 }
