@@ -1,20 +1,19 @@
 package me.sd_master92.customvoting.gui.messages
 
+import me.sd_master92.core.input.PlayerStringInput
 import me.sd_master92.core.inventory.GUI
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Data
 import me.sd_master92.customvoting.constants.enumerations.SoundType
-import me.sd_master92.customvoting.listeners.PlayerListener
 import org.bukkit.ChatColor
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.ClickType
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
-import org.bukkit.scheduler.BukkitRunnable
 
 class VoteLinks @JvmOverloads constructor(private val plugin: CV, private val isPublic: Boolean = false) :
-    GUI(plugin, NAME, 27, true)
+    GUI(plugin, "Vote Links", 27, true)
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
     {
@@ -22,33 +21,10 @@ class VoteLinks @JvmOverloads constructor(private val plugin: CV, private val is
         {
             if (event.click == ClickType.RIGHT)
             {
-                save(plugin, player, inventory.contents, false)
-                PlayerListener.voteLinkInput[player.uniqueId] = event.slot
+                save(player, inventory.contents, false)
                 cancelCloseEvent()
                 player.closeInventory()
-                player.sendMessage(
-                    arrayOf(
-                        ChatColor.GREEN.toString() + "Enter a title for this item (with & colors)",
-                        ChatColor.GRAY.toString() +
-                                "Type 'cancel' to continue"
-                    )
-                )
-                object : BukkitRunnable()
-                {
-                    override fun run()
-                    {
-                        if (!PlayerListener.voteLinkInput.containsKey(player.uniqueId))
-                        {
-                            player.openInventory(VoteLinks(plugin).inventory)
-                            cancelCloseEvent()
-                            cancel()
-                        } else if (!player.isOnline)
-                        {
-                            PlayerListener.voteLinkInput.remove(player.uniqueId)
-                            cancel()
-                        }
-                    }
-                }.runTaskTimer(plugin, 0, 10)
+                enterTitle(player, event.slot)
             }
         } else
         {
@@ -67,30 +43,139 @@ class VoteLinks @JvmOverloads constructor(private val plugin: CV, private val is
     {
         if (!isPublic)
         {
-            save(plugin, player, inventory.contents, true)
+            save(player, inventory.contents, true)
         } else
         {
             SoundType.CLOSE.play(plugin, player)
         }
     }
 
-    companion object
+    private fun enterTitle(player: Player, slot: Int)
     {
-        const val NAME = "Vote Links"
-        fun save(plugin: CV, player: Player, items: Array<ItemStack?>, notify: Boolean)
+        player.sendMessage(
+            arrayOf(
+                ChatColor.GREEN.toString() + "Enter a title for this item (with & colors)",
+                ChatColor.GRAY.toString() +
+                        "Type 'cancel' to continue"
+            )
+        )
+        object : PlayerStringInput(plugin, player)
         {
-            if (plugin.data.setItemsWithNull(Data.VOTE_LINK_ITEMS, items))
+            override fun onInputReceived(input: String)
             {
-                if (notify)
+                val message = ChatColor.translateAlternateColorCodes('&', input)
+                val items = plugin.data.getItems(Data.VOTE_LINK_ITEMS)
+                val item = items[slot]
+                val meta = item.itemMeta
+                if (meta != null)
                 {
-                    SoundType.SUCCESS.play(plugin, player)
-                    player.sendMessage(ChatColor.GREEN.toString() + "Successfully updated the $NAME!")
+                    meta.setDisplayName(message)
+                    item.itemMeta = meta
                 }
-            } else
-            {
-                SoundType.FAILURE.play(plugin, player)
-                player.sendMessage(ChatColor.RED.toString() + "Failed to update the $NAME!")
+                items[slot] = item
+
+                save(player, items as Array<ItemStack?>, false)
+
+                SoundType.SUCCESS.play(plugin, player)
+                player.sendMessage(
+                    arrayOf(
+                        ChatColor.GREEN.toString() + "Add lore (subtext) to this item", ChatColor.GRAY.toString() +
+                                "Type 'cancel' to continue"
+                    )
+                )
+                enterMessage(player, slot)
+                cancel()
             }
+
+            override fun onCancel()
+            {
+                SoundType.SUCCESS.play(plugin, player)
+                enterMessage(player, slot)
+            }
+        }
+    }
+
+    private fun enterMessage(player: Player, slot: Int, add: Boolean = false)
+    {
+        object : PlayerStringInput(plugin, player)
+        {
+            override fun onInputReceived(input: String)
+            {
+                val message = ChatColor.translateAlternateColorCodes('&', input)
+                val items = plugin.data.getItems(Data.VOTE_LINK_ITEMS)
+                val item = items[slot]
+                val meta = item.itemMeta
+                if (meta != null)
+                {
+                    val lore = if (add && meta.lore != null) meta.lore else ArrayList()
+                    lore!!.add(message)
+                    meta.lore = lore
+                    item.itemMeta = meta
+                }
+                items[slot] = item
+
+                save(player, items as Array<ItemStack?>, false)
+
+                SoundType.SUCCESS.play(plugin, player)
+                player.sendMessage(
+                    arrayOf(
+                        ChatColor.GREEN.toString() + "Add more lore (subtext) to this item", ChatColor.GRAY.toString() +
+                                "Type 'cancel' to continue"
+                    )
+                )
+                enterMessage(player, slot, true)
+                cancel()
+            }
+
+            override fun onCancel()
+            {
+                SoundType.SUCCESS.play(plugin, player)
+                enterLink(player, slot)
+            }
+        }
+    }
+
+    private fun enterLink(player: Player, slot: Int)
+    {
+        player.sendMessage(
+            arrayOf(
+                ChatColor.GREEN.toString() + "Add a link to this item", ChatColor.GRAY.toString() +
+                        "Type 'cancel' to continue"
+            )
+        )
+        object : PlayerStringInput(plugin, player)
+        {
+            override fun onInputReceived(input: String)
+            {
+                plugin.data[Data.VOTE_LINKS + ".$slot"] = input
+                plugin.data.saveConfig()
+
+                SoundType.SUCCESS.play(plugin, player)
+                player.openInventory(VoteLinks(plugin).inventory)
+                cancel()
+            }
+
+            override fun onCancel()
+            {
+                SoundType.SUCCESS.play(plugin, player)
+                player.openInventory(VoteLinks(plugin).inventory)
+            }
+        }
+    }
+
+    private fun save(player: Player, items: Array<ItemStack?>, notify: Boolean)
+    {
+        if (plugin.data.setItemsWithNull(Data.VOTE_LINK_ITEMS, items))
+        {
+            if (notify)
+            {
+                SoundType.SUCCESS.play(plugin, player)
+                player.sendMessage(ChatColor.GREEN.toString() + "Successfully updated the $name!")
+            }
+        } else
+        {
+            SoundType.FAILURE.play(plugin, player)
+            player.sendMessage(ChatColor.RED.toString() + "Failed to update the $name!")
         }
     }
 

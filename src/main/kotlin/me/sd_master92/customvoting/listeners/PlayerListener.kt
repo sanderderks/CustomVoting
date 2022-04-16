@@ -7,7 +7,6 @@ import me.sd_master92.customvoting.constants.Messages
 import me.sd_master92.customvoting.constants.Settings
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.database.PlayerRow
-import me.sd_master92.customvoting.gui.messages.VoteLinks
 import me.sd_master92.customvoting.gui.voteparty.VotePartyRewards
 import me.sd_master92.customvoting.sendText
 import me.sd_master92.customvoting.subjects.CustomVote
@@ -25,10 +24,11 @@ import org.bukkit.event.Listener
 import org.bukkit.event.block.Action
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.block.BlockPlaceEvent
-import org.bukkit.event.player.*
-import org.bukkit.inventory.ItemStack
+import org.bukkit.event.player.PlayerChangedWorldEvent
+import org.bukkit.event.player.PlayerInteractAtEntityEvent
+import org.bukkit.event.player.PlayerInteractEvent
+import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.scheduler.BukkitRunnable
-import java.util.*
 
 class PlayerListener(private val plugin: CV) : Listener
 {
@@ -119,95 +119,6 @@ class PlayerListener(private val plugin: CV) : Listener
                         }
                     }
                 }
-            }
-        }
-    }
-
-    @EventHandler
-    fun onPlayerChat(event: AsyncPlayerChatEvent)
-    {
-        val player = event.player
-        when (player.uniqueId)
-        {
-            in loreVoteLinkInput ->
-            {
-                event.isCancelled = true
-                if (event.message.equals("cancel", true))
-                {
-                    loreVoteLinkInput.remove(player.uniqueId)
-                    linkVoteLinkInput.add(player.uniqueId)
-                    SoundType.SUCCESS.play(plugin, player)
-                    player.sendMessage(
-                        arrayOf(
-                            ChatColor.GREEN.toString() + "Add a link to this item", ChatColor.GRAY.toString() +
-                                    "Type 'cancel' to continue"
-                        )
-                    )
-                } else
-                {
-                    val message = ChatColor.translateAlternateColorCodes('&', event.message)
-                    val items = plugin.data.getItems(Data.VOTE_LINK_ITEMS)
-                    val i = voteLinkInput[player.uniqueId]!!
-                    val item = items[i]
-                    val meta = item.itemMeta
-                    if (meta != null)
-                    {
-                        val lore = if (meta.lore != null) meta.lore else ArrayList()
-                        lore!!.add(message)
-                        meta.lore = lore
-                        item.itemMeta = meta
-                    }
-                    items[i] = item
-                    VoteLinks.save(plugin, player, items as Array<ItemStack?>, false)
-                    SoundType.SUCCESS.play(plugin, player)
-                    player.sendMessage(
-                        arrayOf(
-                            ChatColor.GREEN.toString() + "Add more lore (subtext) to this item",
-                            ChatColor.GRAY.toString() +
-                                    "Type 'cancel' to continue"
-                        )
-                    )
-                }
-            }
-            in linkVoteLinkInput ->
-            {
-                event.isCancelled = true
-                if (!event.message.equals("cancel", true))
-                {
-                    val i = voteLinkInput[player.uniqueId]!!
-                    plugin.data[Data.VOTE_LINKS + "." + i] = event.message
-                    plugin.data.saveConfig()
-                }
-                linkVoteLinkInput.remove(player.uniqueId)
-                voteLinkInput.remove(player.uniqueId)
-                SoundType.SUCCESS.play(plugin, player)
-            }
-            in voteLinkInput     ->
-            {
-                event.isCancelled = true
-                if (!event.message.equals("cancel", true))
-                {
-                    val message = ChatColor.translateAlternateColorCodes('&', event.message)
-                    val items = plugin.data.getItems(Data.VOTE_LINK_ITEMS)
-                    val i = voteLinkInput[player.uniqueId]!!
-                    val item = items[i]
-                    val meta = item.itemMeta
-                    if (meta != null)
-                    {
-                        meta.setDisplayName(message)
-                        item.itemMeta = meta
-                    }
-                    items[i] = item
-                    VoteLinks.save(plugin, player, items as Array<ItemStack?>, false)
-                }
-                loreVoteLinkInput.add(player.uniqueId)
-                SoundType.SUCCESS.play(plugin, player)
-                player.sendMessage(
-                    arrayOf(
-                        ChatColor.GREEN.toString() + "Add lore (subtext) to this item", ChatColor.GRAY.toString() +
-                                "Type 'cancel' to continue"
-                    )
-                )
             }
         }
     }
@@ -318,12 +229,5 @@ class PlayerListener(private val plugin: CV) : Listener
                 }
             }
         }
-    }
-
-    companion object
-    {
-        var voteLinkInput: MutableMap<UUID, Int> = HashMap()
-        var linkVoteLinkInput: MutableList<UUID> = ArrayList()
-        var loreVoteLinkInput: MutableList<UUID> = ArrayList()
     }
 }
