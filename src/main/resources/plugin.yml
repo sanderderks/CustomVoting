@@ -41,6 +41,9 @@ commands:
     description: vote settings
     permission: customvoting.settings
     aliases: [ vsettings ]
+  votereset:
+    description: reset player votes
+    permission: customvoting.reset
 
 permissions:
   customvoting.*:
@@ -90,3 +93,5 @@ permissions:
     default: op
   customvoting.extra:
     default: false
+  customvoting.reset:
+    default: op

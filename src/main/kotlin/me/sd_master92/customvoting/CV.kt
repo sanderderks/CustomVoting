@@ -258,6 +258,7 @@ class CV : CustomPlugin(
         VotePartyCommand(this).register()
         VotesCommand(this).register()
         VoteTopCommand(this).register()
+        ResetVotesCommand(this).register()
     }
 
     private fun startTasks()

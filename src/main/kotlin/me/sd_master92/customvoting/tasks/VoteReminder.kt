@@ -59,6 +59,6 @@ class VoteReminder(private val plugin: CV)
                     remindPlayer(plugin, player)
                 }
             }
-        }.runTaskTimer(plugin, 60, (20 * 60 * 60).toLong())
+        }.runTaskTimer(plugin, 60, 20 * 60 * 60)
     }
 }
