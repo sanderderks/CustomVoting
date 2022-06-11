@@ -12,9 +12,7 @@ class PlayerTable(private val plugin: CV, database: CustomDatabase)
     val table: CustomTable
     private fun addPlayer(uuid: String): Boolean
     {
-        return table.insertData(
-            arrayOf("uuid", "votes", "last", "queue", "period"), arrayOf(uuid, 0, 0, 0, 0)
-        )
+        return table.insertData(arrayOf("uuid", "votes", "last", "queue", "period"), arrayOf(uuid, 0, 0, 0, 0))
     }
 
     val all: ResultSet
