@@ -161,6 +161,9 @@ class PlayerTable(private val plugin: CV, database: CustomDatabase)
             if (!periodColumn.create(CustomColumn.DataType.INT))
             {
                 plugin.errorLog("| could not create column 'period'!")
+            } else
+            {
+                plugin.errorLog("| successfully migrated table 'players'!")
             }
         }
     }
@@ -253,8 +256,9 @@ class PlayerTable(private val plugin: CV, database: CustomDatabase)
         {
             plugin.infoLog("| successfully located table 'players'")
             plugin.infoLog("|")
-            plugin.infoLog("|___successfully connected to database")
             migrate()
+            plugin.infoLog("|")
+            plugin.infoLog("|___successfully connected to database")
         }
     }
 }
