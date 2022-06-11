@@ -13,19 +13,16 @@ class PlayerTable(private val plugin: CV, database: CustomDatabase)
     private fun addPlayer(uuid: String): Boolean
     {
         return table.insertData(
-            arrayOf("uuid", "votes", "last", "queue", "period"), arrayOf(
-                uuid, "0",
-                "0", "0", "0"
-            )
+            arrayOf("uuid", "votes", "last", "queue", "period"), arrayOf(uuid, 0, 0, 0, 0)
         )
     }
 
     val all: ResultSet
-        get() = table.all
+        get() = table.getAll()
 
     fun getUuid(name: String): String
     {
-        val result = table.getData("name=\"$name\"")
+        val result = table.getData("name", name)
         try
         {
             if (result.next())
@@ -41,7 +38,7 @@ class PlayerTable(private val plugin: CV, database: CustomDatabase)
 
     fun getName(uuid: String): String
     {
-        val result = table.getData("uuid=\"$uuid\"")
+        val result = table.getData("uuid", uuid)
         try
         {
             if (result.next())
@@ -57,12 +54,12 @@ class PlayerTable(private val plugin: CV, database: CustomDatabase)
 
     fun setName(uuid: String, name: String): Boolean
     {
-        return table.updateData("uuid=\"$uuid\"", "name=\"$name\"")
+        return table.updateData("uuid", uuid, "name", name)
     }
 
     fun getVotes(uuid: String): Int
     {
-        val result = table.getData("uuid=\"$uuid\"")
+        val result = table.getData("uuid", uuid)
         try
         {
             if (result.next())
@@ -81,12 +78,12 @@ class PlayerTable(private val plugin: CV, database: CustomDatabase)
 
     fun setVotes(uuid: String, votes: Int): Boolean
     {
-        return table.updateData("uuid=\"$uuid\"", "votes=$votes")
+        return table.updateData("uuid", uuid, "votes", votes)
     }
 
     fun getPeriod(uuid: String): Int
     {
-        val result = table.getData("uuid=\"$uuid\"")
+        val result = table.getData("uuid", uuid)
         try
         {
             if (result.next())
@@ -105,12 +102,12 @@ class PlayerTable(private val plugin: CV, database: CustomDatabase)
 
     fun setPeriod(uuid: String, votes: Int): Boolean
     {
-        return table.updateData("uuid=\"$uuid\"", "period=$votes")
+        return table.updateData("uuid", uuid, "period", votes)
     }
 
     fun getLast(uuid: String): Long
     {
-        val result = table.getData("uuid=\"$uuid\"")
+        val result = table.getData("uuid", uuid)
         try
         {
             if (result.next())
@@ -129,12 +126,12 @@ class PlayerTable(private val plugin: CV, database: CustomDatabase)
 
     fun setLast(uuid: String): Boolean
     {
-        return table.updateData("uuid=\"$uuid\"", "last=" + System.currentTimeMillis())
+        return table.updateData("uuid", uuid, "last", System.currentTimeMillis())
     }
 
     fun getQueue(uuid: String): Int
     {
-        val result = table.getData("uuid=\"$uuid\"")
+        val result = table.getData("uuid", uuid)
         try
         {
             if (result.next())
@@ -153,7 +150,7 @@ class PlayerTable(private val plugin: CV, database: CustomDatabase)
 
     fun setQueue(uuid: String, queue: Int): Boolean
     {
-        return table.updateData("uuid=\"$uuid\"", "queue=$queue")
+        return table.updateData("uuid", uuid, "queue", queue)
     }
 
     private fun migrate()
