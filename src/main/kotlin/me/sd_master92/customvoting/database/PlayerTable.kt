@@ -155,9 +155,10 @@ class PlayerTable(private val plugin: CV, database: CustomDatabase)
 
     private fun migrate()
     {
-        if (!table.getColumn("period").exists())
+        val periodColumn = table.getColumn("period")
+        if (!periodColumn.exists())
         {
-            if (!table.create("period", CustomColumn.DataType.INT))
+            if (!periodColumn.create(CustomColumn.DataType.INT))
             {
                 plugin.errorLog("| could not create column 'period'!")
             }
