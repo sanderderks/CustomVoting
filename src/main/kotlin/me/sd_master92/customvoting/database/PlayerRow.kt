@@ -46,8 +46,9 @@ class PlayerRow(private val plugin: CV, override val uuid: String) : Voter
         VoteTopStand.updateAll(plugin)
     }
 
-    fun addVote(update: Boolean)
+    fun addVote(update: Boolean): Boolean
     {
+        val votesBefore = votes
         players?.setVotes(uuid, votes + 1)
         players?.setPeriod(uuid, period + 1)
         players?.setLast(uuid)
@@ -56,6 +57,7 @@ class PlayerRow(private val plugin: CV, override val uuid: String) : Voter
             VoteTopSign.updateAll(plugin)
             VoteTopStand.updateAll(plugin)
         }
+        return votesBefore < votes
     }
 
     override val last: Long

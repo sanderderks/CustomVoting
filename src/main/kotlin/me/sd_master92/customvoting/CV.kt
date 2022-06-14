@@ -251,6 +251,7 @@ class CV : CustomPlugin(
         CreateTopCommand(this).register()
         DeleteTopCommand(this).register()
         FakeVoteCommand(this).register()
+        InspectVoteCommand(this).register()
         ReloadCommand(this).register()
         SettingsCommand(this).register()
         SetVotesCommand(this).register()
@@ -267,6 +268,16 @@ class CV : CustomPlugin(
         ResetChecker(this)
         UpdateChecker(this)
         VoteReminder(this)
+    }
+
+    fun runCommand(command: String)
+    {
+        this.server.dispatchCommand(this.server.consoleSender, command)
+    }
+
+    fun broadcastText(message: Messages, placeholders: Map<String, String> = HashMap())
+    {
+        server.broadcastMessage(message.getMessage(this, placeholders))
     }
 
     companion object

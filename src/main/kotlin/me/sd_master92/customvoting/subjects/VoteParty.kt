@@ -2,14 +2,12 @@ package me.sd_master92.customvoting.subjects
 
 import me.sd_master92.core.inventory.BaseItem
 import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.broadcastText
 import me.sd_master92.customvoting.constants.Data
 import me.sd_master92.customvoting.constants.Messages
 import me.sd_master92.customvoting.constants.Settings
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.constants.enumerations.VotePartyType
 import me.sd_master92.customvoting.helpers.ParticleHelper
-import me.sd_master92.customvoting.runCommand
 import me.sd_master92.customvoting.withPlaceholders
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
@@ -19,7 +17,6 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.scheduler.BukkitRunnable
 import java.util.*
-import java.util.function.Consumer
 
 class VoteParty(private val plugin: CV)
 {
@@ -44,7 +41,7 @@ class VoteParty(private val plugin: CV)
                                 val placeholders = HashMap<String, String>()
                                 placeholders["%TIME%"] = "" + count
                                 SoundType.NOTIFY.playForAll(plugin)
-                                broadcastText(plugin, Messages.VOTE_PARTY_COUNTDOWN, placeholders)
+                                plugin.broadcastText(Messages.VOTE_PARTY_COUNTDOWN, placeholders)
                             }
                         }
                         5, 4, 3, 2, 1 ->
@@ -55,7 +52,7 @@ class VoteParty(private val plugin: CV)
                                 placeholders["%TIME%"] = "" + count
                                 placeholders["%s%"] = if (count == 1) "" else "s"
                                 SoundType.NOTIFY.playForAll(plugin)
-                                broadcastText(plugin, Messages.VOTE_PARTY_COUNTDOWN_ENDING, placeholders)
+                                plugin.broadcastText(Messages.VOTE_PARTY_COUNTDOWN_ENDING, placeholders)
                             }
                         }
                         0             ->
@@ -105,14 +102,11 @@ class VoteParty(private val plugin: CV)
             {
                 for (player in Bukkit.getOnlinePlayers())
                 {
-                    runCommand(
-                        plugin, command.replace("%PLAYER%", player.name)
-                            .withPlaceholders(player)
-                    )
+                    plugin.runCommand(command.replace("%PLAYER%", player.name).withPlaceholders(player))
                 }
             } else
             {
-                runCommand(plugin, command)
+                plugin.runCommand(command)
             }
         }
     }
@@ -159,7 +153,7 @@ class VoteParty(private val plugin: CV)
                             tasks.remove(taskId)
                             if (tasks.isEmpty())
                             {
-                                broadcastText(plugin, Messages.VOTE_PARTY_END)
+                                plugin.broadcastText(Messages.VOTE_PARTY_END)
                                 stop()
                             }
                             cancel()
@@ -175,15 +169,14 @@ class VoteParty(private val plugin: CV)
         val locations = plugin.data.getLocations(Data.VOTE_PARTY)
         val chests: MutableMap<String, MutableList<ItemStack>> = HashMap()
         val keys: MutableList<String> = ArrayList(locations.keys)
-        keys.forEach(Consumer { key: String ->
-            val items = plugin.data.getItems(
-                Data.VOTE_PARTY + "." + key
-            )
+        for (key in keys)
+        {
+            val items = plugin.data.getItems(Data.VOTE_PARTY + ".$key")
             if (items.isNotEmpty())
             {
                 chests[key] = ArrayList(listOf(*items))
             }
-        })
+        }
         val random = Random()
         object : BukkitRunnable()
         {

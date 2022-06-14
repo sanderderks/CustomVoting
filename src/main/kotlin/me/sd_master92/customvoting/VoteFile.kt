@@ -67,8 +67,9 @@ class VoteFile : Voter
         VoteTopStand.updateAll(plugin)
     }
 
-    fun addVote(update: Boolean)
+    fun addVote(update: Boolean): Boolean
     {
+        val beforeVotes = votes
         playerFile.setTimeStamp("last")
         playerFile.addNumber("votes", 1)
         playerFile.addNumber("period", 1)
@@ -77,6 +78,7 @@ class VoteFile : Voter
             VoteTopSign.updateAll(plugin)
             VoteTopStand.updateAll(plugin)
         }
+        return beforeVotes < votes
     }
 
     val queue: List<String>

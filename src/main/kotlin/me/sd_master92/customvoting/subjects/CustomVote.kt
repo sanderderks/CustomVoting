@@ -8,38 +8,67 @@ import me.sd_master92.customvoting.constants.Data
 import me.sd_master92.customvoting.constants.Messages
 import me.sd_master92.customvoting.constants.Settings
 import me.sd_master92.customvoting.constants.enumerations.ItemRewardType
+import me.sd_master92.customvoting.constants.enumerations.Logger
 import me.sd_master92.customvoting.database.PlayerRow
 import me.sd_master92.customvoting.helpers.ParticleHelper
 import org.bukkit.Bukkit
+import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.bukkit.scheduler.BukkitRunnable
 import java.text.DecimalFormat
 import java.util.*
 
-class CustomVote(private val plugin: CV, vote: Vote, private val queued: Boolean = false) : Vote(vote)
+class CustomVote(
+    private val plugin: CV,
+    vote: Vote,
+    private val queued: Boolean = false,
+    private val logger: CommandSender? = null
+) : Vote(vote)
 {
     private fun forwardVote()
     {
+        Logger.OK.log("Now examining incoming vote of $username...", logger)
+        Logger.INFO.log("Website: $serviceName", logger)
         val player = Bukkit.getPlayer(username)
         if (player == null)
         {
+            Logger.INFO.log("The player is not online, adding vote to queue", logger)
             queue()
+            Logger.ERROR.log("End of log", logger)
         } else if (plugin.config.getStringList(Settings.DISABLED_WORLDS).contains(player.world.name))
         {
+            Logger.INFO.log(
+                "The player is in a disabled world called '${player.world.name}', adding vote to queue",
+                logger
+            )
             if (!plugin.config.getBoolean(Settings.DISABLED_MESSAGE_DISABLED_WORLD))
             {
                 player.sendText(plugin, Messages.DISABLED_WORLD)
             }
             queue()
+            Logger.ERROR.log("End of log", logger)
         } else
         {
+            Logger.OK.log("Player online and in an enabled world", logger)
             broadcast(player)
             if (plugin.hasDatabaseConnection())
             {
-                PlayerRow(plugin, player.uniqueId.toString()).addVote(true)
+                if (PlayerRow(plugin, player.uniqueId.toString()).addVote(true))
+                {
+                    Logger.INFO.log("Added vote to database", logger)
+                } else
+                {
+                    Logger.ERROR.log("Could not add vote to database", logger)
+                }
             } else
             {
-                VoteFile(player.uniqueId.toString(), plugin).addVote(true)
+                if (VoteFile(player.uniqueId.toString(), plugin).addVote(true))
+                {
+                    Logger.INFO.log("Added vote to player file", logger)
+                } else
+                {
+                    Logger.ERROR.log("Could not add vote to player file", logger)
+                }
             }
             ParticleHelper.shootFirework(plugin, player.location)
             giveRewards(player, player.hasPermission("customvoting.extra"))
@@ -54,13 +83,25 @@ class CustomVote(private val plugin: CV, vote: Vote, private val queued: Boolean
     {
         if (plugin.hasDatabaseConnection() && plugin.playerTable != null)
         {
-            PlayerRow(plugin, plugin.playerTable!!.getUuid(username)).addQueue()
+            if (PlayerRow(plugin, plugin.playerTable!!.getUuid(username)).addQueue())
+            {
+                Logger.INFO.log("Added vote to database queue", logger)
+            } else
+            {
+                Logger.ERROR.log("Could not add vote to database queue", logger)
+            }
         } else
         {
             val playerFile = PlayerFile.getByName(username)
             if (playerFile != null)
             {
-                VoteFile(playerFile.uuid, plugin).addQueue(serviceName)
+                if (VoteFile(playerFile.uuid, plugin).addQueue(serviceName))
+                {
+                    Logger.INFO.log("Added vote to player file queue", logger)
+                } else
+                {
+                    Logger.ERROR.log("Could not add vote to player file queue", logger)
+                }
             }
         }
     }
@@ -98,7 +139,7 @@ class CustomVote(private val plugin: CV, vote: Vote, private val queued: Boolean
             val placeholders = HashMap<String, String>()
             placeholders["%PLAYER%"] = username
             placeholders["%SERVICE%"] = serviceName
-            broadcastText(plugin, Messages.VOTE_BROADCAST, placeholders)
+            plugin.broadcastText(Messages.VOTE_BROADCAST, placeholders)
         }
     }
 
@@ -134,7 +175,7 @@ class CustomVote(private val plugin: CV, vote: Vote, private val queued: Boolean
                                 val placeholders = HashMap<String, String>()
                                 placeholders["%VOTES%"] = "" + updatedVotesUntil
                                 placeholders["%s%"] = if (updatedVotesUntil == 1) "" else "s"
-                                broadcastText(plugin, Messages.VOTE_PARTY_UNTIL, placeholders)
+                                plugin.broadcastText(Messages.VOTE_PARTY_UNTIL, placeholders)
                             }
                             isAwaitingBroadcast = false
                         }
@@ -146,6 +187,14 @@ class CustomVote(private val plugin: CV, vote: Vote, private val queued: Boolean
 
     private fun giveRewards(player: Player, op: Boolean)
     {
+        if (op)
+        {
+            Logger.WARNING.log("Giving PERMISSION BASED rewards to player", logger)
+            Logger.INFO.log("^ This happens because the player has the permission 'customvoting.extra'", logger)
+        } else
+        {
+            Logger.INFO.log("Giving regular rewards to player", logger)
+        }
         giveItems(player, op)
         executeCommands(player, op)
         var rewardMessage = ""
@@ -192,7 +241,9 @@ class CustomVote(private val plugin: CV, vote: Vote, private val queued: Boolean
         val path = Data.ITEM_REWARDS.appendWhenTrue(op, Data.OP_REWARDS)
         val typePath = Settings.ITEM_REWARD_TYPE.appendWhenTrue(op, Data.OP_REWARDS)
         val random = plugin.config.getNumber(typePath) != ItemRewardType.ALL_ITEMS.value
-        player.addToInventoryOrDrop(plugin.data.getItems(path), random)
+        val items = plugin.data.getItems(path)
+        Logger.INFO.log("Giving ${items.size} items to player", logger)
+        player.addToInventoryOrDrop(items, random)
     }
 
     private fun giveMoney(player: Player, op: Boolean): Double
@@ -202,8 +253,12 @@ class CustomVote(private val plugin: CV, vote: Vote, private val queued: Boolean
         {
             val path = Settings.VOTE_REWARD_MONEY.appendWhenTrue(op, Data.OP_REWARDS)
             val amount = plugin.config.getDouble(path)
+            Logger.INFO.log("Giving $$amount to player", logger)
             economy.depositPlayer(player, amount)
             return amount
+        } else
+        {
+            Logger.WARNING.log("Money reward disabled", logger)
         }
         return 0.0
     }
@@ -212,6 +267,7 @@ class CustomVote(private val plugin: CV, vote: Vote, private val queued: Boolean
     {
         val path = Settings.VOTE_REWARD_EXPERIENCE.appendWhenTrue(op, Data.OP_REWARDS)
         val amount = plugin.config.getNumber(path)
+        Logger.INFO.log("Giving ${amount}xp to player", logger)
         player.level = player.level + amount
         return amount
     }
@@ -223,6 +279,7 @@ class CustomVote(private val plugin: CV, vote: Vote, private val queued: Boolean
             val luckyRewards = plugin.data.getItems(Data.LUCKY_REWARDS)
             if (luckyRewards.isNotEmpty())
             {
+                Logger.OK.log("Giving 1 random lucky reward to player", logger)
                 player.addToInventoryOrDrop(luckyRewards, true)
                 player.sendMessage(Messages.VOTE_LUCKY.getMessage(plugin))
             }
@@ -232,9 +289,11 @@ class CustomVote(private val plugin: CV, vote: Vote, private val queued: Boolean
     private fun executeCommands(player: Player, op: Boolean)
     {
         val path = Data.VOTE_COMMANDS.appendWhenTrue(op, Data.OP_REWARDS)
-        for (command in plugin.data.getStringList(path))
+        val commands = plugin.data.getStringList(path)
+        Logger.INFO.log("Executing ${commands.size} commands", logger)
+        for (command in commands)
         {
-            runCommand(plugin, command.replace("%PLAYER%", player.name).withPlaceholders(player))
+            plugin.runCommand(command.replace("%PLAYER%", player.name).withPlaceholders(player))
         }
     }
 
@@ -243,6 +302,7 @@ class CustomVote(private val plugin: CV, vote: Vote, private val queued: Boolean
         val votes = VoteFile(player, plugin).votes
         if (plugin.data.contains(Data.VOTE_STREAKS + "." + votes))
         {
+            Logger.OK.log("Player reached vote streak #$votes, giving streak rewards", logger)
             if (!plugin.config.getBoolean(Settings.DISABLED_BROADCAST_STREAK))
             {
                 val placeholders = HashMap<String, String>()
@@ -262,7 +322,7 @@ class CustomVote(private val plugin: CV, vote: Vote, private val queued: Boolean
             val commands = plugin.data.getStringList(Data.VOTE_STREAKS + "." + votes + ".commands")
             for (command in commands)
             {
-                runCommand(plugin, command.replace("%PLAYER%", player.name).withPlaceholders(player))
+                plugin.runCommand(command.replace("%PLAYER%", player.name).withPlaceholders(player))
             }
             player.addToInventoryOrDrop(plugin.data.getItems("${Data.VOTE_STREAKS}.$votes.${Data.ITEM_REWARDS}"))
         }
@@ -272,10 +332,16 @@ class CustomVote(private val plugin: CV, vote: Vote, private val queued: Boolean
     {
         private var isAwaitingBroadcast = false
 
-        fun create(plugin: CV, name: String?, service: String?, queued: Boolean = false)
+        fun create(
+            plugin: CV,
+            name: String,
+            service: String,
+            queued: Boolean = false,
+            logger: CommandSender? = null
+        )
         {
             val vote = Vote(service, name, "0.0.0.0", Date().time.toString())
-            CustomVote(plugin, vote, queued)
+            CustomVote(plugin, vote, queued, logger)
         }
     }
 

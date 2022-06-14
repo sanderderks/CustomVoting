@@ -20,16 +20,6 @@ fun String.withPlaceholders(player: Player): String
     }
 }
 
-fun runCommand(plugin: CV, command: String)
-{
-    plugin.server.dispatchCommand(plugin.server.consoleSender, command)
-}
-
-fun broadcastText(plugin: CV, message: Messages, placeholders: Map<String, String> = HashMap())
-{
-    plugin.server.broadcastMessage(message.getMessage(plugin, placeholders))
-}
-
 fun CommandSender?.sendText(message: String)
 {
     if (this is Player)

@@ -4,7 +4,6 @@ import me.sd_master92.core.file.PlayerFile.Companion.getAll
 import me.sd_master92.core.inventory.ConfirmGUI
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.VoteFile
-import me.sd_master92.customvoting.broadcastText
 import me.sd_master92.customvoting.constants.Messages
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.database.PlayerRow
@@ -43,7 +42,7 @@ class ConfirmVotesReset(private val plugin: CV, private val period: Boolean) :
             }
         }
         ResetChecker.FIRST_OF_MONTH = false
-        broadcastText(plugin, Messages.MONTHLY_RESET)
+        plugin.broadcastText(Messages.MONTHLY_RESET)
         player.openInventory(VoteSettings(plugin).inventory)
     }
 

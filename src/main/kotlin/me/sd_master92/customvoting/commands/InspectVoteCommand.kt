@@ -10,7 +10,7 @@ import org.bukkit.ChatColor
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
-class FakeVoteCommand(private val plugin: CV) : SimpleCommand(plugin, "fakevote")
+class InspectVoteCommand(private val plugin: CV) : SimpleCommand(plugin, "inspectvote")
 {
     override fun onCommand(sender: CommandSender, args: Array<String>)
     {
@@ -18,10 +18,10 @@ class FakeVoteCommand(private val plugin: CV) : SimpleCommand(plugin, "fakevote"
         {
             if (sender is Player)
             {
-                fakeVote(sender.getName(), "fakevote.com")
+                testVote(sender.getName(), "fakevote.com", sender)
             } else
             {
-                sender.sendMessage(ChatColor.RED.toString() + "- /fakevote <name> [website]")
+                sender.sendMessage(ChatColor.RED.toString() + "- /inspectvote <name> [website]")
             }
         } else
         {
@@ -29,7 +29,7 @@ class FakeVoteCommand(private val plugin: CV) : SimpleCommand(plugin, "fakevote"
             val service = if (args.size >= 2) args[1] else "fakevote.com"
             if (PlayerFile.getByName(name) != null)
             {
-                fakeVote(name, service)
+                testVote(name, service, sender)
             } else
             {
                 sender.sendText(plugin, Messages.INVALID_PLAYER)
@@ -41,9 +41,9 @@ class FakeVoteCommand(private val plugin: CV) : SimpleCommand(plugin, "fakevote"
     {
     }
 
-    private fun fakeVote(name: String, service: String)
+    private fun testVote(name: String, service: String, sender: CommandSender? = null)
     {
-        CustomVote.create(plugin, name, service)
+        CustomVote.create(plugin, name, service, logger = sender)
     }
 
     init
