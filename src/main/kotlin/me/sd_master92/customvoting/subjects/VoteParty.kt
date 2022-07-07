@@ -175,6 +175,9 @@ class VoteParty(private val plugin: CV)
             if (items.isNotEmpty())
             {
                 chests[key] = ArrayList(listOf(*items))
+            } else
+            {
+                keys.remove(key)
             }
         }
         val random = Random()
