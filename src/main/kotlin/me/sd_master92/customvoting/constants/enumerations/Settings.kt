@@ -31,6 +31,7 @@ enum class Settings(val path: String, private val defaultValue: Any? = null)
     DISABLED_MESSAGE_VOTE_REMINDER("disabled_broadcasts.vote_reminder", false),
     FIRST_VOTE_BROADCAST_ONLY("first_vote_broadcast_only", false),
     DISABLED_WORLDS("disabled_worlds"),
+    ENABLED_OP_GROUPS("enabled_op_groups"),
     USE_DATABASE("use_database", false),
     DATABASE("database"),
     DATABASE_HOST("${DATABASE.path}.host", "localhost"),

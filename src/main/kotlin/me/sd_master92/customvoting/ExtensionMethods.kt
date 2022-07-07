@@ -2,6 +2,7 @@ package me.sd_master92.customvoting
 
 import me.clip.placeholderapi.PlaceholderAPI
 import me.sd_master92.customvoting.constants.enumerations.Messages
+import me.sd_master92.customvoting.constants.enumerations.Settings
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
 import org.bukkit.command.CommandSender
@@ -88,4 +89,19 @@ fun Player.addToInventoryOrDrop(items: Array<ItemStack>, random: Boolean = false
 fun Player.addToInventoryOrDrop(item: ItemStack)
 {
     this.inventory.addItem(item).values.forEach { this.world.dropItemNaturally(this.location, it) }
+}
+
+fun Player.hasPermissionBasedRewards(plugin: CV): Boolean
+{
+    if (CV.PERMISSION != null)
+    {
+        for (group in CV.PERMISSION!!.getPlayerGroups(this))
+        {
+            if (plugin.config.getStringList(Settings.ENABLED_OP_GROUPS.path).contains(group.lowercase()))
+            {
+                return true
+            }
+        }
+    }
+    return false
 }
