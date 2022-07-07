@@ -4,8 +4,8 @@ import me.sd_master92.core.inventory.BaseItem
 import me.sd_master92.core.inventory.GUI
 import me.sd_master92.core.inventory.StatusItem
 import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.constants.Settings
 import me.sd_master92.customvoting.constants.enumerations.Materials
+import me.sd_master92.customvoting.constants.enumerations.Settings
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.gui.VoteSettings
 import org.bukkit.ChatColor
@@ -30,7 +30,10 @@ class MessageSettings(private val plugin: CV) : GUI(plugin, "Message Settings", 
             Material.CHEST             ->
             {
                 SoundType.CHANGE.play(plugin, player)
-                plugin.config.set(Settings.VOTE_LINK_INVENTORY, !plugin.config.getBoolean(Settings.VOTE_LINK_INVENTORY))
+                plugin.config.set(
+                    Settings.VOTE_LINK_INVENTORY.path,
+                    !plugin.config.getBoolean(Settings.VOTE_LINK_INVENTORY.path)
+                )
                 plugin.config.saveConfig()
                 event.currentItem = UseVoteLinkItem(plugin)
             }
@@ -38,8 +41,8 @@ class MessageSettings(private val plugin: CV) : GUI(plugin, "Message Settings", 
             {
                 SoundType.CHANGE.play(plugin, player)
                 plugin.config.set(
-                    Settings.DISABLED_BROADCAST_VOTE,
-                    !plugin.config.getBoolean(Settings.DISABLED_BROADCAST_VOTE)
+                    Settings.DISABLED_BROADCAST_VOTE.path,
+                    !plugin.config.getBoolean(Settings.DISABLED_BROADCAST_VOTE.path)
                 )
                 plugin.config.saveConfig()
                 event.currentItem = VoteBroadcast(plugin)
@@ -48,8 +51,8 @@ class MessageSettings(private val plugin: CV) : GUI(plugin, "Message Settings", 
             {
                 SoundType.CHANGE.play(plugin, player)
                 plugin.config.set(
-                    Settings.DISABLED_BROADCAST_STREAK,
-                    !plugin.config.getBoolean(Settings.DISABLED_BROADCAST_STREAK)
+                    Settings.DISABLED_BROADCAST_STREAK.path,
+                    !plugin.config.getBoolean(Settings.DISABLED_BROADCAST_STREAK.path)
                 )
                 plugin.config.saveConfig()
                 event.currentItem = StreakBroadcast(plugin)
@@ -58,8 +61,8 @@ class MessageSettings(private val plugin: CV) : GUI(plugin, "Message Settings", 
             {
                 SoundType.CHANGE.play(plugin, player)
                 plugin.config.set(
-                    Settings.DISABLED_BROADCAST_VOTE_PARTY_UNTIL,
-                    !plugin.config.getBoolean(Settings.DISABLED_BROADCAST_VOTE_PARTY_UNTIL)
+                    Settings.DISABLED_BROADCAST_VOTE_PARTY_UNTIL.path,
+                    !plugin.config.getBoolean(Settings.DISABLED_BROADCAST_VOTE_PARTY_UNTIL.path)
                 )
                 plugin.config.saveConfig()
                 event.currentItem = VotePartyUntilBroadcast(plugin)
@@ -68,8 +71,8 @@ class MessageSettings(private val plugin: CV) : GUI(plugin, "Message Settings", 
             {
                 SoundType.CHANGE.play(plugin, player)
                 plugin.config.set(
-                    Settings.DISABLED_BROADCAST_VOTE_PARTY_COUNTDOWN,
-                    !plugin.config.getBoolean(Settings.DISABLED_BROADCAST_VOTE_PARTY_COUNTDOWN)
+                    Settings.DISABLED_BROADCAST_VOTE_PARTY_COUNTDOWN.path,
+                    !plugin.config.getBoolean(Settings.DISABLED_BROADCAST_VOTE_PARTY_COUNTDOWN.path)
                 )
                 plugin.config.saveConfig()
                 event.currentItem = VotePartyCountBroadcast(plugin)
@@ -78,8 +81,8 @@ class MessageSettings(private val plugin: CV) : GUI(plugin, "Message Settings", 
             {
                 SoundType.CHANGE.play(plugin, player)
                 plugin.config.set(
-                    Settings.DISABLED_BROADCAST_VOTE_PARTY_COUNTDOWN_ENDING,
-                    !plugin.config.getBoolean(Settings.DISABLED_BROADCAST_VOTE_PARTY_COUNTDOWN_ENDING)
+                    Settings.DISABLED_BROADCAST_VOTE_PARTY_COUNTDOWN_ENDING.path,
+                    !plugin.config.getBoolean(Settings.DISABLED_BROADCAST_VOTE_PARTY_COUNTDOWN_ENDING.path)
                 )
                 plugin.config.saveConfig()
                 event.currentItem = VotePartyCountEndBroadcast(plugin)
@@ -88,8 +91,8 @@ class MessageSettings(private val plugin: CV) : GUI(plugin, "Message Settings", 
             {
                 SoundType.CHANGE.play(plugin, player)
                 plugin.config.set(
-                    Settings.DISABLED_MESSAGE_ARMOR_STAND,
-                    !plugin.config.getBoolean(Settings.DISABLED_MESSAGE_ARMOR_STAND)
+                    Settings.DISABLED_MESSAGE_ARMOR_STAND.path,
+                    !plugin.config.getBoolean(Settings.DISABLED_MESSAGE_ARMOR_STAND.path)
                 )
                 plugin.config.saveConfig()
                 event.currentItem = ArmorStandBreakMessage(plugin)
@@ -98,8 +101,8 @@ class MessageSettings(private val plugin: CV) : GUI(plugin, "Message Settings", 
             {
                 SoundType.CHANGE.play(plugin, player)
                 plugin.config.set(
-                    Settings.DISABLED_MESSAGE_DISABLED_WORLD,
-                    !plugin.config.getBoolean(Settings.DISABLED_MESSAGE_DISABLED_WORLD)
+                    Settings.DISABLED_MESSAGE_DISABLED_WORLD.path,
+                    !plugin.config.getBoolean(Settings.DISABLED_MESSAGE_DISABLED_WORLD.path)
                 )
                 plugin.config.saveConfig()
                 event.currentItem = DisabledWorldMessage(plugin)
@@ -108,8 +111,8 @@ class MessageSettings(private val plugin: CV) : GUI(plugin, "Message Settings", 
             {
                 SoundType.CHANGE.play(plugin, player)
                 plugin.config.set(
-                    Settings.DISABLED_MESSAGE_VOTE_REMINDER,
-                    !plugin.config.getBoolean(Settings.DISABLED_MESSAGE_VOTE_REMINDER)
+                    Settings.DISABLED_MESSAGE_VOTE_REMINDER.path,
+                    !plugin.config.getBoolean(Settings.DISABLED_MESSAGE_VOTE_REMINDER.path)
                 )
                 plugin.config.saveConfig()
                 event.currentItem = VoteRemindMessage(plugin)
@@ -157,53 +160,53 @@ class MessageSettings(private val plugin: CV) : GUI(plugin, "Message Settings", 
 
 class UseVoteLinkItem(plugin: CV) : StatusItem(
     Material.CHEST, "Vote Links Inventory",
-    plugin.config, Settings.VOTE_LINK_INVENTORY
+    plugin.config, Settings.VOTE_LINK_INVENTORY.path
 )
 
 class VoteBroadcast(plugin: CV) : StatusItem(
     Material.DIAMOND, "Vote Broadcast",
-    plugin.config, Settings.DISABLED_BROADCAST_VOTE,
+    plugin.config, Settings.DISABLED_BROADCAST_VOTE.path,
     true
 )
 
 class StreakBroadcast(plugin: CV) : StatusItem(
     Material.ENDER_PEARL, "Streak Broadcast",
-    plugin.config, Settings.DISABLED_BROADCAST_STREAK,
+    plugin.config, Settings.DISABLED_BROADCAST_STREAK.path,
     true
 )
 
 class VotePartyUntilBroadcast(plugin: CV) : StatusItem(
     Material.BOOKSHELF, "VoteParty Votes Broadcast",
-    plugin.config, Settings.DISABLED_BROADCAST_VOTE_PARTY_UNTIL,
+    plugin.config, Settings.DISABLED_BROADCAST_VOTE_PARTY_UNTIL.path,
     true
 )
 
 class VotePartyCountBroadcast(plugin: CV) : StatusItem(
     Material.NOTE_BLOCK, "VoteParty Count Broadcast",
-    plugin.config, Settings.DISABLED_BROADCAST_VOTE_PARTY_COUNTDOWN,
+    plugin.config, Settings.DISABLED_BROADCAST_VOTE_PARTY_COUNTDOWN.path,
     true
 )
 
 class VotePartyCountEndBroadcast(plugin: CV) : StatusItem(
     Material.FIREWORK_ROCKET, "VoteParty Count Ending Broadcast",
-    plugin.config, Settings.DISABLED_BROADCAST_VOTE_PARTY_COUNTDOWN_ENDING,
+    plugin.config, Settings.DISABLED_BROADCAST_VOTE_PARTY_COUNTDOWN_ENDING.path,
     true
 )
 
 class ArmorStandBreakMessage(plugin: CV) : StatusItem(
     Material.ARMOR_STAND, "Break Armorstand Message",
-    plugin.config, Settings.DISABLED_MESSAGE_ARMOR_STAND,
+    plugin.config, Settings.DISABLED_MESSAGE_ARMOR_STAND.path,
     true
 )
 
 class DisabledWorldMessage(plugin: CV) : StatusItem(
     Material.GRASS_BLOCK, "Disabled World Message",
-    plugin.config, Settings.DISABLED_MESSAGE_DISABLED_WORLD,
+    plugin.config, Settings.DISABLED_MESSAGE_DISABLED_WORLD.path,
     true
 )
 
 class VoteRemindMessage(plugin: CV) : StatusItem(
     Material.OAK_SIGN, "Hourly Vote Reminder",
-    plugin.config, Settings.DISABLED_MESSAGE_VOTE_REMINDER,
+    plugin.config, Settings.DISABLED_MESSAGE_VOTE_REMINDER.path,
     true
 )

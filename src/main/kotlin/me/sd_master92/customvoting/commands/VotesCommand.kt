@@ -5,8 +5,8 @@ import me.sd_master92.core.file.PlayerFile
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.VoteFile
 import me.sd_master92.customvoting.constants.Messages
-import me.sd_master92.customvoting.constants.Settings
 import me.sd_master92.customvoting.constants.Voter
+import me.sd_master92.customvoting.constants.enumerations.Settings
 import me.sd_master92.customvoting.database.PlayerRow
 import me.sd_master92.customvoting.sendText
 import org.bukkit.command.CommandSender
@@ -25,7 +25,7 @@ class VotesCommand(private val plugin: CV) : SimpleCommand(plugin, "votes")
                     if (plugin.hasDatabaseConnection()) PlayerRow(plugin, sender) else VoteFile(sender, plugin)
                 placeholders["%VOTES%"] = "${voter.votes}"
                 placeholders["%PERIOD%"] = "${voter.period}"
-                if (plugin.config.getBoolean(Settings.MONTHLY_PERIOD))
+                if (plugin.config.getBoolean(Settings.MONTHLY_PERIOD.path))
                 {
                     placeholders["%s%"] = if (VoteFile(sender, plugin).period == 1) "" else "s"
                 } else
@@ -48,7 +48,7 @@ class VotesCommand(private val plugin: CV) : SimpleCommand(plugin, "votes")
                 placeholders["%PLAYER%"] = voteFile.name
                 placeholders["%VOTES%"] = "${voteFile.votes}"
                 placeholders["%PERIOD%"] = "${voteFile.period}"
-                if (plugin.config.getBoolean(Settings.MONTHLY_PERIOD))
+                if (plugin.config.getBoolean(Settings.MONTHLY_PERIOD.path))
                 {
                     placeholders["%s%"] = if (voteFile.period == 1) "" else "s"
                 } else

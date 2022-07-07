@@ -7,7 +7,7 @@ import me.sd_master92.core.plugin.CustomPlugin
 import me.sd_master92.customvoting.commands.*
 import me.sd_master92.customvoting.commands.voteparty.VotePartyCommand
 import me.sd_master92.customvoting.constants.Messages
-import me.sd_master92.customvoting.constants.Settings
+import me.sd_master92.customvoting.constants.enumerations.Settings
 import me.sd_master92.customvoting.database.PlayerTable
 import me.sd_master92.customvoting.extensions.CustomPlaceholders
 import me.sd_master92.customvoting.listeners.PlayerListener
@@ -200,7 +200,7 @@ class CV : CustomPlugin(
         infoLog("|")
         if (useDatabase())
         {
-            val database = CustomDatabase(config, Settings.DATABASE)
+            val database = CustomDatabase(config, Settings.DATABASE.path)
             if (!database.connect())
             {
                 errorLog("|___could not connect to database")
@@ -217,15 +217,15 @@ class CV : CustomPlugin(
     private fun setupBStatsMetrics()
     {
         val metrics = Metrics(this, 13544)
-        metrics.addCustomChart(SimplePie("ingame_updates_enabled") { if (config.getBoolean(Settings.INGAME_UPDATES)) "true" else "false" })
+        metrics.addCustomChart(SimplePie("ingame_updates_enabled") { if (config.getBoolean(Settings.INGAME_UPDATES.path)) "true" else "false" })
         metrics.addCustomChart(SimplePie("database_enabled") { if (useDatabase()) "true" else "false" })
-        metrics.addCustomChart(SimplePie("vote_party_enabled") { if (config.getBoolean(Settings.VOTE_PARTY)) "true" else "false" })
-        metrics.addCustomChart(SimplePie("lucky_vote_enabled") { if (config.getBoolean(Settings.LUCKY_VOTE)) "true" else "false" })
+        metrics.addCustomChart(SimplePie("vote_party_enabled") { if (config.getBoolean(Settings.VOTE_PARTY.path)) "true" else "false" })
+        metrics.addCustomChart(SimplePie("lucky_vote_enabled") { if (config.getBoolean(Settings.LUCKY_VOTE.path)) "true" else "false" })
     }
 
     private fun useDatabase(): Boolean
     {
-        return config.getBoolean(Settings.USE_DATABASE)
+        return config.getBoolean(Settings.USE_DATABASE.path)
     }
 
     fun hasDatabaseConnection(): Boolean

@@ -5,7 +5,7 @@ import me.sd_master92.core.inventory.GUI
 import me.sd_master92.core.inventory.StatusItem
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Data
-import me.sd_master92.customvoting.constants.Settings
+import me.sd_master92.customvoting.constants.enumerations.Settings
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.constants.enumerations.VotePartyType
 import me.sd_master92.customvoting.gui.VoteSettings
@@ -31,35 +31,36 @@ class GeneralSettings(private val plugin: CV) : GUI(plugin, "General Settings", 
             Material.CLOCK             ->
             {
                 SoundType.CHANGE.play(plugin, player)
-                plugin.config[Settings.MONTHLY_RESET] = !plugin.config.getBoolean(Settings.MONTHLY_RESET)
+                plugin.config[Settings.MONTHLY_RESET.path] = !plugin.config.getBoolean(Settings.MONTHLY_RESET.path)
                 plugin.config.saveConfig()
                 event.currentItem = MonthlyResetItem(plugin)
             }
             Material.TNT               ->
             {
                 SoundType.CHANGE.play(plugin, player)
-                plugin.config[Settings.MONTHLY_PERIOD] = !plugin.config.getBoolean(Settings.MONTHLY_PERIOD)
+                plugin.config[Settings.MONTHLY_PERIOD.path] = !plugin.config.getBoolean(Settings.MONTHLY_PERIOD.path)
                 plugin.config.saveConfig()
                 event.currentItem = MonthlyPeriodItem(plugin)
             }
             Material.MUSIC_DISC_CAT    ->
             {
                 SoundType.CHANGE.play(plugin, player)
-                plugin.config[Settings.USE_SOUND_EFFECTS] = !plugin.config.getBoolean(Settings.USE_SOUND_EFFECTS)
+                plugin.config[Settings.USE_SOUND_EFFECTS.path] =
+                    !plugin.config.getBoolean(Settings.USE_SOUND_EFFECTS.path)
                 plugin.config.saveConfig()
                 event.currentItem = SoundEffectsItem(plugin)
             }
             Material.FIREWORK_ROCKET   ->
             {
                 SoundType.CHANGE.play(plugin, player)
-                plugin.config[Settings.FIREWORK] = !plugin.config.getBoolean(Settings.FIREWORK)
+                plugin.config[Settings.FIREWORK.path] = !plugin.config.getBoolean(Settings.FIREWORK.path)
                 plugin.config.saveConfig()
                 event.currentItem = FireworkItem(plugin)
             }
             Material.EXPERIENCE_BOTTLE ->
             {
                 SoundType.CHANGE.play(plugin, player)
-                plugin.config[Settings.VOTE_PARTY] = !plugin.config.getBoolean(Settings.VOTE_PARTY)
+                plugin.config[Settings.VOTE_PARTY.path] = !plugin.config.getBoolean(Settings.VOTE_PARTY.path)
                 plugin.config.saveConfig()
                 event.currentItem = DoVotePartyItem(plugin)
             }
@@ -67,7 +68,7 @@ class GeneralSettings(private val plugin: CV) : GUI(plugin, "General Settings", 
             {
                 SoundType.CHANGE.play(plugin, player)
                 plugin.config.setNumber(
-                    Settings.VOTE_PARTY_TYPE,
+                    Settings.VOTE_PARTY_TYPE.path,
                     VotePartyType.next(plugin).value
                 )
                 event.currentItem = VotePartyTypeItem(plugin)
@@ -75,31 +76,31 @@ class GeneralSettings(private val plugin: CV) : GUI(plugin, "General Settings", 
             Material.ENCHANTED_BOOK    ->
             {
                 SoundType.CHANGE.play(plugin, player)
-                if (plugin.config.getNumber(Settings.VOTES_REQUIRED_FOR_VOTE_PARTY) < 100)
+                if (plugin.config.getNumber(Settings.VOTES_REQUIRED_FOR_VOTE_PARTY.path) < 100)
                 {
-                    plugin.config.addNumber(Settings.VOTES_REQUIRED_FOR_VOTE_PARTY, 10)
+                    plugin.config.addNumber(Settings.VOTES_REQUIRED_FOR_VOTE_PARTY.path, 10)
                 } else
                 {
-                    plugin.config.setNumber(Settings.VOTES_REQUIRED_FOR_VOTE_PARTY, 10)
+                    plugin.config.setNumber(Settings.VOTES_REQUIRED_FOR_VOTE_PARTY.path, 10)
                 }
                 event.currentItem = VotesUntilItem.getInstance(plugin)
             }
             Material.ENDER_CHEST       ->
             {
                 SoundType.CHANGE.play(plugin, player)
-                if (plugin.config.getNumber(Settings.VOTE_PARTY_COUNTDOWN) < 60)
+                if (plugin.config.getNumber(Settings.VOTE_PARTY_COUNTDOWN.path) < 60)
                 {
-                    plugin.config.addNumber(Settings.VOTE_PARTY_COUNTDOWN, 10)
+                    plugin.config.addNumber(Settings.VOTE_PARTY_COUNTDOWN.path, 10)
                 } else
                 {
-                    plugin.config.setNumber(Settings.VOTE_PARTY_COUNTDOWN, 0)
+                    plugin.config.setNumber(Settings.VOTE_PARTY_COUNTDOWN.path, 0)
                 }
                 event.currentItem = VotePartyCountdownItem(plugin)
             }
             Material.TOTEM_OF_UNDYING  ->
             {
                 SoundType.CHANGE.play(plugin, player)
-                plugin.config[Settings.LUCKY_VOTE] = !plugin.config.getBoolean(Settings.LUCKY_VOTE)
+                plugin.config[Settings.LUCKY_VOTE.path] = !plugin.config.getBoolean(Settings.LUCKY_VOTE.path)
                 plugin.config.saveConfig()
                 event.currentItem = LuckyVoteItem(plugin)
             }
@@ -146,7 +147,7 @@ class VotesUntilItem private constructor(votesRequired: Int, votesUntil: Int) : 
     {
         fun getInstance(plugin: CV): VotesUntilItem
         {
-            val votesRequired = plugin.config.getNumber(Settings.VOTES_REQUIRED_FOR_VOTE_PARTY)
+            val votesRequired = plugin.config.getNumber(Settings.VOTES_REQUIRED_FOR_VOTE_PARTY.path)
             val votesUntil = votesRequired - plugin.data.getNumber(Data.CURRENT_VOTES)
             return VotesUntilItem(votesRequired, votesUntil)
         }
@@ -157,42 +158,42 @@ class VotePartyTypeItem(plugin: CV) : BaseItem(
     Material.SPLASH_POTION, ChatColor.LIGHT_PURPLE.toString() + "Vote Party Type",
     ChatColor.GRAY.toString() + "Status: " + ChatColor.AQUA + VotePartyType.valueOf(
         plugin.config.getNumber(
-            Settings.VOTE_PARTY_TYPE
+            Settings.VOTE_PARTY_TYPE.path
         )
     ).label
 )
 
 class VotePartyCountdownItem(plugin: CV) : BaseItem(
     Material.ENDER_CHEST, ChatColor.LIGHT_PURPLE.toString() + "Vote Party Countdown",
-    ChatColor.GRAY.toString() + "Currently: " + ChatColor.AQUA + plugin.config.getNumber(Settings.VOTE_PARTY_COUNTDOWN)
+    ChatColor.GRAY.toString() + "Currently: " + ChatColor.AQUA + plugin.config.getNumber(Settings.VOTE_PARTY_COUNTDOWN.path)
 )
 
 class SoundEffectsItem(plugin: CV) : StatusItem(
     Material.MUSIC_DISC_CAT, "Sound Effects",
-    plugin.config, Settings.USE_SOUND_EFFECTS
+    plugin.config, Settings.USE_SOUND_EFFECTS.path
 )
 
 class MonthlyResetItem(plugin: CV) : StatusItem(
     Material.CLOCK, "Monthly Reset",
-    plugin.config, Settings.MONTHLY_RESET
+    plugin.config, Settings.MONTHLY_RESET.path
 )
 
 class MonthlyPeriodItem(plugin: CV) : StatusItem(
     Material.TNT, "Monthly Period",
-    plugin.config, Settings.MONTHLY_PERIOD
+    plugin.config, Settings.MONTHLY_PERIOD.path
 )
 
 class LuckyVoteItem(plugin: CV) : StatusItem(
     Material.TOTEM_OF_UNDYING, "Lucky Vote",
-    plugin.config, Settings.LUCKY_VOTE
+    plugin.config, Settings.LUCKY_VOTE.path
 )
 
 class FireworkItem(plugin: CV) : StatusItem(
     Material.FIREWORK_ROCKET, "Firework",
-    plugin.config, Settings.FIREWORK
+    plugin.config, Settings.FIREWORK.path
 )
 
 class DoVotePartyItem(plugin: CV) : StatusItem(
     Material.EXPERIENCE_BOTTLE, "Vote Party",
-    plugin.config, Settings.VOTE_PARTY
+    plugin.config, Settings.VOTE_PARTY.path
 )

@@ -4,7 +4,7 @@ import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.VoteFile
 import me.sd_master92.customvoting.constants.Data
 import me.sd_master92.customvoting.constants.Messages
-import me.sd_master92.customvoting.constants.Settings
+import me.sd_master92.customvoting.constants.enumerations.Settings
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.database.PlayerRow
 import me.sd_master92.customvoting.gui.voteparty.VotePartyRewards
@@ -104,7 +104,7 @@ class PlayerListener(private val plugin: CV) : Listener
                         if (section.getString("$top.$sub") == event.rightClicked.uniqueId.toString())
                         {
                             event.isCancelled = true
-                            if (!plugin.config.getBoolean(Settings.DISABLED_MESSAGE_ARMOR_STAND))
+                            if (!plugin.config.getBoolean(Settings.DISABLED_MESSAGE_ARMOR_STAND.path))
                             {
                                 event.player.sendText(plugin, Messages.VOTE_TOP_STANDS_DONT)
                             }

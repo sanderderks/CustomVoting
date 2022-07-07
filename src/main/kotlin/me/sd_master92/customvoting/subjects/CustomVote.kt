@@ -6,9 +6,9 @@ import me.sd_master92.core.file.PlayerFile
 import me.sd_master92.customvoting.*
 import me.sd_master92.customvoting.constants.Data
 import me.sd_master92.customvoting.constants.Messages
-import me.sd_master92.customvoting.constants.Settings
 import me.sd_master92.customvoting.constants.enumerations.ItemRewardType
 import me.sd_master92.customvoting.constants.enumerations.Logger
+import me.sd_master92.customvoting.constants.enumerations.Settings
 import me.sd_master92.customvoting.database.PlayerRow
 import me.sd_master92.customvoting.helpers.ParticleHelper
 import org.bukkit.Bukkit
@@ -35,13 +35,13 @@ class CustomVote(
             Logger.INFO.log("The player is not online, adding vote to queue", logger)
             queue()
             Logger.ERROR.log("End of log", logger)
-        } else if (plugin.config.getStringList(Settings.DISABLED_WORLDS).contains(player.world.name))
+        } else if (plugin.config.getStringList(Settings.DISABLED_WORLDS.path).contains(player.world.name))
         {
             Logger.INFO.log(
                 "The player is in a disabled world called '${player.world.name}', adding vote to queue",
                 logger
             )
-            if (!plugin.config.getBoolean(Settings.DISABLED_MESSAGE_DISABLED_WORLD))
+            if (!plugin.config.getBoolean(Settings.DISABLED_MESSAGE_DISABLED_WORLD.path))
             {
                 player.sendText(plugin, Messages.DISABLED_WORLD)
             }
@@ -72,7 +72,7 @@ class CustomVote(
             }
             ParticleHelper.shootFirework(plugin, player.location)
             giveRewards(player, player.hasPermission("customvoting.extra"))
-            if (plugin.config.getBoolean(Settings.VOTE_PARTY))
+            if (plugin.config.getBoolean(Settings.VOTE_PARTY.path))
             {
                 subtractVotesUntilVoteParty()
             }
@@ -108,9 +108,9 @@ class CustomVote(
 
     private fun broadcast(player: Player)
     {
-        if (!plugin.config.getBoolean(Settings.DISABLED_BROADCAST_VOTE))
+        if (!plugin.config.getBoolean(Settings.DISABLED_BROADCAST_VOTE.path))
         {
-            if (plugin.config.getBoolean(Settings.FIRST_VOTE_BROADCAST_ONLY))
+            if (plugin.config.getBoolean(Settings.FIRST_VOTE_BROADCAST_ONLY.path))
             {
                 val last: Long = if (plugin.hasDatabaseConnection())
                 {
@@ -131,7 +131,7 @@ class CustomVote(
                 }
             }
 
-            if (plugin.config.getBoolean(Settings.DISABLED_BROADCAST_OFFLINE) && queued)
+            if (plugin.config.getBoolean(Settings.DISABLED_BROADCAST_OFFLINE.path) && queued)
             {
                 return
             }
@@ -147,7 +147,7 @@ class CustomVote(
     {
         if (plugin.data.getLocations(Data.VOTE_PARTY).isNotEmpty())
         {
-            val votesRequired = plugin.config.getNumber(Settings.VOTES_REQUIRED_FOR_VOTE_PARTY)
+            val votesRequired = plugin.config.getNumber(Settings.VOTES_REQUIRED_FOR_VOTE_PARTY.path)
             val votesUntil = votesRequired - plugin.data.getNumber(Data.CURRENT_VOTES)
             if (votesUntil <= 1)
             {
@@ -170,7 +170,7 @@ class CustomVote(
                         override fun run()
                         {
                             val updatedVotesUntil = votesRequired - plugin.data.getNumber(Data.CURRENT_VOTES)
-                            if (updatedVotesUntil != votesRequired && !plugin.config.getBoolean(Settings.DISABLED_BROADCAST_VOTE_PARTY_UNTIL))
+                            if (updatedVotesUntil != votesRequired && !plugin.config.getBoolean(Settings.DISABLED_BROADCAST_VOTE_PARTY_UNTIL.path))
                             {
                                 val placeholders = HashMap<String, String>()
                                 placeholders["%VOTES%"] = "" + updatedVotesUntil
@@ -239,7 +239,7 @@ class CustomVote(
     private fun giveItems(player: Player, op: Boolean)
     {
         val path = Data.ITEM_REWARDS.appendWhenTrue(op, Data.OP_REWARDS)
-        val typePath = Settings.ITEM_REWARD_TYPE.appendWhenTrue(op, Data.OP_REWARDS)
+        val typePath = Settings.ITEM_REWARD_TYPE.path.appendWhenTrue(op, Data.OP_REWARDS)
         val random = plugin.config.getNumber(typePath) != ItemRewardType.ALL_ITEMS.value
         val items = plugin.data.getItems(path)
         Logger.INFO.log("Giving ${items.size} items to player", logger)
@@ -251,7 +251,7 @@ class CustomVote(
         val economy = CV.ECONOMY
         if (economy != null && economy.hasAccount(player))
         {
-            val path = Settings.VOTE_REWARD_MONEY.appendWhenTrue(op, Data.OP_REWARDS)
+            val path = Settings.VOTE_REWARD_MONEY.path.appendWhenTrue(op, Data.OP_REWARDS)
             val amount = plugin.config.getDouble(path)
             Logger.INFO.log("Giving $$amount to player", logger)
             economy.depositPlayer(player, amount)
@@ -265,7 +265,7 @@ class CustomVote(
 
     private fun giveExperience(player: Player, op: Boolean): Int
     {
-        val path = Settings.VOTE_REWARD_EXPERIENCE.appendWhenTrue(op, Data.OP_REWARDS)
+        val path = Settings.VOTE_REWARD_EXPERIENCE.path.appendWhenTrue(op, Data.OP_REWARDS)
         val amount = plugin.config.getNumber(path)
         Logger.INFO.log("Giving ${amount}xp to player", logger)
         player.level = player.level + amount
@@ -274,7 +274,7 @@ class CustomVote(
 
     private fun giveLuckyReward(player: Player)
     {
-        if (Random().nextInt(100) < plugin.config.getNumber(Settings.LUCKY_VOTE_CHANCE))
+        if (Random().nextInt(100) < plugin.config.getNumber(Settings.LUCKY_VOTE_CHANCE.path))
         {
             val luckyRewards = plugin.data.getItems(Data.LUCKY_REWARDS)
             if (luckyRewards.isNotEmpty())
@@ -303,7 +303,7 @@ class CustomVote(
         if (plugin.data.contains(Data.VOTE_STREAKS + "." + votes))
         {
             Logger.OK.log("Player reached vote streak #$votes, giving streak rewards", logger)
-            if (!plugin.config.getBoolean(Settings.DISABLED_BROADCAST_STREAK))
+            if (!plugin.config.getBoolean(Settings.DISABLED_BROADCAST_STREAK.path))
             {
                 val placeholders = HashMap<String, String>()
                 placeholders["%PLAYER%"] = player.name

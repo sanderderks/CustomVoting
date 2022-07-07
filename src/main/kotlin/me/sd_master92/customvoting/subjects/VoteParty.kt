@@ -4,7 +4,7 @@ import me.sd_master92.core.inventory.BaseItem
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Data
 import me.sd_master92.customvoting.constants.Messages
-import me.sd_master92.customvoting.constants.Settings
+import me.sd_master92.customvoting.constants.enumerations.Settings
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.constants.enumerations.VotePartyType
 import me.sd_master92.customvoting.helpers.ParticleHelper
@@ -20,8 +20,8 @@ import java.util.*
 
 class VoteParty(private val plugin: CV)
 {
-    private val votePartyType: Int = plugin.config.getNumber(Settings.VOTE_PARTY_TYPE)
-    private var count: Int = plugin.config.getNumber(Settings.VOTE_PARTY_COUNTDOWN)
+    private val votePartyType: Int = plugin.config.getNumber(Settings.VOTE_PARTY_TYPE.path)
+    private var count: Int = plugin.config.getNumber(Settings.VOTE_PARTY_COUNTDOWN.path)
     fun start()
     {
         queue.add(this)
@@ -36,7 +36,7 @@ class VoteParty(private val plugin: CV)
                     {
                         30, 15, 10    ->
                         {
-                            if (!plugin.config.getBoolean(Settings.DISABLED_BROADCAST_VOTE_PARTY_COUNTDOWN))
+                            if (!plugin.config.getBoolean(Settings.DISABLED_BROADCAST_VOTE_PARTY_COUNTDOWN.path))
                             {
                                 val placeholders = HashMap<String, String>()
                                 placeholders["%TIME%"] = "" + count
@@ -46,7 +46,7 @@ class VoteParty(private val plugin: CV)
                         }
                         5, 4, 3, 2, 1 ->
                         {
-                            if (!plugin.config.getBoolean(Settings.DISABLED_BROADCAST_VOTE_PARTY_COUNTDOWN_ENDING))
+                            if (!plugin.config.getBoolean(Settings.DISABLED_BROADCAST_VOTE_PARTY_COUNTDOWN_ENDING.path))
                             {
                                 val placeholders = HashMap<String, String>()
                                 placeholders["%TIME%"] = "" + count

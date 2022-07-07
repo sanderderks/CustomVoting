@@ -4,7 +4,7 @@ import me.sd_master92.core.command.SimpleCommand
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.VoteFile
 import me.sd_master92.customvoting.constants.Messages
-import me.sd_master92.customvoting.constants.Settings
+import me.sd_master92.customvoting.constants.enumerations.Settings
 import me.sd_master92.customvoting.database.PlayerTable
 import me.sd_master92.customvoting.sendText
 import me.sd_master92.customvoting.sendTexts
@@ -36,7 +36,7 @@ class VoteTopCommand(private val plugin: CV) : SimpleCommand(plugin, "votetop")
                         placeholders["%PLAYER%"] = topVoter.name
                         placeholders["%VOTES%"] = "${topVoter.votes}"
                         placeholders["%PERIOD%"] = "${topVoter.period}"
-                        if (plugin.config.getBoolean(Settings.MONTHLY_PERIOD))
+                        if (plugin.config.getBoolean(Settings.MONTHLY_PERIOD.path))
                         {
                             placeholders["%s%"] = if (topVoter.period == 1) "" else "s"
                         } else

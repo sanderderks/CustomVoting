@@ -1,7 +1,7 @@
 package me.sd_master92.customvoting.helpers
 
 import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.constants.Settings
+import me.sd_master92.customvoting.constants.enumerations.Settings
 import org.bukkit.Color
 import org.bukkit.FireworkEffect
 import org.bukkit.Location
@@ -13,7 +13,7 @@ object ParticleHelper
 {
     fun shootFirework(plugin: CV, loc: Location)
     {
-        if (plugin.config.getBoolean(Settings.FIREWORK))
+        if (plugin.config.getBoolean(Settings.FIREWORK.path))
         {
             val world = loc.world
             if (world != null)

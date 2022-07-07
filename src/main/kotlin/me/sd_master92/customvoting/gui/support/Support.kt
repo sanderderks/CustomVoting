@@ -4,7 +4,7 @@ import me.sd_master92.core.inventory.BaseItem
 import me.sd_master92.core.inventory.GUI
 import me.sd_master92.core.inventory.StatusItem
 import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.constants.Settings
+import me.sd_master92.customvoting.constants.enumerations.Settings
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.gui.VoteSettings
 import org.bukkit.ChatColor
@@ -37,8 +37,8 @@ class Support(private val plugin: CV) : GUI(plugin, "Support", 9, false, true)
             {
                 SoundType.CHANGE.play(plugin, player)
                 plugin.config.set(
-                    Settings.INGAME_UPDATES,
-                    !plugin.config.getBoolean(Settings.INGAME_UPDATES)
+                    Settings.INGAME_UPDATES.path,
+                    !plugin.config.getBoolean(Settings.INGAME_UPDATES.path)
                 )
                 plugin.config.saveConfig()
                 event.currentItem = IngameUpdateItem(plugin)
@@ -104,5 +104,5 @@ class UpdateItem(plugin: CV) : BaseItem(
 
 class IngameUpdateItem(plugin: CV) : StatusItem(
     Material.FILLED_MAP, "Ingame Updates",
-    plugin.config, Settings.INGAME_UPDATES
+    plugin.config, Settings.INGAME_UPDATES.path
 )

@@ -4,7 +4,7 @@ import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.VoteFile
 import me.sd_master92.customvoting.constants.Data
 import me.sd_master92.customvoting.constants.Messages
-import me.sd_master92.customvoting.constants.Settings
+import me.sd_master92.customvoting.constants.enumerations.Settings
 import me.sd_master92.customvoting.database.PlayerTable
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
@@ -90,7 +90,7 @@ class VoteTopSign @JvmOverloads constructor(
                 placeholders["%PLAYER%"] = topVoter.name
                 placeholders["%VOTES%"] = "${topVoter.votes}"
                 placeholders["%PERIOD%"] = "${topVoter.period}"
-                if (plugin.config.getBoolean(Settings.MONTHLY_PERIOD))
+                if (plugin.config.getBoolean(Settings.MONTHLY_PERIOD.path))
                 {
                     placeholders["%s%"] = if (topVoter.period == 1) "" else "s"
                 } else

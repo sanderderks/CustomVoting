@@ -1,7 +1,6 @@
 package me.sd_master92.customvoting.constants.enumerations
 
 import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.constants.Settings
 import java.util.*
 
 enum class VotePartyType(val value: Int, val label: String)
@@ -15,7 +14,7 @@ enum class VotePartyType(val value: Int, val label: String)
     {
         fun next(plugin: CV): VotePartyType
         {
-            val currentValue = valueOf(plugin.config.getNumber(Settings.VOTE_PARTY_TYPE)).value
+            val currentValue = valueOf(plugin.config.getNumber(Settings.VOTE_PARTY_TYPE.path)).value
             return if (currentValue < values().size - 1)
             {
                 valueOf(currentValue + 1)
@@ -28,8 +27,8 @@ enum class VotePartyType(val value: Int, val label: String)
         fun valueOf(value: Int): VotePartyType
         {
             val votePartyType = Arrays.stream(values())
-                    .filter { type: VotePartyType -> type.value == value }
-                    .findFirst()
+                .filter { type: VotePartyType -> type.value == value }
+                .findFirst()
             return votePartyType.orElse(ALL_CHESTS_AT_ONCE)
         }
     }

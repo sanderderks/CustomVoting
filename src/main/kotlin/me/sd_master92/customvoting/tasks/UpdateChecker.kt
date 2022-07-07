@@ -1,7 +1,7 @@
 package me.sd_master92.customvoting.tasks
 
 import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.constants.Settings
+import me.sd_master92.customvoting.constants.enumerations.Settings
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.entity.Player
@@ -13,7 +13,7 @@ class UpdateChecker(plugin: CV)
     {
         fun checkUpdates(plugin: CV, player: Player)
         {
-            if (player.isOp && plugin.config.getBoolean(Settings.INGAME_UPDATES) && !plugin.isUpToDate())
+            if (player.isOp && plugin.config.getBoolean(Settings.INGAME_UPDATES.path) && !plugin.isUpToDate())
             {
                 object : BukkitRunnable()
                 {

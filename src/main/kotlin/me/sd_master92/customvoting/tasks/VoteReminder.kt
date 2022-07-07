@@ -3,7 +3,7 @@ package me.sd_master92.customvoting.tasks
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.VoteFile
 import me.sd_master92.customvoting.constants.Messages
-import me.sd_master92.customvoting.constants.Settings
+import me.sd_master92.customvoting.constants.enumerations.Settings
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.database.PlayerRow
 import me.sd_master92.customvoting.sendTexts
@@ -18,7 +18,7 @@ class VoteReminder(private val plugin: CV)
     {
         fun remindPlayer(plugin: CV, player: Player)
         {
-            if (!plugin.config.getBoolean(Settings.DISABLED_MESSAGE_VOTE_REMINDER))
+            if (!plugin.config.getBoolean(Settings.DISABLED_MESSAGE_VOTE_REMINDER.path))
             {
                 object : BukkitRunnable()
                 {

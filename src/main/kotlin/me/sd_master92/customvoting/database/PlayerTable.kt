@@ -4,7 +4,7 @@ import me.sd_master92.core.database.CustomColumn
 import me.sd_master92.core.database.CustomDatabase
 import me.sd_master92.core.database.CustomTable
 import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.constants.Settings
+import me.sd_master92.customvoting.constants.enumerations.Settings
 import java.sql.ResultSet
 
 class PlayerTable(private val plugin: CV, database: CustomDatabase)
@@ -193,7 +193,7 @@ class PlayerTable(private val plugin: CV, database: CustomDatabase)
                 return topVoters
             }
 
-            if (plugin.config.getBoolean(Settings.MONTHLY_PERIOD))
+            if (plugin.config.getBoolean(Settings.MONTHLY_PERIOD.path))
             {
                 topVoters.sortWith { x: PlayerData, y: PlayerData ->
                     var compare = y.period.compareTo(x.period)

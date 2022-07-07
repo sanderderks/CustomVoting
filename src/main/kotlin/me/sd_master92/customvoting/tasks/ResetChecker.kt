@@ -2,7 +2,7 @@ package me.sd_master92.customvoting.tasks
 
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.commands.ReloadCommand
-import me.sd_master92.customvoting.constants.Settings
+import me.sd_master92.customvoting.constants.enumerations.Settings
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.scheduler.BukkitRunnable
@@ -25,7 +25,7 @@ class ResetChecker(private val plugin: CV)
                 if (Calendar.getInstance()[Calendar.DAY_OF_MONTH] == 1)
                 {
                     FIRST_OF_MONTH = true
-                    if (plugin.config.getBoolean(Settings.MONTHLY_RESET))
+                    if (plugin.config.getBoolean(Settings.MONTHLY_RESET.path))
                     {
                         for (player in Bukkit.getOnlinePlayers())
                         {

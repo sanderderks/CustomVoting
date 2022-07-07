@@ -1,7 +1,6 @@
 package me.sd_master92.customvoting.constants.enumerations
 
 import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.constants.Settings
 import org.bukkit.Location
 import org.bukkit.Sound
 import org.bukkit.entity.Player
@@ -22,7 +21,7 @@ enum class SoundType(
 
     fun play(plugin: CV, loc: Location)
     {
-        if (plugin.config.getBoolean(Settings.USE_SOUND_EFFECTS))
+        if (plugin.config.getBoolean(Settings.USE_SOUND_EFFECTS.path))
         {
             val world = loc.world
             world?.playSound(loc, sound, 10f, 1f)
