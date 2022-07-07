@@ -5,9 +5,13 @@ import me.sd_master92.customvoting.constants.enumerations.Messages
 import me.sd_master92.customvoting.constants.enumerations.Settings
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
+import org.bukkit.ChatColor
+import org.bukkit.Material
+import org.bukkit.OfflinePlayer
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.meta.SkullMeta
 import java.util.*
 
 fun String.withPlaceholders(player: Player): String
@@ -91,7 +95,12 @@ fun Player.addToInventoryOrDrop(item: ItemStack)
     this.inventory.addItem(item).values.forEach { this.world.dropItemNaturally(this.location, it) }
 }
 
-fun Player.hasPermissionBasedRewards(plugin: CV): Boolean
+fun Player.hasPermissionRewards(plugin: CV): Boolean
+{
+    return this.hasPermissionRewardsByGroup(plugin) || this.hasPermissionRewardsByUser(plugin)
+}
+
+fun Player.hasPermissionRewardsByGroup(plugin: CV): Boolean
 {
     if (CV.PERMISSION != null)
     {
@@ -104,4 +113,23 @@ fun Player.hasPermissionBasedRewards(plugin: CV): Boolean
         }
     }
     return false
+}
+
+fun Player.hasPermissionRewardsByUser(plugin: CV): Boolean
+{
+    if (VoteFile(this, plugin).isOpUser)
+    {
+        return true
+    }
+    return false
+}
+
+fun OfflinePlayer.getSkull(): ItemStack
+{
+    val skull = ItemStack(Material.PLAYER_HEAD)
+    val skullMeta = skull.itemMeta as SkullMeta
+    skullMeta.owningPlayer = this
+    skullMeta.setDisplayName(ChatColor.AQUA.toString() + name)
+    skull.itemMeta = skullMeta
+    return skull
 }

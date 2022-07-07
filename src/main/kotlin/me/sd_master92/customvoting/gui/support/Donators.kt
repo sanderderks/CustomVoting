@@ -3,14 +3,13 @@ package me.sd_master92.customvoting.gui.support
 import me.sd_master92.core.inventory.GUI
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.SoundType
+import me.sd_master92.customvoting.getSkull
 import org.bukkit.Bukkit
-import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
-import org.bukkit.inventory.meta.SkullMeta
 
 class Donators(private val plugin: CV) : GUI(plugin, "Donators", 9, false, true)
 {
@@ -29,24 +28,11 @@ class Donators(private val plugin: CV) : GUI(plugin, "Donators", 9, false, true)
         SoundType.CLOSE.play(plugin, player)
     }
 
-    private fun createSkull(name: String): ItemStack
-    {
-        val skull = ItemStack(Material.PLAYER_HEAD)
-        val meta = skull.itemMeta as SkullMeta?
-        if (meta != null)
-        {
-            meta.setDisplayName(ChatColor.AQUA.toString() + name)
-            meta.owningPlayer = Bukkit.getOfflinePlayer(name)
-        }
-        skull.itemMeta = meta
-        return skull
-    }
-
     init
     {
         for (donator in listOf("Dutchbeard", "Smirren"))
         {
-            inventory.addItem(createSkull(donator))
+            inventory.addItem(Bukkit.getOfflinePlayer(donator).getSkull())
         }
         inventory.setItem(8, BACK_ITEM)
     }

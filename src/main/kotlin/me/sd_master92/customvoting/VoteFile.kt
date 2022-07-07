@@ -15,6 +15,15 @@ class VoteFile : Voter
     override val uuid: String
     override val name: String
 
+    override val votes: Int
+        get() = playerFile.getNumber("votes")
+    override val period: Int
+        get() = playerFile.getNumber("period")
+    override val last: Long
+        get() = playerFile.getTimeStamp("last")
+    val isOpUser: Boolean
+        get() = playerFile.getBoolean("opUser")
+
     constructor(uuid: String, plugin: CV)
     {
         playerFile = PlayerFile.get(plugin, uuid)
@@ -40,13 +49,6 @@ class VoteFile : Voter
             setVotes(0, false)
         }
     }
-
-    override val votes: Int
-        get() = playerFile.getNumber("votes")
-    override val period: Int
-        get() = playerFile.getNumber("period")
-    override val last: Long
-        get() = playerFile.getTimeStamp("last")
 
     fun setVotes(n: Int, update: Boolean)
     {
@@ -96,6 +98,12 @@ class VoteFile : Voter
         queue.add(service)
         plugin.data[path] = queue
         return plugin.data.saveConfig()
+    }
+
+    fun setIsOpUser(isOpUser: Boolean): Boolean
+    {
+        playerFile.set("opUser", isOpUser)
+        return playerFile.saveConfig()
     }
 
     companion object

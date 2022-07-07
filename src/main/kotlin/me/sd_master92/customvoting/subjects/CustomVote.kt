@@ -71,7 +71,7 @@ class CustomVote(
                 }
             }
             ParticleHelper.shootFirework(plugin, player.location)
-            giveRewards(player, player.hasPermissionBasedRewards(plugin))
+            giveRewards(player, player.hasPermissionRewards(plugin))
             if (plugin.config.getBoolean(Settings.VOTE_PARTY.path))
             {
                 subtractVotesUntilVoteParty()
