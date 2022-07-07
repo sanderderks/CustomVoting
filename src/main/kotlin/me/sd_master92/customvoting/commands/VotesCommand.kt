@@ -4,8 +4,8 @@ import me.sd_master92.core.command.SimpleCommand
 import me.sd_master92.core.file.PlayerFile
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.VoteFile
-import me.sd_master92.customvoting.constants.Messages
 import me.sd_master92.customvoting.constants.Voter
+import me.sd_master92.customvoting.constants.enumerations.Messages
 import me.sd_master92.customvoting.constants.enumerations.Settings
 import me.sd_master92.customvoting.database.PlayerRow
 import me.sd_master92.customvoting.sendText

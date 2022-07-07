@@ -2,7 +2,7 @@ package me.sd_master92.customvoting.commands
 
 import me.sd_master92.core.command.SimpleCommand
 import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.constants.Messages
+import me.sd_master92.customvoting.constants.enumerations.Messages
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.gui.ConfirmVotesReset
 import org.bukkit.command.CommandSender

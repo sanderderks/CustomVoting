@@ -4,7 +4,7 @@ import me.sd_master92.core.inventory.BaseItem
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.VoteFile
 import me.sd_master92.customvoting.constants.Data
-import me.sd_master92.customvoting.constants.Messages
+import me.sd_master92.customvoting.constants.enumerations.Messages
 import me.sd_master92.customvoting.database.PlayerTable
 import net.citizensnpcs.api.CitizensAPI
 import net.citizensnpcs.api.npc.NPC

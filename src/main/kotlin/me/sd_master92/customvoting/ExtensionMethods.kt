@@ -1,7 +1,7 @@
 package me.sd_master92.customvoting
 
 import me.clip.placeholderapi.PlaceholderAPI
-import me.sd_master92.customvoting.constants.Messages
+import me.sd_master92.customvoting.constants.enumerations.Messages
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
 import org.bukkit.command.CommandSender
