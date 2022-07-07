@@ -169,15 +169,17 @@ class VoteParty(private val plugin: CV)
         val locations = plugin.data.getLocations(Data.VOTE_PARTY)
         val chests: MutableMap<String, MutableList<ItemStack>> = HashMap()
         val keys: MutableList<String> = ArrayList(locations.keys)
-        for (key in keys)
+        val keysIterator = keys.iterator()
+        while (keysIterator.hasNext())
         {
+            val key = keysIterator.next()
             val items = plugin.data.getItems(Data.VOTE_PARTY + ".$key")
             if (items.isNotEmpty())
             {
                 chests[key] = ArrayList(listOf(*items))
             } else
             {
-                keys.remove(key)
+                keysIterator.remove()
             }
         }
         val random = Random()
