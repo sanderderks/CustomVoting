@@ -61,6 +61,7 @@ class VoteStreakSettings(private val plugin: CV) :
                             plugin.data.set(Data.VOTE_STREAKS + "." + input + ".permissions", ArrayList<String>())
                             plugin.data.saveConfig()
                             player.sendMessage(ChatColor.GREEN.toString() + "Streak #$input created!")
+                            player.openInventory(VoteStreakSettings(plugin).inventory)
                             cancel()
                         }
                     }
@@ -103,21 +104,16 @@ class VoteStreakSettings(private val plugin: CV) :
         inventory.setItem(7, BaseItem(Material.CRAFTING_TABLE, ChatColor.GREEN.toString() + "Add Streak"))
         inventory.setItem(8, BACK_ITEM)
 
-        try
+        for (key in plugin.data.getConfigurationSection(Data.VOTE_STREAKS)?.getKeys(false)?.mapNotNull { key ->
+            key.toIntOrNull()
+        }?.sorted() ?: ArrayList())
         {
-            for (key in plugin.data.getConfigurationSection(Data.VOTE_STREAKS)?.getKeys(false)?.sortedBy { key ->
-                key.toInt()
-            } ?: ArrayList<String>())
-            {
-                inventory.addItem(
-                    BaseItem(
-                        Material.ENDER_PEARL,
-                        ChatColor.LIGHT_PURPLE.toString() + "Streak #" + key
-                    )
+            inventory.addItem(
+                BaseItem(
+                    Material.ENDER_PEARL,
+                    ChatColor.LIGHT_PURPLE.toString() + "Streak #$key"
                 )
-            }
-        } catch (_: Exception)
-        {
+            )
         }
     }
 }
