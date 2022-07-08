@@ -179,7 +179,7 @@ class MonthlyResetItem(plugin: CV) : StatusItem(
 )
 
 class MonthlyPeriodItem(plugin: CV) : StatusItem(
-    Material.TNT, "Monthly Period",
+    Material.TNT, "Monthly Votes",
     plugin.config, Settings.MONTHLY_PERIOD.path
 )
 
