@@ -1,4 +1,4 @@
-package me.sd_master92.customvoting.gui.general
+package me.sd_master92.customvoting.gui.rewards
 
 import me.sd_master92.core.inventory.BaseItem
 import me.sd_master92.core.inventory.GUI
@@ -13,7 +13,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 
 class EnabledGroups(private val plugin: CV) :
-    GUI(plugin, "Enabled Groups - Permission based rewards", 36, false, true)
+    GUI(plugin, "Enabled Groups", 36, false, true)
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
     {
@@ -23,7 +23,7 @@ class EnabledGroups(private val plugin: CV) :
             {
                 SoundType.CLICK.play(plugin, player)
                 cancelCloseEvent()
-                player.openInventory(GeneralSettings(plugin).inventory)
+                player.openInventory(RewardSettings(plugin, true).inventory)
             }
             Material.GREEN_WOOL, Material.RED_WOOL ->
             {

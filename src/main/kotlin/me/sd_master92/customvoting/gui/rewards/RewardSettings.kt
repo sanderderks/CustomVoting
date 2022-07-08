@@ -170,6 +170,18 @@ class RewardSettings(private val plugin: CV, private val op: Boolean = false) :
                     }
                 }
             }
+            Material.BELL              ->
+            {
+                SoundType.CLICK.play(plugin, player)
+                cancelCloseEvent()
+                player.openInventory(EnabledGroups(plugin).inventory)
+            }
+            Material.PLAYER_HEAD       ->
+            {
+                SoundType.CLICK.play(plugin, player)
+                cancelCloseEvent()
+                player.openInventory(EnabledUsers(plugin).inventory)
+            }
             else                       ->
             {
             }
@@ -212,6 +224,24 @@ class RewardSettings(private val plugin: CV, private val op: Boolean = false) :
                     ChatColor.LIGHT_PURPLE.toString() + "Permission Rewards",
                     null,
                     true
+                )
+            )
+        }
+        if (op)
+        {
+            if (CV.PERMISSION != null)
+            {
+                inventory.addItem(
+                    BaseItem(
+                        Material.BELL,
+                        ChatColor.LIGHT_PURPLE.toString() + "Enabled Groups"
+                    )
+                )
+            }
+            inventory.addItem(
+                BaseItem(
+                    Material.PLAYER_HEAD,
+                    ChatColor.LIGHT_PURPLE.toString() + "Enabled Users"
                 )
             )
         }

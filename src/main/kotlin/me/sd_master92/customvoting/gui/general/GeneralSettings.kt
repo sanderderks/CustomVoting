@@ -110,18 +110,6 @@ class GeneralSettings(private val plugin: CV) : GUI(plugin, "General Settings", 
                 cancelCloseEvent()
                 player.openInventory(DisabledWorlds(plugin).inventory)
             }
-            Material.COMMAND_BLOCK     ->
-            {
-                SoundType.CLICK.play(plugin, player)
-                cancelCloseEvent()
-                player.openInventory(EnabledGroups(plugin).inventory)
-            }
-            Material.PLAYER_HEAD       ->
-            {
-                SoundType.CLICK.play(plugin, player)
-                cancelCloseEvent()
-                player.openInventory(EnabledUsers(plugin).inventory)
-            }
             else                       ->
             {
             }
@@ -145,21 +133,6 @@ class GeneralSettings(private val plugin: CV) : GUI(plugin, "General Settings", 
         inventory.addItem(VotesUntilItem.getInstance(plugin))
         inventory.addItem(VotePartyCountdownItem(plugin))
         inventory.addItem(BaseItem(Material.GRASS_BLOCK, ChatColor.LIGHT_PURPLE.toString() + "Disabled Worlds"))
-        if (CV.PERMISSION != null)
-        {
-            inventory.addItem(
-                BaseItem(
-                    Material.COMMAND_BLOCK,
-                    ChatColor.LIGHT_PURPLE.toString() + "Enabled Groups - Permission based rewards"
-                )
-            )
-        }
-        inventory.addItem(
-            BaseItem(
-                Material.PLAYER_HEAD,
-                ChatColor.LIGHT_PURPLE.toString() + "Enabled Users - Permission based rewards"
-            )
-        )
         inventory.setItem(17, BACK_ITEM)
     }
 }

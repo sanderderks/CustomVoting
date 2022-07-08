@@ -1,4 +1,4 @@
-package me.sd_master92.customvoting.gui.general
+package me.sd_master92.customvoting.gui.rewards
 
 import me.sd_master92.core.file.PlayerFile
 import me.sd_master92.core.inventory.GUI
@@ -15,7 +15,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 
 class EnabledUsers(private val plugin: CV) :
-    GUI(plugin, "Enabled Users - Permission based rewards", 36, false, true)
+    GUI(plugin, "Enabled Users", 54, false, true)
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
     {
@@ -25,7 +25,7 @@ class EnabledUsers(private val plugin: CV) :
             {
                 SoundType.CLICK.play(plugin, player)
                 cancelCloseEvent()
-                player.openInventory(GeneralSettings(plugin).inventory)
+                player.openInventory(RewardSettings(plugin, true).inventory)
             }
             Material.PLAYER_HEAD ->
             {
@@ -63,7 +63,7 @@ class EnabledUsers(private val plugin: CV) :
         {
             inventory.addItem(EnabledUser(VoteFile(uuid, plugin)).getSkull())
         }
-        inventory.setItem(35, BACK_ITEM)
+        inventory.setItem(53, BACK_ITEM)
     }
 }
 
