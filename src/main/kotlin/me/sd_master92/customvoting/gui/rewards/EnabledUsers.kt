@@ -1,9 +1,9 @@
 package me.sd_master92.customvoting.gui.rewards
 
-import me.sd_master92.core.file.PlayerFile
+import me.sd_master92.core.inventory.BaseItem
 import me.sd_master92.core.inventory.GUI
 import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.VoteFile
+import me.sd_master92.customvoting.constants.Voter
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.getSkull
 import org.bukkit.Bukkit
@@ -14,7 +14,7 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 
-class EnabledUsers(private val plugin: CV) :
+class EnabledUsers(private val plugin: CV, private var page: Int = 0) :
     GUI(plugin, "Enabled Users", 54, false, true)
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
@@ -35,12 +35,11 @@ class EnabledUsers(private val plugin: CV) :
                 {
                     name = ""
                 }
-                val playerFile = PlayerFile.getByName(name)
-                if (playerFile != null)
+                val voter = Voter.getByName(plugin, name)
+                if (voter != null)
                 {
-                    val voteFile = VoteFile(playerFile.uuid, plugin)
-                    voteFile.setIsOpUser(!voteFile.isOpUser)
-                    event.currentItem = EnabledUser(voteFile).getSkull()
+                    voter.setIsOpUser(!voter.isOpUser)
+                    event.currentItem = EnabledUser(voter).getSkull()
                 } else
                 {
                     event.currentItem = null
@@ -48,6 +47,17 @@ class EnabledUsers(private val plugin: CV) :
             }
             else                 ->
             {
+                if (item.itemMeta?.displayName?.contains("Previous") == true)
+                {
+                    SoundType.CLICK.play(plugin, player)
+                    cancelCloseEvent()
+                    player.openInventory(EnabledUsers(plugin, page - 1).inventory)
+                } else if (item.itemMeta?.displayName?.contains("Next") == true)
+                {
+                    SoundType.CLICK.play(plugin, player)
+                    cancelCloseEvent()
+                    player.openInventory(EnabledUsers(plugin, page + 1).inventory)
+                }
             }
         }
     }
@@ -59,28 +69,35 @@ class EnabledUsers(private val plugin: CV) :
 
     init
     {
-        for (uuid in PlayerFile.getAll().keys)
+        val voters = Voter.getTopVoters(plugin)
+        if (page < 0 || voters.size < 51 * page)
         {
-            inventory.addItem(EnabledUser(VoteFile(uuid, plugin)).getSkull())
+            page = 0
         }
+        for (voter in voters.asSequence().filterIndexed { i, _ -> i >= 51 * page }.take(51))
+        {
+            inventory.addItem(EnabledUser(voter).getSkull())
+        }
+        inventory.setItem(51, BaseItem(Material.FEATHER, ChatColor.AQUA.toString() + "Previous"))
+        inventory.setItem(52, BaseItem(Material.FEATHER, ChatColor.AQUA.toString() + "Next"))
         inventory.setItem(53, BACK_ITEM)
     }
 }
 
-class EnabledUser(private val voteFile: VoteFile)
+class EnabledUser(private val voter: Voter)
 {
     fun getSkull(): ItemStack
     {
-        val skull = Bukkit.getOfflinePlayer(voteFile.name).getSkull()
+        val skull = Bukkit.getOfflinePlayer(voter.name).getSkull()
         val meta = skull.itemMeta
         meta!!.lore = listOf(
-            ChatColor.GRAY.toString() + "Enabled: " + if (voteFile.isOpUser)
+            ChatColor.GRAY.toString() + "Enabled: " + if (voter.isOpUser)
                 ChatColor.GREEN.toString() + "Yes" else ChatColor.RED.toString() + "No",
             ChatColor.GRAY.toString() + "This setting overrides the group permissions."
         )
-        if (meta.displayName != voteFile.name)
+        if (meta.displayName != voter.name)
         {
-            meta.setDisplayName(ChatColor.AQUA.toString() + voteFile.name)
+            meta.setDisplayName(ChatColor.AQUA.toString() + voter.name)
         }
         skull.itemMeta = meta
         return skull

@@ -3,6 +3,7 @@ package me.sd_master92.customvoting
 import me.clip.placeholderapi.PlaceholderAPI
 import me.sd_master92.customvoting.constants.enumerations.Messages
 import me.sd_master92.customvoting.constants.enumerations.Settings
+import me.sd_master92.customvoting.database.PlayerRow
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
 import org.bukkit.ChatColor
@@ -117,11 +118,8 @@ fun Player.hasPermissionRewardsByGroup(plugin: CV): Boolean
 
 fun Player.hasPermissionRewardsByUser(plugin: CV): Boolean
 {
-    if (VoteFile(this, plugin).isOpUser)
-    {
-        return true
-    }
-    return false
+    val voter = if (plugin.hasDatabaseConnection()) PlayerRow(plugin, this) else VoteFile(this, plugin)
+    return voter.isOpUser
 }
 
 fun OfflinePlayer.getSkull(): ItemStack

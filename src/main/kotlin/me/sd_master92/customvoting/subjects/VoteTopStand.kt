@@ -2,10 +2,9 @@ package me.sd_master92.customvoting.subjects
 
 import me.sd_master92.core.inventory.BaseItem
 import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.VoteFile
 import me.sd_master92.customvoting.constants.Data
+import me.sd_master92.customvoting.constants.Voter
 import me.sd_master92.customvoting.constants.enumerations.Messages
-import me.sd_master92.customvoting.database.PlayerTable
 import net.citizensnpcs.api.CitizensAPI
 import net.citizensnpcs.api.npc.NPC
 import org.bukkit.Bukkit
@@ -171,21 +170,17 @@ class VoteTopStand @JvmOverloads constructor(private val plugin: CV, private val
 
     private fun update()
     {
-        val voteFile =
-            if (plugin.hasDatabaseConnection()) PlayerTable.getTopVoter(plugin, top) else VoteFile.getTopVoter(
-                plugin,
-                top
-            )
+        val topVoter = Voter.getTopVoter(plugin, top)
         val placeholders: MutableMap<String, String> = HashMap()
         placeholders["%TOP%"] = "" + top
-        if (voteFile != null)
+        if (topVoter != null)
         {
-            placeholders["%PLAYER%"] = voteFile.name
-            placeholders["%VOTES%"] = "${voteFile.votes}"
-            placeholders["%MONTHLY_VOTES%"] = "${voteFile.monthlyVotes}"
-            if (CV.CITIZENS && citizen != null && citizen!!.name != voteFile.name)
+            placeholders["%PLAYER%"] = topVoter.name
+            placeholders["%VOTES%"] = "${topVoter.votes}"
+            placeholders["%MONTHLY_VOTES%"] = "${topVoter.monthlyVotes}"
+            if (CV.CITIZENS && citizen != null && citizen!!.name != topVoter.name)
             {
-                citizen!!.name = voteFile.name
+                citizen!!.name = topVoter.name
                 citizen!!.despawn()
                 citizen!!.data()?.setPersistent(NPC.NAMEPLATE_VISIBLE_METADATA, false)
                 citizen!!.spawn(plugin.data.getLocation(path))
@@ -215,11 +210,11 @@ class VoteTopStand @JvmOverloads constructor(private val plugin: CV, private val
         {
             val skull = ItemStack(Material.PLAYER_HEAD)
             val skullMeta = skull.itemMeta as SkullMeta?
-            if (skullMeta != null && voteFile != null)
+            if (skullMeta != null && topVoter != null)
             {
                 try
                 {
-                    val uuid = UUID.fromString(voteFile.uuid)
+                    val uuid = UUID.fromString(topVoter.uuid)
                     skullMeta.owningPlayer = Bukkit.getPlayer(uuid) ?: Bukkit.getOfflinePlayer(uuid)
                     skull.itemMeta = skullMeta
                 } catch (ignored: Exception)

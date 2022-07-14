@@ -4,19 +4,18 @@ import me.sd_master92.core.database.CustomColumn
 import me.sd_master92.core.database.CustomDatabase
 import me.sd_master92.core.database.CustomTable
 import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.constants.enumerations.Settings
-import java.sql.ResultSet
 
 class PlayerTable(private val plugin: CV, database: CustomDatabase)
 {
     val table: CustomTable
+
     private fun addPlayer(uuid: String): Boolean
     {
-        return table.insertData(arrayOf("uuid", "votes", "last", "queue", "monthly_votes"), arrayOf(uuid, 0, 0, 0, 0))
+        return table.insertData(
+            arrayOf("uuid", "votes", "last", "queue", "monthly_votes", "is_op"),
+            arrayOf(uuid, 0, 0, 0, 0, false)
+        )
     }
-
-    val all: ResultSet
-        get() = table.getAll()
 
     fun getUuid(name: String): String
     {
@@ -151,6 +150,27 @@ class PlayerTable(private val plugin: CV, database: CustomDatabase)
         return table.updateData("uuid", uuid, "queue", queue)
     }
 
+    fun getIsOp(uuid: String): Boolean
+    {
+        val result = table.getData("uuid", uuid)
+        try
+        {
+            if (result.next())
+            {
+                return result.getBoolean("is_op")
+            }
+        } catch (e: Exception)
+        {
+            plugin.errorLog("Could not retrieve op status of $uuid from database", e)
+        }
+        return false
+    }
+
+    fun setIsOp(uuid: String, isOp: Boolean): Boolean
+    {
+        return table.updateData("uuid", uuid, "is_op", isOp)
+    }
+
     private fun migrate()
     {
         val monthlyVotesColumn = table.getColumn("monthly_votes")
@@ -166,75 +186,23 @@ class PlayerTable(private val plugin: CV, database: CustomDatabase)
             {
                 if (monthlyVotesColumn.create(CustomColumn.DataType.INT))
                 {
-                    plugin.errorLog("| successfully migrated table 'players'!")
+                    plugin.errorLog("| successfully added column 'monthly_votes'!")
                 } else
                 {
                     plugin.errorLog("| could not create column 'monthly_votes'!")
                 }
             }
         }
-    }
-
-    companion object
-    {
-        fun getTopVoters(plugin: CV): List<PlayerData>
+        val isOpColumn = table.getColumn("is_op")
+        if (!isOpColumn.exists())
         {
-            val topVoters: MutableList<PlayerData> = ArrayList()
-            try
+            if (isOpColumn.create(CustomColumn.DataType.BOOLEAN))
             {
-                val all = plugin.playerTable?.all
-                if (all != null)
-                {
-                    while (all.next())
-                    {
-                        topVoters.add(
-                            PlayerData(
-                                all.getString("uuid"), all.getString("name"), all.getInt("votes"),
-                                all.getLong("last"),
-                                all.getInt("queue"),
-                                all.getInt("period")
-                            )
-                        )
-                    }
-                }
-            } catch (e: Exception)
-            {
-                return topVoters
-            }
-
-            if (plugin.config.getBoolean(Settings.MONTHLY_VOTES.path))
-            {
-                topVoters.sortWith { x: PlayerData, y: PlayerData ->
-                    var compare = y.monthlyVotes.compareTo(x.monthlyVotes)
-                    if (compare == 0)
-                    {
-                        compare = x.last.compareTo(y.last)
-                    }
-                    compare
-                }
+                plugin.errorLog("| successfully added column 'is_op'!")
             } else
             {
-                topVoters.sortWith { x: PlayerData, y: PlayerData ->
-                    var compare = y.votes.compareTo(x.votes)
-                    if (compare == 0)
-                    {
-                        compare = x.last.compareTo(y.last)
-                    }
-                    compare
-                }
+                plugin.errorLog("| could not create column 'is_op'!")
             }
-            return topVoters
-        }
-
-        fun getTopVoter(plugin: CV, _n: Int): PlayerData?
-        {
-            var n = _n
-            n--
-            val topVoters = getTopVoters(plugin)
-            return if (n >= 0 && n < topVoters.size)
-            {
-                topVoters[n]
-            } else null
         }
     }
 

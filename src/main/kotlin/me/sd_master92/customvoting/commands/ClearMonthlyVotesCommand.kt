@@ -1,9 +1,9 @@
 package me.sd_master92.customvoting.commands
 
 import me.sd_master92.core.command.SimpleCommand
-import me.sd_master92.core.file.PlayerFile
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.VoteFile
+import me.sd_master92.customvoting.constants.Voter
 import me.sd_master92.customvoting.constants.enumerations.Messages
 import me.sd_master92.customvoting.database.PlayerRow
 import me.sd_master92.customvoting.sendText
@@ -36,19 +36,11 @@ class ClearMonthlyVotesCommand(private val plugin: CV) : SimpleCommand(plugin, "
         } else
         {
             val name = args[0]
-            val playerFile = PlayerFile.getByName(name)
-            if (playerFile != null)
+            val voter = Voter.getByName(plugin, name)
+            if (voter != null)
             {
-                if (plugin.hasDatabaseConnection())
-                {
-                    val playerRow = PlayerRow(plugin, playerFile.uuid)
-                    playerRow.clearMonthlyVotes()
-                } else
-                {
-                    val voteFile = VoteFile(playerFile.uuid, plugin)
-                    voteFile.clearMonthlyVotes()
-                    sender.sendMessage(ChatColor.AQUA.toString() + voteFile.name + "'s " + ChatColor.GREEN + "monthly votes have been reset.")
-                }
+                voter.clearMonthlyVotes()
+                sender.sendMessage(ChatColor.AQUA.toString() + voter.name + "'s " + ChatColor.GREEN + "monthly votes have been reset.")
             } else
             {
                 sender.sendText(plugin, Messages.INVALID_PLAYER)

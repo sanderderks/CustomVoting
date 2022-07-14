@@ -1,12 +1,10 @@
 package me.sd_master92.customvoting.gui
 
-import me.sd_master92.core.file.PlayerFile.Companion.getAll
 import me.sd_master92.core.inventory.ConfirmGUI
 import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.VoteFile
+import me.sd_master92.customvoting.constants.Voter
 import me.sd_master92.customvoting.constants.enumerations.Messages
 import me.sd_master92.customvoting.constants.enumerations.SoundType
-import me.sd_master92.customvoting.database.PlayerRow
 import me.sd_master92.customvoting.tasks.ResetChecker
 import org.bukkit.ChatColor
 import org.bukkit.entity.Player
@@ -21,24 +19,14 @@ class ConfirmVotesReset(private val plugin: CV, private val monthly: Boolean) :
     override fun onConfirm(event: InventoryClickEvent, player: Player)
     {
         SoundType.CLICK.play(plugin, player)
-        for (value in getAll().values)
+        for (voter in Voter.getTopVoters(plugin))
         {
-            if (plugin.hasDatabaseConnection())
-            {
-                if (monthly)
-                {
-                    PlayerRow(plugin, value.uuid).clearMonthlyVotes()
-                } else
-                {
-                    PlayerRow(plugin, value.uuid).setVotes(0, true)
-                }
-            }
             if (monthly)
             {
-                VoteFile(value.uuid, plugin).clearMonthlyVotes()
+                voter.clearMonthlyVotes()
             } else
             {
-                VoteFile(value.uuid, plugin).setVotes(0, true)
+                voter.setVotes(0, true)
             }
         }
         ResetChecker.FIRST_OF_MONTH = false

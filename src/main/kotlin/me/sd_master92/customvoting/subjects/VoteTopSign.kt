@@ -1,11 +1,10 @@
 package me.sd_master92.customvoting.subjects
 
 import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.VoteFile
 import me.sd_master92.customvoting.constants.Data
+import me.sd_master92.customvoting.constants.Voter
 import me.sd_master92.customvoting.constants.enumerations.Messages
 import me.sd_master92.customvoting.constants.enumerations.Settings
-import me.sd_master92.customvoting.database.PlayerTable
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Location
@@ -55,11 +54,7 @@ class VoteTopSign @JvmOverloads constructor(
         if (location!!.block.state is Sign)
         {
             val sign = location.block.state as Sign
-            val topVoter =
-                if (plugin.hasDatabaseConnection()) PlayerTable.getTopVoter(plugin, top) else VoteFile.getTopVoter(
-                    plugin,
-                    top
-                )
+            val topVoter = Voter.getTopVoter(plugin, top)
             if (topVoter != null)
             {
                 val oldLoc = plugin.data.getLocation(Data.VOTE_TOP_SIGNS + "." + top)

@@ -2,8 +2,8 @@ package me.sd_master92.customvoting
 
 import me.sd_master92.core.file.PlayerFile
 import me.sd_master92.customvoting.constants.Data
+import me.sd_master92.customvoting.constants.TopVoter
 import me.sd_master92.customvoting.constants.Voter
-import me.sd_master92.customvoting.constants.enumerations.Settings
 import me.sd_master92.customvoting.subjects.VoteTopSign
 import me.sd_master92.customvoting.subjects.VoteTopStand
 import org.bukkit.entity.Player
@@ -12,17 +12,19 @@ class VoteFile : Voter
 {
     private val plugin: CV
     private val playerFile: PlayerFile
+
     override val uuid: String
     override val name: String
-
     override val votes: Int
         get() = playerFile.getNumber("votes")
     override val monthlyVotes: Int
         get() = playerFile.getNumber("monthly_votes")
     override val last: Long
         get() = playerFile.getTimeStamp("last")
-    val isOpUser: Boolean
+    override val isOpUser: Boolean
         get() = playerFile.getBoolean("opUser")
+    val queue: List<String>
+        get() = plugin.data.getStringList(Data.VOTE_QUEUE + "." + uuid)
 
     constructor(uuid: String, plugin: CV)
     {
@@ -50,7 +52,7 @@ class VoteFile : Voter
         }
     }
 
-    fun setVotes(n: Int, update: Boolean)
+    override fun setVotes(n: Int, update: Boolean)
     {
         playerFile.setTimeStamp("last")
         playerFile.setNumber("votes", n)
@@ -62,14 +64,14 @@ class VoteFile : Voter
         }
     }
 
-    fun clearMonthlyVotes()
+    override fun clearMonthlyVotes()
     {
         playerFile.setNumber("monthly_votes", 0)
         VoteTopSign.updateAll(plugin)
         VoteTopStand.updateAll(plugin)
     }
 
-    fun addVote(update: Boolean): Boolean
+    override fun addVote(update: Boolean): Boolean
     {
         val beforeVotes = votes
         playerFile.setTimeStamp("last")
@@ -83,8 +85,11 @@ class VoteFile : Voter
         return beforeVotes < votes
     }
 
-    val queue: List<String>
-        get() = plugin.data.getStringList(Data.VOTE_QUEUE + "." + uuid)
+    override fun setIsOpUser(isOpUser: Boolean): Boolean
+    {
+        playerFile.set("opUser", isOpUser)
+        return playerFile.saveConfig()
+    }
 
     fun clearQueue(): Boolean
     {
@@ -100,48 +105,11 @@ class VoteFile : Voter
         return plugin.data.saveConfig()
     }
 
-    fun setIsOpUser(isOpUser: Boolean): Boolean
+    companion object : TopVoter
     {
-        playerFile.set("opUser", isOpUser)
-        return playerFile.saveConfig()
-    }
-
-    companion object
-    {
-        fun getTopVoters(plugin: CV): List<VoteFile>
+        override fun getAll(plugin: CV): MutableList<Voter>
         {
-            val topVoters: MutableList<VoteFile> = ArrayList()
-            for (playerFile in PlayerFile.getAll().values)
-            {
-                topVoters.add(VoteFile(playerFile.uuid, plugin))
-            }
-
-            topVoters.sortWith { x: VoteFile, y: VoteFile ->
-                var compare = if (plugin.config.getBoolean(Settings.MONTHLY_VOTES.path))
-                {
-                    y.monthlyVotes.compareTo(x.monthlyVotes)
-                } else
-                {
-                    y.votes.compareTo(x.votes)
-                }
-                if (compare == 0)
-                {
-                    compare = x.last.compareTo(y.last)
-                }
-                compare
-            }
-            return topVoters
-        }
-
-        fun getTopVoter(plugin: CV, n_: Int): VoteFile?
-        {
-            var n = n_
-            n--
-            val topVoters = getTopVoters(plugin)
-            return if (n >= 0 && n < topVoters.size)
-            {
-                topVoters[n]
-            } else null
+            return PlayerFile.getAll().values.map { playerFile -> VoteFile(playerFile.uuid, plugin) }.toMutableList()
         }
 
         fun migrateAll()

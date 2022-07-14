@@ -1,11 +1,9 @@
 package me.sd_master92.customvoting.commands
 
 import me.sd_master92.core.command.SimpleCommand
-import me.sd_master92.core.file.PlayerFile
 import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.VoteFile
+import me.sd_master92.customvoting.constants.Voter
 import me.sd_master92.customvoting.constants.enumerations.Messages
-import me.sd_master92.customvoting.database.PlayerRow
 import me.sd_master92.customvoting.sendText
 import org.bukkit.ChatColor
 import org.bukkit.command.CommandSender
@@ -25,15 +23,7 @@ class SetVotesCommand(private val plugin: CV) : SimpleCommand(plugin, "setvotes"
                     val n = amount.toInt()
                     if (n >= 0)
                     {
-                        if (plugin.hasDatabaseConnection())
-                        {
-                            val playerRow = PlayerRow(plugin, sender)
-                            playerRow.setVotes(n, true)
-                        } else
-                        {
-                            val voteFile = VoteFile(sender.uniqueId.toString(), plugin)
-                            voteFile.setVotes(n, true)
-                        }
+                        Voter.getByUuid(plugin, sender).setVotes(n, true)
                         sender.sendMessage(ChatColor.GREEN.toString() + "Your votes have been set to " + ChatColor.AQUA + n + ChatColor.GREEN + ".")
                     } else
                     {
@@ -56,19 +46,11 @@ class SetVotesCommand(private val plugin: CV) : SimpleCommand(plugin, "setvotes"
                 val n = amount.toInt()
                 if (n >= 0)
                 {
-                    val playerFile = PlayerFile.getByName(name)
-                    if (playerFile != null)
+                    val voter = Voter.getByName(plugin, name)
+                    if (voter != null)
                     {
-                        if (plugin.hasDatabaseConnection())
-                        {
-                            val playerRow = PlayerRow(plugin, playerFile.uuid)
-                            playerRow.setVotes(n, true)
-                        } else
-                        {
-                            val voteFile = VoteFile(playerFile.uuid, plugin)
-                            voteFile.setVotes(n, true)
-                            sender.sendMessage(ChatColor.AQUA.toString() + voteFile.name + "'s " + ChatColor.GREEN + "votes have been set to " + ChatColor.AQUA + n + ChatColor.GREEN + ".")
-                        }
+                        voter.setVotes(n, true)
+                        sender.sendMessage(ChatColor.AQUA.toString() + voter.name + "'s " + ChatColor.GREEN + "votes have been set to " + ChatColor.AQUA + n + ChatColor.GREEN + ".")
                     } else
                     {
                         sender.sendText(plugin, Messages.INVALID_PLAYER)

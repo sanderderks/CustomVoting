@@ -2,10 +2,9 @@ package me.sd_master92.customvoting.commands
 
 import me.sd_master92.core.command.SimpleCommand
 import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.VoteFile
+import me.sd_master92.customvoting.constants.Voter
 import me.sd_master92.customvoting.constants.enumerations.Messages
 import me.sd_master92.customvoting.constants.enumerations.Settings
-import me.sd_master92.customvoting.database.PlayerTable
 import me.sd_master92.customvoting.sendText
 import me.sd_master92.customvoting.sendTexts
 import org.bukkit.command.CommandSender
@@ -16,8 +15,7 @@ class VoteTopCommand(private val plugin: CV) : SimpleCommand(plugin, "votetop")
 {
     override fun onCommand(sender: CommandSender, args: Array<String>)
     {
-        val topVoters =
-            if (plugin.hasDatabaseConnection()) PlayerTable.getTopVoters(plugin) else VoteFile.getTopVoters(plugin)
+        val topVoters = Voter.getTopVoters(plugin)
         if (topVoters.isNotEmpty())
         {
             val messages: MutableList<String> = ArrayList()

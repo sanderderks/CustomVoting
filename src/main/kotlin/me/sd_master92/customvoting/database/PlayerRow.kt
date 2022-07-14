@@ -1,6 +1,7 @@
 package me.sd_master92.customvoting.database
 
 import me.sd_master92.customvoting.CV
+import me.sd_master92.customvoting.constants.TopVoter
 import me.sd_master92.customvoting.constants.Voter
 import me.sd_master92.customvoting.subjects.VoteTopSign
 import me.sd_master92.customvoting.subjects.VoteTopStand
@@ -9,6 +10,20 @@ import org.bukkit.entity.Player
 class PlayerRow(private val plugin: CV, override val uuid: String) : Voter
 {
     private val players: PlayerTable? = plugin.playerTable
+    private var initialized = false
+
+    override val name: String
+        get() = players?.getName(uuid) ?: "Unknown"
+    override val votes: Int
+        get() = players?.getVotes(uuid) ?: 0
+    override val monthlyVotes: Int
+        get() = players?.getMonthlyVotes(uuid) ?: 0
+    override val isOpUser: Boolean
+        get() = players?.getIsOp(uuid) == true
+    override val last: Long
+        get() = players?.getLast(uuid) ?: 0
+    val queue: Int
+        get() = players?.getQueue(uuid) ?: 0
 
     constructor(plugin: CV, player: Player) : this(plugin, player.uniqueId.toString())
     {
@@ -18,16 +33,10 @@ class PlayerRow(private val plugin: CV, override val uuid: String) : Voter
     private fun register()
     {
         players?.getVotes(uuid)
+        ALL[uuid] = this
     }
 
-    override val name: String
-        get() = players?.getName(uuid) ?: "Unknown"
-    override val votes: Int
-        get() = players?.getVotes(uuid) ?: 0
-    override val monthlyVotes: Int
-        get() = players?.getMonthlyVotes(uuid) ?: 0
-
-    fun setVotes(n: Int, update: Boolean)
+    override fun setVotes(n: Int, update: Boolean)
     {
         players?.setVotes(uuid, n)
         players?.setMonthlyVotes(uuid, 0)
@@ -39,14 +48,14 @@ class PlayerRow(private val plugin: CV, override val uuid: String) : Voter
         }
     }
 
-    fun clearMonthlyVotes()
+    override fun clearMonthlyVotes()
     {
         players?.setMonthlyVotes(uuid, 0)
         VoteTopSign.updateAll(plugin)
         VoteTopStand.updateAll(plugin)
     }
 
-    fun addVote(update: Boolean): Boolean
+    override fun addVote(update: Boolean): Boolean
     {
         val votesBefore = votes
         players?.setVotes(uuid, votes + 1)
@@ -60,11 +69,10 @@ class PlayerRow(private val plugin: CV, override val uuid: String) : Voter
         return votesBefore < votes
     }
 
-    override val last: Long
-        get() = players?.getLast(uuid) ?: 0
-
-    val queue: Int
-        get() = players?.getQueue(uuid) ?: 0
+    override fun setIsOpUser(isOpUser: Boolean): Boolean
+    {
+        return players?.setIsOp(uuid, isOpUser) ?: false
+    }
 
     fun clearQueue(): Boolean
     {
@@ -74,6 +82,33 @@ class PlayerRow(private val plugin: CV, override val uuid: String) : Voter
     fun addQueue(): Boolean
     {
         return players?.setQueue(uuid, queue + 1) ?: false
+    }
+
+    fun init(plugin: CV)
+    {
+        if (!initialized)
+        {
+            val result = players?.table?.getAll()
+            if (result != null)
+            {
+                while (result.next())
+                {
+                    val voter = PlayerRow(plugin, result.getString("uuid"))
+                    ALL[voter.uuid] = voter
+                }
+            }
+            initialized = true
+        }
+    }
+
+    companion object : TopVoter
+    {
+        private var ALL: MutableMap<String, PlayerRow> = HashMap()
+
+        override fun getAll(plugin: CV): MutableList<Voter>
+        {
+            return ALL.values.toMutableList()
+        }
     }
 
     init

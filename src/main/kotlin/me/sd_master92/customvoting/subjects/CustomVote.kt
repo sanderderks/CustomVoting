@@ -5,6 +5,7 @@ import me.sd_master92.core.appendWhenTrue
 import me.sd_master92.core.file.PlayerFile
 import me.sd_master92.customvoting.*
 import me.sd_master92.customvoting.constants.Data
+import me.sd_master92.customvoting.constants.Voter
 import me.sd_master92.customvoting.constants.enumerations.ItemRewardType
 import me.sd_master92.customvoting.constants.enumerations.Logger
 import me.sd_master92.customvoting.constants.enumerations.Messages
@@ -51,24 +52,12 @@ class CustomVote(
         {
             Logger.OK.log("Player online and in an enabled world", logger)
             broadcast(player)
-            if (plugin.hasDatabaseConnection())
+            if (Voter.getByUuid(plugin, player).addVote(true))
             {
-                if (PlayerRow(plugin, player.uniqueId.toString()).addVote(true))
-                {
-                    Logger.INFO.log("Added vote to database", logger)
-                } else
-                {
-                    Logger.ERROR.log("Could not add vote to database", logger)
-                }
+                Logger.INFO.log("Added vote to player", logger)
             } else
             {
-                if (VoteFile(player.uniqueId.toString(), plugin).addVote(true))
-                {
-                    Logger.INFO.log("Added vote to player file", logger)
-                } else
-                {
-                    Logger.ERROR.log("Could not add vote to player file", logger)
-                }
+                Logger.ERROR.log("Could not add vote to player", logger)
             }
             ParticleHelper.shootFirework(plugin, player.location)
             giveRewards(player, player.hasPermissionRewards(plugin))

@@ -4,9 +4,9 @@ import me.clip.placeholderapi.expansion.PlaceholderExpansion
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.VoteFile
 import me.sd_master92.customvoting.constants.Data
+import me.sd_master92.customvoting.constants.Voter
 import me.sd_master92.customvoting.constants.enumerations.Settings
 import me.sd_master92.customvoting.database.PlayerRow
-import me.sd_master92.customvoting.database.PlayerTable
 import org.bukkit.entity.Player
 
 class CustomPlaceholders(private val plugin: CV) : PlaceholderExpansion()
@@ -45,9 +45,7 @@ class CustomPlaceholders(private val plugin: CV) : PlaceholderExpansion()
                 SERVER_VOTES                        ->
                 {
                     var total = 0
-                    for (voter in if (plugin.hasDatabaseConnection()) PlayerTable.getTopVoters(plugin) else VoteFile.getTopVoters(
-                        plugin
-                    ))
+                    for (voter in Voter.getTopVoters(plugin))
                     {
                         total += voter.votes
                     }
@@ -94,11 +92,8 @@ class CustomPlaceholders(private val plugin: CV) : PlaceholderExpansion()
                 {
                     if (params.contains(PLAYER_VOTES))
                     {
-                        val key = params.split("_".toRegex())
-                            .toTypedArray()[2].toInt()
-                        val topVoter = if (plugin.hasDatabaseConnection()) PlayerTable.getTopVoter(
-                            plugin, key
-                        ) else VoteFile.getTopVoter(plugin, key)
+                        val top = params.split("_").toTypedArray()[2].toInt()
+                        val topVoter = Voter.getTopVoter(plugin, top)
                         return if (params.endsWith("NAME"))
                         {
                             topVoter?.name ?: "Unknown"
@@ -108,11 +103,8 @@ class CustomPlaceholders(private val plugin: CV) : PlaceholderExpansion()
                         }
                     } else if (params.contains(PLAYER_PERIOD) || params.contains(PLAYER_MONTHLY_VOTES))
                     {
-                        val key = params.split("_".toRegex())
-                            .toTypedArray()[2].toInt()
-                        val topVoter = if (plugin.hasDatabaseConnection()) PlayerTable.getTopVoter(
-                            plugin, key
-                        ) else VoteFile.getTopVoter(plugin, key)
+                        val key = params.split("_").toTypedArray()[2].toInt()
+                        val topVoter = Voter.getTopVoter(plugin, key)
                         return if (params.endsWith("NAME"))
                         {
                             topVoter?.name ?: "Unknown"

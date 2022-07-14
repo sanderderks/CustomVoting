@@ -15,7 +15,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 
 class VoteStreakSettings(private val plugin: CV) :
-    GUI(plugin, "Vote Streak Settings", getVoteStreakInventorySize(plugin), false, true)
+    GUI(plugin, "Vote Streak Settings", getInventorySize(plugin), false, true)
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
     {
@@ -86,7 +86,7 @@ class VoteStreakSettings(private val plugin: CV) :
 
     companion object
     {
-        fun getVoteStreakInventorySize(plugin: CV): Int
+        private fun getInventorySize(plugin: CV): Int
         {
             val streaks = (plugin.data.getConfigurationSection(Data.VOTE_STREAKS)?.getKeys(false)?.size ?: 0) + 2
             return if (streaks % 9 == 0)
