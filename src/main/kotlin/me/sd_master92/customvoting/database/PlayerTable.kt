@@ -226,6 +226,7 @@ class PlayerTable(private val plugin: CV, database: CustomDatabase)
                 plugin.infoLog("| successfully created table 'players'")
                 plugin.infoLog("|")
                 plugin.infoLog("|___successfully connected to database")
+                PlayerRow.init(plugin)
             }
         } else
         {
@@ -234,6 +235,7 @@ class PlayerTable(private val plugin: CV, database: CustomDatabase)
             migrate()
             plugin.infoLog("|")
             plugin.infoLog("|___successfully connected to database")
+            PlayerRow.init(plugin)
         }
     }
 }

@@ -10,7 +10,6 @@ import org.bukkit.entity.Player
 class PlayerRow(private val plugin: CV, override val uuid: String) : Voter
 {
     private val players: PlayerTable? = plugin.playerTable
-    private var initialized = false
 
     override val name: String
         get() = players?.getName(uuid) ?: "Unknown"
@@ -84,26 +83,27 @@ class PlayerRow(private val plugin: CV, override val uuid: String) : Voter
         return players?.setQueue(uuid, queue + 1) ?: false
     }
 
-    fun init(plugin: CV)
-    {
-        if (!initialized)
-        {
-            val result = players?.table?.getAll()
-            if (result != null)
-            {
-                while (result.next())
-                {
-                    val voter = PlayerRow(plugin, result.getString("uuid"))
-                    ALL[voter.uuid] = voter
-                }
-            }
-            initialized = true
-        }
-    }
-
     companion object : TopVoter
     {
         private var ALL: MutableMap<String, PlayerRow> = HashMap()
+        private var initialized = false
+
+        fun init(plugin: CV)
+        {
+            if (!initialized)
+            {
+                val result = plugin.playerTable?.table?.getAll()
+                if (result != null)
+                {
+                    while (result.next())
+                    {
+                        val voter = PlayerRow(plugin, result.getString("uuid"))
+                        ALL[voter.uuid] = voter
+                    }
+                }
+                initialized = true
+            }
+        }
 
         override fun getAll(plugin: CV): MutableList<Voter>
         {
