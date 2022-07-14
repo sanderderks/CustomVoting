@@ -57,6 +57,12 @@ class Support(private val plugin: CV) : GUI(plugin, "Support", 9, false, true)
                 cancelCloseEvent()
                 player.openInventory(Donators(plugin).inventory)
             }
+            Material.PLAYER_HEAD    ->
+            {
+                SoundType.CLICK.play(plugin, player)
+                cancelCloseEvent()
+                player.openInventory(PlayerInfo(plugin).inventory)
+            }
             else                    ->
             {
             }
@@ -89,6 +95,12 @@ class Support(private val plugin: CV) : GUI(plugin, "Support", 9, false, true)
             4, BaseItem(
                 Material.CREEPER_HEAD, ChatColor.LIGHT_PURPLE.toString() + "Donators",
                 ChatColor.GRAY.toString() + "CustomVoting supporters!"
+            )
+        )
+        inventory.setItem(
+            5, BaseItem(
+                Material.PLAYER_HEAD, ChatColor.LIGHT_PURPLE.toString() + "Player Info",
+                ChatColor.GRAY.toString() + "Player vote information"
             )
         )
         inventory.setItem(8, BACK_ITEM)
