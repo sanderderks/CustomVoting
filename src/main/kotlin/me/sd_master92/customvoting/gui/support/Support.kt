@@ -97,7 +97,9 @@ class Support(private val plugin: CV) : GUI(plugin, "Support", 9, false, true)
 
 class UpdateItem(plugin: CV) : BaseItem(
     Material.CLOCK, ChatColor.LIGHT_PURPLE.toString() + "Up to date?",
-    if (plugin.isUpToDate()) ChatColor.GREEN.toString() + "Yes" else ChatColor.GRAY.toString() + "Currently: " + ChatColor.RED + plugin.version + ";" + ChatColor.GRAY +
+    if (plugin.isUpToDate()) ChatColor.GREEN.toString() + "Yes;" + ChatColor.GRAY.toString() + "Currently: " +
+            ChatColor.GREEN + plugin.version else ChatColor.GRAY.toString() +
+            "Currently: " + ChatColor.RED + plugin.version + ";" + ChatColor.GRAY +
             "Latest: " + ChatColor.GREEN + plugin.latestVersion + ";;" + ChatColor.GRAY + "Click to " +
             "download"
 )
