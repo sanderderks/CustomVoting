@@ -78,6 +78,10 @@ class EnabledUser(private val voteFile: VoteFile)
                 ChatColor.GREEN.toString() + "Yes" else ChatColor.RED.toString() + "No",
             ChatColor.GRAY.toString() + "This setting overrides the group permissions."
         )
+        if (meta.displayName != voteFile.name)
+        {
+            meta.setDisplayName(ChatColor.AQUA.toString() + voteFile.name)
+        }
         skull.itemMeta = meta
         return skull
     }
