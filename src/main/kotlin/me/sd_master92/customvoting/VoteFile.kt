@@ -17,8 +17,8 @@ class VoteFile : Voter
 
     override val votes: Int
         get() = playerFile.getNumber("votes")
-    override val period: Int
-        get() = playerFile.getNumber("period")
+    override val monthlyVotes: Int
+        get() = playerFile.getNumber("monthly_votes")
     override val last: Long
         get() = playerFile.getTimeStamp("last")
     val isOpUser: Boolean
@@ -54,7 +54,7 @@ class VoteFile : Voter
     {
         playerFile.setTimeStamp("last")
         playerFile.setNumber("votes", n)
-        playerFile.setNumber("period", n)
+        playerFile.setNumber("monthly_votes", n)
         if (update)
         {
             VoteTopSign.updateAll(plugin)
@@ -62,9 +62,9 @@ class VoteFile : Voter
         }
     }
 
-    fun clearPeriod()
+    fun clearMonthlyVotes()
     {
-        playerFile.setNumber("period", 0)
+        playerFile.setNumber("monthly_votes", 0)
         VoteTopSign.updateAll(plugin)
         VoteTopStand.updateAll(plugin)
     }
@@ -74,7 +74,7 @@ class VoteFile : Voter
         val beforeVotes = votes
         playerFile.setTimeStamp("last")
         playerFile.addNumber("votes", 1)
-        playerFile.addNumber("period", 1)
+        playerFile.addNumber("monthly_votes", 1)
         if (update)
         {
             VoteTopSign.updateAll(plugin)
@@ -117,9 +117,9 @@ class VoteFile : Voter
             }
 
             topVoters.sortWith { x: VoteFile, y: VoteFile ->
-                var compare = if (plugin.config.getBoolean(Settings.MONTHLY_PERIOD.path))
+                var compare = if (plugin.config.getBoolean(Settings.MONTHLY_VOTES.path))
                 {
-                    y.period.compareTo(x.period)
+                    y.monthlyVotes.compareTo(x.monthlyVotes)
                 } else
                 {
                     y.votes.compareTo(x.votes)
@@ -142,6 +142,18 @@ class VoteFile : Voter
             {
                 topVoters[n]
             } else null
+        }
+
+        fun migrateAll()
+        {
+            for (playerFile in PlayerFile.getAll().values)
+            {
+                if (playerFile.contains("period"))
+                {
+                    playerFile.set("monthly_votes", playerFile.get("period"))
+                    playerFile.delete("period")
+                }
+            }
         }
     }
 }

@@ -12,7 +12,7 @@ class PlayerTable(private val plugin: CV, database: CustomDatabase)
     val table: CustomTable
     private fun addPlayer(uuid: String): Boolean
     {
-        return table.insertData(arrayOf("uuid", "votes", "last", "queue", "period"), arrayOf(uuid, 0, 0, 0, 0))
+        return table.insertData(arrayOf("uuid", "votes", "last", "queue", "monthly_votes"), arrayOf(uuid, 0, 0, 0, 0))
     }
 
     val all: ResultSet
@@ -79,14 +79,14 @@ class PlayerTable(private val plugin: CV, database: CustomDatabase)
         return table.updateData("uuid", uuid, "votes", votes)
     }
 
-    fun getPeriod(uuid: String): Int
+    fun getMonthlyVotes(uuid: String): Int
     {
         val result = table.getData("uuid", uuid)
         try
         {
             if (result.next())
             {
-                return result.getInt("period")
+                return result.getInt("monthly_votes")
             } else
             {
                 addPlayer(uuid)
@@ -98,9 +98,9 @@ class PlayerTable(private val plugin: CV, database: CustomDatabase)
         return 0
     }
 
-    fun setPeriod(uuid: String, votes: Int): Boolean
+    fun setMonthlyVotes(uuid: String, votes: Int): Boolean
     {
-        return table.updateData("uuid", uuid, "period", votes)
+        return table.updateData("uuid", uuid, "monthly_votes", votes)
     }
 
     fun getLast(uuid: String): Long
@@ -153,15 +153,24 @@ class PlayerTable(private val plugin: CV, database: CustomDatabase)
 
     private fun migrate()
     {
-        val periodColumn = table.getColumn("period")
-        if (!periodColumn.exists())
+        val monthlyVotesColumn = table.getColumn("monthly_votes")
+        if (!monthlyVotesColumn.exists())
         {
-            if (!periodColumn.create(CustomColumn.DataType.INT))
+            val periodColumn = table.getColumn("period")
+            if (periodColumn.exists())
             {
-                plugin.errorLog("| could not create column 'period'!")
+                val statement =
+                    table.database.connection!!.prepareStatement("ALTER TABLE ${table.name} RENAME COLUMN period TO monthly_votes")
+                table.database.query(statement)
             } else
             {
-                plugin.errorLog("| successfully migrated table 'players'!")
+                if (monthlyVotesColumn.create(CustomColumn.DataType.INT))
+                {
+                    plugin.errorLog("| successfully migrated table 'players'!")
+                } else
+                {
+                    plugin.errorLog("| could not create column 'monthly_votes'!")
+                }
             }
         }
     }
@@ -193,10 +202,10 @@ class PlayerTable(private val plugin: CV, database: CustomDatabase)
                 return topVoters
             }
 
-            if (plugin.config.getBoolean(Settings.MONTHLY_PERIOD.path))
+            if (plugin.config.getBoolean(Settings.MONTHLY_VOTES.path))
             {
                 topVoters.sortWith { x: PlayerData, y: PlayerData ->
-                    var compare = y.period.compareTo(x.period)
+                    var compare = y.monthlyVotes.compareTo(x.monthlyVotes)
                     if (compare == 0)
                     {
                         compare = x.last.compareTo(y.last)
@@ -245,7 +254,7 @@ class PlayerTable(private val plugin: CV, database: CustomDatabase)
                 table.getColumn("votes").create(CustomColumn.DataType.INT)
                 table.getColumn("last").create(CustomColumn.DataType.LONG)
                 table.getColumn("queue").create(CustomColumn.DataType.INT)
-                table.getColumn("period").create(CustomColumn.DataType.INT)
+                table.getColumn("monthly_votes").create(CustomColumn.DataType.INT)
                 plugin.infoLog("| successfully created table 'players'")
                 plugin.infoLog("|")
                 plugin.infoLog("|___successfully connected to database")

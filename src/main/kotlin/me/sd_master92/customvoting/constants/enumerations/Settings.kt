@@ -5,7 +5,7 @@ import me.sd_master92.customvoting.CV
 enum class Settings(val path: String, private val defaultValue: Any? = null)
 {
     MONTHLY_RESET("monthly_reset", false),
-    MONTHLY_PERIOD("monthly_period", false),
+    MONTHLY_VOTES("monthly_votes", false),
     USE_SOUND_EFFECTS("sound_effects", true),
     VOTE_PARTY_COUNTDOWN("vote_party_countdown", 30),
     FIREWORK("firework", true),
@@ -44,6 +44,7 @@ enum class Settings(val path: String, private val defaultValue: Any? = null)
     {
         fun initialize(plugin: CV)
         {
+            migrate(plugin)
             for (setting in values())
             {
                 if (setting.defaultValue != null)
@@ -55,6 +56,15 @@ enum class Settings(val path: String, private val defaultValue: Any? = null)
                 }
             }
             plugin.config.saveConfig()
+        }
+
+        private fun migrate(plugin: CV)
+        {
+            if (plugin.config.contains("monthly_period"))
+            {
+                plugin.config.set("monthly_votes", plugin.config.get("monthly_period"))
+                plugin.config.delete("monthly_period")
+            }
         }
     }
 }

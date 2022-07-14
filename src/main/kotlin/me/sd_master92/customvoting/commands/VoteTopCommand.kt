@@ -35,10 +35,10 @@ class VoteTopCommand(private val plugin: CV) : SimpleCommand(plugin, "votetop")
                     {
                         placeholders["%PLAYER%"] = topVoter.name
                         placeholders["%VOTES%"] = "${topVoter.votes}"
-                        placeholders["%PERIOD%"] = "${topVoter.period}"
-                        if (plugin.config.getBoolean(Settings.MONTHLY_PERIOD.path))
+                        placeholders["%MONTHLY_VOTES%"] = "${topVoter.monthlyVotes}"
+                        if (plugin.config.getBoolean(Settings.MONTHLY_VOTES.path))
                         {
-                            placeholders["%s%"] = if (topVoter.period == 1) "" else "s"
+                            placeholders["%s%"] = if (topVoter.monthlyVotes == 1) "" else "s"
                         } else
                         {
                             placeholders["%s%"] = if (topVoter.votes == 1) "" else "s"

@@ -11,7 +11,7 @@ import org.bukkit.ChatColor
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
-class ClearPeriodVotesCommand(private val plugin: CV) : SimpleCommand(plugin, "clearperiodvotes", true)
+class ClearMonthlyVotesCommand(private val plugin: CV) : SimpleCommand(plugin, "clearmonthlyvotes", true)
 {
     override fun onCommand(sender: CommandSender, args: Array<String>)
     {
@@ -22,16 +22,16 @@ class ClearPeriodVotesCommand(private val plugin: CV) : SimpleCommand(plugin, "c
                 if (plugin.hasDatabaseConnection())
                 {
                     val playerRow = PlayerRow(plugin, sender)
-                    playerRow.clearPeriod()
+                    playerRow.clearMonthlyVotes()
                 } else
                 {
                     val voteFile = VoteFile(sender.uniqueId.toString(), plugin)
-                    voteFile.clearPeriod()
+                    voteFile.clearMonthlyVotes()
                 }
-                sender.sendMessage(ChatColor.GREEN.toString() + "Your period votes have been reset.")
+                sender.sendMessage(ChatColor.GREEN.toString() + "Your monthly votes have been reset.")
             } else
             {
-                sender.sendMessage(ChatColor.RED.toString() + "- /clearperiodvotes <name>")
+                sender.sendMessage(ChatColor.RED.toString() + "- /clearmonthlyvotes <name>")
             }
         } else
         {
@@ -42,12 +42,12 @@ class ClearPeriodVotesCommand(private val plugin: CV) : SimpleCommand(plugin, "c
                 if (plugin.hasDatabaseConnection())
                 {
                     val playerRow = PlayerRow(plugin, playerFile.uuid)
-                    playerRow.clearPeriod()
+                    playerRow.clearMonthlyVotes()
                 } else
                 {
                     val voteFile = VoteFile(playerFile.uuid, plugin)
-                    voteFile.clearPeriod()
-                    sender.sendMessage(ChatColor.AQUA.toString() + voteFile.name + "'s " + ChatColor.GREEN + "period votes have been reset.")
+                    voteFile.clearMonthlyVotes()
+                    sender.sendMessage(ChatColor.AQUA.toString() + voteFile.name + "'s " + ChatColor.GREEN + "monthly votes have been reset.")
                 }
             } else
             {

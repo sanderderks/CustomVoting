@@ -73,12 +73,27 @@ enum class Messages(private val path: String, private val defaultValue: Any)
     {
         fun initialize(plugin: CV)
         {
+            migrate(plugin)
             for (message in values())
             {
                 if (plugin.messages[message.path] == null)
                 {
                     plugin.messages[message.path] = message.defaultValue
                 }
+            }
+            plugin.messages.saveConfig()
+        }
+
+        private fun migrate(plugin: CV)
+        {
+            for (key in plugin.messages.getKeys(true))
+            {
+                val value = plugin.messages.getString(key)
+                if (value?.contains("%PERIOD%") == true)
+                    plugin.messages.set(
+                        key,
+                        value.replace("%PERIOD%", "%MONTHLY_VOTES%")
+                    )
             }
             plugin.messages.saveConfig()
         }

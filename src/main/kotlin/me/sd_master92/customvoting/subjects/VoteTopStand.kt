@@ -182,7 +182,7 @@ class VoteTopStand @JvmOverloads constructor(private val plugin: CV, private val
         {
             placeholders["%PLAYER%"] = voteFile.name
             placeholders["%VOTES%"] = "${voteFile.votes}"
-            placeholders["%PERIOD%"] = "${voteFile.period}"
+            placeholders["%MONTHLY_VOTES%"] = "${voteFile.monthlyVotes}"
             if (CV.CITIZENS && citizen != null && citizen!!.name != voteFile.name)
             {
                 citizen!!.name = voteFile.name
@@ -194,7 +194,7 @@ class VoteTopStand @JvmOverloads constructor(private val plugin: CV, private val
         {
             placeholders["%PLAYER%"] = ChatColor.RED.toString() + "Unknown"
             placeholders["%VOTES%"] = "0"
-            placeholders["%PERIOD%"] = "0"
+            placeholders["%MONTHLY_VOTES%"] = "0"
             if (CV.CITIZENS && citizen != null && citizen!!.name != "Unknown")
             {
                 citizen!!.name = "Unknown"

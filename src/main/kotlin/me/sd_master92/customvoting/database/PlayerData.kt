@@ -8,5 +8,5 @@ class PlayerData(
     override val votes: Int,
     override val last: Long,
     val queue: Int,
-    override val period: Int
+    override val monthlyVotes: Int
 ) : Voter

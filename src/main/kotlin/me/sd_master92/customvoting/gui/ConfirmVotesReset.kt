@@ -15,8 +15,8 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 import kotlin.jvm.internal.Intrinsics
 
 
-class ConfirmVotesReset(private val plugin: CV, private val period: Boolean) :
-    ConfirmGUI(plugin, if (period) "Reset monthly votes?" else "Reset ALL votes?")
+class ConfirmVotesReset(private val plugin: CV, private val monthly: Boolean) :
+    ConfirmGUI(plugin, if (monthly) "Reset monthly votes?" else "Reset ALL votes?")
 {
     override fun onConfirm(event: InventoryClickEvent, player: Player)
     {
@@ -25,17 +25,17 @@ class ConfirmVotesReset(private val plugin: CV, private val period: Boolean) :
         {
             if (plugin.hasDatabaseConnection())
             {
-                if (period)
+                if (monthly)
                 {
-                    PlayerRow(plugin, value.uuid).clearPeriod()
+                    PlayerRow(plugin, value.uuid).clearMonthlyVotes()
                 } else
                 {
                     PlayerRow(plugin, value.uuid).setVotes(0, true)
                 }
             }
-            if (period)
+            if (monthly)
             {
-                VoteFile(value.uuid, plugin).clearPeriod()
+                VoteFile(value.uuid, plugin).clearMonthlyVotes()
             } else
             {
                 VoteFile(value.uuid, plugin).setVotes(0, true)

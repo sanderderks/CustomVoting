@@ -113,7 +113,7 @@ class CV : CustomPlugin(
         infoLog("")
         infoLog("| checking for Vault")
         infoLog("|")
-        if (hasVault())
+        if (server.pluginManager.getPlugin("Vault") != null)
         {
             infoLog("|___Vault found")
             infoLog("")
@@ -167,11 +167,6 @@ class CV : CustomPlugin(
         }
     }
 
-    private fun hasVault(): Boolean
-    {
-        return server.pluginManager.getPlugin("Vault") != null
-    }
-
     private fun setupEconomy(): Boolean
     {
         ECONOMY = server.servicesManager.getRegistration(Economy::class.java)?.provider ?: return false
@@ -189,6 +184,7 @@ class CV : CustomPlugin(
         messages = CustomFile("messages.yml", this)
         data = CustomFile("data.yml", this)
         PlayerFile.init(this)
+        VoteFile.migrateAll()
         Settings.initialize(this)
         Messages.initialize(this)
     }
@@ -255,7 +251,7 @@ class CV : CustomPlugin(
         ReloadCommand(this).register()
         SettingsCommand(this).register()
         SetVotesCommand(this).register()
-        ClearPeriodVotesCommand(this).register()
+        ClearMonthlyVotesCommand(this).register()
         VoteCommand(this).register()
         VotePartyCommand(this).register()
         VotesCommand(this).register()

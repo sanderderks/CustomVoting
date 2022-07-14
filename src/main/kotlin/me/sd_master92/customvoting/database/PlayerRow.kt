@@ -24,13 +24,13 @@ class PlayerRow(private val plugin: CV, override val uuid: String) : Voter
         get() = players?.getName(uuid) ?: "Unknown"
     override val votes: Int
         get() = players?.getVotes(uuid) ?: 0
-    override val period: Int
-        get() = players?.getPeriod(uuid) ?: 0
+    override val monthlyVotes: Int
+        get() = players?.getMonthlyVotes(uuid) ?: 0
 
     fun setVotes(n: Int, update: Boolean)
     {
         players?.setVotes(uuid, n)
-        players?.setPeriod(uuid, 0)
+        players?.setMonthlyVotes(uuid, 0)
         players?.setLast(uuid)
         if (update)
         {
@@ -39,9 +39,9 @@ class PlayerRow(private val plugin: CV, override val uuid: String) : Voter
         }
     }
 
-    fun clearPeriod()
+    fun clearMonthlyVotes()
     {
-        players?.setPeriod(uuid, 0)
+        players?.setMonthlyVotes(uuid, 0)
         VoteTopSign.updateAll(plugin)
         VoteTopStand.updateAll(plugin)
     }
@@ -50,7 +50,7 @@ class PlayerRow(private val plugin: CV, override val uuid: String) : Voter
     {
         val votesBefore = votes
         players?.setVotes(uuid, votes + 1)
-        players?.setPeriod(uuid, period + 1)
+        players?.setMonthlyVotes(uuid, monthlyVotes + 1)
         players?.setLast(uuid)
         if (update)
         {

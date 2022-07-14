@@ -38,9 +38,9 @@ class GeneralSettings(private val plugin: CV) : GUI(plugin, "General Settings", 
             Material.TNT               ->
             {
                 SoundType.CHANGE.play(plugin, player)
-                plugin.config[Settings.MONTHLY_PERIOD.path] = !plugin.config.getBoolean(Settings.MONTHLY_PERIOD.path)
+                plugin.config[Settings.MONTHLY_VOTES.path] = !plugin.config.getBoolean(Settings.MONTHLY_VOTES.path)
                 plugin.config.saveConfig()
-                event.currentItem = MonthlyPeriodItem(plugin)
+                event.currentItem = MonthlyVotesItem(plugin)
             }
             Material.MUSIC_DISC_CAT    ->
             {
@@ -124,7 +124,7 @@ class GeneralSettings(private val plugin: CV) : GUI(plugin, "General Settings", 
     init
     {
         inventory.addItem(MonthlyResetItem(plugin))
-        inventory.addItem(MonthlyPeriodItem(plugin))
+        inventory.addItem(MonthlyVotesItem(plugin))
         inventory.addItem(SoundEffectsItem(plugin))
         inventory.addItem(FireworkItem(plugin))
         inventory.addItem(LuckyVoteItem(plugin))
@@ -178,9 +178,9 @@ class MonthlyResetItem(plugin: CV) : StatusItem(
     plugin.config, Settings.MONTHLY_RESET.path
 )
 
-class MonthlyPeriodItem(plugin: CV) : StatusItem(
+class MonthlyVotesItem(plugin: CV) : StatusItem(
     Material.TNT, "Monthly Votes",
-    plugin.config, Settings.MONTHLY_PERIOD.path
+    plugin.config, Settings.MONTHLY_VOTES.path
 )
 
 class LuckyVoteItem(plugin: CV) : StatusItem(

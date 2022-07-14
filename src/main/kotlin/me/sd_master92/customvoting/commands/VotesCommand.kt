@@ -24,10 +24,10 @@ class VotesCommand(private val plugin: CV) : SimpleCommand(plugin, "votes")
                 val voter: Voter =
                     if (plugin.hasDatabaseConnection()) PlayerRow(plugin, sender) else VoteFile(sender, plugin)
                 placeholders["%VOTES%"] = "${voter.votes}"
-                placeholders["%PERIOD%"] = "${voter.period}"
-                if (plugin.config.getBoolean(Settings.MONTHLY_PERIOD.path))
+                placeholders["%MONTHLY_VOTES%"] = "${voter.monthlyVotes}"
+                if (plugin.config.getBoolean(Settings.MONTHLY_VOTES.path))
                 {
-                    placeholders["%s%"] = if (VoteFile(sender, plugin).period == 1) "" else "s"
+                    placeholders["%s%"] = if (VoteFile(sender, plugin).monthlyVotes == 1) "" else "s"
                 } else
                 {
                     placeholders["%s%"] = if (VoteFile(sender, plugin).votes == 1) "" else "s"
@@ -47,10 +47,10 @@ class VotesCommand(private val plugin: CV) : SimpleCommand(plugin, "votes")
                 val placeholders = HashMap<String, String>()
                 placeholders["%PLAYER%"] = voteFile.name
                 placeholders["%VOTES%"] = "${voteFile.votes}"
-                placeholders["%PERIOD%"] = "${voteFile.period}"
-                if (plugin.config.getBoolean(Settings.MONTHLY_PERIOD.path))
+                placeholders["%MONTHLY_VOTES%"] = "${voteFile.monthlyVotes}"
+                if (plugin.config.getBoolean(Settings.MONTHLY_VOTES.path))
                 {
-                    placeholders["%s%"] = if (voteFile.period == 1) "" else "s"
+                    placeholders["%s%"] = if (voteFile.monthlyVotes == 1) "" else "s"
                 } else
                 {
                     placeholders["%s%"] = if (voteFile.votes == 1) "" else "s"
