@@ -1,241 +1,118 @@
 package me.sd_master92.customvoting.database
 
-import me.sd_master92.core.database.CustomColumn
-import me.sd_master92.core.database.CustomDatabase
-import me.sd_master92.core.database.CustomTable
 import me.sd_master92.customvoting.CV
+import me.sd_master92.customvoting.constants.TopVoter
+import me.sd_master92.customvoting.constants.Voter
+import me.sd_master92.customvoting.subjects.VoteTopSign
+import me.sd_master92.customvoting.subjects.VoteTopStand
+import org.bukkit.entity.Player
 
-class PlayerTable(private val plugin: CV, database: CustomDatabase)
+class PlayerTable(private val plugin: CV, override val uuid: String) : Voter
 {
-    val table: CustomTable
+    private val players: PlayerDatabase? = plugin.playerDatabase
 
-    private fun addPlayer(uuid: String): Boolean
+    override val name: String
+        get() = players?.getName(uuid) ?: "Unknown"
+    override val votes: Int
+        get() = players?.getVotes(uuid) ?: 0
+    override val monthlyVotes: Int
+        get() = players?.getMonthlyVotes(uuid) ?: 0
+    override val isOpUser: Boolean
+        get() = players?.getIsOp(uuid) == true
+    override val last: Long
+        get() = players?.getLast(uuid) ?: 0
+    val queue: Int
+        get() = players?.getQueue(uuid) ?: 0
+
+    constructor(plugin: CV, player: Player) : this(plugin, player.uniqueId.toString())
     {
-        return table.insertData(
-            arrayOf("uuid", "votes", "last", "queue", "monthly_votes", "is_op"),
-            arrayOf(uuid, 0, 0, 0, 0, false)
-        )
+        players?.setName(player.uniqueId.toString(), player.name)
     }
 
-    fun getUuid(name: String): String
+    private fun register()
     {
-        val result = table.getData("name", name)
-        try
+        players?.getVotes(uuid)
+        ALL[uuid] = this
+    }
+
+    override fun setVotes(n: Int, update: Boolean)
+    {
+        players?.setVotes(uuid, n)
+        players?.setMonthlyVotes(uuid, 0)
+        players?.setLast(uuid)
+        if (update)
         {
-            if (result.next())
-            {
-                return result.getString("uuid")
-            }
-        } catch (e: Exception)
-        {
-            plugin.errorLog("Could not retrieve uuid of $name from database", e)
+            VoteTopSign.updateAll(plugin)
+            VoteTopStand.updateAll(plugin)
         }
-        return "Unknown"
     }
 
-    fun getName(uuid: String): String
+    override fun clearMonthlyVotes()
     {
-        val result = table.getData("uuid", uuid)
-        try
+        players?.setMonthlyVotes(uuid, 0)
+        VoteTopSign.updateAll(plugin)
+        VoteTopStand.updateAll(plugin)
+    }
+
+    override fun addVote(update: Boolean): Boolean
+    {
+        val votesBefore = votes
+        players?.setVotes(uuid, votes + 1)
+        players?.setMonthlyVotes(uuid, monthlyVotes + 1)
+        players?.setLast(uuid)
+        if (update)
         {
-            if (result.next())
-            {
-                return result.getString("name")
-            }
-        } catch (e: Exception)
-        {
-            plugin.errorLog("Could not retrieve name of $uuid from database", e)
+            VoteTopSign.updateAll(plugin)
+            VoteTopStand.updateAll(plugin)
         }
-        return "Unknown"
+        return votesBefore < votes
     }
 
-    fun setName(uuid: String, name: String): Boolean
+    override fun setIsOpUser(isOpUser: Boolean): Boolean
     {
-        return table.updateData("uuid", uuid, "name", name)
+        return players?.setIsOp(uuid, isOpUser) ?: false
     }
 
-    fun getVotes(uuid: String): Int
+    fun clearQueue(): Boolean
     {
-        val result = table.getData("uuid", uuid)
-        try
+        return players?.setQueue(uuid, 0) ?: false
+    }
+
+    fun addQueue(): Boolean
+    {
+        return players?.setQueue(uuid, queue + 1) ?: false
+    }
+
+    companion object : TopVoter
+    {
+        private var ALL: MutableMap<String, PlayerTable> = HashMap()
+        private var initialized = false
+
+        fun init(plugin: CV)
         {
-            if (result.next())
+            if (!initialized)
             {
-                return result.getInt("votes")
-            } else
-            {
-                addPlayer(uuid)
-            }
-        } catch (e: Exception)
-        {
-            plugin.errorLog("Could not retrieve votes of $uuid from database", e)
-        }
-        return 0
-    }
-
-    fun setVotes(uuid: String, votes: Int): Boolean
-    {
-        return table.updateData("uuid", uuid, "votes", votes)
-    }
-
-    fun getMonthlyVotes(uuid: String): Int
-    {
-        val result = table.getData("uuid", uuid)
-        try
-        {
-            if (result.next())
-            {
-                return result.getInt("monthly_votes")
-            } else
-            {
-                addPlayer(uuid)
-            }
-        } catch (e: Exception)
-        {
-            plugin.errorLog("Could not retrieve period votes of $uuid from database", e)
-        }
-        return 0
-    }
-
-    fun setMonthlyVotes(uuid: String, votes: Int): Boolean
-    {
-        return table.updateData("uuid", uuid, "monthly_votes", votes)
-    }
-
-    fun getLast(uuid: String): Long
-    {
-        val result = table.getData("uuid", uuid)
-        try
-        {
-            if (result.next())
-            {
-                return result.getLong("last")
-            } else
-            {
-                addPlayer(uuid)
-            }
-        } catch (e: Exception)
-        {
-            plugin.errorLog("Could not retrieve last timestamp of $uuid from database", e)
-        }
-        return 0
-    }
-
-    fun setLast(uuid: String): Boolean
-    {
-        return table.updateData("uuid", uuid, "last", System.currentTimeMillis())
-    }
-
-    fun getQueue(uuid: String): Int
-    {
-        val result = table.getData("uuid", uuid)
-        try
-        {
-            if (result.next())
-            {
-                return result.getInt("queue")
-            } else
-            {
-                addPlayer(uuid)
-            }
-        } catch (e: Exception)
-        {
-            plugin.errorLog("Could not retrieve queue of $uuid from database", e)
-        }
-        return 0
-    }
-
-    fun setQueue(uuid: String, queue: Int): Boolean
-    {
-        return table.updateData("uuid", uuid, "queue", queue)
-    }
-
-    fun getIsOp(uuid: String): Boolean
-    {
-        val result = table.getData("uuid", uuid)
-        try
-        {
-            if (result.next())
-            {
-                return result.getBoolean("is_op")
-            }
-        } catch (e: Exception)
-        {
-            plugin.errorLog("Could not retrieve op status of $uuid from database", e)
-        }
-        return false
-    }
-
-    fun setIsOp(uuid: String, isOp: Boolean): Boolean
-    {
-        return table.updateData("uuid", uuid, "is_op", isOp)
-    }
-
-    private fun migrate()
-    {
-        val monthlyVotesColumn = table.getColumn("monthly_votes")
-        if (!monthlyVotesColumn.exists())
-        {
-            val periodColumn = table.getColumn("period")
-            if (periodColumn.exists())
-            {
-                val statement =
-                    table.database.connection!!.prepareStatement("ALTER TABLE ${table.name} RENAME COLUMN period TO monthly_votes")
-                table.database.query(statement)
-            } else
-            {
-                if (monthlyVotesColumn.create(CustomColumn.DataType.INT))
+                val result = plugin.playerDatabase?.table?.getAll()
+                if (result != null)
                 {
-                    plugin.errorLog("| successfully added column 'monthly_votes'!")
-                } else
-                {
-                    plugin.errorLog("| could not create column 'monthly_votes'!")
+                    while (result.next())
+                    {
+                        val voter = PlayerTable(plugin, result.getString("uuid"))
+                        ALL[voter.uuid] = voter
+                    }
                 }
+                initialized = true
             }
         }
-        val isOpColumn = table.getColumn("is_op")
-        if (!isOpColumn.exists())
+
+        override fun getAll(plugin: CV): MutableList<Voter>
         {
-            if (isOpColumn.create(CustomColumn.DataType.BOOLEAN))
-            {
-                plugin.errorLog("| successfully added column 'is_op'!")
-            } else
-            {
-                plugin.errorLog("| could not create column 'is_op'!")
-            }
+            return ALL.values.toMutableList()
         }
     }
 
     init
     {
-        table = database.getTable("players")
-        if (!table.exists())
-        {
-            if (!table.create("uuid", CustomColumn.DataType.VARCHAR_PRIMARY))
-            {
-                plugin.errorLog("| could not create table 'players'")
-                plugin.errorLog("|")
-                plugin.errorLog("|___database disabled")
-            } else
-            {
-                table.getColumn("name").create(CustomColumn.DataType.VARCHAR)
-                table.getColumn("votes").create(CustomColumn.DataType.INT)
-                table.getColumn("last").create(CustomColumn.DataType.LONG)
-                table.getColumn("queue").create(CustomColumn.DataType.INT)
-                table.getColumn("monthly_votes").create(CustomColumn.DataType.INT)
-                plugin.infoLog("| successfully created table 'players'")
-                plugin.infoLog("|")
-                plugin.infoLog("|___successfully connected to database")
-                PlayerRow.init(plugin)
-            }
-        } else
-        {
-            plugin.infoLog("| successfully located table 'players'")
-            plugin.infoLog("|")
-            migrate()
-            plugin.infoLog("|")
-            plugin.infoLog("|___successfully connected to database")
-            PlayerRow.init(plugin)
-        }
+        register()
     }
 }

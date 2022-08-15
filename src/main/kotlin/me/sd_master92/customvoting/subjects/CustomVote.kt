@@ -10,7 +10,7 @@ import me.sd_master92.customvoting.constants.enumerations.ItemRewardType
 import me.sd_master92.customvoting.constants.enumerations.Logger
 import me.sd_master92.customvoting.constants.enumerations.Messages
 import me.sd_master92.customvoting.constants.enumerations.Settings
-import me.sd_master92.customvoting.database.PlayerRow
+import me.sd_master92.customvoting.database.PlayerTable
 import me.sd_master92.customvoting.helpers.ParticleHelper
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
@@ -70,9 +70,9 @@ class CustomVote(
 
     private fun queue()
     {
-        if (plugin.hasDatabaseConnection() && plugin.playerTable != null)
+        if (plugin.hasDatabaseConnection() && plugin.playerDatabase != null)
         {
-            if (PlayerRow(plugin, plugin.playerTable!!.getUuid(username)).addQueue())
+            if (PlayerTable(plugin, plugin.playerDatabase!!.getUuid(username)).addQueue())
             {
                 Logger.INFO.log("Added vote to database queue", logger)
             } else
@@ -103,7 +103,7 @@ class CustomVote(
             {
                 val last: Long = if (plugin.hasDatabaseConnection())
                 {
-                    PlayerRow(plugin, player.uniqueId.toString()).last
+                    PlayerTable(plugin, player.uniqueId.toString()).last
                 } else
                 {
                     VoteFile(player.uniqueId.toString(), plugin).last

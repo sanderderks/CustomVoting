@@ -6,7 +6,7 @@ import me.sd_master92.customvoting.constants.Data
 import me.sd_master92.customvoting.constants.enumerations.Messages
 import me.sd_master92.customvoting.constants.enumerations.Settings
 import me.sd_master92.customvoting.constants.enumerations.SoundType
-import me.sd_master92.customvoting.database.PlayerRow
+import me.sd_master92.customvoting.database.PlayerTable
 import me.sd_master92.customvoting.gui.voteparty.VotePartyRewards
 import me.sd_master92.customvoting.sendText
 import me.sd_master92.customvoting.subjects.CustomVote
@@ -54,17 +54,23 @@ class PlayerListener(private val plugin: CV) : Listener
         val queue: MutableList<String> = ArrayList()
         if (plugin.hasDatabaseConnection())
         {
-            val playerRow = PlayerRow(plugin, player)
-            for (i in 0 until playerRow.queue)
+            val playerTable = PlayerTable(plugin, player)
+            for (i in 0 until playerTable.queue)
             {
                 queue.add("unknown.com")
             }
-            playerRow.clearQueue()
+            if (!playerTable.clearQueue())
+            {
+                plugin.errorLog("failed to delete database queue of ${player.uniqueId}|${player.name}")
+            }
         } else
         {
             val voteFile = VoteFile(player, plugin)
             queue.addAll(voteFile.queue)
-            voteFile.clearQueue()
+            if (!voteFile.clearQueue())
+            {
+                plugin.errorLog("failed to delete file queue of ${player.uniqueId}|${player.name}")
+            }
         }
         if (queue.isNotEmpty())
         {

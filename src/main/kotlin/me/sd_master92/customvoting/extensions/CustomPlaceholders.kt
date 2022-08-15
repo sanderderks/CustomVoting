@@ -6,7 +6,7 @@ import me.sd_master92.customvoting.VoteFile
 import me.sd_master92.customvoting.constants.Data
 import me.sd_master92.customvoting.constants.Voter
 import me.sd_master92.customvoting.constants.enumerations.Settings
-import me.sd_master92.customvoting.database.PlayerRow
+import me.sd_master92.customvoting.database.PlayerTable
 import org.bukkit.entity.Player
 
 class CustomPlaceholders(private val plugin: CV) : PlaceholderExpansion()
@@ -42,7 +42,7 @@ class CustomPlaceholders(private val plugin: CV) : PlaceholderExpansion()
         {
             when (params)
             {
-                SERVER_VOTES                        ->
+                SERVER_VOTES ->
                 {
                     var total = 0
                     for (voter in Voter.getTopVoters(plugin))
@@ -51,44 +51,56 @@ class CustomPlaceholders(private val plugin: CV) : PlaceholderExpansion()
                     }
                     return "$total"
                 }
-                PLAYER_VOTES                        ->
+
+                PLAYER_VOTES ->
                 {
                     if (player != null)
                     {
                         val voter =
-                            if (plugin.hasDatabaseConnection()) PlayerRow(plugin, player) else VoteFile(player, plugin)
+                            if (plugin.hasDatabaseConnection()) PlayerTable(plugin, player) else VoteFile(
+                                player,
+                                plugin
+                            )
                         return "${voter.votes}"
                     }
                     return "0"
                 }
+
                 PLAYER_PERIOD, PLAYER_MONTHLY_VOTES ->
                 {
                     if (player != null)
                     {
                         val voter =
-                            if (plugin.hasDatabaseConnection()) PlayerRow(plugin, player) else VoteFile(player, plugin)
+                            if (plugin.hasDatabaseConnection()) PlayerTable(plugin, player) else VoteFile(
+                                player,
+                                plugin
+                            )
                         return "${voter.monthlyVotes}"
                     }
                     return "0"
                 }
-                VOTE_PARTY_TOTAL                    ->
+
+                VOTE_PARTY_TOTAL ->
                 {
                     val total = plugin.config.getInt(Settings.VOTES_REQUIRED_FOR_VOTE_PARTY.path)
                     return "$total"
                 }
-                VOTE_PARTY_CURRENT                  ->
+
+                VOTE_PARTY_CURRENT ->
                 {
                     val current = plugin.data.getInt(Data.CURRENT_VOTES)
                     return "$current"
                 }
-                VOTE_PARTY_UNTIL                    ->
+
+                VOTE_PARTY_UNTIL ->
                 {
                     val total = plugin.config.getInt(Settings.VOTES_REQUIRED_FOR_VOTE_PARTY.path)
                     val current = plugin.data.getInt(Data.CURRENT_VOTES)
                     val until = total - current
                     return "$until"
                 }
-                else                                ->
+
+                else ->
                 {
                     if (params.contains(PLAYER_VOTES))
                     {

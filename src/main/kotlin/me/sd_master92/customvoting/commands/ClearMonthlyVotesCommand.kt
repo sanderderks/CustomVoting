@@ -5,7 +5,7 @@ import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.VoteFile
 import me.sd_master92.customvoting.constants.Voter
 import me.sd_master92.customvoting.constants.enumerations.Messages
-import me.sd_master92.customvoting.database.PlayerRow
+import me.sd_master92.customvoting.database.PlayerTable
 import me.sd_master92.customvoting.sendText
 import org.bukkit.ChatColor
 import org.bukkit.command.CommandSender
@@ -21,8 +21,8 @@ class ClearMonthlyVotesCommand(private val plugin: CV) : SimpleCommand(plugin, "
             {
                 if (plugin.hasDatabaseConnection())
                 {
-                    val playerRow = PlayerRow(plugin, sender)
-                    playerRow.clearMonthlyVotes()
+                    val playerTable = PlayerTable(plugin, sender)
+                    playerTable.clearMonthlyVotes()
                 } else
                 {
                     val voteFile = VoteFile(sender.uniqueId.toString(), plugin)

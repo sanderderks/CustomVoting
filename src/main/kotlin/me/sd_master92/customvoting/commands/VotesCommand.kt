@@ -7,7 +7,7 @@ import me.sd_master92.customvoting.VoteFile
 import me.sd_master92.customvoting.constants.Voter
 import me.sd_master92.customvoting.constants.enumerations.Messages
 import me.sd_master92.customvoting.constants.enumerations.Settings
-import me.sd_master92.customvoting.database.PlayerRow
+import me.sd_master92.customvoting.database.PlayerTable
 import me.sd_master92.customvoting.sendText
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -22,7 +22,7 @@ class VotesCommand(private val plugin: CV) : SimpleCommand(plugin, "votes")
             {
                 val placeholders = HashMap<String, String>()
                 val voter: Voter =
-                    if (plugin.hasDatabaseConnection()) PlayerRow(plugin, sender) else VoteFile(sender, plugin)
+                    if (plugin.hasDatabaseConnection()) PlayerTable(plugin, sender) else VoteFile(sender, plugin)
                 placeholders["%VOTES%"] = "${voter.votes}"
                 placeholders["%MONTHLY_VOTES%"] = "${voter.monthlyVotes}"
                 if (plugin.config.getBoolean(Settings.MONTHLY_VOTES.path))
@@ -40,7 +40,7 @@ class VotesCommand(private val plugin: CV) : SimpleCommand(plugin, "votes")
             val playerFile = PlayerFile.getByName(name)
             if (playerFile != null)
             {
-                val voteFile = if (plugin.hasDatabaseConnection()) PlayerRow(
+                val voteFile = if (plugin.hasDatabaseConnection()) PlayerTable(
                     plugin,
                     playerFile.uuid
                 ) else VoteFile(playerFile.uuid, plugin)

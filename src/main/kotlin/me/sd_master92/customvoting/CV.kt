@@ -8,7 +8,7 @@ import me.sd_master92.customvoting.commands.*
 import me.sd_master92.customvoting.commands.voteparty.VotePartyCommand
 import me.sd_master92.customvoting.constants.enumerations.Messages
 import me.sd_master92.customvoting.constants.enumerations.Settings
-import me.sd_master92.customvoting.database.PlayerTable
+import me.sd_master92.customvoting.database.PlayerDatabase
 import me.sd_master92.customvoting.extensions.CustomPlaceholders
 import me.sd_master92.customvoting.listeners.PlayerListener
 import me.sd_master92.customvoting.listeners.VoteTopListener
@@ -28,7 +28,7 @@ class CV : CustomPlugin(
     28103
 )
 {
-    var playerTable: PlayerTable? = null
+    var playerDatabase: PlayerDatabase? = null
         private set
     lateinit var messages: CustomFile
         private set
@@ -54,7 +54,7 @@ class CV : CustomPlugin(
     {
         if (hasDatabaseConnection())
         {
-            playerTable!!.table.database.disconnect()
+            playerDatabase!!.table.database.disconnect()
         }
     }
 
@@ -202,7 +202,7 @@ class CV : CustomPlugin(
                 errorLog("|___could not connect to database")
             } else
             {
-                playerTable = PlayerTable(this, database)
+                playerDatabase = PlayerDatabase(this, database)
             }
         } else
         {
@@ -228,7 +228,7 @@ class CV : CustomPlugin(
     {
         return if (useDatabase())
         {
-            playerTable?.table?.database?.isConnected ?: false
+            playerDatabase?.table?.database?.isConnected ?: false
         } else
         {
             false

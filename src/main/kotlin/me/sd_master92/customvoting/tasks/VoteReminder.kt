@@ -5,7 +5,7 @@ import me.sd_master92.customvoting.VoteFile
 import me.sd_master92.customvoting.constants.enumerations.Messages
 import me.sd_master92.customvoting.constants.enumerations.Settings
 import me.sd_master92.customvoting.constants.enumerations.SoundType
-import me.sd_master92.customvoting.database.PlayerRow
+import me.sd_master92.customvoting.database.PlayerTable
 import me.sd_master92.customvoting.sendTexts
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
@@ -26,7 +26,7 @@ class VoteReminder(private val plugin: CV)
                     {
                         val voter = if (plugin.hasDatabaseConnection())
                         {
-                            PlayerRow(plugin, player.uniqueId.toString())
+                            PlayerTable(plugin, player.uniqueId.toString())
                         } else
                         {
                             VoteFile(player.uniqueId.toString(), plugin)

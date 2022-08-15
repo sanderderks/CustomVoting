@@ -3,7 +3,7 @@ package me.sd_master92.customvoting.constants
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.VoteFile
 import me.sd_master92.customvoting.constants.enumerations.Settings
-import me.sd_master92.customvoting.database.PlayerRow
+import me.sd_master92.customvoting.database.PlayerTable
 import org.bukkit.entity.Player
 
 interface Voter
@@ -24,7 +24,7 @@ interface Voter
     {
         fun getTopVoters(plugin: CV): List<Voter>
         {
-            val type = if (plugin.hasDatabaseConnection()) PlayerRow else VoteFile
+            val type = if (plugin.hasDatabaseConnection()) PlayerTable else VoteFile
             val topVoters = type.getAll(plugin)
             topVoters.sortWith { x: Voter, y: Voter ->
                 var compare = if (plugin.config.getBoolean(Settings.MONTHLY_VOTES.path))
@@ -58,7 +58,7 @@ interface Voter
         {
             return if (plugin.hasDatabaseConnection())
             {
-                PlayerRow(plugin, player)
+                PlayerTable(plugin, player)
             } else
             {
                 VoteFile(player, plugin)
