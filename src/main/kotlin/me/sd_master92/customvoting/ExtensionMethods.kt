@@ -105,12 +105,18 @@ fun Player.hasPermissionRewardsByGroup(plugin: CV): Boolean
 {
     if (CV.PERMISSION != null)
     {
-        for (group in CV.PERMISSION!!.getPlayerGroups(this))
+        try
         {
-            if (plugin.config.getStringList(Settings.ENABLED_OP_GROUPS.path).contains(group.lowercase()))
+            for (group in CV.PERMISSION!!.getPlayerGroups(this))
             {
-                return true
+                if (plugin.config.getStringList(Settings.ENABLED_OP_GROUPS.path).contains(group.lowercase()))
+                {
+                    return true
+                }
             }
+        } catch (e: Exception)
+        {
+            return false
         }
     }
     return false
