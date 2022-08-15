@@ -14,10 +14,13 @@ interface Voter
     val monthlyVotes: Int
     val last: Long
     val isOpUser: Boolean
+    val queue: List<String>
 
     fun setVotes(n: Int, update: Boolean)
     fun addVote(update: Boolean): Boolean
+    fun addQueue(site: String): Boolean
     fun clearMonthlyVotes()
+    fun clearQueue(): Boolean
     fun setIsOpUser(isOpUser: Boolean): Boolean
 
     companion object

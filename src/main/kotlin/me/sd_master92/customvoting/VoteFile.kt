@@ -23,7 +23,7 @@ class VoteFile : Voter
         get() = playerFile.getTimeStamp("last")
     override val isOpUser: Boolean
         get() = playerFile.getBoolean("opUser")
-    val queue: List<String>
+    override val queue: List<String>
         get() = plugin.data.getStringList(Data.VOTE_QUEUE + "." + uuid)
 
     constructor(uuid: String, plugin: CV)
@@ -91,16 +91,16 @@ class VoteFile : Voter
         return playerFile.saveConfig()
     }
 
-    fun clearQueue(): Boolean
+    override fun clearQueue(): Boolean
     {
         return plugin.data.delete(Data.VOTE_QUEUE + "." + uuid)
     }
 
-    fun addQueue(service: String): Boolean
+    override fun addQueue(site: String): Boolean
     {
         val path = Data.VOTE_QUEUE + "." + uuid
         val queue = plugin.data.getStringList(path)
-        queue.add(service)
+        queue.add(site)
         plugin.data[path] = queue
         return plugin.data.saveConfig()
     }

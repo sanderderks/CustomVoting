@@ -2,7 +2,6 @@ package me.sd_master92.customvoting.subjects
 
 import com.vexsoftware.votifier.model.Vote
 import me.sd_master92.core.appendWhenTrue
-import me.sd_master92.core.file.PlayerFile
 import me.sd_master92.customvoting.*
 import me.sd_master92.customvoting.constants.Data
 import me.sd_master92.customvoting.constants.Voter
@@ -33,7 +32,7 @@ class CustomVote(
         val player = Bukkit.getPlayer(username)
         if (player == null)
         {
-            Logger.INFO.log("The player is not online, adding vote to queue", logger)
+            plugin.infoLog("The player is not online, adding vote to queue")
             queue()
             Logger.ERROR.log("End of log", logger)
         } else if (plugin.config.getStringList(Settings.DISABLED_WORLDS.path).contains(player.world.name))
@@ -70,28 +69,19 @@ class CustomVote(
 
     private fun queue()
     {
-        if (plugin.hasDatabaseConnection() && plugin.playerDatabase != null)
+        val voter = Voter.getByName(plugin, username)
+        if (voter != null)
         {
-            if (PlayerTable(plugin, plugin.playerDatabase!!.getUuid(username)).addQueue())
+            if (voter.addQueue(serviceName))
             {
                 Logger.INFO.log("Added vote to database queue", logger)
             } else
             {
-                Logger.ERROR.log("Could not add vote to database queue", logger)
+                Logger.ERROR.log("Could not add vote to queue", logger)
             }
         } else
         {
-            val playerFile = PlayerFile.getByName(username)
-            if (playerFile != null)
-            {
-                if (VoteFile(playerFile.uuid, plugin).addQueue(serviceName))
-                {
-                    Logger.INFO.log("Added vote to player file queue", logger)
-                } else
-                {
-                    Logger.ERROR.log("Could not add vote to player file queue", logger)
-                }
-            }
+            plugin.errorLog("A player with name $username does not exist")
         }
     }
 

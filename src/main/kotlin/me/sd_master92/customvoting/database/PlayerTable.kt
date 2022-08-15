@@ -21,8 +21,8 @@ class PlayerTable(private val plugin: CV, override val uuid: String) : Voter
         get() = players?.getIsOp(uuid) == true
     override val last: Long
         get() = players?.getLast(uuid) ?: 0
-    val queue: Int
-        get() = players?.getQueue(uuid) ?: 0
+    override val queue: List<String>
+        get() = players?.getQueue(uuid) ?: listOf()
 
     constructor(plugin: CV, player: Player) : this(plugin, player.uniqueId.toString())
     {
@@ -73,14 +73,14 @@ class PlayerTable(private val plugin: CV, override val uuid: String) : Voter
         return players?.setIsOp(uuid, isOpUser) ?: false
     }
 
-    fun clearQueue(): Boolean
+    override fun clearQueue(): Boolean
     {
-        return players?.setQueue(uuid, 0) ?: false
+        return players?.clearQueue(uuid) ?: false
     }
 
-    fun addQueue(): Boolean
+    override fun addQueue(site: String): Boolean
     {
-        return players?.setQueue(uuid, queue + 1) ?: false
+        return players?.addQueue(uuid, site) ?: false
     }
 
     companion object : TopVoter
@@ -92,7 +92,7 @@ class PlayerTable(private val plugin: CV, override val uuid: String) : Voter
         {
             if (!initialized)
             {
-                val result = plugin.playerDatabase?.table?.getAll()
+                val result = plugin.playerDatabase?.playersTable?.getAll()
                 if (result != null)
                 {
                     while (result.next())

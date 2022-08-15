@@ -7,35 +7,20 @@ import me.sd_master92.customvoting.CV
 
 class PlayerDatabase(private val plugin: CV, database: CustomDatabase)
 {
-    val table: CustomTable
+    private val queueTable: CustomTable
+    val playersTable: CustomTable
 
     private fun addPlayer(uuid: String): Boolean
     {
-        return table.insertData(
-            arrayOf("uuid", "votes", "last", "queue", "monthly_votes", "is_op"),
-            arrayOf(uuid, 0, 0, 0, 0, 0)
+        return playersTable.insertData(
+            arrayOf("uuid", "votes", "last", "monthly_votes", "is_op"),
+            arrayOf(uuid, 0, 0, 0, 0)
         )
-    }
-
-    fun getUuid(name: String): String
-    {
-        val result = table.getData("name", name)
-        try
-        {
-            if (result.next())
-            {
-                return result.getString("uuid")
-            }
-        } catch (e: Exception)
-        {
-            plugin.errorLog("Could not retrieve uuid of $name from database", e)
-        }
-        return "Unknown"
     }
 
     fun getName(uuid: String): String
     {
-        val result = table.getData("uuid", uuid)
+        val result = playersTable.getData("uuid", uuid)
         try
         {
             if (result.next())
@@ -51,12 +36,12 @@ class PlayerDatabase(private val plugin: CV, database: CustomDatabase)
 
     fun setName(uuid: String, name: String): Boolean
     {
-        return table.updateData("uuid", uuid, "name", name)
+        return playersTable.updateData("uuid", uuid, "name", name)
     }
 
     fun getVotes(uuid: String): Int
     {
-        val result = table.getData("uuid", uuid)
+        val result = playersTable.getData("uuid", uuid)
         try
         {
             if (result.next())
@@ -75,12 +60,12 @@ class PlayerDatabase(private val plugin: CV, database: CustomDatabase)
 
     fun setVotes(uuid: String, votes: Int): Boolean
     {
-        return table.updateData("uuid", uuid, "votes", votes)
+        return playersTable.updateData("uuid", uuid, "votes", votes)
     }
 
     fun getMonthlyVotes(uuid: String): Int
     {
-        val result = table.getData("uuid", uuid)
+        val result = playersTable.getData("uuid", uuid)
         try
         {
             if (result.next())
@@ -99,12 +84,12 @@ class PlayerDatabase(private val plugin: CV, database: CustomDatabase)
 
     fun setMonthlyVotes(uuid: String, votes: Int): Boolean
     {
-        return table.updateData("uuid", uuid, "monthly_votes", votes)
+        return playersTable.updateData("uuid", uuid, "monthly_votes", votes)
     }
 
     fun getLast(uuid: String): Long
     {
-        val result = table.getData("uuid", uuid)
+        val result = playersTable.getData("uuid", uuid)
         try
         {
             if (result.next())
@@ -123,36 +108,39 @@ class PlayerDatabase(private val plugin: CV, database: CustomDatabase)
 
     fun setLast(uuid: String): Boolean
     {
-        return table.updateData("uuid", uuid, "last", System.currentTimeMillis())
+        return playersTable.updateData("uuid", uuid, "last", System.currentTimeMillis())
     }
 
-    fun getQueue(uuid: String): Int
+    fun getQueue(uuid: String): List<String>
     {
-        val result = table.getData("uuid", uuid)
+        val result = queueTable.getData("uuid", uuid)
+        val queue = mutableListOf<String>()
         try
         {
-            if (result.next())
+            while (result.next())
             {
-                return result.getInt("queue")
-            } else
-            {
-                addPlayer(uuid)
+                queue.add(result.getString("site"))
             }
         } catch (e: Exception)
         {
             plugin.errorLog("Could not retrieve queue of $uuid from database", e)
         }
-        return 0
+        return queue
     }
 
-    fun setQueue(uuid: String, queue: Int): Boolean
+    fun addQueue(uuid: String, site: String): Boolean
     {
-        return table.updateData("uuid", uuid, "queue", queue)
+        return queueTable.insertData(arrayOf("uuid", "site"), arrayOf(uuid, site))
+    }
+
+    fun clearQueue(uuid: String): Boolean
+    {
+        return queueTable.deleteData("uuid", uuid)
     }
 
     fun getIsOp(uuid: String): Boolean
     {
-        val result = table.getData("uuid", uuid)
+        val result = playersTable.getData("uuid", uuid)
         try
         {
             if (result.next())
@@ -168,37 +156,37 @@ class PlayerDatabase(private val plugin: CV, database: CustomDatabase)
 
     fun setIsOp(uuid: String, isOp: Boolean): Boolean
     {
-        return table.updateData("uuid", uuid, "is_op", if (isOp) 1 else 0)
+        return playersTable.updateData("uuid", uuid, "is_op", if (isOp) 1 else 0)
     }
 
-    private fun migrate()
+    private fun migratePlayers()
     {
-        val monthlyVotesColumn = table.getColumn("monthly_votes")
+        val monthlyVotesColumn = playersTable.getColumn("monthly_votes")
         if (!monthlyVotesColumn.exists())
         {
-            val periodColumn = table.getColumn("period")
+            val periodColumn = playersTable.getColumn("period")
             if (periodColumn.exists())
             {
                 val statement =
-                    table.database.connection!!.prepareStatement("ALTER TABLE ${table.name} RENAME COLUMN period TO monthly_votes")
-                table.database.query(statement)
+                    playersTable.database.connection!!.prepareStatement("ALTER TABLE ${playersTable.name} CHANGE period monthly_votes ${CustomColumn.DataType.INT}")
+                playersTable.database.execute(statement)
             } else
             {
                 if (monthlyVotesColumn.create(CustomColumn.DataType.INT))
                 {
-                    plugin.errorLog("| successfully added column 'monthly_votes'!")
+                    plugin.infoLog("| successfully added column 'monthly_votes'!")
                 } else
                 {
                     plugin.errorLog("| could not create column 'monthly_votes'!")
                 }
             }
         }
-        val isOpColumn = table.getColumn("is_op")
+        val isOpColumn = playersTable.getColumn("is_op")
         if (!isOpColumn.exists())
         {
             if (isOpColumn.create(CustomColumn.DataType.BOOLEAN))
             {
-                plugin.errorLog("| successfully added column 'is_op'!")
+                plugin.infoLog("| successfully added column 'is_op'!")
             } else
             {
                 plugin.errorLog("| could not create column 'is_op'!")
@@ -208,34 +196,51 @@ class PlayerDatabase(private val plugin: CV, database: CustomDatabase)
 
     init
     {
-        table = database.getTable("players")
-        if (!table.exists())
+        playersTable = database.getTable("players")
+        if (!playersTable.exists())
         {
-            if (!table.create("uuid", CustomColumn.DataType.VARCHAR_PRIMARY))
+            if (!playersTable.create("uuid", CustomColumn.DataType.VARCHAR_PRIMARY))
             {
                 plugin.errorLog("| could not create table 'players'")
                 plugin.errorLog("|")
-                plugin.errorLog("|___database disabled")
             } else
             {
-                table.getColumn("name").create(CustomColumn.DataType.VARCHAR)
-                table.getColumn("votes").create(CustomColumn.DataType.INT)
-                table.getColumn("last").create(CustomColumn.DataType.LONG)
-                table.getColumn("queue").create(CustomColumn.DataType.INT)
-                table.getColumn("monthly_votes").create(CustomColumn.DataType.INT)
+                playersTable.getColumn("name").create(CustomColumn.DataType.VARCHAR)
+                playersTable.getColumn("votes").create(CustomColumn.DataType.INT)
+                playersTable.getColumn("last").create(CustomColumn.DataType.LONG)
+                playersTable.getColumn("monthly_votes").create(CustomColumn.DataType.INT)
                 plugin.infoLog("| successfully created table 'players'")
                 plugin.infoLog("|")
-                plugin.infoLog("|___successfully connected to database")
                 PlayerTable.init(plugin)
             }
         } else
         {
             plugin.infoLog("| successfully located table 'players'")
             plugin.infoLog("|")
-            migrate()
-            plugin.infoLog("|")
-            plugin.infoLog("|___successfully connected to database")
+            migratePlayers()
             PlayerTable.init(plugin)
+        }
+        queueTable = database.getTable("queue")
+        if (!queueTable.exists())
+        {
+            if (!queueTable.create("id", CustomColumn.DataType.INT_PRIMARY))
+            {
+                plugin.errorLog("| could not create table 'queue'")
+                plugin.errorLog("|")
+            } else
+            {
+                queueTable.getColumn("uuid").create(CustomColumn.DataType.VARCHAR)
+                queueTable.getColumn("site").create(CustomColumn.DataType.VARCHAR)
+                plugin.infoLog("| successfully created table 'queue'")
+                plugin.infoLog("|")
+            }
+        }
+        if (playersTable.exists() && queueTable.exists())
+        {
+            plugin.infoLog("|___successfully connected to database")
+        } else
+        {
+            plugin.errorLog("|___database disabled")
         }
     }
 }

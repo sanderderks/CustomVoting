@@ -1,12 +1,11 @@
 package me.sd_master92.customvoting.listeners
 
 import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.VoteFile
 import me.sd_master92.customvoting.constants.Data
+import me.sd_master92.customvoting.constants.Voter
 import me.sd_master92.customvoting.constants.enumerations.Messages
 import me.sd_master92.customvoting.constants.enumerations.Settings
 import me.sd_master92.customvoting.constants.enumerations.SoundType
-import me.sd_master92.customvoting.database.PlayerTable
 import me.sd_master92.customvoting.gui.voteparty.VotePartyRewards
 import me.sd_master92.customvoting.sendText
 import me.sd_master92.customvoting.subjects.CustomVote
@@ -51,33 +50,15 @@ class PlayerListener(private val plugin: CV) : Listener
 
     private fun executeQueue(player: Player)
     {
-        val queue: MutableList<String> = ArrayList()
-        if (plugin.hasDatabaseConnection())
+        val voter = Voter.getByUuid(plugin, player)
+        val queue = voter.queue
+        if (!voter.clearQueue())
         {
-            val playerTable = PlayerTable(plugin, player)
-            for (i in 0 until playerTable.queue)
-            {
-                queue.add("unknown.com")
-            }
-            if (!playerTable.clearQueue())
-            {
-                plugin.errorLog("failed to delete database queue of ${player.uniqueId}|${player.name}")
-            }
-        } else
-        {
-            val voteFile = VoteFile(player, plugin)
-            queue.addAll(voteFile.queue)
-            if (!voteFile.clearQueue())
-            {
-                plugin.errorLog("failed to delete file queue of ${player.uniqueId}|${player.name}")
-            }
+            plugin.errorLog("failed to delete queue of ${player.uniqueId}|${player.name}")
         }
         if (queue.isNotEmpty())
         {
-            plugin.infoLog(
-                queue.size.toString() + " queued votes found for " + player.name + ". Forwarding in 10 seconds.." +
-                        "."
-            )
+            plugin.infoLog(queue.size.toString() + " queued votes found for " + player.name + ". Forwarding in 10 seconds...")
             val iterator = queue.iterator()
             object : BukkitRunnable()
             {

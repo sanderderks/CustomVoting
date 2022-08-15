@@ -54,7 +54,7 @@ class CV : CustomPlugin(
     {
         if (hasDatabaseConnection())
         {
-            playerDatabase!!.table.database.disconnect()
+            playerDatabase!!.playersTable.database.disconnect()
         }
     }
 
@@ -228,7 +228,7 @@ class CV : CustomPlugin(
     {
         return if (useDatabase())
         {
-            playerDatabase?.table?.database?.isConnected ?: false
+            playerDatabase?.playersTable?.database?.isConnected ?: false
         } else
         {
             false
