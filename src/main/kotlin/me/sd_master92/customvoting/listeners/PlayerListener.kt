@@ -8,6 +8,7 @@ import me.sd_master92.customvoting.constants.Voter
 import me.sd_master92.customvoting.constants.enumerations.Messages
 import me.sd_master92.customvoting.constants.enumerations.Settings
 import me.sd_master92.customvoting.constants.enumerations.SoundType
+import me.sd_master92.customvoting.gui.rewards.crate.VoteCrate
 import me.sd_master92.customvoting.gui.voteparty.VotePartyRewards
 import me.sd_master92.customvoting.sendText
 import me.sd_master92.customvoting.subjects.CustomVote
@@ -190,22 +191,43 @@ class PlayerListener(private val plugin: CV) : Listener
     fun onBlockInteract(event: PlayerInteractEvent)
     {
         val player = event.player
-        if (event.action == Action.RIGHT_CLICK_BLOCK && event.clickedBlock != null && event.clickedBlock!!.type == Material.ENDER_CHEST && !player.isSneaking)
+        if (event.action == Action.RIGHT_CLICK_BLOCK && event.clickedBlock != null)
         {
-            val loc = event.clickedBlock!!.location
-            val chests = plugin.data.getLocations(Data.VOTE_PARTY)
-            for (key in chests.keys)
+            if (event.clickedBlock!!.type == Material.ENDER_CHEST && !player.isSneaking)
             {
-                if (chests[key] == loc)
+                val loc = event.clickedBlock!!.location
+                val chests = plugin.data.getLocations(Data.VOTE_PARTY)
+                for (key in chests.keys)
                 {
-                    event.isCancelled = true
-                    if (player.hasPermission("customvoting.voteparty"))
+                    if (chests[key] == loc)
                     {
+                        event.isCancelled = true
+                        if (player.hasPermission("customvoting.voteparty"))
+                        {
+                            SoundType.OPEN.play(plugin, player)
+                            player.openInventory(VotePartyRewards(plugin, key).inventory)
+                        } else
+                        {
+                            player.sendMessage(ChatColor.RED.toString() + "You do not have permission to open this chest.")
+                        }
+                    }
+                }
+            } else if (event.hasItem() && event.item!!.type == Material.TRIPWIRE_HOOK)
+            {
+                val item = event.item!!
+                val name = item.itemMeta?.displayName
+                if (name != null && name.contains("| crate key #"))
+                {
+                    val path = Data.VOTE_CRATES + "." + name.split("| crate key #")[1]
+                    if (plugin.data.getString("$path.name") != null)
+                    {
+                        item.amount--
+                        player.inventory.setItemInMainHand(item)
+
+                        val crate = VoteCrate(plugin, player, path)
                         SoundType.OPEN.play(plugin, player)
-                        player.openInventory(VotePartyRewards(plugin, key).inventory)
-                    } else
-                    {
-                        player.sendMessage(ChatColor.RED.toString() + "You do not have permission to open this chest.")
+                        player.openInventory(crate.inventory)
+                        crate.run()
                     }
                 }
             }

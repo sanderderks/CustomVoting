@@ -16,4 +16,6 @@ object Data
     const val VOTE_LINKS = "vote_links"
     const val VOTE_STREAKS = "vote_streaks"
     const val VOTE_SITES = "vote_sites"
+    const val VOTE_CRATES = "vote_crates"
+    val CRATE_REWARD_CHANCES = listOf(50, 25, 10, 5, 1)
 }

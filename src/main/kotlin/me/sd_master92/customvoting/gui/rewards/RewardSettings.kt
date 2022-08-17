@@ -12,7 +12,8 @@ import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.gui.VoteSettings
 import me.sd_master92.customvoting.gui.items.CommandsRewardItem
 import me.sd_master92.customvoting.gui.items.ItemsRewardItem
-import me.sd_master92.customvoting.gui.rewards.streak.VoteStreakSettings
+import me.sd_master92.customvoting.gui.rewards.crate.VoteCrates
+import me.sd_master92.customvoting.gui.rewards.streak.VoteStreaks
 import me.sd_master92.customvoting.listeners.PlayerCommandInput
 import org.bukkit.ChatColor
 import org.bukkit.Material
@@ -40,12 +41,14 @@ class RewardSettings(private val plugin: CV, private val op: Boolean = false) :
                     player.openInventory(VoteSettings(plugin).inventory)
                 }
             }
+
             Material.CHEST             ->
             {
                 SoundType.CLICK.play(plugin, player)
                 cancelCloseEvent()
                 player.openInventory(ItemRewards(plugin, op).inventory)
             }
+
             Material.REPEATER          ->
             {
                 SoundType.CHANGE.play(plugin, player)
@@ -53,6 +56,7 @@ class RewardSettings(private val plugin: CV, private val op: Boolean = false) :
                 plugin.config.setNumber(path, ItemRewardType.next(plugin, op).value)
                 event.currentItem = ItemsRewardTypeItem(plugin, op)
             }
+
             Material.GOLD_INGOT        -> if (CV.ECONOMY != null)
             {
                 SoundType.CHANGE.play(plugin, player)
@@ -83,6 +87,7 @@ class RewardSettings(private val plugin: CV, private val op: Boolean = false) :
             {
                 SoundType.FAILURE.play(plugin, player)
             }
+
             Material.EXPERIENCE_BOTTLE ->
             {
                 SoundType.CHANGE.play(plugin, player)
@@ -96,6 +101,7 @@ class RewardSettings(private val plugin: CV, private val op: Boolean = false) :
                 }
                 event.currentItem = ExperienceRewardItem(plugin, op)
             }
+
             Material.COMMAND_BLOCK     ->
             {
                 SoundType.CHANGE.play(plugin, player)
@@ -116,12 +122,14 @@ class RewardSettings(private val plugin: CV, private val op: Boolean = false) :
                     }
                 }
             }
+
             Material.ENDER_CHEST       ->
             {
                 SoundType.CLICK.play(plugin, player)
                 cancelCloseEvent()
                 player.openInventory(LuckyRewards(plugin).inventory)
             }
+
             Material.ENDER_EYE         ->
             {
                 SoundType.CHANGE.play(plugin, player)
@@ -138,18 +146,21 @@ class RewardSettings(private val plugin: CV, private val op: Boolean = false) :
                 }
                 event.currentItem = LuckyVoteChanceItem(plugin)
             }
+
             Material.NETHER_STAR       ->
             {
                 SoundType.CLICK.play(plugin, player)
                 cancelCloseEvent()
-                player.openInventory(VoteStreakSettings(plugin).inventory)
+                player.openInventory(VoteStreaks(plugin).inventory)
             }
+
             Material.DIAMOND_BLOCK     ->
             {
                 SoundType.CLICK.play(plugin, player)
                 cancelCloseEvent()
                 player.openInventory(RewardSettings(plugin, true).inventory)
             }
+
             Material.TNT               ->
             {
                 SoundType.CHANGE.play(plugin, player)
@@ -170,18 +181,28 @@ class RewardSettings(private val plugin: CV, private val op: Boolean = false) :
                     }
                 }
             }
+
             Material.BELL              ->
             {
                 SoundType.CLICK.play(plugin, player)
                 cancelCloseEvent()
                 player.openInventory(EnabledGroups(plugin).inventory)
             }
+
             Material.PLAYER_HEAD       ->
             {
                 SoundType.CLICK.play(plugin, player)
                 cancelCloseEvent()
                 player.openInventory(EnabledUsers(plugin).inventory)
             }
+
+            Material.TRIPWIRE_HOOK     ->
+            {
+                SoundType.CLICK.play(plugin, player)
+                cancelCloseEvent()
+                player.openInventory(VoteCrates(plugin).inventory)
+            }
+
             else                       ->
             {
             }
@@ -245,6 +266,14 @@ class RewardSettings(private val plugin: CV, private val op: Boolean = false) :
                 )
             )
         }
+        inventory.addItem(
+            BaseItem(
+                Material.TRIPWIRE_HOOK,
+                ChatColor.LIGHT_PURPLE.toString() + "Crate Rewards",
+                null,
+                true
+            )
+        )
         inventory.setItem(if (op) 8 else 17, BACK_ITEM)
     }
 }

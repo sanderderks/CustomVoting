@@ -1,12 +1,14 @@
 package me.sd_master92.customvoting.gui.rewards.streak
 
-import me.sd_master92.core.input.PlayerNumberInput
 import me.sd_master92.core.inventory.BaseItem
 import me.sd_master92.core.inventory.GUI
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Data
 import me.sd_master92.customvoting.constants.enumerations.SoundType
-import me.sd_master92.customvoting.gui.rewards.RewardSettings
+import me.sd_master92.customvoting.gui.items.CommandsRewardItem
+import me.sd_master92.customvoting.gui.items.ItemsRewardItem
+import me.sd_master92.customvoting.listeners.PlayerCommandInput
+import me.sd_master92.customvoting.listeners.PlayerPermissionInput
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -14,66 +16,80 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 
-class VoteStreakSettings(private val plugin: CV) :
-    GUI(plugin, "Vote Streak Settings", getInventorySize(plugin), false, true)
+class VoteStreakRewards(private val plugin: CV, private val number: Int) : GUI(
+    plugin,
+    "Vote Streak Settings #$number", 9, false, true
+)
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
     {
         when (item.type)
         {
-            Material.BARRIER        ->
+            Material.BARRIER       ->
             {
                 SoundType.CLICK.play(plugin, player)
                 cancelCloseEvent()
-                player.openInventory(RewardSettings(plugin).inventory)
+                player.openInventory(VoteStreaks(plugin).inventory)
             }
-            Material.ENDER_PEARL    ->
+
+            Material.RED_WOOL      ->
             {
-                val key = item.itemMeta?.displayName?.split("#")?.get(1)
-                try
-                {
-                    val number: Int = key!!.toInt()
-                    SoundType.CLICK.play(plugin, player)
-                    cancelCloseEvent()
-                    player.openInventory(VoteStreakRewards(plugin, number).inventory)
-                } catch (e: Exception)
-                {
-                    SoundType.FAILURE.play(plugin, player)
-                }
+                SoundType.FAILURE.play(plugin, player)
+                plugin.data.delete(Data.VOTE_STREAKS + ".$number")
+                cancelCloseEvent()
+                player.openInventory(VoteStreaks(plugin).inventory)
             }
-            Material.CRAFTING_TABLE ->
+
+            Material.DIAMOND_SWORD ->
             {
                 SoundType.CHANGE.play(plugin, player)
                 cancelCloseEvent()
                 player.closeInventory()
-                player.sendMessage(ChatColor.GREEN.toString() + "Please enter a streak number")
-                player.sendMessage(ChatColor.GRAY.toString() + "Type 'cancel' to go back")
-                object : PlayerNumberInput(plugin, player)
+                object : PlayerPermissionInput(plugin, player, Data.VOTE_STREAKS + ".$number.permissions")
                 {
-                    override fun onNumberReceived(input: Int)
+                    override fun onPermissionReceived()
                     {
-                        if (plugin.data.contains(Data.VOTE_STREAKS + ".$input"))
-                        {
-                            player.sendMessage(ChatColor.RED.toString() + "That streak already exists.")
-                        } else
-                        {
-                            SoundType.SUCCESS.play(plugin, player)
-                            plugin.data.set(Data.VOTE_STREAKS + "." + input + ".permissions", ArrayList<String>())
-                            plugin.data.saveConfig()
-                            player.sendMessage(ChatColor.GREEN.toString() + "Streak #$input created!")
-                            player.openInventory(VoteStreakSettings(plugin).inventory)
-                            cancel()
-                        }
+                        SoundType.SUCCESS.play(plugin, player)
+                        player.openInventory(VoteStreakRewards(plugin, number).inventory)
                     }
 
                     override fun onCancel()
                     {
                         SoundType.FAILURE.play(plugin, player)
-                        player.openInventory(VoteStreakSettings(plugin).inventory)
+                        player.openInventory(VoteStreakRewards(plugin, number).inventory)
                     }
                 }
             }
-            else                    ->
+
+            Material.SHIELD        ->
+            {
+                SoundType.CHANGE.play(plugin, player)
+                cancelCloseEvent()
+                player.closeInventory()
+                object : PlayerCommandInput(plugin, player, Data.VOTE_STREAKS + ".$number.commands")
+                {
+                    override fun onCommandReceived()
+                    {
+                        SoundType.SUCCESS.play(plugin, player)
+                        player.openInventory(VoteStreakRewards(plugin, number).inventory)
+                    }
+
+                    override fun onCancel()
+                    {
+                        SoundType.FAILURE.play(plugin, player)
+                        player.openInventory(VoteStreakRewards(plugin, number).inventory)
+                    }
+                }
+            }
+
+            Material.CHEST         ->
+            {
+                SoundType.CLICK.play(plugin, player)
+                cancelCloseEvent()
+                player.openInventory(VoteStreakItemRewards(plugin, number).inventory)
+            }
+
+            else                   ->
             {
             }
         }
@@ -86,34 +102,20 @@ class VoteStreakSettings(private val plugin: CV) :
 
     companion object
     {
-        private fun getInventorySize(plugin: CV): Int
-        {
-            val streaks = (plugin.data.getConfigurationSection(Data.VOTE_STREAKS)?.getKeys(false)?.size ?: 0) + 2
-            return if (streaks % 9 == 0)
-            {
-                streaks
-            } else
-            {
-                streaks + (9 - (streaks % 9))
-            }
-        }
+        val DELETE_ITEM = BaseItem(Material.RED_WOOL, ChatColor.RED.toString() + "Delete")
     }
 
     init
     {
-        inventory.setItem(7, BaseItem(Material.CRAFTING_TABLE, ChatColor.GREEN.toString() + "Add Streak"))
+        inventory.setItem(0, PermissionsRewardItem(plugin, "${Data.VOTE_STREAKS}.$number.permissions"))
+        inventory.setItem(1, CommandsRewardItem(plugin, "${Data.VOTE_STREAKS}.$number.commands", Material.SHIELD))
+        inventory.setItem(2, ItemsRewardItem(plugin, "${Data.VOTE_STREAKS}.$number.${Data.ITEM_REWARDS}"))
+        inventory.setItem(7, DELETE_ITEM)
         inventory.setItem(8, BACK_ITEM)
-
-        for (key in plugin.data.getConfigurationSection(Data.VOTE_STREAKS)?.getKeys(false)?.mapNotNull { key ->
-            key.toIntOrNull()
-        }?.sorted() ?: ArrayList())
-        {
-            inventory.addItem(
-                BaseItem(
-                    Material.ENDER_PEARL,
-                    ChatColor.LIGHT_PURPLE.toString() + "Streak #$key"
-                )
-            )
-        }
     }
 }
+
+class PermissionsRewardItem(plugin: CV, path: String) : BaseItem(
+    Material.DIAMOND_SWORD, ChatColor.LIGHT_PURPLE.toString() + "Permission Rewards",
+    ChatColor.GRAY.toString() + "Currently: " + ChatColor.AQUA + plugin.data.getStringList(path).size + ChatColor.GRAY + " permissions"
+)
