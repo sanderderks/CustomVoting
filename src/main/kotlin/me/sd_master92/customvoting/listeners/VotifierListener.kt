@@ -2,6 +2,7 @@ package me.sd_master92.customvoting.listeners
 
 import com.vexsoftware.votifier.model.VotifierEvent
 import me.sd_master92.customvoting.CV
+import me.sd_master92.customvoting.constants.Data
 import me.sd_master92.customvoting.subjects.CustomVote
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
@@ -12,6 +13,15 @@ class VotifierListener(private val plugin: CV) : Listener
     @EventHandler(priority = EventPriority.NORMAL)
     fun onVotifierEvent(event: VotifierEvent)
     {
-        CustomVote(plugin, event.vote)
+        val vote = event.vote
+        CustomVote(plugin, vote)
+
+        val voteSites = plugin.data.getStringList(Data.VOTE_SITES)
+        if (!voteSites.contains(vote.serviceName))
+        {
+            voteSites.add(vote.serviceName)
+        }
+        plugin.data.set(Data.VOTE_SITES, voteSites)
+        plugin.data.saveConfig()
     }
 }

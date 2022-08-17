@@ -6,9 +6,12 @@ import me.sd_master92.core.file.PlayerFile
 import me.sd_master92.core.plugin.CustomPlugin
 import me.sd_master92.customvoting.commands.*
 import me.sd_master92.customvoting.commands.voteparty.VotePartyCommand
+import me.sd_master92.customvoting.constants.Data
 import me.sd_master92.customvoting.constants.enumerations.Messages
 import me.sd_master92.customvoting.constants.enumerations.Settings
+import me.sd_master92.customvoting.constants.enumerations.VotePartyType
 import me.sd_master92.customvoting.database.PlayerDatabase
+import me.sd_master92.customvoting.database.PlayerTable
 import me.sd_master92.customvoting.extensions.CustomPlaceholders
 import me.sd_master92.customvoting.listeners.PlayerListener
 import me.sd_master92.customvoting.listeners.VoteTopListener
@@ -19,6 +22,7 @@ import me.sd_master92.customvoting.tasks.VoteReminder
 import net.milkbowl.vault.economy.Economy
 import net.milkbowl.vault.permission.Permission
 import org.bstats.bukkit.Metrics
+import org.bstats.charts.AdvancedPie
 import org.bstats.charts.SimplePie
 import org.bukkit.Bukkit
 
@@ -217,6 +221,31 @@ class CV : CustomPlugin(
         metrics.addCustomChart(SimplePie("database_enabled") { if (useDatabase()) "true" else "false" })
         metrics.addCustomChart(SimplePie("vote_party_enabled") { if (config.getBoolean(Settings.VOTE_PARTY.path)) "true" else "false" })
         metrics.addCustomChart(SimplePie("lucky_vote_enabled") { if (config.getBoolean(Settings.LUCKY_VOTE.path)) "true" else "false" })
+        metrics.addCustomChart(SimplePie("vote_party_type") {
+            if (config.getBoolean(Settings.VOTE_PARTY.path)) VotePartyType.valueOf(
+                config.getNumber(Settings.VOTE_PARTY_TYPE.path)
+            ).label else "None"
+        })
+        metrics.addCustomChart(AdvancedPie("number_of_playerfiles") {
+            val valueMap: MutableMap<String, Int> = HashMap()
+            val size = VoteFile.getAll(this).size
+            valueMap["$size"] = size
+            valueMap
+        })
+        metrics.addCustomChart(AdvancedPie("number_of_databaserows") {
+            val valueMap: MutableMap<String, Int> = HashMap()
+            val size = PlayerTable.getAll(this).size
+            valueMap["$size"] = size
+            valueMap
+        })
+        metrics.addCustomChart(AdvancedPie("vote_sites") {
+            val valueMap: MutableMap<String, Int> = HashMap()
+            for (site in data.getStringList(Data.VOTE_SITES))
+            {
+                valueMap[site] = 1
+            }
+            valueMap
+        })
     }
 
     private fun useDatabase(): Boolean

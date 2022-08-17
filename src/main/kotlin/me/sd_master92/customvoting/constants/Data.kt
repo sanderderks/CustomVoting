@@ -15,4 +15,5 @@ object Data
     const val VOTE_LINK_ITEMS = "vote_link_items"
     const val VOTE_LINKS = "vote_links"
     const val VOTE_STREAKS = "vote_streaks"
+    const val VOTE_SITES = "vote_sites"
 }
