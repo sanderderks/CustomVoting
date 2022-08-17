@@ -3,6 +3,8 @@ package me.sd_master92.customvoting.database
 import me.sd_master92.core.database.CustomColumn
 import me.sd_master92.core.database.CustomDatabase
 import me.sd_master92.core.database.CustomTable
+import me.sd_master92.core.errorLog
+import me.sd_master92.core.infoLog
 import me.sd_master92.customvoting.CV
 
 class PlayerDatabase(private val plugin: CV, database: CustomDatabase)

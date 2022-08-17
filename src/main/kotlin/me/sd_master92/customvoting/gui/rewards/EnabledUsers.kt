@@ -5,8 +5,8 @@ import me.sd_master92.core.inventory.GUI
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Voter
 import me.sd_master92.customvoting.constants.enumerations.SoundType
+import me.sd_master92.customvoting.getOfflinePlayer
 import me.sd_master92.customvoting.getSkull
-import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -15,7 +15,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 
 class EnabledUsers(private val plugin: CV, private var page: Int = 0) :
-    GUI(plugin, "Enabled Users", 54, false, true)
+    GUI(plugin, "Enabled Users #${page + 1}", 54, false, true)
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
     {
@@ -27,6 +27,7 @@ class EnabledUsers(private val plugin: CV, private var page: Int = 0) :
                 cancelCloseEvent()
                 player.openInventory(RewardSettings(plugin, true).inventory)
             }
+
             Material.PLAYER_HEAD ->
             {
                 SoundType.CHANGE.play(plugin, player)
@@ -45,14 +46,15 @@ class EnabledUsers(private val plugin: CV, private var page: Int = 0) :
                     event.currentItem = null
                 }
             }
+
             else                 ->
             {
-                if (item.itemMeta?.displayName?.contains("Previous") == true)
+                if (item.itemMeta?.displayName?.contains("Previous") == true && page > 0)
                 {
                     SoundType.CLICK.play(plugin, player)
                     cancelCloseEvent()
                     player.openInventory(EnabledUsers(plugin, page - 1).inventory)
-                } else if (item.itemMeta?.displayName?.contains("Next") == true)
+                } else if (item.itemMeta?.displayName?.contains("Next") == true && Voter.getTopVoters(plugin).size > (page + 1) * 51)
                 {
                     SoundType.CLICK.play(plugin, player)
                     cancelCloseEvent()
@@ -88,12 +90,12 @@ class EnabledUser(private val voter: Voter)
 {
     fun getSkull(): ItemStack
     {
-        val skull = Bukkit.getOfflinePlayer(voter.name).getSkull()
+        val skull = voter.name.getOfflinePlayer().getSkull()
         val meta = skull.itemMeta
         meta!!.lore = listOf(
             ChatColor.GRAY.toString() + "Enabled: " + if (voter.isOpUser)
                 ChatColor.GREEN.toString() + "Yes" else ChatColor.RED.toString() + "No",
-            ChatColor.GRAY.toString() + "This setting overrides the group permissions."
+            ChatColor.GRAY.toString() + "This setting overrides;the group permissions."
         )
         if (meta.displayName != voter.name)
         {

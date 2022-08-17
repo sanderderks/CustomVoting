@@ -2,6 +2,8 @@ package me.sd_master92.customvoting.subjects
 
 import com.vexsoftware.votifier.model.Vote
 import me.sd_master92.core.appendWhenTrue
+import me.sd_master92.core.errorLog
+import me.sd_master92.core.infoLog
 import me.sd_master92.customvoting.*
 import me.sd_master92.customvoting.constants.Data
 import me.sd_master92.customvoting.constants.Voter
@@ -9,7 +11,6 @@ import me.sd_master92.customvoting.constants.enumerations.ItemRewardType
 import me.sd_master92.customvoting.constants.enumerations.Logger
 import me.sd_master92.customvoting.constants.enumerations.Messages
 import me.sd_master92.customvoting.constants.enumerations.Settings
-import me.sd_master92.customvoting.database.PlayerTable
 import me.sd_master92.customvoting.helpers.ParticleHelper
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
@@ -51,7 +52,7 @@ class CustomVote(
         {
             Logger.OK.log("Player online and in an enabled world", logger)
             broadcast(player)
-            if (Voter.getByUuid(plugin, player).addVote(true))
+            if (Voter.get(plugin, player).addVote())
             {
                 Logger.INFO.log("Added vote to player", logger)
             } else
@@ -91,13 +92,7 @@ class CustomVote(
         {
             if (plugin.config.getBoolean(Settings.FIRST_VOTE_BROADCAST_ONLY.path))
             {
-                val last: Long = if (plugin.hasDatabaseConnection())
-                {
-                    PlayerTable(plugin, player.uniqueId.toString()).last
-                } else
-                {
-                    VoteFile(player.uniqueId.toString(), plugin).last
-                }
+                val last = Voter.get(plugin, player).last
                 val date1 = Calendar.getInstance()
                 date1.time = Date(last)
                 val date2 = Calendar.getInstance()

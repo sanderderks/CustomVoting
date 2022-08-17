@@ -4,6 +4,8 @@ import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.VoteFile
 import me.sd_master92.customvoting.constants.enumerations.Settings
 import me.sd_master92.customvoting.database.PlayerTable
+import me.sd_master92.customvoting.subjects.VoteTopSign
+import me.sd_master92.customvoting.subjects.VoteTopStand
 import org.bukkit.entity.Player
 
 interface Voter
@@ -17,7 +19,7 @@ interface Voter
     val queue: List<String>
 
     fun setVotes(n: Int, update: Boolean)
-    fun addVote(update: Boolean): Boolean
+    fun addVote(): Boolean
     fun addQueue(site: String): Boolean
     fun clearMonthlyVotes()
     fun clearQueue(): Boolean
@@ -25,25 +27,43 @@ interface Voter
 
     companion object
     {
-        fun getTopVoters(plugin: CV): List<Voter>
+        private var TOP_VOTERS: List<Voter> = listOf()
+
+        fun init(plugin: CV)
         {
-            val type = if (plugin.hasDatabaseConnection()) PlayerTable else VoteFile
-            val topVoters = type.getAll(plugin)
-            topVoters.sortWith { x: Voter, y: Voter ->
-                var compare = if (plugin.config.getBoolean(Settings.MONTHLY_VOTES.path))
-                {
-                    y.monthlyVotes.compareTo(x.monthlyVotes)
-                } else
-                {
-                    y.votes.compareTo(x.votes)
+            VoteFile.init(plugin)
+            PlayerTable.init(plugin)
+            getTopVoters(plugin, true)
+        }
+
+        fun getTopVoters(plugin: CV, update: Boolean? = null): List<Voter>
+        {
+            if (update == true)
+            {
+                val type = if (plugin.hasDatabaseConnection()) PlayerTable else VoteFile
+                val topVoters = type.getAll(plugin)
+                val useMonthly = plugin.config.getBoolean(Settings.MONTHLY_VOTES.path)
+
+                topVoters.sortWith { x: Voter, y: Voter ->
+                    var compare = if (useMonthly)
+                    {
+                        y.monthlyVotes.compareTo(x.monthlyVotes)
+                    } else
+                    {
+                        y.votes.compareTo(x.votes)
+                    }
+                    if (compare == 0)
+                    {
+                        compare = x.last.compareTo(y.last)
+                    }
+                    compare
                 }
-                if (compare == 0)
-                {
-                    compare = x.last.compareTo(y.last)
-                }
-                compare
+                TOP_VOTERS = topVoters
+
+                VoteTopSign.updateAll(plugin)
+                VoteTopStand.updateAll(plugin)
             }
-            return topVoters
+            return TOP_VOTERS
         }
 
         fun getTopVoter(plugin: CV, top: Int): Voter?
@@ -57,7 +77,7 @@ interface Voter
             } else null
         }
 
-        fun getByUuid(plugin: CV, player: Player): Voter
+        fun get(plugin: CV, player: Player): Voter
         {
             return if (plugin.hasDatabaseConnection())
             {

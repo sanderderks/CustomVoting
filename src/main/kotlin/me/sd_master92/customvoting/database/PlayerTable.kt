@@ -3,8 +3,6 @@ package me.sd_master92.customvoting.database
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.TopVoter
 import me.sd_master92.customvoting.constants.Voter
-import me.sd_master92.customvoting.subjects.VoteTopSign
-import me.sd_master92.customvoting.subjects.VoteTopStand
 import org.bukkit.entity.Player
 
 class PlayerTable(private val plugin: CV, override val uuid: String) : Voter
@@ -40,31 +38,29 @@ class PlayerTable(private val plugin: CV, override val uuid: String) : Voter
         players?.setVotes(uuid, n)
         players?.setMonthlyVotes(uuid, 0)
         players?.setLast(uuid)
+
         if (update)
         {
-            VoteTopSign.updateAll(plugin)
-            VoteTopStand.updateAll(plugin)
+            Voter.getTopVoters(plugin, true)
         }
     }
 
     override fun clearMonthlyVotes()
     {
         players?.setMonthlyVotes(uuid, 0)
-        VoteTopSign.updateAll(plugin)
-        VoteTopStand.updateAll(plugin)
+
+        Voter.getTopVoters(plugin, true)
     }
 
-    override fun addVote(update: Boolean): Boolean
+    override fun addVote(): Boolean
     {
         val votesBefore = votes
         players?.setVotes(uuid, votes + 1)
         players?.setMonthlyVotes(uuid, monthlyVotes + 1)
         players?.setLast(uuid)
-        if (update)
-        {
-            VoteTopSign.updateAll(plugin)
-            VoteTopStand.updateAll(plugin)
-        }
+
+        Voter.getTopVoters(plugin, true)
+
         return votesBefore < votes
     }
 
@@ -86,22 +82,17 @@ class PlayerTable(private val plugin: CV, override val uuid: String) : Voter
     companion object : TopVoter
     {
         private var ALL: MutableMap<String, PlayerTable> = HashMap()
-        private var initialized = false
 
         fun init(plugin: CV)
         {
-            if (!initialized)
+            val result = plugin.playerDatabase?.playersTable?.getAll()
+            if (result != null)
             {
-                val result = plugin.playerDatabase?.playersTable?.getAll()
-                if (result != null)
+                while (result.next())
                 {
-                    while (result.next())
-                    {
-                        val voter = PlayerTable(plugin, result.getString("uuid"))
-                        ALL[voter.uuid] = voter
-                    }
+                    val voter = PlayerTable(plugin, result.getString("uuid"))
+                    ALL[voter.uuid] = voter
                 }
-                initialized = true
             }
         }
 

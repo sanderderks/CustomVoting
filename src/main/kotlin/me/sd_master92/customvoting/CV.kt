@@ -1,12 +1,14 @@
 package me.sd_master92.customvoting
 
 import me.sd_master92.core.database.CustomDatabase
+import me.sd_master92.core.errorLog
 import me.sd_master92.core.file.CustomFile
-import me.sd_master92.core.file.PlayerFile
+import me.sd_master92.core.infoLog
 import me.sd_master92.core.plugin.CustomPlugin
 import me.sd_master92.customvoting.commands.*
 import me.sd_master92.customvoting.commands.voteparty.VotePartyCommand
 import me.sd_master92.customvoting.constants.Data
+import me.sd_master92.customvoting.constants.Voter
 import me.sd_master92.customvoting.constants.enumerations.Messages
 import me.sd_master92.customvoting.constants.enumerations.Settings
 import me.sd_master92.customvoting.constants.enumerations.VotePartyType
@@ -25,6 +27,7 @@ import org.bstats.bukkit.Metrics
 import org.bstats.charts.AdvancedPie
 import org.bstats.charts.SimplePie
 import org.bukkit.Bukkit
+import kotlin.system.measureTimeMillis
 
 
 class CV : CustomPlugin(
@@ -46,8 +49,8 @@ class CV : CustomPlugin(
             return
         }
         checkHooks()
-        registerFiles()
         setupDatabase()
+        registerFiles()
         registerListeners()
         registerCommands()
         startTasks()
@@ -187,8 +190,13 @@ class CV : CustomPlugin(
     {
         messages = CustomFile("messages.yml", this)
         data = CustomFile("data.yml", this)
-        PlayerFile.init(this)
-        VoteFile.migrateAll()
+        infoLog("")
+        infoLog("| caching player files")
+        infoLog("|")
+        val time = measureTimeMillis {
+            Voter.init(this)
+        } / 1000
+        infoLog("|___finished caching in ${time}s")
         Settings.initialize(this)
         Messages.initialize(this)
     }
@@ -221,23 +229,14 @@ class CV : CustomPlugin(
         metrics.addCustomChart(SimplePie("database_enabled") { if (useDatabase()) "true" else "false" })
         metrics.addCustomChart(SimplePie("vote_party_enabled") { if (config.getBoolean(Settings.VOTE_PARTY.path)) "true" else "false" })
         metrics.addCustomChart(SimplePie("lucky_vote_enabled") { if (config.getBoolean(Settings.LUCKY_VOTE.path)) "true" else "false" })
+        metrics.addCustomChart(SimplePie("uuid_support") { if (config.getBoolean(Settings.UUID_STORAGE.path)) "true" else "false" })
         metrics.addCustomChart(SimplePie("vote_party_type") {
             if (config.getBoolean(Settings.VOTE_PARTY.path)) VotePartyType.valueOf(
                 config.getNumber(Settings.VOTE_PARTY_TYPE.path)
             ).label else "None"
         })
-        metrics.addCustomChart(AdvancedPie("number_of_playerfiles") {
-            val valueMap: MutableMap<String, Int> = HashMap()
-            val size = VoteFile.getAll(this).size
-            valueMap["$size"] = size
-            valueMap
-        })
-        metrics.addCustomChart(AdvancedPie("number_of_databaserows") {
-            val valueMap: MutableMap<String, Int> = HashMap()
-            val size = PlayerTable.getAll(this).size
-            valueMap["$size"] = size
-            valueMap
-        })
+        metrics.addCustomChart(SimplePie("number_of_playerfiles") { "${VoteFile.getAll(this).size}" })
+        metrics.addCustomChart(SimplePie("number_of_databaserows") { "${PlayerTable.getAll(this).size}" })
         metrics.addCustomChart(AdvancedPie("vote_sites") {
             val valueMap: MutableMap<String, Int> = HashMap()
             for (site in data.getStringList(Data.VOTE_SITES))

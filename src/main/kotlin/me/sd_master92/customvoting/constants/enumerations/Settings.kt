@@ -32,6 +32,7 @@ enum class Settings(val path: String, private val defaultValue: Any? = null)
     FIRST_VOTE_BROADCAST_ONLY("first_vote_broadcast_only", false),
     DISABLED_WORLDS("disabled_worlds"),
     ENABLED_OP_GROUPS("enabled_op_groups"),
+    UUID_STORAGE("uuid_storage", true),
     USE_DATABASE("use_database", false),
     DATABASE("database"),
     DATABASE_HOST("${DATABASE.path}.host", "localhost"),
@@ -51,7 +52,7 @@ enum class Settings(val path: String, private val defaultValue: Any? = null)
                 {
                     if (plugin.config[setting.path] == null)
                     {
-                        plugin.config[setting.path] = setting
+                        plugin.config[setting.path] = setting.defaultValue
                     }
                 }
             }

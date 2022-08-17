@@ -1,5 +1,7 @@
 package me.sd_master92.customvoting.listeners
 
+import me.sd_master92.core.errorLog
+import me.sd_master92.core.infoLog
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Data
 import me.sd_master92.customvoting.constants.Voter
@@ -50,7 +52,7 @@ class PlayerListener(private val plugin: CV) : Listener
 
     private fun executeQueue(player: Player)
     {
-        val voter = Voter.getByUuid(plugin, player)
+        val voter = Voter.get(plugin, player)
         val queue = voter.queue
         if (!voter.clearQueue())
         {

@@ -23,7 +23,7 @@ class SetVotesCommand(private val plugin: CV) : SimpleCommand(plugin, "setvotes"
                     val n = amount.toInt()
                     if (n >= 0)
                     {
-                        Voter.getByUuid(plugin, sender).setVotes(n, true)
+                        Voter.get(plugin, sender).setVotes(n, true)
                         sender.sendMessage(ChatColor.GREEN.toString() + "Your votes have been set to " + ChatColor.AQUA + n + ChatColor.GREEN + ".")
                     } else
                     {

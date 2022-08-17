@@ -4,8 +4,6 @@ import me.sd_master92.core.file.PlayerFile
 import me.sd_master92.customvoting.constants.Data
 import me.sd_master92.customvoting.constants.TopVoter
 import me.sd_master92.customvoting.constants.Voter
-import me.sd_master92.customvoting.subjects.VoteTopSign
-import me.sd_master92.customvoting.subjects.VoteTopStand
 import org.bukkit.entity.Player
 
 class VoteFile : Voter
@@ -14,7 +12,9 @@ class VoteFile : Voter
     private val playerFile: PlayerFile
 
     override val uuid: String
+        get() = playerFile.uuid
     override val name: String
+        get() = playerFile.name
     override val votes: Int
         get() = playerFile.getNumber("votes")
     override val monthlyVotes: Int
@@ -30,17 +30,13 @@ class VoteFile : Voter
     {
         playerFile = PlayerFile.get(plugin, uuid)
         this.plugin = plugin
-        this.uuid = uuid
-        this.name = playerFile.name
         register()
     }
 
     constructor(player: Player, plugin: CV)
     {
-        playerFile = PlayerFile.get(plugin, player)
+        playerFile = player.getPlayerFile(plugin)
         this.plugin = plugin
-        this.uuid = player.uniqueId.toString()
-        this.name = player.name
         register()
     }
 
@@ -52,36 +48,45 @@ class VoteFile : Voter
         }
     }
 
+    fun delete(): Boolean
+    {
+        if (playerFile.delete())
+        {
+            ALL.remove(uuid)
+            Voter.getTopVoters(plugin, true)
+            return true
+        }
+        return false
+    }
+
     override fun setVotes(n: Int, update: Boolean)
     {
         playerFile.setTimeStamp("last")
         playerFile.setNumber("votes", n)
         playerFile.setNumber("monthly_votes", n)
+
         if (update)
         {
-            VoteTopSign.updateAll(plugin)
-            VoteTopStand.updateAll(plugin)
+            Voter.getTopVoters(plugin, true)
         }
     }
 
     override fun clearMonthlyVotes()
     {
         playerFile.setNumber("monthly_votes", 0)
-        VoteTopSign.updateAll(plugin)
-        VoteTopStand.updateAll(plugin)
+
+        Voter.getTopVoters(plugin, true)
     }
 
-    override fun addVote(update: Boolean): Boolean
+    override fun addVote(): Boolean
     {
         val beforeVotes = votes
         playerFile.setTimeStamp("last")
         playerFile.addNumber("votes", 1)
         playerFile.addNumber("monthly_votes", 1)
-        if (update)
-        {
-            VoteTopSign.updateAll(plugin)
-            VoteTopStand.updateAll(plugin)
-        }
+
+        Voter.getTopVoters(plugin, true)
+
         return beforeVotes < votes
     }
 
@@ -107,12 +112,36 @@ class VoteFile : Voter
 
     companion object : TopVoter
     {
-        override fun getAll(plugin: CV): MutableList<Voter>
+        private var ALL: MutableMap<String, VoteFile> = HashMap()
+
+        fun init(plugin: CV)
         {
-            return PlayerFile.getAll().values.map { playerFile -> VoteFile(playerFile.uuid, plugin) }.toMutableList()
+            PlayerFile.init(plugin)
+            ALL = PlayerFile.getAll().values.map { playerFile -> VoteFile(playerFile.uuid, plugin) }
+                .associateBy { file -> file.uuid }.toMutableMap()
+            migrateAll()
         }
 
-        fun migrateAll()
+        fun mergeDuplicates(plugin: CV): Int
+        {
+            val voters = getAll(plugin)
+            var deleted = 0
+            for (voter in voters.filter { it -> it.uuid !in voters.distinctBy { it.name }.map { it.uuid } })
+            {
+                if (voter is VoteFile && voter.delete())
+                {
+                    deleted++
+                }
+            }
+            return deleted
+        }
+
+        override fun getAll(plugin: CV): MutableList<Voter>
+        {
+            return ALL.values.toMutableList()
+        }
+
+        private fun migrateAll()
         {
             for (playerFile in PlayerFile.getAll().values)
             {

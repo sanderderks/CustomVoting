@@ -1,7 +1,6 @@
 package me.sd_master92.customvoting.commands
 
 import me.sd_master92.core.command.SimpleCommand
-import me.sd_master92.core.file.PlayerFile
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.VoteFile
 import me.sd_master92.customvoting.constants.Voter
@@ -37,23 +36,19 @@ class VotesCommand(private val plugin: CV) : SimpleCommand(plugin, "votes")
         } else
         {
             val name = args[0]
-            val playerFile = PlayerFile.getByName(name)
-            if (playerFile != null)
+            val voter = Voter.getByName(plugin, name)
+            if (voter != null)
             {
-                val voteFile = if (plugin.hasDatabaseConnection()) PlayerTable(
-                    plugin,
-                    playerFile.uuid
-                ) else VoteFile(playerFile.uuid, plugin)
                 val placeholders = HashMap<String, String>()
-                placeholders["%PLAYER%"] = voteFile.name
-                placeholders["%VOTES%"] = "${voteFile.votes}"
-                placeholders["%MONTHLY_VOTES%"] = "${voteFile.monthlyVotes}"
+                placeholders["%PLAYER%"] = voter.name
+                placeholders["%VOTES%"] = "${voter.votes}"
+                placeholders["%MONTHLY_VOTES%"] = "${voter.monthlyVotes}"
                 if (plugin.config.getBoolean(Settings.MONTHLY_VOTES.path))
                 {
-                    placeholders["%s%"] = if (voteFile.monthlyVotes == 1) "" else "s"
+                    placeholders["%s%"] = if (voter.monthlyVotes == 1) "" else "s"
                 } else
                 {
-                    placeholders["%s%"] = if (voteFile.votes == 1) "" else "s"
+                    placeholders["%s%"] = if (voter.votes == 1) "" else "s"
                 }
                 sender.sendText(plugin, Messages.VOTES_COMMAND_OTHERS, placeholders)
             } else

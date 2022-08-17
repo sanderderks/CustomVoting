@@ -1,11 +1,10 @@
 package me.sd_master92.customvoting.tasks
 
 import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.VoteFile
+import me.sd_master92.customvoting.constants.Voter
 import me.sd_master92.customvoting.constants.enumerations.Messages
 import me.sd_master92.customvoting.constants.enumerations.Settings
 import me.sd_master92.customvoting.constants.enumerations.SoundType
-import me.sd_master92.customvoting.database.PlayerTable
 import me.sd_master92.customvoting.sendTexts
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
@@ -24,13 +23,7 @@ class VoteReminder(private val plugin: CV)
                 {
                     override fun run()
                     {
-                        val voter = if (plugin.hasDatabaseConnection())
-                        {
-                            PlayerTable(plugin, player.uniqueId.toString())
-                        } else
-                        {
-                            VoteFile(player.uniqueId.toString(), plugin)
-                        }
+                        val voter = Voter.get(plugin, player)
 
                         val now = Calendar.getInstance()
                         val next = Calendar.getInstance()

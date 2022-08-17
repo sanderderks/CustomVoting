@@ -1,11 +1,13 @@
 package me.sd_master92.customvoting
 
 import me.clip.placeholderapi.PlaceholderAPI
+import me.sd_master92.core.file.PlayerFile
 import me.sd_master92.customvoting.constants.enumerations.Messages
 import me.sd_master92.customvoting.constants.enumerations.Settings
 import me.sd_master92.customvoting.database.PlayerTable
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
+import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.OfflinePlayer
@@ -128,12 +130,26 @@ fun Player.hasPermissionRewardsByUser(plugin: CV): Boolean
     return voter.isOpUser
 }
 
-fun OfflinePlayer.getSkull(): ItemStack
+fun Player.getPlayerFile(plugin: CV): PlayerFile
+{
+    return (if (plugin.config.getBoolean(Settings.UUID_STORAGE.path)) PlayerFile.getByName(player!!.name) else null)
+        ?: PlayerFile.get(plugin, player!!.uniqueId.toString())
+}
+
+fun OfflinePlayer?.getSkull(): ItemStack
 {
     val skull = ItemStack(Material.PLAYER_HEAD)
     val skullMeta = skull.itemMeta as SkullMeta
     skullMeta.owningPlayer = this
-    skullMeta.setDisplayName(ChatColor.AQUA.toString() + name)
+    if (this != null)
+    {
+        skullMeta.setDisplayName(ChatColor.AQUA.toString() + name)
+    }
     skull.itemMeta = skullMeta
     return skull
+}
+
+fun String.getOfflinePlayer(): OfflinePlayer?
+{
+    return Bukkit.getOfflinePlayers().toList().firstOrNull { player -> player.name == this }
 }

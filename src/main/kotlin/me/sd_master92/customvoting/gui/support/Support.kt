@@ -4,6 +4,7 @@ import me.sd_master92.core.inventory.BaseItem
 import me.sd_master92.core.inventory.GUI
 import me.sd_master92.core.inventory.StatusItem
 import me.sd_master92.customvoting.CV
+import me.sd_master92.customvoting.VoteFile
 import me.sd_master92.customvoting.constants.enumerations.Settings
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.gui.VoteSettings
@@ -26,6 +27,7 @@ class Support(private val plugin: CV) : GUI(plugin, "Support", 9, false, true)
                 cancelCloseEvent()
                 player.openInventory(VoteSettings(plugin).inventory)
             }
+
             Material.CLOCK          -> if (!plugin.isUpToDate())
             {
                 SoundType.CLICK.play(plugin, player)
@@ -33,6 +35,7 @@ class Support(private val plugin: CV) : GUI(plugin, "Support", 9, false, true)
                 player.closeInventory()
                 plugin.sendDownloadUrl(player)
             }
+
             Material.FILLED_MAP     ->
             {
                 SoundType.CHANGE.play(plugin, player)
@@ -43,6 +46,7 @@ class Support(private val plugin: CV) : GUI(plugin, "Support", 9, false, true)
                 plugin.config.saveConfig()
                 event.currentItem = IngameUpdateItem(plugin)
             }
+
             Material.ENCHANTED_BOOK ->
             {
                 SoundType.CLICK.play(plugin, player)
@@ -51,18 +55,36 @@ class Support(private val plugin: CV) : GUI(plugin, "Support", 9, false, true)
                 player.sendMessage(ChatColor.AQUA.toString() + "Join the Discord server:")
                 player.sendMessage(ChatColor.GREEN.toString() + "https://discord.gg/v3qmJu7jWD")
             }
+
             Material.CREEPER_HEAD   ->
             {
                 SoundType.CLICK.play(plugin, player)
                 cancelCloseEvent()
                 player.openInventory(Donators(plugin).inventory)
             }
+
             Material.PLAYER_HEAD    ->
             {
                 SoundType.CLICK.play(plugin, player)
                 cancelCloseEvent()
                 player.openInventory(PlayerInfo(plugin).inventory)
             }
+
+            Material.HOPPER         ->
+            {
+                SoundType.CHANGE.play(plugin, player)
+                val deleted = VoteFile.mergeDuplicates(plugin)
+                if (deleted > 0)
+                {
+                    SoundType.SUCCESS
+                    player.sendMessage(ChatColor.GREEN.toString() + "Deleted $deleted votefiles!")
+                    event.currentItem = MergeItem(plugin)
+                } else
+                {
+                    player.sendMessage(ChatColor.RED.toString() + "Deleted 0 votefiles!")
+                }
+            }
+
             else                    ->
             {
             }
@@ -76,33 +98,34 @@ class Support(private val plugin: CV) : GUI(plugin, "Support", 9, false, true)
 
     init
     {
-        inventory.setItem(0, UpdateItem(plugin))
-        inventory.setItem(1, IngameUpdateItem(plugin))
-        inventory.setItem(
-            2, BaseItem(
+        inventory.addItem(UpdateItem(plugin))
+        inventory.addItem(IngameUpdateItem(plugin))
+        inventory.addItem(
+            BaseItem(
                 Material.ENCHANTED_BOOK,
                 ChatColor.LIGHT_PURPLE.toString() + "Discord",
                 ChatColor.GRAY.toString() + "Join the discord server"
             )
         )
-        inventory.setItem(
-            3, BaseItem(
+        inventory.addItem(
+            BaseItem(
                 Material.ENCHANTING_TABLE, ChatColor.LIGHT_PURPLE.toString() + "Database",
                 ChatColor.GRAY.toString() + "Status: " + if (plugin.hasDatabaseConnection()) ChatColor.GREEN.toString() + "Connected" else ChatColor.RED.toString() + "Disabled"
             )
         )
-        inventory.setItem(
-            4, BaseItem(
+        inventory.addItem(
+            BaseItem(
                 Material.CREEPER_HEAD, ChatColor.LIGHT_PURPLE.toString() + "Donators",
                 ChatColor.GRAY.toString() + "CustomVoting supporters!"
             )
         )
-        inventory.setItem(
-            5, BaseItem(
+        inventory.addItem(
+            BaseItem(
                 Material.PLAYER_HEAD, ChatColor.LIGHT_PURPLE.toString() + "Player Info",
                 ChatColor.GRAY.toString() + "Player vote information"
             )
         )
+        inventory.addItem(MergeItem(plugin))
         inventory.setItem(8, BACK_ITEM)
     }
 }
@@ -119,4 +142,10 @@ class UpdateItem(plugin: CV) : BaseItem(
 class IngameUpdateItem(plugin: CV) : StatusItem(
     Material.FILLED_MAP, "Ingame Updates",
     plugin.config, Settings.INGAME_UPDATES.path
+)
+
+class MergeItem(plugin: CV) : BaseItem(
+    Material.HOPPER, ChatColor.RED.toString() + "Merge Duplicates",
+    ChatColor.GRAY.toString() + "Merge duplicate playerfiles;" + ChatColor.RED + "Currently: " +
+            VoteFile.getAll(plugin).size + " files"
 )

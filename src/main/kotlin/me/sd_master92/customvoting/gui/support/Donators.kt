@@ -30,7 +30,7 @@ class Donators(private val plugin: CV) : GUI(plugin, "Donators", 9, false, true)
 
     init
     {
-        for (donator in listOf("Dutchbeard", "Smirren"))
+        for (donator in listOf("sd_master92", "Dutchbeard", "Smirren"))
         {
             inventory.addItem(Bukkit.getOfflinePlayer(donator).getSkull())
         }

@@ -1,6 +1,7 @@
 package me.sd_master92.customvoting.commands
 
 import me.sd_master92.core.command.SimpleCommand
+import me.sd_master92.core.errorLog
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.Messages
 import me.sd_master92.customvoting.subjects.VoteTopStand

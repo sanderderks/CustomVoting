@@ -28,6 +28,7 @@ class GeneralSettings(private val plugin: CV) : GUI(plugin, "General Settings", 
                 cancelCloseEvent()
                 player.openInventory(VoteSettings(plugin).inventory)
             }
+
             Material.CLOCK             ->
             {
                 SoundType.CHANGE.play(plugin, player)
@@ -35,6 +36,7 @@ class GeneralSettings(private val plugin: CV) : GUI(plugin, "General Settings", 
                 plugin.config.saveConfig()
                 event.currentItem = MonthlyResetItem(plugin)
             }
+
             Material.TNT               ->
             {
                 SoundType.CHANGE.play(plugin, player)
@@ -42,6 +44,7 @@ class GeneralSettings(private val plugin: CV) : GUI(plugin, "General Settings", 
                 plugin.config.saveConfig()
                 event.currentItem = MonthlyVotesItem(plugin)
             }
+
             Material.MUSIC_DISC_CAT    ->
             {
                 SoundType.CHANGE.play(plugin, player)
@@ -50,6 +53,7 @@ class GeneralSettings(private val plugin: CV) : GUI(plugin, "General Settings", 
                 plugin.config.saveConfig()
                 event.currentItem = SoundEffectsItem(plugin)
             }
+
             Material.FIREWORK_ROCKET   ->
             {
                 SoundType.CHANGE.play(plugin, player)
@@ -57,6 +61,7 @@ class GeneralSettings(private val plugin: CV) : GUI(plugin, "General Settings", 
                 plugin.config.saveConfig()
                 event.currentItem = FireworkItem(plugin)
             }
+
             Material.EXPERIENCE_BOTTLE ->
             {
                 SoundType.CHANGE.play(plugin, player)
@@ -64,6 +69,7 @@ class GeneralSettings(private val plugin: CV) : GUI(plugin, "General Settings", 
                 plugin.config.saveConfig()
                 event.currentItem = DoVotePartyItem(plugin)
             }
+
             Material.SPLASH_POTION     ->
             {
                 SoundType.CHANGE.play(plugin, player)
@@ -73,6 +79,7 @@ class GeneralSettings(private val plugin: CV) : GUI(plugin, "General Settings", 
                 )
                 event.currentItem = VotePartyTypeItem(plugin)
             }
+
             Material.ENCHANTED_BOOK    ->
             {
                 SoundType.CHANGE.play(plugin, player)
@@ -85,6 +92,7 @@ class GeneralSettings(private val plugin: CV) : GUI(plugin, "General Settings", 
                 }
                 event.currentItem = VotesUntilItem.getInstance(plugin)
             }
+
             Material.ENDER_CHEST       ->
             {
                 SoundType.CHANGE.play(plugin, player)
@@ -97,6 +105,7 @@ class GeneralSettings(private val plugin: CV) : GUI(plugin, "General Settings", 
                 }
                 event.currentItem = VotePartyCountdownItem(plugin)
             }
+
             Material.TOTEM_OF_UNDYING  ->
             {
                 SoundType.CHANGE.play(plugin, player)
@@ -104,12 +113,22 @@ class GeneralSettings(private val plugin: CV) : GUI(plugin, "General Settings", 
                 plugin.config.saveConfig()
                 event.currentItem = LuckyVoteItem(plugin)
             }
+
             Material.GRASS_BLOCK       ->
             {
                 SoundType.CLICK.play(plugin, player)
                 cancelCloseEvent()
                 player.openInventory(DisabledWorlds(plugin).inventory)
             }
+
+            Material.PLAYER_HEAD       ->
+            {
+                SoundType.CHANGE.play(plugin, player)
+                plugin.config[Settings.UUID_STORAGE.path] = !plugin.config.getBoolean(Settings.UUID_STORAGE.path)
+                plugin.config.saveConfig()
+                event.currentItem = UUIDSupportItem(plugin)
+            }
+
             else                       ->
             {
             }
@@ -133,6 +152,7 @@ class GeneralSettings(private val plugin: CV) : GUI(plugin, "General Settings", 
         inventory.addItem(VotesUntilItem.getInstance(plugin))
         inventory.addItem(VotePartyCountdownItem(plugin))
         inventory.addItem(BaseItem(Material.GRASS_BLOCK, ChatColor.LIGHT_PURPLE.toString() + "Disabled Worlds"))
+        inventory.addItem(UUIDSupportItem(plugin))
         inventory.setItem(17, BACK_ITEM)
     }
 }
@@ -196,4 +216,9 @@ class FireworkItem(plugin: CV) : StatusItem(
 class DoVotePartyItem(plugin: CV) : StatusItem(
     Material.EXPERIENCE_BOTTLE, "Vote Party",
     plugin.config, Settings.VOTE_PARTY.path
+)
+
+class UUIDSupportItem(plugin: CV) : StatusItem(
+    Material.PLAYER_HEAD, ChatColor.RED.toString() + "UUID Storage",
+    plugin.config, Settings.UUID_STORAGE.path
 )
