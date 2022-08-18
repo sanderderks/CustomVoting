@@ -221,6 +221,7 @@ class PlayerListener(private val plugin: CV) : Listener
                     val path = Data.VOTE_CRATES + "." + lore.split("#")[1]
                     if (plugin.data.getString("$path.name") != null)
                     {
+                        event.isCancelled = true
                         item.amount--
                         player.inventory.setItemInMainHand(item)
 
