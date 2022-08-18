@@ -24,6 +24,7 @@ import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.block.BlockFace
 import org.bukkit.block.Sign
+import org.bukkit.block.data.Directional
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -227,23 +228,32 @@ class PlayerListener(private val plugin: CV) : Listener
             if (event.clickedBlock!!.type == Material.ENDER_CHEST)
             {
                 val loc = event.clickedBlock!!.location
-                val chests = plugin.data.getLocations(Data.VOTE_PARTY)
+                var chests = plugin.data.getLocations(Data.VOTE_PARTY)
                 for (key in chests.keys)
                 {
                     if (chests[key] == loc)
                     {
-                        if (!player.isSneaking)
+                        event.isCancelled = true
+                        if (player.hasPermission("customvoting.voteparty"))
                         {
-                            event.isCancelled = true
-                            if (player.hasPermission("customvoting.voteparty"))
-                            {
-                                SoundType.OPEN.play(plugin, player)
-                                player.openInventory(VotePartyRewards(plugin, key).inventory)
-                            } else
-                            {
-                                player.sendMessage(ChatColor.RED.toString() + "You do not have permission to open this chest.")
-                            }
+                            SoundType.OPEN.play(plugin, player)
+                            player.openInventory(VotePartyRewards(plugin, key).inventory)
+                        } else
+                        {
+                            player.sendMessage(ChatColor.RED.toString() + "You do not have permission to open this chest.")
                         }
+                    }
+                }
+                chests = plugin.data.getLocations(Data.VOTE_CRATES)
+                for (key in chests.keys)
+                {
+                    if (chests[key]?.equals(loc) == true &&
+                        (event.item?.type != Material.TRIPWIRE_HOOK || event.item?.itemMeta?.lore?.get(0)
+                            ?.contains("#") == false)
+                    )
+                    {
+                        event.isCancelled = true
+                        player.sendMessage(ChatColor.RED.toString() + "You do not have permission to open this chest.")
                     }
                 }
             }
@@ -279,6 +289,9 @@ class PlayerListener(private val plugin: CV) : Listener
                                     {
                                         val location = Location(loc.world, loc.x, loc.y + 1, loc.z)
                                         location.block.type = Material.ENDER_CHEST
+                                        val directional = location.block.blockData as Directional
+                                        directional.facing = player.facing.oppositeFace
+                                        location.block.blockData = directional
                                         plugin.data.setLocation(path, location)
 
                                         val stand =
