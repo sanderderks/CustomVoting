@@ -238,7 +238,7 @@ class CV : CustomPlugin(
         metrics.addCustomChart(SimplePie("number_of_playerfiles") {
             val number = VoteFile.getAll(this).size
             var max = 100
-            while (number + 100 >= max)
+            while (number >= max)
             {
                 max += 100
             }
