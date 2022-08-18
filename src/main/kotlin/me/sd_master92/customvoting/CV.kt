@@ -235,7 +235,15 @@ class CV : CustomPlugin(
                 config.getNumber(Settings.VOTE_PARTY_TYPE.path)
             ).label else "None"
         })
-        metrics.addCustomChart(SimplePie("number_of_playerfiles") { "${VoteFile.getAll(this).size}" })
+        metrics.addCustomChart(SimplePie("number_of_playerfiles") {
+            val number = VoteFile.getAll(this).size
+            var max = 100
+            while (number + 100 >= max)
+            {
+                max += 100
+            }
+            "${max - 100}-$max"
+        })
         metrics.addCustomChart(SimplePie("number_of_databaserows") { "${PlayerTable.getAll(this).size}" })
         metrics.addCustomChart(AdvancedPie("vote_sites") {
             val valueMap: MutableMap<String, Int> = HashMap()
