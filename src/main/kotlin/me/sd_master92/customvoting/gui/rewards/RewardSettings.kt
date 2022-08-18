@@ -23,7 +23,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 
 class RewardSettings(private val plugin: CV, private val op: Boolean = false) :
-    GUI(plugin, "Vote Rewards".appendWhenTrue(op, " (permission based)"), if (op) 9 else 18, true, true)
+    GUI(plugin, "Vote Rewards".appendWhenTrue(op, " (permission based)"), if (op) 9 else 18)
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
     {
@@ -32,7 +32,7 @@ class RewardSettings(private val plugin: CV, private val op: Boolean = false) :
             Material.BARRIER           ->
             {
                 SoundType.CLICK.play(plugin, player)
-                cancelCloseEvent()
+                cancelCloseEvent = true
                 if (op)
                 {
                     player.openInventory(RewardSettings(plugin).inventory)
@@ -45,7 +45,7 @@ class RewardSettings(private val plugin: CV, private val op: Boolean = false) :
             Material.CHEST             ->
             {
                 SoundType.CLICK.play(plugin, player)
-                cancelCloseEvent()
+                cancelCloseEvent = true
                 player.openInventory(ItemRewards(plugin, op).inventory)
             }
 
@@ -60,7 +60,7 @@ class RewardSettings(private val plugin: CV, private val op: Boolean = false) :
             Material.GOLD_INGOT        -> if (CV.ECONOMY != null)
             {
                 SoundType.CHANGE.play(plugin, player)
-                cancelCloseEvent()
+                cancelCloseEvent = true
                 player.closeInventory()
                 player.sendMessage(ChatColor.GREEN.toString() + "Please enter a number")
                 player.sendMessage(ChatColor.GRAY.toString() + "Type 'cancel' to go back")
@@ -105,7 +105,7 @@ class RewardSettings(private val plugin: CV, private val op: Boolean = false) :
             Material.COMMAND_BLOCK     ->
             {
                 SoundType.CHANGE.play(plugin, player)
-                cancelCloseEvent()
+                cancelCloseEvent = true
                 player.closeInventory()
                 object : PlayerCommandInput(plugin, player, Data.VOTE_COMMANDS.appendWhenTrue(op, Data.OP_REWARDS))
                 {
@@ -126,7 +126,7 @@ class RewardSettings(private val plugin: CV, private val op: Boolean = false) :
             Material.ENDER_CHEST       ->
             {
                 SoundType.CLICK.play(plugin, player)
-                cancelCloseEvent()
+                cancelCloseEvent = true
                 player.openInventory(LuckyRewards(plugin).inventory)
             }
 
@@ -150,21 +150,21 @@ class RewardSettings(private val plugin: CV, private val op: Boolean = false) :
             Material.NETHER_STAR       ->
             {
                 SoundType.CLICK.play(plugin, player)
-                cancelCloseEvent()
+                cancelCloseEvent = true
                 player.openInventory(VoteStreaks(plugin).inventory)
             }
 
             Material.DIAMOND_BLOCK     ->
             {
                 SoundType.CLICK.play(plugin, player)
-                cancelCloseEvent()
+                cancelCloseEvent = true
                 player.openInventory(RewardSettings(plugin, true).inventory)
             }
 
             Material.TNT               ->
             {
                 SoundType.CHANGE.play(plugin, player)
-                cancelCloseEvent()
+                cancelCloseEvent = true
                 player.closeInventory()
                 object : PlayerCommandInput(plugin, player, Data.VOTE_PARTY_COMMANDS)
                 {
@@ -185,21 +185,21 @@ class RewardSettings(private val plugin: CV, private val op: Boolean = false) :
             Material.BELL              ->
             {
                 SoundType.CLICK.play(plugin, player)
-                cancelCloseEvent()
+                cancelCloseEvent = true
                 player.openInventory(EnabledGroups(plugin).inventory)
             }
 
             Material.PLAYER_HEAD       ->
             {
                 SoundType.CLICK.play(plugin, player)
-                cancelCloseEvent()
+                cancelCloseEvent = true
                 player.openInventory(EnabledUsers(plugin).inventory)
             }
 
             Material.TRIPWIRE_HOOK     ->
             {
                 SoundType.CLICK.play(plugin, player)
-                cancelCloseEvent()
+                cancelCloseEvent = true
                 player.openInventory(VoteCrates(plugin).inventory)
             }
 

@@ -17,10 +17,8 @@ import org.bukkit.inventory.ItemStack
 
 class VoteCrateSettings(private val plugin: CV, private val number: Int) : GUI(
     plugin,
-    (plugin.data.getString(Data.VOTE_CRATES + ".$number.name") ?: "Vote Crate") + " #$number",
-    9,
-    false,
-    true
+    (plugin.data.getString(Data.VOTE_CRATES + ".$number.name") ?: "Vote Crate"),
+    9
 )
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
@@ -30,7 +28,7 @@ class VoteCrateSettings(private val plugin: CV, private val number: Int) : GUI(
             Material.BARRIER  ->
             {
                 SoundType.CLICK.play(plugin, player)
-                cancelCloseEvent()
+                cancelCloseEvent = true
                 player.openInventory(VoteCrates(plugin).inventory)
             }
 
@@ -38,14 +36,14 @@ class VoteCrateSettings(private val plugin: CV, private val number: Int) : GUI(
             {
                 SoundType.FAILURE.play(plugin, player)
                 plugin.data.delete(Data.VOTE_CRATES + ".$number")
-                cancelCloseEvent()
+                cancelCloseEvent = true
                 player.openInventory(VoteCrates(plugin).inventory)
             }
 
             Material.CHEST    ->
             {
                 SoundType.CLICK.play(plugin, player)
-                cancelCloseEvent()
+                cancelCloseEvent = true
                 try
                 {
                     player.openInventory(
@@ -66,8 +64,8 @@ class VoteCrateSettings(private val plugin: CV, private val number: Int) : GUI(
                 player.addToInventoryOrDrop(
                     BaseItem(
                         Material.TRIPWIRE_HOOK,
-                        ChatColor.AQUA.toString() + plugin.data.getString(Data.VOTE_CRATES + ".$number.name") + " | crate key #$number",
-                        null,
+                        ChatColor.AQUA.toString() + plugin.data.getString(Data.VOTE_CRATES + ".$number.name"),
+                        ChatColor.GRAY.toString() + "#$number",
                         true
                     )
                 )
@@ -76,7 +74,7 @@ class VoteCrateSettings(private val plugin: CV, private val number: Int) : GUI(
             Material.OAK_SIGN ->
             {
                 SoundType.CHANGE.play(plugin, player)
-                cancelCloseEvent()
+                cancelCloseEvent = true
                 player.closeInventory()
                 player.sendMessage(ChatColor.GREEN.toString() + "Please enter a new name")
                 player.sendMessage(ChatColor.GRAY.toString() + "Type 'cancel' to go back")

@@ -17,10 +17,9 @@ import org.bukkit.scheduler.BukkitRunnable
 import java.util.*
 
 class VoteCrate(private val plugin: CV, private val player: Player, path: String) :
-    GUI(plugin, (plugin.data.getString("$path.name") ?: "Vote Crate"), 45, false, true)
+    GUI(plugin, (plugin.data.getString("$path.name") ?: "Vote Crate"), 45)
 {
     private var searching = true
-    private var closeInv = false
     private var rewards = mutableMapOf<Int, Array<ItemStack>>()
     private var allRewards = mutableListOf<ItemStack>()
 
@@ -30,7 +29,7 @@ class VoteCrate(private val plugin: CV, private val player: Player, path: String
 
     override fun onClose(event: InventoryCloseEvent, player: Player)
     {
-        if (!closeInv)
+        if (keepAlive)
         {
             object : BukkitRunnable()
             {
@@ -38,7 +37,7 @@ class VoteCrate(private val plugin: CV, private val player: Player, path: String
                 {
                     player.openInventory(inventory)
                 }
-            }.runTaskLater(plugin, 2)
+            }.runTaskLater(plugin, 1)
         } else
         {
             SoundType.CLOSE.play(plugin, player)
@@ -47,15 +46,18 @@ class VoteCrate(private val plugin: CV, private val player: Player, path: String
 
     private fun giveReward(number: Int? = null)
     {
-        val reward = if (number != null) rewards[number]!!.random() else BaseItem(
-            Material.BARRIER,
-            ChatColor.RED.toString() + "No price!"
-        )
+        val rewards = if (number != null && this.rewards.isNotEmpty()) this.rewards[number] else null
+        val reward = if (rewards?.isNotEmpty() == true) rewards.random() else null
 
         inventory.clear()
-        inventory.setItem(22, reward)
+        inventory.setItem(
+            22, reward ?: BaseItem(
+                Material.BARRIER,
+                ChatColor.RED.toString() + "No price!"
+            )
+        )
 
-        if (number != null)
+        if (number != null && reward != null)
         {
             player.addToInventoryOrDrop(reward)
             ParticleHelper.shootFirework(plugin, player.location)
@@ -68,12 +70,11 @@ class VoteCrate(private val plugin: CV, private val player: Player, path: String
             SoundType.FAILURE.play(plugin, player)
             player.sendMessage(ChatColor.RED.toString() + "No price this time :\"(")
         }
-        closeInv = true
+        keepAlive = false
     }
 
     private fun shuffle(number: Int? = null)
     {
-        searching = false
         var shuffle = 1
         var wait = 0L
         while (shuffle < 20)
@@ -108,17 +109,17 @@ class VoteCrate(private val plugin: CV, private val player: Player, path: String
     fun run()
     {
         val chance = Random().nextInt(100)
-        for (number in Data.CRATE_REWARD_CHANCES.sortedByDescending { it })
+        var min = 0
+        for (number in rewards.keys.sortedBy { it })
         {
-            if (chance >= number)
+            if (chance in min until number + min)
             {
-                if (searching)
-                {
-                    shuffle(number)
-                } else
-                {
-                    break
-                }
+                searching = false
+                shuffle(number)
+                break
+            } else
+            {
+                min += number
             }
         }
         if (searching)
@@ -138,5 +139,6 @@ class VoteCrate(private val plugin: CV, private val player: Player, path: String
         {
             allRewards.addAll(rewards[key]!!)
         }
+        keepAlive = true
     }
 }

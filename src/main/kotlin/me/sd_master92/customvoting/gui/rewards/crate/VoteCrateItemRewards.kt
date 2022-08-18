@@ -13,7 +13,7 @@ import org.bukkit.inventory.ItemStack
 
 class VoteCrateItemRewards(private val plugin: CV, private val number: Int, private val percentage: Int) : GUI(
     plugin,
-    "Crate Rewards $percentage%\'" + plugin.data.getString(Data.VOTE_CRATES + ".$number.name") + "\'", 27, true
+    "$percentage% Rewards \'" + plugin.data.getString(Data.VOTE_CRATES + ".$number.name") + "\'", 27, false
 )
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
@@ -28,7 +28,7 @@ class VoteCrateItemRewards(private val plugin: CV, private val number: Int, priv
             {
                 SoundType.CLICK.play(plugin, player)
             }
-            cancelCloseEvent()
+            cancelCloseEvent = true
             player.openInventory(VoteCrateSettings(plugin, number).inventory)
         }
     }

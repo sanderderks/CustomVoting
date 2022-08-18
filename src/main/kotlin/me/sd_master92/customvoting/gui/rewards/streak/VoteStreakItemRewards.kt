@@ -13,7 +13,7 @@ import org.bukkit.inventory.ItemStack
 
 class VoteStreakItemRewards(private val plugin: CV, private val number: Int) : GUI(
     plugin,
-    "Vote Streak Item Rewards #$number", 27, true
+    "Vote Streak Item Rewards #$number", 27, false
 )
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
@@ -28,7 +28,7 @@ class VoteStreakItemRewards(private val plugin: CV, private val number: Int) : G
             {
                 SoundType.CLICK.play(plugin, player)
             }
-            cancelCloseEvent()
+            cancelCloseEvent = true
             player.openInventory(VoteStreakRewards(plugin, number).inventory)
         }
     }

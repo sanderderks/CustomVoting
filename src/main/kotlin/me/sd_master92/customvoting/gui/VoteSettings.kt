@@ -16,7 +16,7 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 
-class VoteSettings(private val plugin: CV) : GUI(plugin, "Vote Settings", 9, false, true)
+class VoteSettings(private val plugin: CV) : GUI(plugin, "Vote Settings", 9)
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
     {
@@ -25,27 +25,31 @@ class VoteSettings(private val plugin: CV) : GUI(plugin, "Vote Settings", 9, fal
             Material.COMMAND_BLOCK   ->
             {
                 SoundType.CLICK.play(plugin, player)
-                cancelCloseEvent()
+                cancelCloseEvent = true
                 player.openInventory(GeneralSettings(plugin).inventory)
             }
+
             Material.DIAMOND         ->
             {
                 SoundType.CLICK.play(plugin, player)
-                cancelCloseEvent()
+                cancelCloseEvent = true
                 player.openInventory(RewardSettings(plugin).inventory)
             }
+
             Material.WRITABLE_BOOK   ->
             {
                 SoundType.CLICK.play(plugin, player)
-                cancelCloseEvent()
+                cancelCloseEvent = true
                 player.openInventory(MessageSettings(plugin).inventory)
             }
+
             Materials.SPYGLASS.get() ->
             {
                 SoundType.CLICK.play(plugin, player)
-                cancelCloseEvent()
+                cancelCloseEvent = true
                 player.openInventory(Support(plugin).inventory)
             }
+
             else                     ->
             {
             }

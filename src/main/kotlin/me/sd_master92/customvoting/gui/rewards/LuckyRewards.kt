@@ -11,7 +11,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 
-class LuckyRewards(private val plugin: CV) : GUI(plugin, NAME, 27, true)
+class LuckyRewards(private val plugin: CV) : GUI(plugin, NAME, 27, false)
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
     {
@@ -25,7 +25,7 @@ class LuckyRewards(private val plugin: CV) : GUI(plugin, NAME, 27, true)
             {
                 SoundType.CLICK.play(plugin, player)
             }
-            cancelCloseEvent()
+            cancelCloseEvent = true
             player.openInventory(RewardSettings(plugin).inventory)
         }
     }

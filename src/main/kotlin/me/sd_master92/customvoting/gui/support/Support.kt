@@ -15,7 +15,7 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 
-class Support(private val plugin: CV) : GUI(plugin, "Support", 9, false, true)
+class Support(private val plugin: CV) : GUI(plugin, "Support", 9)
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
     {
@@ -24,14 +24,14 @@ class Support(private val plugin: CV) : GUI(plugin, "Support", 9, false, true)
             Material.BARRIER        ->
             {
                 SoundType.CLICK.play(plugin, player)
-                cancelCloseEvent()
+                cancelCloseEvent = true
                 player.openInventory(VoteSettings(plugin).inventory)
             }
 
             Material.CLOCK          -> if (!plugin.isUpToDate())
             {
                 SoundType.CLICK.play(plugin, player)
-                cancelCloseEvent()
+                cancelCloseEvent = true
                 player.closeInventory()
                 plugin.sendDownloadUrl(player)
             }
@@ -50,7 +50,7 @@ class Support(private val plugin: CV) : GUI(plugin, "Support", 9, false, true)
             Material.ENCHANTED_BOOK ->
             {
                 SoundType.CLICK.play(plugin, player)
-                cancelCloseEvent()
+                cancelCloseEvent = true
                 player.closeInventory()
                 player.sendMessage(ChatColor.AQUA.toString() + "Join the Discord server:")
                 player.sendMessage(ChatColor.GREEN.toString() + "https://discord.gg/v3qmJu7jWD")
@@ -59,14 +59,14 @@ class Support(private val plugin: CV) : GUI(plugin, "Support", 9, false, true)
             Material.CREEPER_HEAD   ->
             {
                 SoundType.CLICK.play(plugin, player)
-                cancelCloseEvent()
+                cancelCloseEvent = true
                 player.openInventory(Donators(plugin).inventory)
             }
 
             Material.PLAYER_HEAD    ->
             {
                 SoundType.CLICK.play(plugin, player)
-                cancelCloseEvent()
+                cancelCloseEvent = true
                 player.openInventory(PlayerInfo(plugin).inventory)
             }
 

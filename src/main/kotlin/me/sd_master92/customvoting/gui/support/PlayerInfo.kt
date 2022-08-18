@@ -16,7 +16,7 @@ import org.bukkit.inventory.ItemStack
 import java.util.*
 
 class PlayerInfo(private val plugin: CV, private var page: Int = 0) :
-    GUI(plugin, "Player Info #${page + 1}", 54, false, true)
+    GUI(plugin, "Player Info #${page + 1}", 54)
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
     {
@@ -25,7 +25,7 @@ class PlayerInfo(private val plugin: CV, private var page: Int = 0) :
             Material.BARRIER ->
             {
                 SoundType.CLICK.play(plugin, player)
-                cancelCloseEvent()
+                cancelCloseEvent = true
                 player.openInventory(Support(plugin).inventory)
             }
 
@@ -34,12 +34,12 @@ class PlayerInfo(private val plugin: CV, private var page: Int = 0) :
                 if (item.itemMeta?.displayName?.contains("Previous") == true && page > 0)
                 {
                     SoundType.CLICK.play(plugin, player)
-                    cancelCloseEvent()
+                    cancelCloseEvent = true
                     player.openInventory(PlayerInfo(plugin, page - 1).inventory)
                 } else if (item.itemMeta?.displayName?.contains("Next") == true && Voter.getTopVoters(plugin).size > (page + 1) * 51)
                 {
                     SoundType.CLICK.play(plugin, player)
-                    cancelCloseEvent()
+                    cancelCloseEvent = true
                     player.openInventory(PlayerInfo(plugin, page + 1).inventory)
                 }
             }

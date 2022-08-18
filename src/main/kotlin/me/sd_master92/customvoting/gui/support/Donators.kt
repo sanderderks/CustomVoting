@@ -11,14 +11,14 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 
-class Donators(private val plugin: CV) : GUI(plugin, "Donators", 9, false, true)
+class Donators(private val plugin: CV) : GUI(plugin, "Donators", 9)
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
     {
         if (item.type == Material.BARRIER)
         {
             SoundType.CLICK.play(plugin, player)
-            cancelCloseEvent()
+            cancelCloseEvent = true
             player.openInventory(Support(plugin).inventory)
         }
     }

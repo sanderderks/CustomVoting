@@ -215,10 +215,10 @@ class PlayerListener(private val plugin: CV) : Listener
             } else if (event.hasItem() && event.item!!.type == Material.TRIPWIRE_HOOK)
             {
                 val item = event.item!!
-                val name = item.itemMeta?.displayName
-                if (name != null && name.contains("| crate key #"))
+                val lore = item.itemMeta?.lore?.get(0)
+                if (lore != null && lore.contains("#"))
                 {
-                    val path = Data.VOTE_CRATES + "." + name.split("| crate key #")[1]
+                    val path = Data.VOTE_CRATES + "." + lore.split("#")[1]
                     if (plugin.data.getString("$path.name") != null)
                     {
                         item.amount--

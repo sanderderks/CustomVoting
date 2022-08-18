@@ -13,7 +13,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 
 class VoteLinks @JvmOverloads constructor(private val plugin: CV, private val isPublic: Boolean = false) :
-    GUI(plugin, "Vote Links", 27, true)
+    GUI(plugin, "Vote Links", 27, false)
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
     {
@@ -22,7 +22,7 @@ class VoteLinks @JvmOverloads constructor(private val plugin: CV, private val is
             if (event.click == ClickType.RIGHT)
             {
                 save(player, inventory.contents, false)
-                cancelCloseEvent()
+                cancelCloseEvent = true
                 player.closeInventory()
                 enterTitle(player, event.slot)
             }

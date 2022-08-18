@@ -15,7 +15,7 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 
-class MessageSettings(private val plugin: CV) : GUI(plugin, "Message Settings", 18, false, true)
+class MessageSettings(private val plugin: CV) : GUI(plugin, "Message Settings", 18)
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
     {
@@ -24,9 +24,10 @@ class MessageSettings(private val plugin: CV) : GUI(plugin, "Message Settings", 
             Materials.SOUL_TORCH.get() ->
             {
                 SoundType.CLICK.play(plugin, player)
-                cancelCloseEvent()
+                cancelCloseEvent = true
                 player.openInventory(VoteLinks(plugin).inventory)
             }
+
             Material.CHEST             ->
             {
                 SoundType.CHANGE.play(plugin, player)
@@ -37,6 +38,7 @@ class MessageSettings(private val plugin: CV) : GUI(plugin, "Message Settings", 
                 plugin.config.saveConfig()
                 event.currentItem = UseVoteLinkItem(plugin)
             }
+
             Material.DIAMOND           ->
             {
                 SoundType.CHANGE.play(plugin, player)
@@ -47,6 +49,7 @@ class MessageSettings(private val plugin: CV) : GUI(plugin, "Message Settings", 
                 plugin.config.saveConfig()
                 event.currentItem = VoteBroadcast(plugin)
             }
+
             Material.ENDER_PEARL       ->
             {
                 SoundType.CHANGE.play(plugin, player)
@@ -57,6 +60,7 @@ class MessageSettings(private val plugin: CV) : GUI(plugin, "Message Settings", 
                 plugin.config.saveConfig()
                 event.currentItem = StreakBroadcast(plugin)
             }
+
             Material.BOOKSHELF         ->
             {
                 SoundType.CHANGE.play(plugin, player)
@@ -67,6 +71,7 @@ class MessageSettings(private val plugin: CV) : GUI(plugin, "Message Settings", 
                 plugin.config.saveConfig()
                 event.currentItem = VotePartyUntilBroadcast(plugin)
             }
+
             Material.NOTE_BLOCK        ->
             {
                 SoundType.CHANGE.play(plugin, player)
@@ -77,6 +82,7 @@ class MessageSettings(private val plugin: CV) : GUI(plugin, "Message Settings", 
                 plugin.config.saveConfig()
                 event.currentItem = VotePartyCountBroadcast(plugin)
             }
+
             Material.FIREWORK_ROCKET   ->
             {
                 SoundType.CHANGE.play(plugin, player)
@@ -87,6 +93,7 @@ class MessageSettings(private val plugin: CV) : GUI(plugin, "Message Settings", 
                 plugin.config.saveConfig()
                 event.currentItem = VotePartyCountEndBroadcast(plugin)
             }
+
             Material.ARMOR_STAND       ->
             {
                 SoundType.CHANGE.play(plugin, player)
@@ -97,6 +104,7 @@ class MessageSettings(private val plugin: CV) : GUI(plugin, "Message Settings", 
                 plugin.config.saveConfig()
                 event.currentItem = ArmorStandBreakMessage(plugin)
             }
+
             Material.GRASS_BLOCK       ->
             {
                 SoundType.CHANGE.play(plugin, player)
@@ -107,6 +115,7 @@ class MessageSettings(private val plugin: CV) : GUI(plugin, "Message Settings", 
                 plugin.config.saveConfig()
                 event.currentItem = DisabledWorldMessage(plugin)
             }
+
             Material.OAK_SIGN          ->
             {
                 SoundType.CHANGE.play(plugin, player)
@@ -117,12 +126,14 @@ class MessageSettings(private val plugin: CV) : GUI(plugin, "Message Settings", 
                 plugin.config.saveConfig()
                 event.currentItem = VoteRemindMessage(plugin)
             }
+
             Material.BARRIER           ->
             {
                 SoundType.CLICK.play(plugin, player)
-                cancelCloseEvent()
+                cancelCloseEvent = true
                 player.openInventory(VoteSettings(plugin).inventory)
             }
+
             else                       ->
             {
             }

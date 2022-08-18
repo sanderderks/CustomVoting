@@ -44,6 +44,6 @@ class ConfirmVotesReset(private val plugin: CV, private val monthly: Boolean) :
 
     override fun onClose(event: InventoryCloseEvent, player: Player)
     {
-        cancelCloseEvent()
+        cancelCloseEvent = true
     }
 }

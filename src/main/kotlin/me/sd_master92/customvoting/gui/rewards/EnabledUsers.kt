@@ -15,7 +15,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 
 class EnabledUsers(private val plugin: CV, private var page: Int = 0) :
-    GUI(plugin, "Enabled Users #${page + 1}", 54, false, true)
+    GUI(plugin, "Enabled Users #${page + 1}", 54)
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
     {
@@ -24,7 +24,7 @@ class EnabledUsers(private val plugin: CV, private var page: Int = 0) :
             Material.BARRIER     ->
             {
                 SoundType.CLICK.play(plugin, player)
-                cancelCloseEvent()
+                cancelCloseEvent = true
                 player.openInventory(RewardSettings(plugin, true).inventory)
             }
 
@@ -52,12 +52,12 @@ class EnabledUsers(private val plugin: CV, private var page: Int = 0) :
                 if (item.itemMeta?.displayName?.contains("Previous") == true && page > 0)
                 {
                     SoundType.CLICK.play(plugin, player)
-                    cancelCloseEvent()
+                    cancelCloseEvent = true
                     player.openInventory(EnabledUsers(plugin, page - 1).inventory)
                 } else if (item.itemMeta?.displayName?.contains("Next") == true && Voter.getTopVoters(plugin).size > (page + 1) * 51)
                 {
                     SoundType.CLICK.play(plugin, player)
-                    cancelCloseEvent()
+                    cancelCloseEvent = true
                     player.openInventory(EnabledUsers(plugin, page + 1).inventory)
                 }
             }

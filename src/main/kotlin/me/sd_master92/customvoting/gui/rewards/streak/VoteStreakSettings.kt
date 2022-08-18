@@ -16,10 +16,8 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 
-class VoteStreakRewards(private val plugin: CV, private val number: Int) : GUI(
-    plugin,
-    "Vote Streak Settings #$number", 9, false, true
-)
+class VoteStreakRewards(private val plugin: CV, private val number: Int) :
+    GUI(plugin, "Vote Streak Settings #$number", 9)
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
     {
@@ -28,7 +26,7 @@ class VoteStreakRewards(private val plugin: CV, private val number: Int) : GUI(
             Material.BARRIER       ->
             {
                 SoundType.CLICK.play(plugin, player)
-                cancelCloseEvent()
+                cancelCloseEvent = true
                 player.openInventory(VoteStreaks(plugin).inventory)
             }
 
@@ -36,14 +34,14 @@ class VoteStreakRewards(private val plugin: CV, private val number: Int) : GUI(
             {
                 SoundType.FAILURE.play(plugin, player)
                 plugin.data.delete(Data.VOTE_STREAKS + ".$number")
-                cancelCloseEvent()
+                cancelCloseEvent = true
                 player.openInventory(VoteStreaks(plugin).inventory)
             }
 
             Material.DIAMOND_SWORD ->
             {
                 SoundType.CHANGE.play(plugin, player)
-                cancelCloseEvent()
+                cancelCloseEvent = true
                 player.closeInventory()
                 object : PlayerPermissionInput(plugin, player, Data.VOTE_STREAKS + ".$number.permissions")
                 {
@@ -64,7 +62,7 @@ class VoteStreakRewards(private val plugin: CV, private val number: Int) : GUI(
             Material.SHIELD        ->
             {
                 SoundType.CHANGE.play(plugin, player)
-                cancelCloseEvent()
+                cancelCloseEvent = true
                 player.closeInventory()
                 object : PlayerCommandInput(plugin, player, Data.VOTE_STREAKS + ".$number.commands")
                 {
@@ -85,7 +83,7 @@ class VoteStreakRewards(private val plugin: CV, private val number: Int) : GUI(
             Material.CHEST         ->
             {
                 SoundType.CLICK.play(plugin, player)
-                cancelCloseEvent()
+                cancelCloseEvent = true
                 player.openInventory(VoteStreakItemRewards(plugin, number).inventory)
             }
 

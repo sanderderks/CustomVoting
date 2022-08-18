@@ -16,7 +16,7 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 
-class GeneralSettings(private val plugin: CV) : GUI(plugin, "General Settings", 18, false, true)
+class GeneralSettings(private val plugin: CV) : GUI(plugin, "General Settings", 18)
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
     {
@@ -25,7 +25,7 @@ class GeneralSettings(private val plugin: CV) : GUI(plugin, "General Settings", 
             Material.BARRIER           ->
             {
                 SoundType.CLICK.play(plugin, player)
-                cancelCloseEvent()
+                cancelCloseEvent = true
                 player.openInventory(VoteSettings(plugin).inventory)
             }
 
@@ -117,7 +117,7 @@ class GeneralSettings(private val plugin: CV) : GUI(plugin, "General Settings", 
             Material.GRASS_BLOCK       ->
             {
                 SoundType.CLICK.play(plugin, player)
-                cancelCloseEvent()
+                cancelCloseEvent = true
                 player.openInventory(DisabledWorlds(plugin).inventory)
             }
 

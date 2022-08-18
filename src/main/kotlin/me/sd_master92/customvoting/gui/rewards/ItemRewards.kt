@@ -12,7 +12,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 
-class ItemRewards(private val plugin: CV, private val op: Boolean = false) : GUI(plugin, "Item Rewards", 27, true)
+class ItemRewards(private val plugin: CV, private val op: Boolean = false) : GUI(plugin, "Item Rewards", 27, false)
 {
     private var path = Data.ITEM_REWARDS.appendWhenTrue(op, Data.OP_REWARDS)
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
@@ -27,7 +27,7 @@ class ItemRewards(private val plugin: CV, private val op: Boolean = false) : GUI
             {
                 SoundType.CLICK.play(plugin, player)
             }
-            cancelCloseEvent()
+            cancelCloseEvent = true
             player.openInventory(RewardSettings(plugin, op).inventory)
         }
     }

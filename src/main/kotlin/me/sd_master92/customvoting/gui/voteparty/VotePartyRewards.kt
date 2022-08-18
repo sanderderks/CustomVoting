@@ -11,8 +11,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 
 class VotePartyRewards(private val plugin: CV, private val key: String) : GUI(
-    plugin,
-    "Vote Party Chest #$key", 54, true
+    plugin, "Vote Party Chest #$key", 54, false
 )
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)

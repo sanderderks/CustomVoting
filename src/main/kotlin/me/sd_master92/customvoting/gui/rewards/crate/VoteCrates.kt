@@ -14,7 +14,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 
 class VoteCrates(private val plugin: CV) :
-    GUI(plugin, "Vote Crates", getInventorySize(plugin), false, true)
+    GUI(plugin, "Vote Crates", getInventorySize(plugin))
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
     {
@@ -23,18 +23,18 @@ class VoteCrates(private val plugin: CV) :
             Material.BARRIER        ->
             {
                 SoundType.CLICK.play(plugin, player)
-                cancelCloseEvent()
+                cancelCloseEvent = true
                 player.openInventory(RewardSettings(plugin).inventory)
             }
 
             Material.TRIPWIRE_HOOK  ->
             {
-                val key = item.itemMeta?.displayName?.split("#")?.get(1)
+                val key = item.itemMeta?.lore?.get(0)?.split("#")?.get(1)
                 try
                 {
                     val number: Int = key!!.toInt()
                     SoundType.CLICK.play(plugin, player)
-                    cancelCloseEvent()
+                    cancelCloseEvent = true
                     player.openInventory(VoteCrateSettings(plugin, number).inventory)
                 } catch (e: Exception)
                 {
@@ -101,7 +101,7 @@ class VoteCrates(private val plugin: CV) :
                 BaseItem(
                     Material.TRIPWIRE_HOOK,
                     ChatColor.LIGHT_PURPLE.toString() + (plugin.data.getString(Data.VOTE_CRATES + ".$key.name")
-                        ?: "Vote Crate") + " #" + key
+                        ?: "Vote Crate"), ChatColor.GRAY.toString() + "#$key", true
                 )
             )
         }

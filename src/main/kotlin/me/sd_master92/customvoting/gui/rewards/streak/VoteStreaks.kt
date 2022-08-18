@@ -15,7 +15,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 
 class VoteStreaks(private val plugin: CV) :
-    GUI(plugin, "Vote Streaks", getInventorySize(plugin), false, true)
+    GUI(plugin, "Vote Streaks", getInventorySize(plugin))
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
     {
@@ -24,7 +24,7 @@ class VoteStreaks(private val plugin: CV) :
             Material.BARRIER        ->
             {
                 SoundType.CLICK.play(plugin, player)
-                cancelCloseEvent()
+                cancelCloseEvent = true
                 player.openInventory(RewardSettings(plugin).inventory)
             }
 
@@ -35,7 +35,7 @@ class VoteStreaks(private val plugin: CV) :
                 {
                     val number: Int = key!!.toInt()
                     SoundType.CLICK.play(plugin, player)
-                    cancelCloseEvent()
+                    cancelCloseEvent = true
                     player.openInventory(VoteStreakRewards(plugin, number).inventory)
                 } catch (e: Exception)
                 {
@@ -46,7 +46,7 @@ class VoteStreaks(private val plugin: CV) :
             Material.CRAFTING_TABLE ->
             {
                 SoundType.CHANGE.play(plugin, player)
-                cancelCloseEvent()
+                cancelCloseEvent = true
                 player.closeInventory()
                 player.sendMessage(ChatColor.GREEN.toString() + "Please enter a streak number")
                 player.sendMessage(ChatColor.GRAY.toString() + "Type 'cancel' to go back")

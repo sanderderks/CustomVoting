@@ -13,7 +13,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 
 class EnabledGroups(private val plugin: CV) :
-    GUI(plugin, "Enabled Groups", 36, false, true)
+    GUI(plugin, "Enabled Groups", 36)
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
     {
@@ -22,9 +22,10 @@ class EnabledGroups(private val plugin: CV) :
             Material.BARRIER                       ->
             {
                 SoundType.CLICK.play(plugin, player)
-                cancelCloseEvent()
+                cancelCloseEvent = true
                 player.openInventory(RewardSettings(plugin, true).inventory)
             }
+
             Material.GREEN_WOOL, Material.RED_WOOL ->
             {
                 SoundType.CHANGE.play(plugin, player)
@@ -45,6 +46,7 @@ class EnabledGroups(private val plugin: CV) :
                 plugin.config.saveConfig()
                 event.currentItem = EnabledGroup(plugin, group).update()
             }
+
             else                                   ->
             {
             }
