@@ -2,6 +2,7 @@ package me.sd_master92.customvoting.listeners
 
 import me.sd_master92.core.errorLog
 import me.sd_master92.core.infoLog
+import me.sd_master92.core.inventory.ConfirmGUI
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Data
 import me.sd_master92.customvoting.constants.Voter
@@ -14,8 +15,10 @@ import me.sd_master92.customvoting.sendText
 import me.sd_master92.customvoting.subjects.CustomVote
 import me.sd_master92.customvoting.subjects.VoteParty
 import me.sd_master92.customvoting.subjects.VoteTopSign
+import me.sd_master92.customvoting.subjects.VoteTopStand
 import me.sd_master92.customvoting.tasks.UpdateChecker
 import me.sd_master92.customvoting.tasks.VoteReminder
+import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Location
 import org.bukkit.Material
@@ -28,11 +31,14 @@ import org.bukkit.event.Listener
 import org.bukkit.event.block.Action
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.block.BlockPlaceEvent
+import org.bukkit.event.inventory.InventoryClickEvent
+import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.event.player.PlayerChangedWorldEvent
 import org.bukkit.event.player.PlayerInteractAtEntityEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.scheduler.BukkitRunnable
+import java.util.*
 
 class PlayerListener(private val plugin: CV) : Listener
 {
@@ -112,18 +118,18 @@ class PlayerListener(private val plugin: CV) : Listener
         val block = event.block
         if (block.type == Material.ENDER_CHEST)
         {
-            val chests = plugin.data.getLocations(Data.VOTE_PARTY)
+            var chests = plugin.data.getLocations(Data.VOTE_PARTY)
             for (key in chests.keys)
             {
                 if (chests[key] == event.block.location)
                 {
                     if (player.hasPermission("çustomvoting.voteparty"))
                     {
-                        if (plugin.data.deleteLocation(Data.VOTE_PARTY + "." + key))
+                        if (plugin.data.deleteLocation(Data.VOTE_PARTY + ".$key"))
                         {
-                            plugin.data.deleteItems(Data.VOTE_PARTY + "." + key)
+                            plugin.data.deleteItems(Data.VOTE_PARTY + ".$key")
                             event.isDropItems = false
-                            event.player.sendMessage(ChatColor.RED.toString() + "Vote Party Chest #" + key + " deleted.")
+                            event.player.sendMessage(ChatColor.RED.toString() + "Vote Party Chest #$key deleted.")
                         }
                     } else
                     {
@@ -132,6 +138,31 @@ class PlayerListener(private val plugin: CV) : Listener
                     }
                 }
             }
+            chests = plugin.data.getLocations(Data.VOTE_CRATES)
+            for (key in chests.keys)
+            {
+                if (chests[key] == event.block.location)
+                {
+                    if (player.hasPermission("customvoting.crate"))
+                    {
+                        if (plugin.data.deleteLocation(Data.VOTE_CRATES + ".$key"))
+                        {
+                            val path = Data.VOTE_CRATES + ".$key"
+                            val stand = Bukkit.getEntity(
+                                UUID.fromString(plugin.data.getString("$path.stand") ?: "")
+                            )
+                            stand?.remove()
+                            plugin.data.delete("$path.stand")
+                            event.player.sendMessage(ChatColor.RED.toString() + plugin.data.getString("$path.name") + " deleted.")
+                        }
+                    } else
+                    {
+                        event.isCancelled = true
+                        player.sendMessage(ChatColor.RED.toString() + "You do not have permission to break this block.")
+                    }
+                }
+            }
+
         } else if (block.state is Sign)
         {
             val voteTop = VoteTopSign[block.location]
@@ -193,7 +224,7 @@ class PlayerListener(private val plugin: CV) : Listener
         val player = event.player
         if (event.action == Action.RIGHT_CLICK_BLOCK && event.clickedBlock != null)
         {
-            if (event.clickedBlock!!.type == Material.ENDER_CHEST && !player.isSneaking)
+            if (event.clickedBlock!!.type == Material.ENDER_CHEST)
             {
                 val loc = event.clickedBlock!!.location
                 val chests = plugin.data.getLocations(Data.VOTE_PARTY)
@@ -201,34 +232,95 @@ class PlayerListener(private val plugin: CV) : Listener
                 {
                     if (chests[key] == loc)
                     {
-                        event.isCancelled = true
-                        if (player.hasPermission("customvoting.voteparty"))
+                        if (!player.isSneaking)
                         {
-                            SoundType.OPEN.play(plugin, player)
-                            player.openInventory(VotePartyRewards(plugin, key).inventory)
-                        } else
-                        {
-                            player.sendMessage(ChatColor.RED.toString() + "You do not have permission to open this chest.")
+                            event.isCancelled = true
+                            if (player.hasPermission("customvoting.voteparty"))
+                            {
+                                SoundType.OPEN.play(plugin, player)
+                                player.openInventory(VotePartyRewards(plugin, key).inventory)
+                            } else
+                            {
+                                player.sendMessage(ChatColor.RED.toString() + "You do not have permission to open this chest.")
+                            }
                         }
                     }
                 }
-            } else if (event.hasItem() && event.item!!.type == Material.TRIPWIRE_HOOK)
+            }
+            if (event.hasItem() && event.item!!.type == Material.TRIPWIRE_HOOK)
             {
                 val item = event.item!!
                 val lore = item.itemMeta?.lore?.get(0)
                 if (lore != null && lore.contains("#"))
                 {
                     val path = Data.VOTE_CRATES + "." + lore.split("#")[1]
-                    if (plugin.data.getString("$path.name") != null)
+                    val name = plugin.data.getString("$path.name")
+                    if (name != null)
                     {
-                        event.isCancelled = true
-                        item.amount--
-                        player.inventory.setItemInMainHand(item)
+                        if (plugin.data.getLocation(path) == null)
+                        {
+                            if (player.hasPermission("customvoting.crate"))
+                            {
+                                val loc = event.clickedBlock!!.location
+                                val confirm = object : ConfirmGUI(plugin, "Place '$name' here?")
+                                {
+                                    override fun onCancel(event: InventoryClickEvent, player: Player)
+                                    {
+                                        SoundType.FAILURE.play(plugin, player)
+                                        player.closeInventory()
+                                    }
 
-                        val crate = VoteCrate(plugin, player, path)
-                        SoundType.OPEN.play(plugin, player)
-                        player.openInventory(crate.inventory)
-                        crate.run()
+                                    override fun onClose(event: InventoryCloseEvent, player: Player)
+                                    {
+                                        SoundType.FAILURE.play(plugin, player)
+                                    }
+
+                                    override fun onConfirm(event: InventoryClickEvent, player: Player)
+                                    {
+                                        val location = Location(loc.world, loc.x, loc.y + 1, loc.z)
+                                        location.block.type = Material.ENDER_CHEST
+                                        plugin.data.setLocation(path, location)
+
+                                        val stand =
+                                            VoteTopStand.spawnArmorStand(
+                                                Location(
+                                                    loc.world,
+                                                    loc.x + 0.5,
+                                                    loc.y + 1,
+                                                    loc.z + 0.5
+                                                )
+                                            )
+                                        stand.customName = ChatColor.AQUA.toString() + name
+                                        stand.setGravity(false)
+                                        plugin.data.set("$path.stand", stand.uniqueId.toString())
+
+                                        plugin.data.saveConfig()
+
+                                        SoundType.SUCCESS.play(plugin, player)
+                                        player.closeInventory()
+                                    }
+                                }
+                                SoundType.CLICK.play(plugin, player)
+                                player.openInventory(confirm.inventory)
+                            }
+                        } else if (event.clickedBlock!!.type == Material.ENDER_CHEST && event.clickedBlock?.location?.equals(
+                                plugin.data.getLocation(path)
+                            ) == true
+                        )
+                        {
+                            event.isCancelled = true
+                            item.amount--
+                            player.inventory.setItemInMainHand(item)
+
+                            val crate = VoteCrate(plugin, player, path)
+                            SoundType.OPEN.play(plugin, player)
+                            player.openInventory(crate.inventory)
+                            crate.run()
+                        } else
+                        {
+                            event.isCancelled = true
+                            player.sendMessage(ChatColor.RED.toString() + "You need to open a crate with this key.")
+                        }
                     }
                 }
             }

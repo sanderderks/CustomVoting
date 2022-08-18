@@ -63,6 +63,7 @@ permissions:
       customvoting.voteparty: true
       customvoting.reload: true
       customvoting.settings: true
+      customvoting.crate: true
   customvoting.vote:
     default: true
   customvoting.votes.*:
@@ -98,4 +99,6 @@ permissions:
   customvoting.settings:
     default: op
   customvoting.reset:
+    default: op
+  customvoting.crate:
     default: op

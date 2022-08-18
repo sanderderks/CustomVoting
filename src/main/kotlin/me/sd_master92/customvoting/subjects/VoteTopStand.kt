@@ -132,6 +132,7 @@ class VoteTopStand @JvmOverloads constructor(private val plugin: CV, private val
                 equipment.boots = BaseItem(Material.DIAMOND_BOOTS, true)
                 equipment.setItemInMainHand(BaseItem(Material.DIAMOND_SWORD, true))
             }
+
             2    ->
             {
                 equipment.chestplate = BaseItem(Material.GOLDEN_CHESTPLATE, true)
@@ -139,6 +140,7 @@ class VoteTopStand @JvmOverloads constructor(private val plugin: CV, private val
                 equipment.boots = BaseItem(Material.GOLDEN_BOOTS, true)
                 equipment.setItemInMainHand(BaseItem(Material.GOLDEN_SWORD, true))
             }
+
             3    ->
             {
                 equipment.chestplate = BaseItem(Material.IRON_CHESTPLATE, true)
@@ -146,6 +148,7 @@ class VoteTopStand @JvmOverloads constructor(private val plugin: CV, private val
                 equipment.boots = BaseItem(Material.IRON_BOOTS, true)
                 equipment.setItemInMainHand(BaseItem(Material.IRON_SWORD, true))
             }
+
             else ->
             {
                 equipment.chestplate = BaseItem(Material.CHAINMAIL_CHESTPLATE, true)
@@ -154,18 +157,6 @@ class VoteTopStand @JvmOverloads constructor(private val plugin: CV, private val
                 equipment.setItemInMainHand(BaseItem(Material.STONE_SWORD, true))
             }
         }
-    }
-
-    private fun spawnArmorStand(loc: Location): ArmorStand
-    {
-        val stand = loc.world!!.spawnEntity(loc, EntityType.ARMOR_STAND) as ArmorStand
-        stand.removeWhenFarAway = false
-        stand.isSilent = true
-        stand.setGravity(false)
-        stand.isCustomNameVisible = true
-        stand.isInvulnerable = true
-        stand.isVisible = false
-        return stand
     }
 
     private fun update()
@@ -243,9 +234,22 @@ class VoteTopStand @JvmOverloads constructor(private val plugin: CV, private val
     companion object
     {
         private val voteTops: MutableMap<Int, VoteTopStand> = HashMap()
+
         operator fun get(top: Int): VoteTopStand?
         {
             return voteTops[top]
+        }
+
+        fun spawnArmorStand(loc: Location): ArmorStand
+        {
+            val stand = loc.world!!.spawnEntity(loc, EntityType.ARMOR_STAND) as ArmorStand
+            stand.removeWhenFarAway = false
+            stand.isSilent = true
+            stand.setGravity(false)
+            stand.isCustomNameVisible = true
+            stand.isInvulnerable = true
+            stand.isVisible = false
+            return stand
         }
 
         fun updateAll(plugin: CV)
