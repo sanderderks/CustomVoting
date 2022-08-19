@@ -5,7 +5,6 @@ import me.sd_master92.core.inventory.GUI
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.Settings
 import me.sd_master92.customvoting.constants.enumerations.SoundType
-import me.sd_master92.customvoting.gui.VoteSettings
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Material
@@ -24,7 +23,7 @@ class DisabledWorlds(private val plugin: CV) : GUI(plugin, "Disabled Worlds", 27
             {
                 SoundType.CLICK.play(plugin, player)
                 cancelCloseEvent = true
-                player.openInventory(VoteSettings(plugin).inventory)
+                player.openInventory(GeneralSettings(plugin).inventory)
             }
 
             Material.GRASS_BLOCK ->
