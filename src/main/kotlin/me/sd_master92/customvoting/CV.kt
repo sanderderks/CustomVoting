@@ -235,6 +235,9 @@ class CV : CustomPlugin(
                 config.getNumber(Settings.VOTE_PARTY_TYPE.path)
             ).label else "None"
         })
+        metrics.addCustomChart(SimplePie("vote_crates") {
+            if (data.getLocations(Data.VOTE_CRATES).isNotEmpty()) "true" else "false"
+        })
         metrics.addCustomChart(SimplePie("number_of_playerfiles") {
             val number = VoteFile.getAll(this).size
             var max = 100
@@ -244,10 +247,18 @@ class CV : CustomPlugin(
             }
             "${max - 100}-$max"
         })
-        metrics.addCustomChart(SimplePie("number_of_databaserows") { "${PlayerTable.getAll(this).size}" })
+        metrics.addCustomChart(SimplePie("number_of_databaserows") {
+            val number = PlayerTable.getAll(this).size
+            var max = 100
+            while (number >= max)
+            {
+                max += 100
+            }
+            "${max - 100}-$max"
+        })
         metrics.addCustomChart(AdvancedPie("vote_sites") {
             val valueMap: MutableMap<String, Int> = HashMap()
-            for (site in data.getStringList(Data.VOTE_SITES))
+            for (site in data.getStringList(Data.VOTE_SITES).filter { site -> !site.lowercase().contains("test") })
             {
                 valueMap[site] = 1
             }
