@@ -253,7 +253,7 @@ class PlayerListener(private val plugin: CV) : Listener
                     )
                     {
                         event.isCancelled = true
-                        player.sendMessage(ChatColor.RED.toString() + "You do not have permission to open this chest.")
+                        player.sendMessage(ChatColor.RED.toString() + "You need a key to open this crate.")
                     }
                 }
             }
