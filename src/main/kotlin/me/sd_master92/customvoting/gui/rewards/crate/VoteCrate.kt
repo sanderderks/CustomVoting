@@ -108,23 +108,31 @@ class VoteCrate(private val plugin: CV, private val player: Player, path: String
 
     fun run()
     {
-        val chance = Random().nextInt(100)
-        var min = 0
-        for (number in rewards.keys.sortedBy { it })
+        if (allRewards.isNotEmpty())
         {
-            if (chance in min until number + min)
+            val chance = Random().nextInt(100)
+            var min = 0
+            for (number in rewards.keys.sortedBy { it })
             {
-                searching = false
-                shuffle(number)
-                break
-            } else
-            {
-                min += number
+                if (chance in min until number + min)
+                {
+                    searching = false
+                    shuffle(number)
+                    break
+                } else
+                {
+                    min += number
+                }
             }
-        }
-        if (searching)
+            if (searching)
+            {
+                shuffle()
+            }
+        } else
         {
-            shuffle()
+            keepAlive = false
+            player.closeInventory()
+            player.sendMessage(ChatColor.RED.toString() + "There are no rewards inside this crate...")
         }
     }
 

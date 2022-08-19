@@ -95,7 +95,7 @@ class EnabledUser(private val voter: Voter)
         meta!!.lore = listOf(
             ChatColor.GRAY.toString() + "Enabled: " + if (voter.isOpUser)
                 ChatColor.GREEN.toString() + "Yes" else ChatColor.RED.toString() + "No",
-            ChatColor.GRAY.toString() + "This setting overrides;the group permissions."
+            ChatColor.GRAY.toString() + "This setting overrides", ChatColor.GRAY.toString() + "the group permissions."
         )
         if (meta.displayName != voter.name)
         {
