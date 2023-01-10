@@ -126,7 +126,7 @@ fun Player.hasPermissionRewardsByGroup(plugin: CV): Boolean
 
 fun Player.hasPermissionRewardsByUser(plugin: CV): Boolean
 {
-    val voter = if (plugin.hasDatabaseConnection()) PlayerTable(plugin, this) else VoteFile(this, plugin)
+    val voter = if (plugin.hasDatabaseConnection()) PlayerTable(plugin, this) else VoteFile.get(plugin, this)
     return voter.isOpUser
 }
 

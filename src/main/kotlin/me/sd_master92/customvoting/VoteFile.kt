@@ -4,6 +4,7 @@ import me.sd_master92.core.file.PlayerFile
 import me.sd_master92.customvoting.constants.Data
 import me.sd_master92.customvoting.constants.TopVoter
 import me.sd_master92.customvoting.constants.Voter
+import me.sd_master92.customvoting.constants.enumerations.Settings
 import org.bukkit.entity.Player
 
 class VoteFile : Voter
@@ -26,14 +27,14 @@ class VoteFile : Voter
     override val queue: List<String>
         get() = plugin.data.getStringList(Data.VOTE_QUEUE + "." + uuid)
 
-    constructor(uuid: String, plugin: CV)
+    private constructor(uuid: String, plugin: CV)
     {
         playerFile = PlayerFile.getByUuid(plugin, uuid)
         this.plugin = plugin
         register()
     }
 
-    constructor(player: Player, plugin: CV)
+    private constructor(player: Player, plugin: CV)
     {
         playerFile = player.getPlayerFile(plugin)
         this.plugin = plugin
@@ -139,6 +140,24 @@ class VoteFile : Voter
         override fun getAll(plugin: CV): MutableList<Voter>
         {
             return ALL.values.toMutableList()
+        }
+
+        fun get(plugin: CV, player: Player): VoteFile
+        {
+            return if (plugin.config.getBoolean(Settings.UUID_STORAGE.path)) getByUuid(plugin, player) else getByName(
+                plugin,
+                player
+            )
+        }
+
+        private fun getByUuid(plugin: CV, player: Player): VoteFile
+        {
+            return ALL.getOrDefault(player.uniqueId.toString(), VoteFile(player, plugin))
+        }
+
+        private fun getByName(plugin: CV, player: Player): VoteFile
+        {
+            return ALL.values.firstOrNull { file -> file.name == player.name } ?: VoteFile(player, plugin)
         }
 
         private fun migrateAll()

@@ -21,15 +21,15 @@ class VotesCommand(private val plugin: CV) : SimpleCommand(plugin, "votes")
             {
                 val placeholders = HashMap<String, String>()
                 val voter: Voter =
-                    if (plugin.hasDatabaseConnection()) PlayerTable(plugin, sender) else VoteFile(sender, plugin)
+                    if (plugin.hasDatabaseConnection()) PlayerTable(plugin, sender) else VoteFile.get(plugin, sender)
                 placeholders["%VOTES%"] = "${voter.votes}"
                 placeholders["%MONTHLY_VOTES%"] = "${voter.monthlyVotes}"
                 if (plugin.config.getBoolean(Settings.MONTHLY_VOTES.path))
                 {
-                    placeholders["%s%"] = if (VoteFile(sender, plugin).monthlyVotes == 1) "" else "s"
+                    placeholders["%s%"] = if (VoteFile.get(plugin, sender).monthlyVotes == 1) "" else "s"
                 } else
                 {
-                    placeholders["%s%"] = if (VoteFile(sender, plugin).votes == 1) "" else "s"
+                    placeholders["%s%"] = if (VoteFile.get(plugin, sender).votes == 1) "" else "s"
                 }
                 sender.sendText(plugin, Messages.VOTES_COMMAND_SELF, placeholders)
             }

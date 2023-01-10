@@ -273,7 +273,7 @@ class CustomVote(
 
     private fun giveStreakRewards(player: Player)
     {
-        val votes = VoteFile(player, plugin).votes
+        val votes = VoteFile.get(plugin, player).votes
         if (plugin.data.contains(Data.VOTE_STREAKS + "." + votes))
         {
             Logger.OK.log("Player reached vote streak #$votes, giving streak rewards", logger)

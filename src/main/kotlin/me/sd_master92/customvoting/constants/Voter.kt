@@ -84,7 +84,7 @@ interface Voter
                 PlayerTable(plugin, player)
             } else
             {
-                VoteFile(player, plugin)
+                VoteFile.get(plugin, player)
             }
         }
 
