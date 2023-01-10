@@ -28,7 +28,7 @@ class VoteFile : Voter
 
     constructor(uuid: String, plugin: CV)
     {
-        playerFile = PlayerFile.get(plugin, uuid)
+        playerFile = PlayerFile.getByUuid(plugin, uuid)
         this.plugin = plugin
         register()
     }
