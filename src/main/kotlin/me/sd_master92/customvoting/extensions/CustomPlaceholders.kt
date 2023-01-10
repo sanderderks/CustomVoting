@@ -57,7 +57,7 @@ class CustomPlaceholders(private val plugin: CV) : PlaceholderExpansion()
                     if (player != null)
                     {
                         val voter =
-                            if (plugin.hasDatabaseConnection()) PlayerTable(plugin, player) else VoteFile.get(
+                            if (plugin.hasDatabaseConnection()) PlayerTable.get(plugin, player) else VoteFile.get(
                                 plugin,
                                 player
                             )
@@ -71,7 +71,7 @@ class CustomPlaceholders(private val plugin: CV) : PlaceholderExpansion()
                     if (player != null)
                     {
                         val voter =
-                            if (plugin.hasDatabaseConnection()) PlayerTable(plugin, player) else VoteFile.get(
+                            if (plugin.hasDatabaseConnection()) PlayerTable.get(plugin, player) else VoteFile.get(
                                 plugin,
                                 player
                             )

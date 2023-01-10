@@ -3,6 +3,7 @@ package me.sd_master92.customvoting.database
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.TopVoter
 import me.sd_master92.customvoting.constants.Voter
+import me.sd_master92.customvoting.constants.enumerations.Settings
 import org.bukkit.entity.Player
 
 class PlayerTable(private val plugin: CV, override val uuid: String) : Voter
@@ -22,7 +23,7 @@ class PlayerTable(private val plugin: CV, override val uuid: String) : Voter
     override val queue: List<String>
         get() = players?.getQueue(uuid) ?: listOf()
 
-    constructor(plugin: CV, player: Player) : this(plugin, player.uniqueId.toString())
+    private constructor(plugin: CV, player: Player) : this(plugin, player.uniqueId.toString())
     {
         players?.setName(player.uniqueId.toString(), player.name)
     }
@@ -99,6 +100,24 @@ class PlayerTable(private val plugin: CV, override val uuid: String) : Voter
         override fun getAll(plugin: CV): MutableList<Voter>
         {
             return ALL.values.toMutableList()
+        }
+
+        fun get(plugin: CV, player: Player): PlayerTable
+        {
+            return if (plugin.config.getBoolean(Settings.UUID_STORAGE.path)) getByUuid(plugin, player) else getByName(
+                plugin,
+                player
+            )
+        }
+
+        private fun getByUuid(plugin: CV, player: Player): PlayerTable
+        {
+            return ALL.getOrDefault(player.uniqueId.toString(), PlayerTable(plugin, player))
+        }
+
+        private fun getByName(plugin: CV, player: Player): PlayerTable
+        {
+            return ALL.values.firstOrNull { file -> file.name == player.name } ?: PlayerTable(plugin, player)
         }
     }
 

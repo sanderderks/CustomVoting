@@ -81,7 +81,7 @@ interface Voter
         {
             return if (plugin.hasDatabaseConnection())
             {
-                PlayerTable(plugin, player)
+                PlayerTable.get(plugin, player)
             } else
             {
                 VoteFile.get(plugin, player)
