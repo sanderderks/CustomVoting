@@ -96,7 +96,7 @@ class VoteTopStand @JvmOverloads constructor(private val plugin: CV, private val
                 val citizen = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, "Unknown")
                 plugin.data["$path.citizen"] = citizen.uniqueId.toString()
                 citizen.isProtected = true
-                citizen.data().setPersistent(NPC.NAMEPLATE_VISIBLE_METADATA, false)
+                citizen.data().setPersistent(NPC.Metadata.NAMEPLATE_VISIBLE, false)
                 citizen.spawn(player.location)
                 if (citizen.isSpawned)
                 {
@@ -173,7 +173,7 @@ class VoteTopStand @JvmOverloads constructor(private val plugin: CV, private val
             {
                 citizen!!.name = topVoter.name
                 citizen!!.despawn()
-                citizen!!.data()?.setPersistent(NPC.NAMEPLATE_VISIBLE_METADATA, false)
+                citizen!!.data()?.setPersistent(NPC.Metadata.NAMEPLATE_VISIBLE, false)
                 citizen!!.spawn(plugin.data.getLocation(path))
             }
         } else
@@ -185,7 +185,7 @@ class VoteTopStand @JvmOverloads constructor(private val plugin: CV, private val
             {
                 citizen!!.name = "Unknown"
                 citizen!!.despawn()
-                citizen!!.data()?.setPersistent(NPC.NAMEPLATE_VISIBLE_METADATA, false)
+                citizen!!.data()?.setPersistent(NPC.Metadata.NAMEPLATE_VISIBLE, false)
                 citizen!!.spawn(plugin.data.getLocation(path))
             }
         }
