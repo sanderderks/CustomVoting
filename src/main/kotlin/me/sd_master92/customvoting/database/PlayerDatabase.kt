@@ -194,6 +194,17 @@ class PlayerDatabase(private val plugin: CV, database: CustomDatabase)
                 plugin.errorLog("| could not create column 'is_op'!")
             }
         }
+        val queueColumn = playersTable.getColumn("queue")
+        if (queueColumn.exists())
+        {
+            if (queueColumn.delete())
+            {
+                plugin.infoLog("| successfully deleted column 'queue'!")
+            } else
+            {
+                plugin.errorLog("| could not delete column 'queue'!")
+            }
+        }
     }
 
     init
@@ -236,6 +247,10 @@ class PlayerDatabase(private val plugin: CV, database: CustomDatabase)
                 plugin.infoLog("| successfully created table 'queue'")
                 plugin.infoLog("|")
             }
+        } else
+        {
+            plugin.infoLog("| successfully located table 'queue'")
+            plugin.infoLog("|")
         }
         if (playersTable.exists() && queueTable.exists())
         {

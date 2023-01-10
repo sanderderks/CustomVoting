@@ -191,7 +191,7 @@ class CV : CustomPlugin(
         messages = CustomFile("messages.yml", this)
         data = CustomFile("data.yml", this)
         infoLog("")
-        infoLog("| caching player files")
+        infoLog("| caching player data")
         infoLog("|")
         val time = measureTimeMillis {
             Voter.init(this)
