@@ -39,7 +39,8 @@ enum class Settings(val path: String, private val defaultValue: Any? = null)
     DATABASE_PORT("${DATABASE.path}.port", 3306),
     DATABASE_DATABASE("${DATABASE.path}.database", "customvoting"),
     DATABASE_USER("${DATABASE.path}.user", "root"),
-    DATABASE_PASSWORD("${DATABASE.path}.password", "root");
+    DATABASE_PASSWORD("${DATABASE.path}.password", "root"),
+    SETTINGS_ENABLED("vote_settings_enabled", true);
 
     companion object
     {
