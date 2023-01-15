@@ -32,7 +32,6 @@ interface Voter
         fun init(plugin: CV)
         {
             VoteFile.init(plugin)
-            PlayerTable.init(plugin)
             getTopVoters(plugin, true)
         }
 

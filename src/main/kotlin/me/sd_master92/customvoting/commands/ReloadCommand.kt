@@ -1,5 +1,6 @@
 package me.sd_master92.customvoting.commands
 
+import me.sd_master92.core.appendWhenTrue
 import me.sd_master92.core.command.SimpleCommand
 import me.sd_master92.core.file.PlayerFile
 import me.sd_master92.customvoting.CV
@@ -15,12 +16,18 @@ class ReloadCommand(private val plugin: CV) : SimpleCommand(plugin, "votereload"
 {
     override fun onCommand(sender: CommandSender, args: Array<String>)
     {
-        if (reload(plugin))
+        val cache = args.isNotEmpty() && args[0] == "cache"
+        sender.sendMessage(
+            ChatColor.GRAY.toString() + "Reloading configuration".appendWhenTrue(cache, " and cache") + "..."
+        )
+        if (reload(plugin, cache))
         {
-            sender.sendMessage(ChatColor.GREEN.toString() + "Configuration files reloaded!")
+            sender.sendMessage(
+                ChatColor.GREEN.toString() + "Configuration".appendWhenTrue(cache, " and cache") + " reloaded!"
+            )
         } else
         {
-            sender.sendMessage(ChatColor.RED.toString() + "Could not reload configuration files!")
+            sender.sendMessage(ChatColor.RED.toString() + "Could not reload configuration!")
         }
     }
 
@@ -30,11 +37,14 @@ class ReloadCommand(private val plugin: CV) : SimpleCommand(plugin, "votereload"
 
     companion object
     {
-        fun reload(plugin: CV): Boolean
+        fun reload(plugin: CV, init: Boolean? = false): Boolean
         {
             if (plugin.config.reloadConfig() && plugin.data.reloadConfig() && plugin.messages.reloadConfig())
             {
-                Voter.init(plugin)
+                if (init == true)
+                {
+                    Voter.init(plugin)
+                }
                 if (PlayerFile.getAll().values.stream().allMatch { obj: PlayerFile -> obj.reloadConfig() })
                 {
                     VoteTopSign.updateAll(plugin)
