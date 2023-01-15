@@ -85,6 +85,13 @@ class Support(private val plugin: CV) : GUI(plugin, "Support", 9)
                 }
             }
 
+            Material.CARVED_PUMPKIN ->
+            {
+                SoundType.CLICK.play(plugin, player)
+                cancelCloseEvent = true
+                player.openInventory(Statistics(plugin).inventory)
+            }
+
             else                    ->
             {
             }
@@ -126,6 +133,12 @@ class Support(private val plugin: CV) : GUI(plugin, "Support", 9)
             )
         )
         inventory.addItem(MergeItem(plugin))
+        inventory.addItem(
+            BaseItem(
+                Material.CARVED_PUMPKIN, ChatColor.LIGHT_PURPLE.toString() + "Statistics",
+                ChatColor.GRAY.toString() + "CustomVoting BStats"
+            )
+        )
         inventory.setItem(8, BACK_ITEM)
     }
 }
@@ -146,6 +159,6 @@ class IngameUpdateItem(plugin: CV) : StatusItem(
 
 class MergeItem(plugin: CV) : BaseItem(
     Material.HOPPER, ChatColor.RED.toString() + "Merge Duplicates",
-    ChatColor.GRAY.toString() + "Merge duplicate playerfiles;" + ChatColor.RED + "Currently: " +
-            VoteFile.getAll(plugin).size + " files"
+    ChatColor.GRAY.toString() + "Find and merge duplicate;" + ChatColor.GRAY + "playerfiles;" + ChatColor.GRAY + "Currently: " +
+            ChatColor.GREEN + VoteFile.getAll(plugin).size + " files"
 )
