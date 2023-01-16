@@ -20,7 +20,12 @@ class VotePartyRewards(private val plugin: CV, private val key: String) : GUI(
 
     override fun onClose(event: InventoryCloseEvent, player: Player)
     {
-        if (plugin.data.setItems(Data.VOTE_PARTY + "." + key, event.inventory.contents))
+        val path = Data.VOTE_PARTY + "." + key
+        if (plugin.data.getItems(path).contentEquals(event.inventory.contents.filterNotNull().toTypedArray()))
+        {
+            SoundType.SUCCESS.play(plugin, player)
+            player.sendMessage(ChatColor.GRAY.toString() + "Nothing changed!")
+        } else if (plugin.data.setItems(path, event.inventory.contents))
         {
             SoundType.SUCCESS.play(plugin, player)
             player.sendMessage(ChatColor.GREEN.toString() + "Successfully updated " + name)

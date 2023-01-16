@@ -41,7 +41,11 @@ class ItemRewards(private val plugin: CV, private val op: Boolean = false) : GUI
     {
         inv.setItem(25, null)
         inv.setItem(26, null)
-        if (plugin.data.setItems(path, inv.contents))
+        if (plugin.data.getItems(path).contentEquals(inv.contents.filterNotNull().toTypedArray()))
+        {
+            SoundType.SUCCESS.play(plugin, player)
+            player.sendMessage(ChatColor.GRAY.toString() + "Nothing changed!")
+        } else if (plugin.data.setItems(path, inv.contents))
         {
             SoundType.SUCCESS.play(plugin, player)
             player.sendMessage(ChatColor.GREEN.toString() + "Successfully updated the $name!")
