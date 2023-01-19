@@ -1,20 +1,18 @@
-package me.sd_master92.customvoting.subjects
+package me.sd_master92.customvoting.subjects.voteparty
 
 import me.sd_master92.core.inventory.BaseItem
 import me.sd_master92.customvoting.CV
+import me.sd_master92.customvoting.addToInventoryOrDrop
 import me.sd_master92.customvoting.constants.Data
 import me.sd_master92.customvoting.constants.enumerations.Messages
 import me.sd_master92.customvoting.constants.enumerations.Settings
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.constants.enumerations.VotePartyType
-import me.sd_master92.customvoting.helpers.ParticleHelper
 import me.sd_master92.customvoting.withPlaceholders
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
-import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.entity.Player
-import org.bukkit.inventory.ItemStack
 import org.bukkit.scheduler.BukkitRunnable
 import java.util.*
 
@@ -44,6 +42,7 @@ class VoteParty(private val plugin: CV)
                                 plugin.broadcastText(Messages.VOTE_PARTY_COUNTDOWN, placeholders)
                             }
                         }
+
                         5, 4, 3, 2, 1 ->
                         {
                             if (!plugin.config.getBoolean(Settings.DISABLED_BROADCAST_VOTE_PARTY_COUNTDOWN_ENDING.path))
@@ -55,6 +54,7 @@ class VoteParty(private val plugin: CV)
                                 plugin.broadcastText(Messages.VOTE_PARTY_COUNTDOWN_ENDING, placeholders)
                             }
                         }
+
                         0             ->
                         {
                             SoundType.VOTE_PARTY_START.playForAll(plugin)
@@ -66,10 +66,12 @@ class VoteParty(private val plugin: CV)
                                 {
                                     dropChestsRandomly()
                                 }
+
                                 VotePartyType.ADD_TO_INVENTORY.value       ->
                                 {
                                     addToInventory()
                                 }
+
                                 else                                       ->
                                 {
                                     dropChests()
@@ -113,16 +115,11 @@ class VoteParty(private val plugin: CV)
 
     private fun dropChests()
     {
-        val locations = plugin.data.getLocations(Data.VOTE_PARTY)
-        val random = Random()
+        val chests = VotePartyChest.getAll(plugin)
         val tasks: MutableMap<Int, Boolean> = HashMap()
-        for (key in locations.keys)
+
+        for (chest in chests)
         {
-            val chest: MutableList<ItemStack> = ArrayList(listOf(*plugin.data.getItems(Data.VOTE_PARTY + "." + key)))
-            val loc = locations[key]!!.clone()
-                .add(0.5, 0.0, 0.5)
-            val dropLoc = Location(loc.world, loc.x, loc.y - 1, loc.z)
-            val fireworkLoc = Location(loc.world, loc.x, loc.y + 1, loc.z)
             object : BukkitRunnable()
             {
                 override fun run()
@@ -139,15 +136,8 @@ class VoteParty(private val plugin: CV)
                         }
                         if (chest.isNotEmpty())
                         {
-                            val i = random.nextInt(chest.size)
-                            if (dropLoc.world != null)
-                            {
-                                dropLoc.world!!.dropItem(dropLoc, chest.removeAt(i))
-                            }
-                            if (random.nextInt(2) == 0)
-                            {
-                                ParticleHelper.shootFirework(plugin, fireworkLoc)
-                            }
+                            chest.dropRandomItem()
+                            chest.shootFirework()
                         } else
                         {
                             tasks.remove(taskId)
@@ -166,50 +156,21 @@ class VoteParty(private val plugin: CV)
 
     private fun dropChestsRandomly()
     {
-        val locations = plugin.data.getLocations(Data.VOTE_PARTY)
-        val chests: MutableMap<String, MutableList<ItemStack>> = HashMap()
-        val keys: MutableList<String> = ArrayList(locations.keys)
-        val keysIterator = keys.iterator()
-        while (keysIterator.hasNext())
-        {
-            val key = keysIterator.next()
-            val items = plugin.data.getItems(Data.VOTE_PARTY + ".$key")
-            if (items.isNotEmpty())
-            {
-                chests[key] = ArrayList(listOf(*items))
-            } else
-            {
-                keysIterator.remove()
-            }
-        }
+        val chests = VotePartyChest.getAll(plugin)
         val random = Random()
         object : BukkitRunnable()
         {
             override fun run()
             {
-                if (keys.isNotEmpty() && chests.isNotEmpty())
+                if (chests.isNotEmpty())
                 {
-                    val key = keys[random.nextInt(keys.size)]
-                    val chest = chests[key]!!
-                    val loc = locations[key]!!.clone()
-                        .add(0.5, 0.0, 0.5)
-                    val dropLoc = Location(loc.world, loc.x, loc.y - 1, loc.z)
-                    val fireworkLoc = Location(loc.world, loc.x, loc.y + 1, loc.z)
-                    if (dropLoc.world != null)
+                    val chest = chests[random.nextInt(chests.size)]
+                    chest.dropRandomItem()
+                    if (chest.isEmpty())
                     {
-                        dropLoc.world!!.dropItem(dropLoc, chest.removeAt(random.nextInt(chest.size)))
-                        if (chest.isEmpty())
-                        {
-                            keys.remove(key)
-                        } else
-                        {
-                            chests[key] = chest
-                        }
+                        chests.remove(chest)
                     }
-                    if (random.nextInt(3) == 0)
-                    {
-                        ParticleHelper.shootFirework(plugin, fireworkLoc)
-                    }
+                    chest.shootFirework()
                 } else
                 {
                     plugin.server.broadcastMessage(Messages.VOTE_PARTY_END.getMessage(plugin))
@@ -222,11 +183,11 @@ class VoteParty(private val plugin: CV)
 
     private fun addToInventory()
     {
+        val chests = VotePartyChest.getAll(plugin)
         val random = Random()
         val tasks: MutableMap<Int, Boolean> = HashMap()
-        for (key in plugin.data.getLocations(Data.VOTE_PARTY).keys)
+        for (chest in chests)
         {
-            val chest: MutableList<ItemStack> = ArrayList(listOf(*plugin.data.getItems(Data.VOTE_PARTY + "." + key)))
             object : BukkitRunnable()
             {
                 override fun run()
@@ -242,11 +203,7 @@ class VoteParty(private val plugin: CV)
                         {
                             val players: List<Player> = ArrayList(Bukkit.getOnlinePlayers())
                             val player = players[random.nextInt(players.size)]
-                            val item: ItemStack = chest.removeAt(random.nextInt(chest.size))
-                            for (left in player.inventory.addItem(item).values)
-                            {
-                                player.world.dropItem(player.location, left!!)
-                            }
+                            player.addToInventoryOrDrop(chest.popRandomItem())
                             SoundType.PICKUP.play(plugin, player)
                         } else
                         {

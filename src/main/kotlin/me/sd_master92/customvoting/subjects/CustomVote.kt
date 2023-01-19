@@ -12,6 +12,7 @@ import me.sd_master92.customvoting.constants.enumerations.Logger
 import me.sd_master92.customvoting.constants.enumerations.Messages
 import me.sd_master92.customvoting.constants.enumerations.Settings
 import me.sd_master92.customvoting.helpers.ParticleHelper
+import me.sd_master92.customvoting.subjects.voteparty.VoteParty
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player

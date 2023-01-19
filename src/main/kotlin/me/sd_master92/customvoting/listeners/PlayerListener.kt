@@ -13,9 +13,9 @@ import me.sd_master92.customvoting.gui.rewards.crate.VoteCrate
 import me.sd_master92.customvoting.gui.voteparty.VotePartyRewards
 import me.sd_master92.customvoting.sendText
 import me.sd_master92.customvoting.subjects.CustomVote
-import me.sd_master92.customvoting.subjects.VoteParty
 import me.sd_master92.customvoting.subjects.VoteTopSign
 import me.sd_master92.customvoting.subjects.VoteTopStand
+import me.sd_master92.customvoting.subjects.voteparty.VoteParty
 import me.sd_master92.customvoting.tasks.UpdateChecker
 import me.sd_master92.customvoting.tasks.VoteReminder
 import org.bukkit.Bukkit

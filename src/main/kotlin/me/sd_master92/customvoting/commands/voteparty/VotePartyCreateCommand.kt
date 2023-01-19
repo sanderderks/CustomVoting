@@ -1,7 +1,7 @@
 package me.sd_master92.customvoting.commands.voteparty
 
 import me.sd_master92.core.command.SimpleSubCommand
-import me.sd_master92.customvoting.subjects.VoteParty
+import me.sd_master92.customvoting.subjects.voteparty.VoteParty
 import org.bukkit.ChatColor
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
