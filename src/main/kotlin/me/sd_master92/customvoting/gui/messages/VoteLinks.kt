@@ -75,6 +75,7 @@ class VoteLinks @JvmOverloads constructor(private val plugin: CV, private val is
                 }
                 items[slot] = item
 
+                @Suppress("UNCHECKED_CAST")
                 save(player, items as Array<ItemStack?>, false)
 
                 SoundType.SUCCESS.play(plugin, player)
@@ -115,6 +116,7 @@ class VoteLinks @JvmOverloads constructor(private val plugin: CV, private val is
                 }
                 items[slot] = item
 
+                @Suppress("UNCHECKED_CAST")
                 save(player, items as Array<ItemStack?>, false)
 
                 SoundType.SUCCESS.play(plugin, player)

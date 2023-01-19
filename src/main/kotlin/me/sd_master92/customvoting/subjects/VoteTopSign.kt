@@ -141,6 +141,8 @@ class VoteTopSign @JvmOverloads constructor(
                         if (skull.hasOwner())
                         {
                             val material = skull.type
+
+                            @Suppress("DEPRECATION")
                             val blockFace = skull.rotation
                             block.type = Material.AIR
                             object : BukkitRunnable()
@@ -150,9 +152,11 @@ class VoteTopSign @JvmOverloads constructor(
                                     block.type = material
                                     if (material == Material.PLAYER_WALL_HEAD)
                                     {
+                                        @Suppress("DEPRECATION")
                                         skull.rotation = sign.facing
                                     } else
                                     {
+                                        @Suppress("DEPRECATION")
                                         skull.rotation = blockFace
                                     }
                                     skull.update(true)

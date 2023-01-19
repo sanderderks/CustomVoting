@@ -71,6 +71,18 @@
                             <shadedPattern>me.sd_master92.customvoting</shadedPattern>
                         </relocation>
                     </relocations>
+                    <transformers>
+                        <transformer
+                                implementation="org.apache.maven.plugins.shade.resource.DontIncludeResourceTransformer">
+                            <resource>MANIFEST.MF</resource>
+                        </transformer>
+                        <!-- Add a transformer to include your custom manifest file. -->
+                        <transformer
+                                implementation="org.apache.maven.plugins.shade.resource.IncludeResourceTransformer">
+                            <resource>META-INF/MANIFEST.MF</resource>
+                            <file>src/main/resources/META-INF/MANIFEST.MF</file>
+                        </transformer>
+                    </transformers>
                 </configuration>
                 <executions>
                     <execution>
