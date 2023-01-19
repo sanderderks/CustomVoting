@@ -69,7 +69,8 @@ class InfoPlayer(private val voter: Voter)
     {
         val skull = voter.name.getOfflinePlayer().getSkull()
         val meta = skull.itemMeta
-        val lastVote = java.text.SimpleDateFormat(("dd-M-yyyy HH:mm:ss")).format(Date(voter.last))
+        val lastVote = if (voter.votes > 0) java.text.SimpleDateFormat(("dd-M-yyyy HH:mm:ss"))
+            .format(Date(voter.last)) else ChatColor.RED.toString() + "never"
         meta!!.lore = listOf(
             ChatColor.GRAY.toString() + "Votes: " + ChatColor.LIGHT_PURPLE + voter.votes,
             ChatColor.GRAY.toString() + "Monthly votes: " + ChatColor.LIGHT_PURPLE + voter.monthlyVotes,
