@@ -1,13 +1,11 @@
 package me.sd_master92.customvoting.listeners
 
-import me.sd_master92.customvoting.CV
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.ItemMergeEvent
-import org.bukkit.scheduler.BukkitRunnable
 import java.util.*
 
-class ItemListener(private val plugin: CV) : Listener
+class ItemListener : Listener
 {
 
     @EventHandler
@@ -16,13 +14,6 @@ class ItemListener(private val plugin: CV) : Listener
         if (event.entity.uniqueId in CANCEL_EVENT)
         {
             event.isCancelled = true
-            object : BukkitRunnable()
-            {
-                override fun run()
-                {
-                    CANCEL_EVENT.remove(event.entity.uniqueId)
-                }
-            }.runTaskLater(plugin, 20 * 5)
         }
     }
 

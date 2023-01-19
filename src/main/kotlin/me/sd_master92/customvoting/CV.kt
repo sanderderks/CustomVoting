@@ -288,7 +288,7 @@ class CV : CustomPlugin(
         registerListener(PlayerListener(this))
         registerListener(VotifierListener(this))
         registerListener(VoteTopListener(this))
-        registerListener(ItemListener(this))
+        registerListener(ItemListener())
     }
 
     private fun registerCommands()

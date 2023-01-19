@@ -57,7 +57,15 @@ class VotePartyChest(private val plugin: CV, key: String)
     {
         if (dropLoc.world != null)
         {
-            ItemListener.CANCEL_EVENT.add(dropLoc.world!!.dropItem(dropLoc, popRandomItem()).uniqueId)
+            val uuid = dropLoc.world!!.dropItem(dropLoc, popRandomItem()).uniqueId
+            ItemListener.CANCEL_EVENT.add(uuid)
+            object : BukkitRunnable()
+            {
+                override fun run()
+                {
+                    ItemListener.CANCEL_EVENT.remove(uuid)
+                }
+            }.runTaskLater(plugin, 20 * 10)
         }
     }
 
