@@ -42,7 +42,11 @@ class LuckyRewards(private val plugin: CV) : GUI(plugin, NAME, 27, false)
         {
             inv.setItem(25, null)
             inv.setItem(26, null)
-            if (plugin.data.setItems(Data.LUCKY_REWARDS, inv.contents))
+            if (plugin.data.getItems(Data.LUCKY_REWARDS).contentEquals(inv.contents.filterNotNull().toTypedArray()))
+            {
+                SoundType.SUCCESS.play(plugin, player)
+                player.sendMessage(ChatColor.GRAY.toString() + "Nothing changed!")
+            } else if (plugin.data.setItems(Data.LUCKY_REWARDS, inv.contents))
             {
                 SoundType.SUCCESS.play(plugin, player)
                 player.sendMessage(ChatColor.GREEN.toString() + "Successfully updated the $NAME!")

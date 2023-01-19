@@ -6,6 +6,7 @@ import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Data
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import org.bukkit.ChatColor
+import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.ClickType
 import org.bukkit.event.inventory.InventoryClickEvent
@@ -165,7 +166,13 @@ class VoteLinks @JvmOverloads constructor(private val plugin: CV, private val is
 
     private fun save(player: Player, items: Array<ItemStack?>, notify: Boolean)
     {
-        if (plugin.data.setItemsWithNull(Data.VOTE_LINK_ITEMS, items))
+        if (plugin.data.getItems(Data.VOTE_LINK_ITEMS).contentEquals(items.map { item ->
+                item ?: ItemStack(Material.AIR)
+            }.toTypedArray()))
+        {
+            SoundType.SUCCESS.play(plugin, player)
+            player.sendMessage(ChatColor.GRAY.toString() + "Nothing changed!")
+        } else if (plugin.data.setItemsWithNull(Data.VOTE_LINK_ITEMS, items))
         {
             if (notify)
             {
