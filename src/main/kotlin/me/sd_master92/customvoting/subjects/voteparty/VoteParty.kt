@@ -72,6 +72,11 @@ class VoteParty(private val plugin: CV)
                                     addToInventory()
                                 }
 
+                                VotePartyType.EXPLODE_CHESTS.value         ->
+                                {
+                                    explode()
+                                }
+
                                 else                                       ->
                                 {
                                     dropChests()
@@ -166,11 +171,11 @@ class VoteParty(private val plugin: CV)
                 {
                     val chest = chests[random.nextInt(chests.size)]
                     chest.dropRandomItem()
+                    chest.shootFirework()
                     if (chest.isEmpty())
                     {
                         chests.remove(chest)
                     }
-                    chest.shootFirework()
                 } else
                 {
                     plugin.server.broadcastMessage(Messages.VOTE_PARTY_END.getMessage(plugin))
@@ -179,6 +184,29 @@ class VoteParty(private val plugin: CV)
                 }
             }
         }.runTaskTimer(plugin, 0, 10)
+    }
+
+    private fun explode()
+    {
+        val chests = VotePartyChest.getAll(plugin)
+        val random = Random()
+        object : BukkitRunnable()
+        {
+            override fun run()
+            {
+                if (chests.isNotEmpty())
+                {
+                    val chest = chests[random.nextInt(chests.size)]
+                    chest.explode()
+                    chests.remove(chest)
+                } else
+                {
+                    plugin.server.broadcastMessage(Messages.VOTE_PARTY_END.getMessage(plugin))
+                    stop()
+                    cancel()
+                }
+            }
+        }.runTaskTimer(plugin, 0, 30)
     }
 
     private fun addToInventory()

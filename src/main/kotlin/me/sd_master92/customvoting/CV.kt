@@ -15,6 +15,7 @@ import me.sd_master92.customvoting.constants.enumerations.VotePartyType
 import me.sd_master92.customvoting.database.PlayerDatabase
 import me.sd_master92.customvoting.database.PlayerTable
 import me.sd_master92.customvoting.extensions.CustomPlaceholders
+import me.sd_master92.customvoting.listeners.ItemListener
 import me.sd_master92.customvoting.listeners.PlayerListener
 import me.sd_master92.customvoting.listeners.VoteTopListener
 import me.sd_master92.customvoting.listeners.VotifierListener
@@ -287,6 +288,7 @@ class CV : CustomPlugin(
         registerListener(PlayerListener(this))
         registerListener(VotifierListener(this))
         registerListener(VoteTopListener(this))
+        registerListener(ItemListener(this))
     }
 
     private fun registerCommands()

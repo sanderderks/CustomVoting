@@ -17,7 +17,8 @@ enum class SoundType(
     OPEN(Sound.BLOCK_ENDER_CHEST_OPEN),
     CLOSE(Sound.BLOCK_ENDER_CHEST_CLOSE),
     VOTE_PARTY_START(Sound.ENTITY_ENDER_DRAGON_GROWL),
-    PICKUP(Sound.ENTITY_ITEM_PICKUP);
+    PICKUP(Sound.ENTITY_ITEM_PICKUP),
+    EXPLODE(Sound.ENTITY_GENERIC_EXPLODE);
 
     fun play(plugin: CV, loc: Location)
     {

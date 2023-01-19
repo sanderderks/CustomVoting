@@ -2,19 +2,23 @@ package me.sd_master92.customvoting.subjects.voteparty
 
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Data
+import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.helpers.ParticleHelper
+import me.sd_master92.customvoting.listeners.ItemListener
 import org.bukkit.Location
+import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
+import org.bukkit.scheduler.BukkitRunnable
 import java.util.*
 
 class VotePartyChest(private val plugin: CV, key: String)
 {
-    private val loc: Location = plugin.data.getLocation(Data.VOTE_PARTY + ".$key")!!.clone().add(0.5, 0.0, 0.5)
-    private val dropLoc: Location = Location(loc.world, loc.x, loc.y - 1, loc.z)
-    private val fireworkLoc: Location = Location(loc.world, loc.x, loc.y + 1, loc.z)
+    private val loc: Location = plugin.data.getLocation(Data.VOTE_PARTY + ".$key")!!.clone()
+    private val dropLoc: Location = Location(loc.world, loc.x + 0.5, loc.y - 1, loc.z + 0.5)
+    private val fireworkLoc: Location = Location(loc.world, loc.x + 0.5, loc.y + 1, loc.z + 0.5)
     private val items: MutableList<ItemStack> = plugin.data.getItems(Data.VOTE_PARTY + ".$key").toMutableList()
     private val random: Random = Random()
-    
+
     fun isEmpty(): Boolean
     {
         return items.isEmpty()
@@ -23,6 +27,25 @@ class VotePartyChest(private val plugin: CV, key: String)
     fun isNotEmpty(): Boolean
     {
         return !isEmpty()
+    }
+
+    fun explode()
+    {
+        val chest = loc.block
+        chest.world.strikeLightningEffect(loc)
+        chest.type = Material.AIR
+        while (isNotEmpty())
+        {
+            dropRandomItem()
+        }
+        SoundType.EXPLODE.play(plugin, loc)
+        object : BukkitRunnable()
+        {
+            override fun run()
+            {
+                chest.type = Material.ENDER_CHEST
+            }
+        }.runTaskLater(plugin, 60)
     }
 
     fun popRandomItem(): ItemStack
@@ -34,7 +57,7 @@ class VotePartyChest(private val plugin: CV, key: String)
     {
         if (dropLoc.world != null)
         {
-            dropLoc.world!!.dropItem(dropLoc, popRandomItem())
+            ItemListener.CANCEL_EVENT.add(dropLoc.world!!.dropItem(dropLoc, popRandomItem()).uniqueId)
         }
     }
 
