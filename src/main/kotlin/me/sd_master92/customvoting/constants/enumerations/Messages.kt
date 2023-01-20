@@ -53,6 +53,7 @@ enum class Messages(private val path: String, private val defaultValue: Any)
     VOTE_PARTY_COUNTDOWN_ENDING("vote_party.countdown_ending", "&aVote Party starting in &b%TIME%"),
     VOTE_PARTY_START("vote_party.start", "&aThe Vote Party has begun!"),
     VOTE_PARTY_END("vote_party.end", "&7The Vote Party has ended!"),
+    VOTE_PARTY_PIG_KILLED("vote_party.pig_killed", "&dPig killed by &b%KILLER%&d! Only &b%TOGO% &dpig%s% to go!"),
     VOTE_STREAK_REACHED("vote_streak.streak_reached", "&b%PLAYER% &dreached vote streak #&b%STREAK%&d!"),
     VOTE_REMINDER(
         "vote_reminder",

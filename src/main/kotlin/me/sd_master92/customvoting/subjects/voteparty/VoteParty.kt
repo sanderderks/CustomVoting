@@ -13,6 +13,8 @@ import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
+import org.bukkit.potion.PotionEffect
+import org.bukkit.potion.PotionEffectType
 import org.bukkit.scheduler.BukkitRunnable
 import java.util.*
 
@@ -57,8 +59,14 @@ class VoteParty(private val plugin: CV)
 
                         0             ->
                         {
-                            SoundType.VOTE_PARTY_START.playForAll(plugin)
-                            plugin.server.broadcastMessage(Messages.VOTE_PARTY_START.getMessage(plugin))
+                            if (votePartyType == VotePartyType.PIG_HUNT.value)
+                            {
+                                SoundType.EXPLODE.playForAll(plugin)
+                            } else
+                            {
+                                SoundType.VOTE_PARTY_START.playForAll(plugin)
+                            }
+                            plugin.broadcastText(Messages.VOTE_PARTY_START)
                             executeCommands()
                             when (votePartyType)
                             {
@@ -77,6 +85,16 @@ class VoteParty(private val plugin: CV)
                                     explode()
                                 }
 
+                                VotePartyType.SCARY.value                  ->
+                                {
+                                    scare()
+                                }
+
+                                VotePartyType.PIG_HUNT.value               ->
+                                {
+                                    pigHunt()
+                                }
+
                                 else                                       ->
                                 {
                                     dropChests()
@@ -88,16 +106,6 @@ class VoteParty(private val plugin: CV)
                     count--
                 }
             }.runTaskTimer(plugin, 0, 20)
-        }
-    }
-
-    private fun stop()
-    {
-        isActive = false
-        queue.removeFirstOrNull()
-        if (queue.isNotEmpty())
-        {
-            queue[0].start()
         }
     }
 
@@ -148,8 +156,7 @@ class VoteParty(private val plugin: CV)
                             tasks.remove(taskId)
                             if (tasks.isEmpty())
                             {
-                                plugin.broadcastText(Messages.VOTE_PARTY_END)
-                                stop()
+                                stop(plugin)
                             }
                             cancel()
                         }
@@ -178,8 +185,7 @@ class VoteParty(private val plugin: CV)
                     }
                 } else
                 {
-                    plugin.server.broadcastMessage(Messages.VOTE_PARTY_END.getMessage(plugin))
-                    stop()
+                    stop(plugin)
                     cancel()
                 }
             }
@@ -201,12 +207,70 @@ class VoteParty(private val plugin: CV)
                     chests.remove(chest)
                 } else
                 {
-                    plugin.server.broadcastMessage(Messages.VOTE_PARTY_END.getMessage(plugin))
-                    stop()
+                    stop(plugin)
                     cancel()
                 }
             }
         }.runTaskTimer(plugin, 0, 30)
+    }
+
+    private fun scare()
+    {
+        val chests = VotePartyChest.getAll(plugin)
+        val random = Random()
+
+        chests.firstOrNull()?.loc?.let {
+            SoundType.SCARY_1.play(plugin, it)
+            object : BukkitRunnable()
+            {
+                override fun run()
+                {
+                    SoundType.SCARY_2.play(plugin, it)
+                }
+            }.runTaskLater(plugin, 20 * 4)
+            object : BukkitRunnable()
+            {
+                override fun run()
+                {
+                    SoundType.SCARY_3.play(plugin, it)
+                }
+            }.runTaskLater(plugin, 20 * 6)
+            for (player in it.world!!.getNearbyEntities(it, 50.0, 50.0, 50.0).filterIsInstance<Player>())
+            {
+                player.addPotionEffect(
+                    PotionEffect(PotionEffectType.getByName("DARKNESS") ?: PotionEffectType.CONFUSION, 20 * 8, 1)
+                )
+                player.setPlayerTime(18000, false)
+                object : BukkitRunnable()
+                {
+                    override fun run()
+                    {
+                        player.resetPlayerTime()
+                    }
+                }.runTaskLater(plugin, 20 * 13)
+            }
+        }
+        while (chests.isNotEmpty())
+        {
+            val chest = chests[random.nextInt(chests.size)]
+            chest.scare()
+            chests.remove(chest)
+        }
+        object : BukkitRunnable()
+        {
+            override fun run()
+            {
+                stop(plugin)
+            }
+        }.runTaskLater(plugin, 20 * 12)
+    }
+
+    private fun pigHunt()
+    {
+        for (chest in VotePartyChest.getAll(plugin))
+        {
+            chest.convertToPig()
+        }
     }
 
     private fun addToInventory()
@@ -238,8 +302,7 @@ class VoteParty(private val plugin: CV)
                             tasks.remove(taskId)
                             if (tasks.isEmpty())
                             {
-                                plugin.server.broadcastMessage(Messages.VOTE_PARTY_END.getMessage(plugin))
-                                stop()
+                                stop(plugin)
                             }
                             cancel()
                         }
@@ -260,5 +323,17 @@ class VoteParty(private val plugin: CV)
         )
         private val queue: MutableList<VoteParty> = ArrayList()
         private var isActive = false
+
+        fun stop(plugin: CV)
+        {
+            plugin.broadcastText(Messages.VOTE_PARTY_END)
+
+            isActive = false
+            queue.removeFirstOrNull()
+            if (queue.isNotEmpty())
+            {
+                queue[0].start()
+            }
+        }
     }
 }

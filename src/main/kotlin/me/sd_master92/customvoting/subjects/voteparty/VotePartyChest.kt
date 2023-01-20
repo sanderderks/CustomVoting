@@ -4,19 +4,26 @@ import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Data
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.helpers.ParticleHelper
+import me.sd_master92.customvoting.listeners.EntityListener
 import me.sd_master92.customvoting.listeners.ItemListener
+import org.bukkit.ChatColor
 import org.bukkit.Location
 import org.bukkit.Material
+import org.bukkit.block.BlockFace
+import org.bukkit.entity.EntityType
+import org.bukkit.entity.Pig
 import org.bukkit.inventory.ItemStack
+import org.bukkit.potion.PotionEffect
+import org.bukkit.potion.PotionEffectType
 import org.bukkit.scheduler.BukkitRunnable
 import java.util.*
 
 class VotePartyChest(private val plugin: CV, key: String)
 {
-    private val loc: Location = plugin.data.getLocation(Data.VOTE_PARTY + ".$key")!!.clone()
-    private val dropLoc: Location = Location(loc.world, loc.x + 0.5, loc.y - 1, loc.z + 0.5)
+    val items: MutableList<ItemStack> = plugin.data.getItems(Data.VOTE_PARTY + ".$key").toMutableList()
+    val loc: Location = plugin.data.getLocation(Data.VOTE_PARTY + ".$key")!!.clone()
+    var dropLoc: Location = Location(loc.world, loc.x + 0.5, loc.y - 1, loc.z + 0.5)
     private val fireworkLoc: Location = Location(loc.world, loc.x + 0.5, loc.y + 1, loc.z + 0.5)
-    private val items: MutableList<ItemStack> = plugin.data.getItems(Data.VOTE_PARTY + ".$key").toMutableList()
     private val random: Random = Random()
 
     fun isEmpty(): Boolean
@@ -29,11 +36,20 @@ class VotePartyChest(private val plugin: CV, key: String)
         return !isEmpty()
     }
 
+    fun show()
+    {
+        loc.block.type = Material.ENDER_CHEST
+    }
+
+    fun hide()
+    {
+        loc.block.type = Material.AIR
+    }
+
     fun explode()
     {
-        val chest = loc.block
-        chest.world.strikeLightningEffect(loc)
-        chest.type = Material.AIR
+        loc.world!!.strikeLightningEffect(loc)
+        hide()
         while (isNotEmpty())
         {
             dropRandomItem()
@@ -43,9 +59,69 @@ class VotePartyChest(private val plugin: CV, key: String)
         {
             override fun run()
             {
-                chest.type = Material.ENDER_CHEST
+                show()
             }
         }.runTaskLater(plugin, 60)
+    }
+
+    fun scare()
+    {
+        hide()
+        val vex = loc.world!!.spawnEntity(loc, EntityType.VEX)
+        EntityListener.CANCEL_EVENT.add(vex.uniqueId)
+        object : BukkitRunnable()
+        {
+            override fun run()
+            {
+                EntityListener.CANCEL_EVENT.remove(vex.uniqueId)
+            }
+        }.runTaskLater(plugin, 20 * 8)
+        object : BukkitRunnable()
+        {
+            override fun run()
+            {
+                SoundType.SCARY_4.play(plugin, vex.location)
+                loc.block.type = if (random.nextInt(2) == 1) Material.JACK_O_LANTERN else Material.CARVED_PUMPKIN
+                loc.block.getRelative(BlockFace.UP).type = Material.FIRE
+                object : BukkitRunnable()
+                {
+                    override fun run()
+                    {
+                        vex.remove()
+                        explode()
+                    }
+                }.runTaskLater(plugin, 20 * 2)
+            }
+        }.runTaskLater(plugin, 20 * 8)
+    }
+
+    fun convertToPig()
+    {
+        hide()
+        val pig = loc.world!!.spawnEntity(loc, EntityType.PIG) as Pig
+        pig.isInvulnerable = true
+        pig.isCustomNameVisible = true
+        pig.addPotionEffect(PotionEffect(PotionEffectType.SPEED, 20 * 120, 2))
+        EntityListener.PIG_HUNT[pig.uniqueId] = this
+        object : BukkitRunnable()
+        {
+            var i = 5
+            override fun run()
+            {
+
+                if (i > 0)
+                {
+                    pig.customName = ChatColor.LIGHT_PURPLE.toString() + ChatColor.BOLD + i
+                    i--
+                } else
+                {
+                    pig.customName = null
+                    pig.isCustomNameVisible = false
+                    pig.isInvulnerable = false
+                    cancel()
+                }
+            }
+        }.runTaskTimer(plugin, 0, 20)
     }
 
     fun popRandomItem(): ItemStack

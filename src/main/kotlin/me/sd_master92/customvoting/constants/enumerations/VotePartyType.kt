@@ -9,7 +9,9 @@ enum class VotePartyType(val value: Int, val label: String)
     ALL_CHESTS_AT_ONCE(1, "All Chests at Once"),
     ONE_CHEST_AT_A_TIME(2, "One Chest at a Time"),
     ADD_TO_INVENTORY(3, "Add To Inventory"),
-    EXPLODE_CHESTS(4, "Explode Chests");
+    EXPLODE_CHESTS(4, "Explode Chests"),
+    SCARY(5, "Scary"),
+    PIG_HUNT(6, "Pig Hunt");
 
     companion object
     {

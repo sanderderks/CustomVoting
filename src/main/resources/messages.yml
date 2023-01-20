@@ -101,6 +101,11 @@ vote_party:
   countdown_ending: '&aVote Party starting in &b%TIME%'
   start: '&aThe Vote Party has begun!'
   end: '&7The Vote Party has ended!'
+  # %COUNT% pigs killed
+  # %TOGO% pigs to kill
+  # %KILLER% killer
+  # %s% extra s for when the TOGO is higher than 1
+  pig_killed: '&dPig killed by &b%KILLER%&d! Only &b%TOGO% &dpig%s% to go!'
 
 # %PLAYER% name of the player
 # %STREAK% streak reached
