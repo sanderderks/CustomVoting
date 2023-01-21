@@ -1,6 +1,7 @@
 package me.sd_master92.customvoting.subjects.voteparty
 
 import me.sd_master92.core.inventory.BaseItem
+import me.sd_master92.core.tasks.TaskTimer
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.addToInventoryOrDrop
 import me.sd_master92.customvoting.constants.Data
@@ -15,97 +16,81 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
-import org.bukkit.scheduler.BukkitRunnable
 import java.util.*
 
 class VoteParty(private val plugin: CV)
 {
     private val votePartyType: Int = plugin.config.getNumber(Settings.VOTE_PARTY_TYPE.path)
-    private var count: Int = plugin.config.getNumber(Settings.VOTE_PARTY_COUNTDOWN.path)
+
     fun start()
     {
         queue.add(this)
         if (!isActive)
         {
             isActive = true
-            object : BukkitRunnable()
-            {
-                override fun run()
+            TaskTimer.repeat(plugin, 20, 0, plugin.config.getNumber(Settings.VOTE_PARTY_COUNTDOWN.path)) {
+                when (it.count)
                 {
-                    when (count)
+                    30, 15, 10    ->
                     {
-                        30, 15, 10    ->
+                        if (!plugin.config.getBoolean(Settings.DISABLED_BROADCAST_VOTE_PARTY_COUNTDOWN.path))
                         {
-                            if (!plugin.config.getBoolean(Settings.DISABLED_BROADCAST_VOTE_PARTY_COUNTDOWN.path))
-                            {
-                                val placeholders = HashMap<String, String>()
-                                placeholders["%TIME%"] = "" + count
-                                SoundType.NOTIFY.playForAll(plugin)
-                                plugin.broadcastText(Messages.VOTE_PARTY_COUNTDOWN, placeholders)
-                            }
-                        }
-
-                        5, 4, 3, 2, 1 ->
-                        {
-                            if (!plugin.config.getBoolean(Settings.DISABLED_BROADCAST_VOTE_PARTY_COUNTDOWN_ENDING.path))
-                            {
-                                val placeholders = HashMap<String, String>()
-                                placeholders["%TIME%"] = "" + count
-                                placeholders["%s%"] = if (count == 1) "" else "s"
-                                SoundType.NOTIFY.playForAll(plugin)
-                                plugin.broadcastText(Messages.VOTE_PARTY_COUNTDOWN_ENDING, placeholders)
-                            }
-                        }
-
-                        0             ->
-                        {
-                            if (votePartyType == VotePartyType.PIG_HUNT.value)
-                            {
-                                SoundType.EXPLODE.playForAll(plugin)
-                            } else
-                            {
-                                SoundType.VOTE_PARTY_START.playForAll(plugin)
-                            }
-                            plugin.broadcastText(Messages.VOTE_PARTY_START)
-                            executeCommands()
-                            when (votePartyType)
-                            {
-                                VotePartyType.RANDOM_CHEST_AT_A_TIME.value ->
-                                {
-                                    dropChestsRandomly()
-                                }
-
-                                VotePartyType.ADD_TO_INVENTORY.value       ->
-                                {
-                                    addToInventory()
-                                }
-
-                                VotePartyType.EXPLODE_CHESTS.value         ->
-                                {
-                                    explode()
-                                }
-
-                                VotePartyType.SCARY.value                  ->
-                                {
-                                    scare()
-                                }
-
-                                VotePartyType.PIG_HUNT.value               ->
-                                {
-                                    pigHunt()
-                                }
-
-                                else                                       ->
-                                {
-                                    dropChests()
-                                }
-                            }
-                            cancel()
+                            val placeholders = HashMap<String, String>()
+                            placeholders["%TIME%"] = "" + it.count
+                            SoundType.NOTIFY.playForAll(plugin)
+                            plugin.broadcastText(Messages.VOTE_PARTY_COUNTDOWN, placeholders)
                         }
                     }
-                    count--
+
+                    5, 4, 3, 2, 1 ->
+                    {
+                        if (!plugin.config.getBoolean(Settings.DISABLED_BROADCAST_VOTE_PARTY_COUNTDOWN_ENDING.path))
+                        {
+                            val placeholders = HashMap<String, String>()
+                            placeholders["%TIME%"] = "" + it.count
+                            placeholders["%s%"] = if (it.count == 1) "" else "s"
+                            SoundType.NOTIFY.playForAll(plugin)
+                            plugin.broadcastText(Messages.VOTE_PARTY_COUNTDOWN_ENDING, placeholders)
+                        }
+                    }
+
+                    0             ->
+                    {
+                        if (votePartyType == VotePartyType.PIG_HUNT.value)
+                        {
+                            SoundType.EXPLODE.playForAll(plugin)
+                        } else
+                        {
+                            SoundType.VOTE_PARTY_START.playForAll(plugin)
+                        }
+                        plugin.broadcastText(Messages.VOTE_PARTY_START)
+                        executeCommands()
+                        when (votePartyType)
+                        {
+                            VotePartyType.EXPLODE_CHESTS.value ->
+                            {
+                                explode()
+                            }
+
+                            VotePartyType.SCARY.value          ->
+                            {
+                                scare()
+                            }
+
+                            VotePartyType.PIG_HUNT.value       ->
+                            {
+                                pigHunt()
+                            }
+
+                            else                               ->
+                            {
+                                dropChests()
+                            }
+                        }
+                        it.cancel()
+                    }
                 }
-            }.runTaskTimer(plugin, 0, 20)
+            }.run()
         }
     }
 
@@ -129,89 +114,74 @@ class VoteParty(private val plugin: CV)
     private fun dropChests()
     {
         val chests = VotePartyChest.getAll(plugin)
-        val tasks: MutableMap<Int, Boolean> = HashMap()
+        val random = Random()
 
-        for (chest in chests)
+        TaskTimer.repeat(plugin, 10)
         {
-            object : BukkitRunnable()
+            chests.removeIf { chest -> chest.isEmpty() }
+            if (chests.isNotEmpty())
             {
-                override fun run()
+                when (votePartyType)
                 {
-                    if (!tasks.containsKey(taskId))
+                    VotePartyType.ALL_CHESTS_AT_ONCE.value     ->
                     {
-                        tasks[taskId] = false
-                    }
-                    if (votePartyType == VotePartyType.ALL_CHESTS_AT_ONCE.value || !tasks.containsValue(true) || tasks[taskId]!!)
-                    {
-                        if (votePartyType == VotePartyType.ONE_CHEST_AT_A_TIME.value)
-                        {
-                            tasks[taskId] = true
-                        }
-                        if (chest.isNotEmpty())
+                        for (chest in chests)
                         {
                             chest.dropRandomItem()
                             chest.shootFirework()
-                        } else
-                        {
-                            tasks.remove(taskId)
-                            if (tasks.isEmpty())
-                            {
-                                stop(plugin)
-                            }
-                            cancel()
                         }
                     }
-                }
-            }.runTaskTimer(plugin, 0, 10)
-        }
-    }
 
-    private fun dropChestsRandomly()
-    {
-        val chests = VotePartyChest.getAll(plugin)
-        val random = Random()
-        object : BukkitRunnable()
-        {
-            override fun run()
-            {
-                if (chests.isNotEmpty())
-                {
-                    val chest = chests[random.nextInt(chests.size)]
-                    chest.dropRandomItem()
-                    chest.shootFirework()
-                    if (chest.isEmpty())
+                    VotePartyType.ONE_CHEST_AT_A_TIME.value    ->
                     {
-                        chests.remove(chest)
+                        val chest = chests.first()
+                        chest.dropRandomItem()
+                        chest.shootFirework()
                     }
-                } else
-                {
-                    stop(plugin)
-                    cancel()
+
+                    VotePartyType.RANDOM_CHEST_AT_A_TIME.value ->
+                    {
+                        val chest = chests[random.nextInt(chests.size)]
+                        chest.dropRandomItem()
+                        chest.shootFirework()
+                    }
+
+                    VotePartyType.ADD_TO_INVENTORY.value       ->
+                    {
+                        val chest = chests[random.nextInt(chests.size)]
+                        val players: List<Player> = ArrayList(Bukkit.getOnlinePlayers())
+                        val player = players[random.nextInt(players.size)]
+
+                        player.addToInventoryOrDrop(chest.popRandomItem())
+                        SoundType.PICKUP.play(plugin, player)
+                    }
                 }
+            } else
+            {
+                stop(plugin)
+                it.cancel()
             }
-        }.runTaskTimer(plugin, 0, 10)
+        }.run()
     }
 
     private fun explode()
     {
         val chests = VotePartyChest.getAll(plugin)
         val random = Random()
-        object : BukkitRunnable()
+
+        TaskTimer.repeat(plugin, 30)
         {
-            override fun run()
+            if (chests.isNotEmpty())
             {
-                if (chests.isNotEmpty())
-                {
-                    val chest = chests[random.nextInt(chests.size)]
-                    chest.explode()
-                    chests.remove(chest)
-                } else
-                {
-                    stop(plugin)
-                    cancel()
-                }
+                val chest = chests[random.nextInt(chests.size)]
+                chest.explode()
+                chests.remove(chest)
+            } else
+            {
+                stop(plugin)
+                it.cancel()
             }
-        }.runTaskTimer(plugin, 0, 30)
+        }.run()
     }
 
     private fun scare()
@@ -219,50 +189,43 @@ class VoteParty(private val plugin: CV)
         val chests = VotePartyChest.getAll(plugin)
         val random = Random()
 
-        chests.firstOrNull()?.loc?.let {
-            SoundType.SCARY_1.play(plugin, it)
-            object : BukkitRunnable()
-            {
-                override fun run()
-                {
-                    SoundType.SCARY_2.play(plugin, it)
-                }
-            }.runTaskLater(plugin, 20 * 4)
-            object : BukkitRunnable()
-            {
-                override fun run()
-                {
-                    SoundType.SCARY_3.play(plugin, it)
-                }
-            }.runTaskLater(plugin, 20 * 6)
-            for (player in it.world!!.getNearbyEntities(it, 50.0, 50.0, 50.0).filterIsInstance<Player>())
+        chests.firstOrNull()?.loc?.let { loc ->
+            val players = loc.world!!.getNearbyEntities(loc, 50.0, 50.0, 50.0).filterIsInstance<Player>()
+            for (player in players)
             {
                 player.addPotionEffect(
                     PotionEffect(PotionEffectType.getByName("DARKNESS") ?: PotionEffectType.CONFUSION, 20 * 8, 1)
                 )
                 player.setPlayerTime(18000, false)
-                object : BukkitRunnable()
+            }
+            SoundType.SCARY_1.play(plugin, loc)
+            TaskTimer.delay(plugin, 20 * 4)
+            {
+                SoundType.SCARY_2.play(plugin, loc)
+            }.run().then(
+                TaskTimer.delay(plugin, 20 * 2)
                 {
-                    override fun run()
+                    SoundType.SCARY_3.play(plugin, loc)
+                }).then(
+                TaskTimer.delay(plugin, 20 * 6)
+                {
+                    for (player in players)
                     {
                         player.resetPlayerTime()
                     }
-                }.runTaskLater(plugin, 20 * 13)
-            }
-        }
-        while (chests.isNotEmpty())
-        {
-            val chest = chests[random.nextInt(chests.size)]
-            chest.scare()
-            chests.remove(chest)
-        }
-        object : BukkitRunnable()
-        {
-            override fun run()
+                }).then(
+                TaskTimer.delay(plugin, 20)
+                {
+                    stop(plugin)
+                })
+
+            while (chests.isNotEmpty())
             {
-                stop(plugin)
+                val chest = chests[random.nextInt(chests.size)]
+                chest.scare()
+                chests.remove(chest)
             }
-        }.runTaskLater(plugin, 20 * 12)
+        }
     }
 
     private fun pigHunt()
@@ -270,45 +233,6 @@ class VoteParty(private val plugin: CV)
         for (chest in VotePartyChest.getAll(plugin))
         {
             chest.convertToPig()
-        }
-    }
-
-    private fun addToInventory()
-    {
-        val chests = VotePartyChest.getAll(plugin)
-        val random = Random()
-        val tasks: MutableMap<Int, Boolean> = HashMap()
-        for (chest in chests)
-        {
-            object : BukkitRunnable()
-            {
-                override fun run()
-                {
-                    if (!tasks.containsKey(taskId))
-                    {
-                        tasks[taskId] = false
-                    }
-                    if (!tasks.containsValue(true) || tasks[taskId]!!)
-                    {
-                        tasks[taskId] = true
-                        if (chest.isNotEmpty())
-                        {
-                            val players: List<Player> = ArrayList(Bukkit.getOnlinePlayers())
-                            val player = players[random.nextInt(players.size)]
-                            player.addToInventoryOrDrop(chest.popRandomItem())
-                            SoundType.PICKUP.play(plugin, player)
-                        } else
-                        {
-                            tasks.remove(taskId)
-                            if (tasks.isEmpty())
-                            {
-                                stop(plugin)
-                            }
-                            cancel()
-                        }
-                    }
-                }
-            }.runTaskTimer(plugin, 0, 10)
         }
     }
 

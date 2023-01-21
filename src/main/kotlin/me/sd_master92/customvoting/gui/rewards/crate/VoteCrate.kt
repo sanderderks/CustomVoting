@@ -2,6 +2,7 @@ package me.sd_master92.customvoting.gui.rewards.crate
 
 import me.sd_master92.core.inventory.BaseItem
 import me.sd_master92.core.inventory.GUI
+import me.sd_master92.core.tasks.TaskTimer
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.addToInventoryOrDrop
 import me.sd_master92.customvoting.constants.Data
@@ -13,7 +14,6 @@ import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
-import org.bukkit.scheduler.BukkitRunnable
 import java.util.*
 
 class VoteCrate(private val plugin: CV, private val player: Player, path: String) :
@@ -31,13 +31,10 @@ class VoteCrate(private val plugin: CV, private val player: Player, path: String
     {
         if (keepAlive)
         {
-            object : BukkitRunnable()
+            TaskTimer.delay(plugin)
             {
-                override fun run()
-                {
-                    player.openInventory(inventory)
-                }
-            }.runTaskLater(plugin, 1)
+                player.openInventory(inventory)
+            }.run()
         } else
         {
             SoundType.CLOSE.play(plugin, player)
@@ -80,30 +77,21 @@ class VoteCrate(private val plugin: CV, private val player: Player, path: String
         while (shuffle < 20)
         {
             wait += shuffle
-            object : BukkitRunnable()
+            TaskTimer.delay(plugin, wait)
             {
-                override fun run()
+                for (i in 0 until inventory.size)
                 {
-                    for (i in 0 until inventory.size)
+                    if (i != 22)
                     {
-                        if (i != 22)
-                        {
-                            inventory.setItem(i, allRewards.random())
-                        }
+                        inventory.setItem(i, allRewards.random())
                     }
-                    SoundType.SUCCESS.play(plugin, player)
-                    player.updateInventory()
                 }
-            }.runTaskLater(plugin, wait)
+                SoundType.SUCCESS.play(plugin, player)
+                player.updateInventory()
+            }.run()
             shuffle++
         }
-        object : BukkitRunnable()
-        {
-            override fun run()
-            {
-                giveReward(number)
-            }
-        }.runTaskLater(plugin, wait)
+        TaskTimer.delay(plugin, wait) { giveReward(number) }.run()
     }
 
     fun run()

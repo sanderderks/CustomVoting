@@ -3,6 +3,7 @@ package me.sd_master92.customvoting.listeners
 import me.sd_master92.core.errorLog
 import me.sd_master92.core.infoLog
 import me.sd_master92.core.inventory.ConfirmGUI
+import me.sd_master92.core.tasks.TaskTimer
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Data
 import me.sd_master92.customvoting.constants.Voter
@@ -38,7 +39,6 @@ import org.bukkit.event.player.PlayerChangedWorldEvent
 import org.bukkit.event.player.PlayerInteractAtEntityEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerJoinEvent
-import org.bukkit.scheduler.BukkitRunnable
 import java.util.*
 
 class PlayerListener(private val plugin: CV) : Listener
@@ -70,19 +70,16 @@ class PlayerListener(private val plugin: CV) : Listener
         {
             plugin.infoLog(queue.size.toString() + " queued votes found for " + player.name + ". Forwarding in 10 seconds...")
             val iterator = queue.iterator()
-            object : BukkitRunnable()
+            TaskTimer.repeat(plugin, 20, 200)
             {
-                override fun run()
+                if (iterator.hasNext())
                 {
-                    if (iterator.hasNext())
-                    {
-                        CustomVote.create(plugin, player.name, iterator.next())
-                    } else
-                    {
-                        cancel()
-                    }
+                    CustomVote.create(plugin, player.name, iterator.next())
+                } else
+                {
+                    it.cancel()
                 }
-            }.runTaskTimer(plugin, 200L, 20L)
+            }.run()
         }
     }
 

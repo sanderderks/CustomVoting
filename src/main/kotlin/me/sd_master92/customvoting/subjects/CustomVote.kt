@@ -4,6 +4,7 @@ import com.vexsoftware.votifier.model.Vote
 import me.sd_master92.core.appendWhenTrue
 import me.sd_master92.core.errorLog
 import me.sd_master92.core.infoLog
+import me.sd_master92.core.tasks.TaskTimer
 import me.sd_master92.customvoting.*
 import me.sd_master92.customvoting.constants.Data
 import me.sd_master92.customvoting.constants.Voter
@@ -16,7 +17,6 @@ import me.sd_master92.customvoting.subjects.voteparty.VoteParty
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
-import org.bukkit.scheduler.BukkitRunnable
 import java.text.DecimalFormat
 import java.util.*
 
@@ -127,34 +127,25 @@ class CustomVote(
             if (votesUntil <= 1)
             {
                 plugin.data.setNumber(Data.CURRENT_VOTES, 0)
-                object : BukkitRunnable()
-                {
-                    override fun run()
-                    {
-                        VoteParty(plugin).start()
-                    }
-                }.runTaskLater(plugin, 40)
+                TaskTimer.delay(plugin, 40) { VoteParty(plugin).start() }.run()
             } else
             {
                 plugin.data.addNumber(Data.CURRENT_VOTES)
                 if (!isAwaitingBroadcast)
                 {
                     isAwaitingBroadcast = true
-                    object : BukkitRunnable()
+                    TaskTimer.delay(plugin, 40)
                     {
-                        override fun run()
+                        val updatedVotesUntil = votesRequired - plugin.data.getNumber(Data.CURRENT_VOTES)
+                        if (updatedVotesUntil != votesRequired && !plugin.config.getBoolean(Settings.DISABLED_BROADCAST_VOTE_PARTY_UNTIL.path))
                         {
-                            val updatedVotesUntil = votesRequired - plugin.data.getNumber(Data.CURRENT_VOTES)
-                            if (updatedVotesUntil != votesRequired && !plugin.config.getBoolean(Settings.DISABLED_BROADCAST_VOTE_PARTY_UNTIL.path))
-                            {
-                                val placeholders = HashMap<String, String>()
-                                placeholders["%VOTES%"] = "" + updatedVotesUntil
-                                placeholders["%s%"] = if (updatedVotesUntil == 1) "" else "s"
-                                plugin.broadcastText(Messages.VOTE_PARTY_UNTIL, placeholders)
-                            }
-                            isAwaitingBroadcast = false
+                            val placeholders = HashMap<String, String>()
+                            placeholders["%VOTES%"] = "" + updatedVotesUntil
+                            placeholders["%s%"] = if (updatedVotesUntil == 1) "" else "s"
+                            plugin.broadcastText(Messages.VOTE_PARTY_UNTIL, placeholders)
                         }
-                    }.runTaskLater(plugin, 40)
+                        isAwaitingBroadcast = false
+                    }.run()
                 }
             }
         }
@@ -195,19 +186,10 @@ class CustomVote(
         val message = rewardMessage
         if (message.isNotEmpty())
         {
-            object : BukkitRunnable()
+            TaskTimer.repeat(plugin, 1, 0, 40)
             {
-                var i = 40
-                override fun run()
-                {
-                    player.sendActionBar(Messages.VOTE_REWARD_PREFIX.getMessage(plugin) + message)
-                    if (i == 0)
-                    {
-                        cancel()
-                    }
-                    i--
-                }
-            }.runTaskTimer(plugin, 0, 1)
+                player.sendActionBar(Messages.VOTE_REWARD_PREFIX.getMessage(plugin) + message)
+            }.run()
         }
     }
 

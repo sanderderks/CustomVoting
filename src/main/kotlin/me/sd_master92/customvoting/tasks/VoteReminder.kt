@@ -1,5 +1,6 @@
 package me.sd_master92.customvoting.tasks
 
+import me.sd_master92.core.tasks.TaskTimer
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Voter
 import me.sd_master92.customvoting.constants.enumerations.Messages
@@ -8,7 +9,6 @@ import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.sendTexts
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
-import org.bukkit.scheduler.BukkitRunnable
 import java.util.*
 
 class VoteReminder(private val plugin: CV)
@@ -19,39 +19,33 @@ class VoteReminder(private val plugin: CV)
         {
             if (!plugin.config.getBoolean(Settings.DISABLED_MESSAGE_VOTE_REMINDER.path))
             {
-                object : BukkitRunnable()
+                TaskTimer.delay(plugin, 20 * 10)
                 {
-                    override fun run()
+                    val voter = Voter.get(plugin, player)
+
+                    val now = Calendar.getInstance()
+                    val next = Calendar.getInstance()
+                    next.timeInMillis = voter.last
+                    next.add(Calendar.DAY_OF_MONTH, 1)
+
+                    if (voter.votes == 0 || now >= next)
                     {
-                        val voter = Voter.get(plugin, player)
-
-                        val now = Calendar.getInstance()
-                        val next = Calendar.getInstance()
-                        next.timeInMillis = voter.last
-                        next.add(Calendar.DAY_OF_MONTH, 1)
-
-                        if (voter.votes == 0 || now >= next)
-                        {
-                            player.sendTexts(plugin, Messages.VOTE_REMINDER)
-                            SoundType.NOTIFY.play(plugin, player)
-                        }
+                        player.sendTexts(plugin, Messages.VOTE_REMINDER)
+                        SoundType.NOTIFY.play(plugin, player)
                     }
-                }.runTaskLater(plugin, 20 * 10)
+                }.run()
             }
         }
     }
 
     init
     {
-        object : BukkitRunnable()
+        TaskTimer.repeat(plugin, 20 * 60 * 60, 20 * 3)
         {
-            override fun run()
+            for (player in Bukkit.getOnlinePlayers())
             {
-                for (player in Bukkit.getOnlinePlayers())
-                {
-                    remindPlayer(plugin, player)
-                }
+                remindPlayer(plugin, player)
             }
-        }.runTaskTimer(plugin, 60, 20 * 60 * 60)
+        }.run()
     }
 }

@@ -1,6 +1,7 @@
 package me.sd_master92.customvoting.subjects
 
 import me.sd_master92.core.inventory.BaseItem
+import me.sd_master92.core.tasks.TaskTimer
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Data
 import me.sd_master92.customvoting.constants.Voter
@@ -18,7 +19,6 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.EntityEquipment
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.SkullMeta
-import org.bukkit.scheduler.BukkitRunnable
 import java.util.*
 
 
@@ -296,16 +296,13 @@ class VoteTopStand @JvmOverloads constructor(private val plugin: CV, private val
             {
                 initialize(plugin)
             }
-            object : BukkitRunnable()
+            TaskTimer.delay(plugin, 40)
             {
-                override fun run()
+                for (voteTop in voteTops.values)
                 {
-                    for (voteTop in voteTops.values)
-                    {
-                        voteTop.update()
-                    }
+                    voteTop.update()
                 }
-            }.runTaskLater(plugin, 40L)
+            }.run()
         }
 
         private fun initialize(plugin: CV)

@@ -1,5 +1,6 @@
 package me.sd_master92.customvoting.subjects.voteparty
 
+import me.sd_master92.core.tasks.TaskTimer
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Data
 import me.sd_master92.customvoting.constants.enumerations.SoundType
@@ -15,7 +16,6 @@ import org.bukkit.entity.Pig
 import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
-import org.bukkit.scheduler.BukkitRunnable
 import java.util.*
 
 class VotePartyChest(private val plugin: CV, key: String)
@@ -55,13 +55,7 @@ class VotePartyChest(private val plugin: CV, key: String)
             dropRandomItem()
         }
         SoundType.EXPLODE.play(plugin, loc)
-        object : BukkitRunnable()
-        {
-            override fun run()
-            {
-                show()
-            }
-        }.runTaskLater(plugin, 60)
+        TaskTimer.delay(plugin, 20 * 3) { show() }.run()
     }
 
     fun scare()
@@ -69,30 +63,17 @@ class VotePartyChest(private val plugin: CV, key: String)
         hide()
         val vex = loc.world!!.spawnEntity(loc, EntityType.VEX)
         EntityListener.CANCEL_EVENT.add(vex.uniqueId)
-        object : BukkitRunnable()
+        TaskTimer.delay(plugin, 20 * 8)
         {
-            override fun run()
-            {
-                EntityListener.CANCEL_EVENT.remove(vex.uniqueId)
-            }
-        }.runTaskLater(plugin, 20 * 8)
-        object : BukkitRunnable()
+            EntityListener.CANCEL_EVENT.remove(vex.uniqueId)
+            SoundType.SCARY_4.play(plugin, vex.location)
+            loc.block.type = if (random.nextInt(2) == 1) Material.JACK_O_LANTERN else Material.CARVED_PUMPKIN
+            loc.block.getRelative(BlockFace.UP).type = Material.FIRE
+        }.run().then(TaskTimer.delay(plugin, 20 * 2)
         {
-            override fun run()
-            {
-                SoundType.SCARY_4.play(plugin, vex.location)
-                loc.block.type = if (random.nextInt(2) == 1) Material.JACK_O_LANTERN else Material.CARVED_PUMPKIN
-                loc.block.getRelative(BlockFace.UP).type = Material.FIRE
-                object : BukkitRunnable()
-                {
-                    override fun run()
-                    {
-                        vex.remove()
-                        explode()
-                    }
-                }.runTaskLater(plugin, 20 * 2)
-            }
-        }.runTaskLater(plugin, 20 * 8)
+            vex.remove()
+            explode()
+        })
     }
 
     fun convertToPig()
@@ -103,25 +84,18 @@ class VotePartyChest(private val plugin: CV, key: String)
         pig.isCustomNameVisible = true
         pig.addPotionEffect(PotionEffect(PotionEffectType.SPEED, 20 * 120, 2))
         EntityListener.PIG_HUNT[pig.uniqueId] = this
-        object : BukkitRunnable()
+        TaskTimer.repeat(plugin, 20, 0, 5)
         {
-            var i = 5
-            override fun run()
+            if (it.count > 0)
             {
-
-                if (i > 0)
-                {
-                    pig.customName = ChatColor.LIGHT_PURPLE.toString() + ChatColor.BOLD + i
-                    i--
-                } else
-                {
-                    pig.customName = null
-                    pig.isCustomNameVisible = false
-                    pig.isInvulnerable = false
-                    cancel()
-                }
+                pig.customName = ChatColor.LIGHT_PURPLE.toString() + ChatColor.BOLD + it.count
+            } else
+            {
+                pig.customName = null
+                pig.isCustomNameVisible = false
+                pig.isInvulnerable = false
             }
-        }.runTaskTimer(plugin, 0, 20)
+        }.run()
     }
 
     fun popRandomItem(): ItemStack
@@ -135,13 +109,7 @@ class VotePartyChest(private val plugin: CV, key: String)
         {
             val uuid = dropLoc.world!!.dropItem(dropLoc, popRandomItem()).uniqueId
             ItemListener.CANCEL_EVENT.add(uuid)
-            object : BukkitRunnable()
-            {
-                override fun run()
-                {
-                    ItemListener.CANCEL_EVENT.remove(uuid)
-                }
-            }.runTaskLater(plugin, 20 * 10)
+            TaskTimer.delay(plugin, 20 * 10) { ItemListener.CANCEL_EVENT.remove(uuid) }.run()
         }
     }
 

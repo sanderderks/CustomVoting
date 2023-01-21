@@ -1,5 +1,6 @@
 package me.sd_master92.customvoting.subjects
 
+import me.sd_master92.core.tasks.TaskTimer
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Data
 import me.sd_master92.customvoting.constants.Voter
@@ -14,7 +15,6 @@ import org.bukkit.block.Sign
 import org.bukkit.block.Skull
 import org.bukkit.block.data.type.WallSign
 import org.bukkit.entity.Player
-import org.bukkit.scheduler.BukkitRunnable
 import java.util.*
 
 class VoteTopSign @JvmOverloads constructor(
@@ -145,23 +145,20 @@ class VoteTopSign @JvmOverloads constructor(
                             @Suppress("DEPRECATION")
                             val blockFace = skull.rotation
                             block.type = Material.AIR
-                            object : BukkitRunnable()
+                            TaskTimer.delay(plugin)
                             {
-                                override fun run()
+                                block.type = material
+                                if (material == Material.PLAYER_WALL_HEAD)
                                 {
-                                    block.type = material
-                                    if (material == Material.PLAYER_WALL_HEAD)
-                                    {
-                                        @Suppress("DEPRECATION")
-                                        skull.rotation = sign.facing
-                                    } else
-                                    {
-                                        @Suppress("DEPRECATION")
-                                        skull.rotation = blockFace
-                                    }
-                                    skull.update(true)
+                                    @Suppress("DEPRECATION")
+                                    skull.rotation = sign.facing
+                                } else
+                                {
+                                    @Suppress("DEPRECATION")
+                                    skull.rotation = blockFace
                                 }
-                            }.runTaskLater(plugin, 1L)
+                                skull.update(true)
+                            }.run()
                         }
                     }
                 }
@@ -200,16 +197,13 @@ class VoteTopSign @JvmOverloads constructor(
             {
                 initialize(plugin)
             }
-            object : BukkitRunnable()
+            TaskTimer.delay(plugin, 40)
             {
-                override fun run()
+                for (voteTop in voteTops.values)
                 {
-                    for (voteTop in voteTops.values)
-                    {
-                        voteTop.update()
-                    }
+                    voteTop.update()
                 }
-            }.runTaskLater(plugin, 40L)
+            }.run()
         }
 
         private fun initialize(plugin: CV)
