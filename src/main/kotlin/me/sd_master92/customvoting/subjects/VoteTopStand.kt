@@ -38,24 +38,36 @@ class VoteTopStand @JvmOverloads constructor(private val plugin: CV, private val
             topStand = getArmorStand(section.getString("top"))
             nameStand = getArmorStand(section.getString("name"))
             votesStand = getArmorStand(section.getString("votes"))
-            if (CV.CITIZENS)
+            if (!doesNotExist())
             {
-                if (votesStand?.isVisible == true)
+                if (CV.CITIZENS)
                 {
-                    votesStand?.isVisible = false
-                    votesStand?.equipment?.clear()
-                }
-                if (citizen == null)
-                {
-                    citizen = CitizensAPI.getNPCRegistry().getByUniqueId(UUID.fromString(section.getString("citizen")))
-                    if (citizen != null && !citizen!!.isSpawned)
+                    if (votesStand?.isVisible == true)
                     {
-                        citizen!!.spawn(plugin.data.getLocation(path))
+                        votesStand?.isVisible = false
+                        votesStand?.equipment?.clear()
                     }
+                    if (citizen == null)
+                    {
+                        citizen = if (section.getString("citizen") == null)
+                        {
+                            createCitizen(votesStand!!.location)
+                        } else
+                        {
+                            CitizensAPI.getNPCRegistry().getByUniqueId(UUID.fromString(section.getString("citizen")))
+                        }
+                        if (citizen != null && !citizen!!.isSpawned)
+                        {
+                            citizen!!.spawn(plugin.data.getLocation(path))
+                        }
+                    }
+                } else
+                {
+                    votesStand?.isVisible = true
                 }
             } else
             {
-                votesStand?.isVisible = true
+                delete()
             }
         }
     }
@@ -93,20 +105,7 @@ class VoteTopStand @JvmOverloads constructor(private val plugin: CV, private val
 
             if (CV.CITIZENS)
             {
-                val citizen = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, "Unknown")
-                plugin.data["$path.citizen"] = citizen.uniqueId.toString()
-                citizen.isProtected = true
-                citizen.data().setPersistent(NPC.Metadata.NAMEPLATE_VISIBLE, false)
-                citizen.spawn(player.location)
-                if (citizen.isSpawned)
-                {
-                    val entityEquipment = (citizen.entity as LivingEntity).equipment
-                    if (entityEquipment != null)
-                    {
-                        setEntityEquipment(entityEquipment)
-                    }
-                }
-                this.citizen = citizen
+                citizen = createCitizen(player.location)
             } else
             {
                 votesStand.isVisible = true
@@ -119,6 +118,24 @@ class VoteTopStand @JvmOverloads constructor(private val plugin: CV, private val
         }
         plugin.data.setLocation(path, player.location)
         player.sendMessage(ChatColor.GREEN.toString() + "Registered Vote Stand #" + top)
+    }
+
+    private fun createCitizen(loc: Location, name: String? = null): NPC
+    {
+        val citizen = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, name ?: "Unknown")
+        plugin.data["$path.citizen"] = citizen.uniqueId.toString()
+        citizen.isProtected = true
+        citizen.data().setPersistent(NPC.Metadata.NAMEPLATE_VISIBLE, false)
+        citizen.spawn(loc)
+        if (citizen.isSpawned)
+        {
+            val entityEquipment = (citizen.entity as LivingEntity).equipment
+            if (entityEquipment != null)
+            {
+                setEntityEquipment(entityEquipment)
+            }
+        }
+        return citizen
     }
 
     private fun setEntityEquipment(equipment: EntityEquipment)
@@ -189,11 +206,7 @@ class VoteTopStand @JvmOverloads constructor(private val plugin: CV, private val
                 citizen!!.spawn(plugin.data.getLocation(path))
             }
         }
-        if (topStand == null
-            || nameStand == null
-            || votesStand == null
-            || CV.CITIZENS && (citizen == null || !citizen!!.isSpawned)
-        )
+        if (doesNotExist() || citizenDoesNotExist())
         {
             registerArmorStands()
         }
@@ -219,16 +232,41 @@ class VoteTopStand @JvmOverloads constructor(private val plugin: CV, private val
         votesStand?.customName = Messages.VOTE_TOP_STANDS_BOTTOM.getMessage(plugin, placeholders)
     }
 
-    fun delete(player: Player)
+    private fun doesNotExist(): Boolean
+    {
+        if (topStand == null
+            || nameStand == null
+            || votesStand == null
+        )
+        {
+            return true
+        }
+        return false
+    }
+
+    private fun citizenDoesNotExist(): Boolean
+    {
+        if (CV.CITIZENS && (citizen == null || !citizen!!.isSpawned))
+        {
+            return true
+        }
+        return false
+    }
+
+    fun delete(player: Player? = null)
     {
         topStand?.remove()
+        topStand = null
         nameStand?.remove()
+        nameStand = null
         votesStand?.remove()
-        citizen?.let { CitizensAPI.getNPCRegistry().deregister(citizen) }
+        votesStand = null
+        citizen?.let { CitizensAPI.getNPCRegistry().deregister(it) }
+        plugin.data.deleteLocation(path)
         plugin.data[path] = null
         plugin.data.saveConfig()
         voteTops.remove(top)
-        player.sendMessage(ChatColor.GREEN.toString() + "Successfully deleted Vote Stand #" + top)
+        player?.sendMessage(ChatColor.GREEN.toString() + "Successfully deleted Vote Stand #" + top)
     }
 
     companion object
