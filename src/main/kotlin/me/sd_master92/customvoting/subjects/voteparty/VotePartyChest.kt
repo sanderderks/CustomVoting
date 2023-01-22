@@ -89,11 +89,13 @@ class VotePartyChest(private val plugin: CV, key: String)
             if (it.count > 0)
             {
                 pig.customName = ChatColor.LIGHT_PURPLE.toString() + ChatColor.BOLD + it.count
+                SoundType.CLICK.play(plugin, pig.location)
             } else
             {
                 pig.customName = null
                 pig.isCustomNameVisible = false
                 pig.isInvulnerable = false
+                SoundType.NOTIFY.play(plugin, pig.location)
             }
         }.run()
     }
