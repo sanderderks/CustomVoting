@@ -99,7 +99,8 @@ vote_party:
   # %TIME% seconds until the vote party
   # %s% extra s for when the TIME is higher than 1
   countdown_ending: '&aVote Party starting in &b%TIME%'
-  start: '&aThe Vote Party has begun!'
+  # %TYPE% vote party type
+  start: '&aThe Vote Party &d%TYPE% &ahas begun!'
   end: '&7The Vote Party has ended!'
   # %COUNT% pigs killed
   # %TOGO% pigs to kill

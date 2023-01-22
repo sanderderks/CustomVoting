@@ -20,11 +20,10 @@ import java.util.*
 
 class VoteParty(private val plugin: CV)
 {
-    private val votePartyType: Int = plugin.config.getNumber(Settings.VOTE_PARTY_TYPE.path)
+    private var votePartyType = VotePartyType.valueOf(plugin.config.getNumber(Settings.VOTE_PARTY_TYPE.path))
 
     fun start()
     {
-        queue.add(this)
         if (!isActive)
         {
             isActive = true
@@ -56,33 +55,39 @@ class VoteParty(private val plugin: CV)
 
                     0             ->
                     {
-                        if (votePartyType == VotePartyType.PIG_HUNT.value)
+                        if (votePartyType == VotePartyType.RANDOMLY)
+                        {
+                            votePartyType = VotePartyType.random()
+                        }
+                        if (votePartyType == VotePartyType.PIG_HUNT)
                         {
                             SoundType.EXPLODE.playForAll(plugin)
                         } else
                         {
                             SoundType.VOTE_PARTY_START.playForAll(plugin)
                         }
-                        plugin.broadcastText(Messages.VOTE_PARTY_START)
+                        val placeholders = HashMap<String, String>()
+                        placeholders["%TYPE%"] = votePartyType.label
+                        plugin.broadcastText(Messages.VOTE_PARTY_START, placeholders)
                         executeCommands()
                         when (votePartyType)
                         {
-                            VotePartyType.EXPLODE_CHESTS.value ->
+                            VotePartyType.EXPLODE_CHESTS ->
                             {
                                 explode()
                             }
 
-                            VotePartyType.SCARY.value          ->
+                            VotePartyType.SCARY          ->
                             {
                                 scare()
                             }
 
-                            VotePartyType.PIG_HUNT.value       ->
+                            VotePartyType.PIG_HUNT       ->
                             {
                                 pigHunt()
                             }
 
-                            else                               ->
+                            else                         ->
                             {
                                 dropChests()
                             }
@@ -123,7 +128,7 @@ class VoteParty(private val plugin: CV)
             {
                 when (votePartyType)
                 {
-                    VotePartyType.ALL_CHESTS_AT_ONCE.value     ->
+                    VotePartyType.ALL_CHESTS_AT_ONCE     ->
                     {
                         for (chest in chests)
                         {
@@ -132,21 +137,21 @@ class VoteParty(private val plugin: CV)
                         }
                     }
 
-                    VotePartyType.ONE_CHEST_AT_A_TIME.value    ->
+                    VotePartyType.ONE_CHEST_AT_A_TIME    ->
                     {
                         val chest = chests.first()
                         chest.dropRandomItem()
                         chest.shootFirework()
                     }
 
-                    VotePartyType.RANDOM_CHEST_AT_A_TIME.value ->
+                    VotePartyType.RANDOM_CHEST_AT_A_TIME ->
                     {
                         val chest = chests[random.nextInt(chests.size)]
                         chest.dropRandomItem()
                         chest.shootFirework()
                     }
 
-                    VotePartyType.ADD_TO_INVENTORY.value       ->
+                    VotePartyType.ADD_TO_INVENTORY       ->
                     {
                         val chest = chests[random.nextInt(chests.size)]
                         val players: List<Player> = ArrayList(Bukkit.getOnlinePlayers())
@@ -154,6 +159,10 @@ class VoteParty(private val plugin: CV)
 
                         player.addToInventoryOrDrop(chest.popRandomItem())
                         SoundType.PICKUP.play(plugin, player)
+                    }
+
+                    else                                 ->
+                    {
                     }
                 }
             } else
@@ -254,10 +263,12 @@ class VoteParty(private val plugin: CV)
 
             isActive = false
             queue.removeFirstOrNull()
-            if (queue.isNotEmpty())
-            {
-                queue[0].start()
-            }
+            queue.firstOrNull()?.start()
         }
+    }
+
+    init
+    {
+        queue.add(this)
     }
 }

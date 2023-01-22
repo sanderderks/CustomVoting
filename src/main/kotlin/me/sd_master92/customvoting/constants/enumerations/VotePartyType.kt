@@ -5,16 +5,22 @@ import java.util.*
 
 enum class VotePartyType(val value: Int, val label: String)
 {
-    RANDOM_CHEST_AT_A_TIME(0, "Randomly"),
-    ALL_CHESTS_AT_ONCE(1, "All Chests at Once"),
-    ONE_CHEST_AT_A_TIME(2, "One Chest at a Time"),
-    ADD_TO_INVENTORY(3, "Add To Inventory"),
-    EXPLODE_CHESTS(4, "Explode Chests"),
-    SCARY(5, "Scary"),
-    PIG_HUNT(6, "Pig Hunt");
+    RANDOMLY(0, "Randomly!"),
+    RANDOM_CHEST_AT_A_TIME(1, "Random Chest at a Time"),
+    ALL_CHESTS_AT_ONCE(2, "All Chests at Once"),
+    ONE_CHEST_AT_A_TIME(3, "One Chest at a Time"),
+    ADD_TO_INVENTORY(4, "Add To Inventory"),
+    EXPLODE_CHESTS(5, "Explode Chests"),
+    SCARY(6, "Scary"),
+    PIG_HUNT(7, "Pig Hunt");
 
     companion object
     {
+        fun random(): VotePartyType
+        {
+            return valueOf(Random().nextInt(1, values().size))
+        }
+
         fun next(plugin: CV): VotePartyType
         {
             val currentValue = valueOf(plugin.config.getNumber(Settings.VOTE_PARTY_TYPE.path)).value
@@ -32,7 +38,7 @@ enum class VotePartyType(val value: Int, val label: String)
             val votePartyType = Arrays.stream(values())
                 .filter { type: VotePartyType -> type.value == value }
                 .findFirst()
-            return votePartyType.orElse(ALL_CHESTS_AT_ONCE)
+            return votePartyType.orElse(RANDOM_CHEST_AT_A_TIME)
         }
     }
 }
