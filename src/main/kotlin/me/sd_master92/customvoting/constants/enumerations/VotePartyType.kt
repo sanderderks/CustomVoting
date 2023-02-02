@@ -5,7 +5,7 @@ import java.util.*
 
 enum class VotePartyType(val value: Int, val label: String)
 {
-    RANDOMLY(0, "Randomly!"),
+    RANDOMLY(0, "Randomly"),
     RANDOM_CHEST_AT_A_TIME(1, "Random Chest at a Time"),
     ALL_CHESTS_AT_ONCE(2, "All Chests at Once"),
     ONE_CHEST_AT_A_TIME(3, "One Chest at a Time"),

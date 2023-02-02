@@ -76,7 +76,7 @@ class CustomVote(
         {
             if (voter.addQueue(serviceName))
             {
-                Logger.INFO.log("Added vote to database queue", logger)
+                Logger.INFO.log("Added vote to queue", logger)
             } else
             {
                 Logger.ERROR.log("Could not add vote to queue", logger)
