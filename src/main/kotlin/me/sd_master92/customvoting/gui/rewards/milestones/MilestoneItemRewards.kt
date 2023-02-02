@@ -1,4 +1,4 @@
-package me.sd_master92.customvoting.gui.rewards.streak
+package me.sd_master92.customvoting.gui.rewards.milestones
 
 import me.sd_master92.core.inventory.GUI
 import me.sd_master92.customvoting.CV
@@ -11,9 +11,9 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 
-class VoteStreakItemRewards(private val plugin: CV, private val number: Int) : GUI(
+class MilestoneItemRewards(private val plugin: CV, private val number: Int) : GUI(
     plugin,
-    "Vote Streak Item Rewards #$number", 27, false
+    "Vote Milestone Item Rewards #$number", 27, false
 )
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
@@ -29,7 +29,7 @@ class VoteStreakItemRewards(private val plugin: CV, private val number: Int) : G
                 SoundType.CLICK.play(plugin, player)
             }
             cancelCloseEvent = true
-            player.openInventory(VoteStreakRewards(plugin, number).inventory)
+            player.openInventory(MilestoneSettings(plugin, number).inventory)
         }
     }
 
@@ -44,7 +44,7 @@ class VoteStreakItemRewards(private val plugin: CV, private val number: Int) : G
         {
             inv.setItem(25, null)
             inv.setItem(26, null)
-            val path = "${Data.VOTE_STREAKS}.$number.${Data.ITEM_REWARDS}"
+            val path = "${Data.MILESTONES}.$number.${Data.ITEM_REWARDS}"
             if (plugin.data.getItems(path).contentEquals(inv.contents.filterNotNull().toTypedArray()))
             {
                 SoundType.SUCCESS.play(plugin, player)
@@ -52,18 +52,18 @@ class VoteStreakItemRewards(private val plugin: CV, private val number: Int) : G
             } else if (plugin.data.setItems(path, inv.contents))
             {
                 SoundType.SUCCESS.play(plugin, player)
-                player.sendMessage(ChatColor.GREEN.toString() + "Successfully updated the Item Rewards of Streak #$number!")
+                player.sendMessage(ChatColor.GREEN.toString() + "Successfully updated the Item Rewards of Milestone #$number!")
             } else
             {
                 SoundType.FAILURE.play(plugin, player)
-                player.sendMessage(ChatColor.RED.toString() + "Failed to update the Item Rewards of Streak #$number!")
+                player.sendMessage(ChatColor.RED.toString() + "Failed to update the Item Rewards of Milestone #$number!")
             }
         }
     }
 
     init
     {
-        for (reward in plugin.data.getItems("${Data.VOTE_STREAKS}.$number.${Data.ITEM_REWARDS}"))
+        for (reward in plugin.data.getItems("${Data.MILESTONES}.$number.${Data.ITEM_REWARDS}"))
         {
             inventory.addItem(reward)
         }

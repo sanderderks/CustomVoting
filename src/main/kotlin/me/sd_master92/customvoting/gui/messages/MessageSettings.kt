@@ -54,11 +54,11 @@ class MessageSettings(private val plugin: CV) : GUI(plugin, "Message Settings", 
             {
                 SoundType.CHANGE.play(plugin, player)
                 plugin.config.set(
-                    Settings.DISABLED_BROADCAST_STREAK.path,
-                    !plugin.config.getBoolean(Settings.DISABLED_BROADCAST_STREAK.path)
+                    Settings.DISABLED_BROADCAST_MILESTONE.path,
+                    !plugin.config.getBoolean(Settings.DISABLED_BROADCAST_MILESTONE.path)
                 )
                 plugin.config.saveConfig()
-                event.currentItem = StreakBroadcast(plugin)
+                event.currentItem = MilestoneBroadcast(plugin)
             }
 
             Material.BOOKSHELF         ->
@@ -158,7 +158,7 @@ class MessageSettings(private val plugin: CV) : GUI(plugin, "Message Settings", 
         inventory.addItem(VOTE_LINKS)
         inventory.addItem(UseVoteLinkItem(plugin))
         inventory.addItem(VoteBroadcast(plugin))
-        inventory.addItem(StreakBroadcast(plugin))
+        inventory.addItem(MilestoneBroadcast(plugin))
         inventory.addItem(VotePartyUntilBroadcast(plugin))
         inventory.addItem(VotePartyCountBroadcast(plugin))
         inventory.addItem(VotePartyCountEndBroadcast(plugin))
@@ -180,9 +180,9 @@ class VoteBroadcast(plugin: CV) : StatusItem(
     true
 )
 
-class StreakBroadcast(plugin: CV) : StatusItem(
-    Material.ENDER_PEARL, "Streak Broadcast",
-    plugin.config, Settings.DISABLED_BROADCAST_STREAK.path,
+class MilestoneBroadcast(plugin: CV) : StatusItem(
+    Material.ENDER_PEARL, "Milestone Broadcast",
+    plugin.config, Settings.DISABLED_BROADCAST_MILESTONE.path,
     true
 )
 

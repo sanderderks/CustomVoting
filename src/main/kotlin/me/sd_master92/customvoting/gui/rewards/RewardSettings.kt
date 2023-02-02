@@ -13,7 +13,7 @@ import me.sd_master92.customvoting.gui.VoteSettings
 import me.sd_master92.customvoting.gui.items.CommandsRewardItem
 import me.sd_master92.customvoting.gui.items.ItemsRewardItem
 import me.sd_master92.customvoting.gui.rewards.crate.VoteCrates
-import me.sd_master92.customvoting.gui.rewards.streak.VoteStreaks
+import me.sd_master92.customvoting.gui.rewards.milestones.Milestones
 import me.sd_master92.customvoting.listeners.PlayerCommandInput
 import org.bukkit.ChatColor
 import org.bukkit.Material
@@ -151,7 +151,7 @@ class RewardSettings(private val plugin: CV, private val op: Boolean = false) :
             {
                 SoundType.CLICK.play(plugin, player)
                 cancelCloseEvent = true
-                player.openInventory(VoteStreaks(plugin).inventory)
+                player.openInventory(Milestones(plugin).inventory)
             }
 
             Material.DIAMOND_BLOCK     ->
@@ -237,7 +237,7 @@ class RewardSettings(private val plugin: CV, private val op: Boolean = false) :
                 )
             )
             inventory.addItem(LuckyVoteChanceItem(plugin))
-            inventory.addItem(BaseItem(Material.NETHER_STAR, ChatColor.LIGHT_PURPLE.toString() + "Vote Streak"))
+            inventory.addItem(BaseItem(Material.NETHER_STAR, ChatColor.LIGHT_PURPLE.toString() + "Milestones"))
             inventory.addItem(
                 BaseItem(
                     Material.DIAMOND_BLOCK,

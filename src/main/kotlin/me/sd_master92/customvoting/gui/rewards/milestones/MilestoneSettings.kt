@@ -1,4 +1,4 @@
-package me.sd_master92.customvoting.gui.rewards.streak
+package me.sd_master92.customvoting.gui.rewards.milestones
 
 import me.sd_master92.core.inventory.BaseItem
 import me.sd_master92.core.inventory.GUI
@@ -16,8 +16,8 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 
-class VoteStreakRewards(private val plugin: CV, private val number: Int) :
-    GUI(plugin, "Vote Streak Settings #$number", 9)
+class MilestoneSettings(private val plugin: CV, private val number: Int) :
+    GUI(plugin, "Vote Milestone Settings #$number", 9)
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
     {
@@ -27,15 +27,15 @@ class VoteStreakRewards(private val plugin: CV, private val number: Int) :
             {
                 SoundType.CLICK.play(plugin, player)
                 cancelCloseEvent = true
-                player.openInventory(VoteStreaks(plugin).inventory)
+                player.openInventory(Milestones(plugin).inventory)
             }
 
             Material.RED_WOOL      ->
             {
                 SoundType.FAILURE.play(plugin, player)
-                plugin.data.delete(Data.VOTE_STREAKS + ".$number")
+                plugin.data.delete(Data.MILESTONES + ".$number")
                 cancelCloseEvent = true
-                player.openInventory(VoteStreaks(plugin).inventory)
+                player.openInventory(Milestones(plugin).inventory)
             }
 
             Material.DIAMOND_SWORD ->
@@ -43,18 +43,18 @@ class VoteStreakRewards(private val plugin: CV, private val number: Int) :
                 SoundType.CHANGE.play(plugin, player)
                 cancelCloseEvent = true
                 player.closeInventory()
-                object : PlayerPermissionInput(plugin, player, Data.VOTE_STREAKS + ".$number.permissions")
+                object : PlayerPermissionInput(plugin, player, Data.MILESTONES + ".$number.permissions")
                 {
                     override fun onPermissionReceived()
                     {
                         SoundType.SUCCESS.play(plugin, player)
-                        player.openInventory(VoteStreakRewards(plugin, number).inventory)
+                        player.openInventory(MilestoneSettings(plugin, number).inventory)
                     }
 
                     override fun onCancel()
                     {
                         SoundType.FAILURE.play(plugin, player)
-                        player.openInventory(VoteStreakRewards(plugin, number).inventory)
+                        player.openInventory(MilestoneSettings(plugin, number).inventory)
                     }
                 }
             }
@@ -64,18 +64,18 @@ class VoteStreakRewards(private val plugin: CV, private val number: Int) :
                 SoundType.CHANGE.play(plugin, player)
                 cancelCloseEvent = true
                 player.closeInventory()
-                object : PlayerCommandInput(plugin, player, Data.VOTE_STREAKS + ".$number.commands")
+                object : PlayerCommandInput(plugin, player, Data.MILESTONES + ".$number.commands")
                 {
                     override fun onCommandReceived()
                     {
                         SoundType.SUCCESS.play(plugin, player)
-                        player.openInventory(VoteStreakRewards(plugin, number).inventory)
+                        player.openInventory(MilestoneSettings(plugin, number).inventory)
                     }
 
                     override fun onCancel()
                     {
                         SoundType.FAILURE.play(plugin, player)
-                        player.openInventory(VoteStreakRewards(plugin, number).inventory)
+                        player.openInventory(MilestoneSettings(plugin, number).inventory)
                     }
                 }
             }
@@ -84,7 +84,7 @@ class VoteStreakRewards(private val plugin: CV, private val number: Int) :
             {
                 SoundType.CLICK.play(plugin, player)
                 cancelCloseEvent = true
-                player.openInventory(VoteStreakItemRewards(plugin, number).inventory)
+                player.openInventory(MilestoneItemRewards(plugin, number).inventory)
             }
 
             else                   ->
@@ -105,9 +105,9 @@ class VoteStreakRewards(private val plugin: CV, private val number: Int) :
 
     init
     {
-        inventory.setItem(0, PermissionsRewardItem(plugin, "${Data.VOTE_STREAKS}.$number.permissions"))
-        inventory.setItem(1, CommandsRewardItem(plugin, "${Data.VOTE_STREAKS}.$number.commands", Material.SHIELD))
-        inventory.setItem(2, ItemsRewardItem(plugin, "${Data.VOTE_STREAKS}.$number.${Data.ITEM_REWARDS}"))
+        inventory.addItem(ItemsRewardItem(plugin, "${Data.MILESTONES}.$number.${Data.ITEM_REWARDS}"))
+        inventory.addItem(CommandsRewardItem(plugin, "${Data.MILESTONES}.$number.commands", Material.SHIELD))
+        inventory.addItem(PermissionsRewardItem(plugin, "${Data.MILESTONES}.$number.permissions"))
         inventory.setItem(7, DELETE_ITEM)
         inventory.setItem(8, BACK_ITEM)
     }

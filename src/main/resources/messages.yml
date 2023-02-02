@@ -109,6 +109,6 @@ vote_party:
   pig_killed: '&dPig killed by &b%KILLER%&d! Only &b%TOGO% &dpig%s% to go!'
 
 # %PLAYER% name of the player
-# %STREAK% streak reached
-vote_streak:
-  streak_reached: '&b%PLAYER% &dreached vote streak #&b%STREAK%&d!'
+# %MILESTONE% milestone reached
+milestone:
+  milestone_reached: '&b%PLAYER% &dreached milestone #&b%MILESTONE%&d!'

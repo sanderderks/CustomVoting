@@ -1,4 +1,4 @@
-package me.sd_master92.customvoting.gui.rewards.streak
+package me.sd_master92.customvoting.gui.rewards.milestones
 
 import me.sd_master92.core.input.PlayerNumberInput
 import me.sd_master92.core.inventory.BaseItem
@@ -14,8 +14,8 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 
-class VoteStreaks(private val plugin: CV) :
-    GUI(plugin, "Vote Streaks", getInventorySize(plugin))
+class Milestones(private val plugin: CV) :
+    GUI(plugin, "Vote Milestones", getInventorySize(plugin))
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
     {
@@ -36,7 +36,7 @@ class VoteStreaks(private val plugin: CV) :
                     val number: Int = key!!.toInt()
                     SoundType.CLICK.play(plugin, player)
                     cancelCloseEvent = true
-                    player.openInventory(VoteStreakRewards(plugin, number).inventory)
+                    player.openInventory(MilestoneSettings(plugin, number).inventory)
                 } catch (e: Exception)
                 {
                     SoundType.FAILURE.play(plugin, player)
@@ -48,22 +48,22 @@ class VoteStreaks(private val plugin: CV) :
                 SoundType.CHANGE.play(plugin, player)
                 cancelCloseEvent = true
                 player.closeInventory()
-                player.sendMessage(ChatColor.GREEN.toString() + "Please enter a streak number")
+                player.sendMessage(ChatColor.GREEN.toString() + "Please enter a milestone number")
                 player.sendMessage(ChatColor.GRAY.toString() + "Type 'cancel' to go back")
                 object : PlayerNumberInput(plugin, player)
                 {
                     override fun onNumberReceived(input: Int)
                     {
-                        if (plugin.data.contains(Data.VOTE_STREAKS + ".$input"))
+                        if (plugin.data.contains(Data.MILESTONES + ".$input"))
                         {
-                            player.sendMessage(ChatColor.RED.toString() + "That streak already exists.")
+                            player.sendMessage(ChatColor.RED.toString() + "That milestone already exists.")
                         } else
                         {
                             SoundType.SUCCESS.play(plugin, player)
-                            plugin.data.set(Data.VOTE_STREAKS + "." + input + ".permissions", ArrayList<String>())
+                            plugin.data.set(Data.MILESTONES + "." + input + ".permissions", ArrayList<String>())
                             plugin.data.saveConfig()
-                            player.sendMessage(ChatColor.GREEN.toString() + "Streak #$input created!")
-                            player.openInventory(VoteStreaks(plugin).inventory)
+                            player.sendMessage(ChatColor.GREEN.toString() + "Milestone #$input created!")
+                            player.openInventory(Milestones(plugin).inventory)
                             cancel()
                         }
                     }
@@ -71,7 +71,7 @@ class VoteStreaks(private val plugin: CV) :
                     override fun onCancel()
                     {
                         SoundType.FAILURE.play(plugin, player)
-                        player.openInventory(VoteStreaks(plugin).inventory)
+                        player.openInventory(Milestones(plugin).inventory)
                     }
                 }
             }
@@ -91,30 +91,30 @@ class VoteStreaks(private val plugin: CV) :
     {
         private fun getInventorySize(plugin: CV): Int
         {
-            val streaks = (plugin.data.getConfigurationSection(Data.VOTE_STREAKS)?.getKeys(false)?.size ?: 0) + 2
-            return if (streaks % 9 == 0)
+            val milestones = (plugin.data.getConfigurationSection(Data.MILESTONES)?.getKeys(false)?.size ?: 0) + 2
+            return if (milestones % 9 == 0)
             {
-                streaks
+                milestones
             } else
             {
-                streaks + (9 - (streaks % 9))
+                milestones + (9 - (milestones % 9))
             }
         }
     }
 
     init
     {
-        inventory.setItem(7, BaseItem(Material.CRAFTING_TABLE, ChatColor.GREEN.toString() + "Add Streak"))
+        inventory.setItem(7, BaseItem(Material.CRAFTING_TABLE, ChatColor.GREEN.toString() + "Add Milestone"))
         inventory.setItem(8, BACK_ITEM)
 
-        for (key in plugin.data.getConfigurationSection(Data.VOTE_STREAKS)?.getKeys(false)?.mapNotNull { key ->
+        for (key in plugin.data.getConfigurationSection(Data.MILESTONES)?.getKeys(false)?.mapNotNull { key ->
             key.toIntOrNull()
         }?.sorted() ?: ArrayList())
         {
             inventory.addItem(
                 BaseItem(
                     Material.ENDER_PEARL,
-                    ChatColor.LIGHT_PURPLE.toString() + "Streak #$key"
+                    ChatColor.LIGHT_PURPLE.toString() + "Milestone #$key"
                 )
             )
         }

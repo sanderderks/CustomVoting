@@ -20,26 +20,31 @@ enum class Settings(val path: String, private val defaultValue: Any? = null)
     VOTE_LINK_INVENTORY("vote_link_inventory", false),
     FORBIDDEN_COMMANDS("forbidden_commands", arrayOf("fakevote", "op", "stop", "restart", "reload")),
     INGAME_UPDATES("ingame_updates", true),
-    DISABLED_BROADCAST_VOTE("disabled_broadcasts.vote", false),
-    DISABLED_BROADCAST_STREAK("disabled_broadcasts.vote_streak", false),
-    DISABLED_BROADCAST_OFFLINE("disabled_broadcasts.offline", false),
-    DISABLED_BROADCAST_VOTE_PARTY_UNTIL("disabled_broadcasts.vote_party.until", false),
-    DISABLED_BROADCAST_VOTE_PARTY_COUNTDOWN("disabled_broadcasts.vote_party_countdown", false),
-    DISABLED_BROADCAST_VOTE_PARTY_COUNTDOWN_ENDING("disabled_broadcasts.vote_party.countdown_ending", false),
-    DISABLED_MESSAGE_ARMOR_STAND("disabled_broadcasts.armor_stand", false),
-    DISABLED_MESSAGE_DISABLED_WORLD("disabled_broadcasts.disabled_world", false),
-    DISABLED_MESSAGE_VOTE_REMINDER("disabled_broadcasts.vote_reminder", false),
+
+    DISABLED_BROADCASTS("disabled_broadcasts"),
+    DISABLED_BROADCAST_VOTE("$DISABLED_BROADCASTS.vote", false),
+    DISABLED_BROADCAST_MILESTONE("$DISABLED_BROADCASTS.milestone", false),
+    DISABLED_BROADCAST_OFFLINE("$DISABLED_BROADCASTS.offline", false),
+    DISABLED_BROADCAST_VOTE_PARTY_UNTIL("$DISABLED_BROADCASTS.vote_party.until", false),
+    DISABLED_BROADCAST_VOTE_PARTY_COUNTDOWN("$DISABLED_BROADCASTS.vote_party_countdown", false),
+    DISABLED_BROADCAST_VOTE_PARTY_COUNTDOWN_ENDING("$DISABLED_BROADCASTS.vote_party.countdown_ending", false),
+    DISABLED_MESSAGE_ARMOR_STAND("$DISABLED_BROADCASTS.armor_stand", false),
+    DISABLED_MESSAGE_DISABLED_WORLD("$DISABLED_BROADCASTS.disabled_world", false),
+    DISABLED_MESSAGE_VOTE_REMINDER("$DISABLED_BROADCASTS.vote_reminder", false),
+
     FIRST_VOTE_BROADCAST_ONLY("first_vote_broadcast_only", false),
     DISABLED_WORLDS("disabled_worlds"),
     ENABLED_OP_GROUPS("enabled_op_groups"),
     UUID_STORAGE("uuid_storage", true),
     USE_DATABASE("use_database", false),
+
     DATABASE("database"),
     DATABASE_HOST("${DATABASE.path}.host", "localhost"),
     DATABASE_PORT("${DATABASE.path}.port", 3306),
     DATABASE_DATABASE("${DATABASE.path}.database", "customvoting"),
     DATABASE_USER("${DATABASE.path}.user", "root"),
     DATABASE_PASSWORD("${DATABASE.path}.password", "root"),
+
     SETTINGS_ENABLED("vote_settings_enabled", true);
 
     companion object
@@ -49,12 +54,9 @@ enum class Settings(val path: String, private val defaultValue: Any? = null)
             migrate(plugin)
             for (setting in values())
             {
-                if (setting.defaultValue != null)
+                if (setting.defaultValue != null && plugin.config[setting.path] == null)
                 {
-                    if (plugin.config[setting.path] == null)
-                    {
-                        plugin.config[setting.path] = setting.defaultValue
-                    }
+                    plugin.config[setting.path] = setting.defaultValue
                 }
             }
             plugin.config.saveConfig()
@@ -62,11 +64,20 @@ enum class Settings(val path: String, private val defaultValue: Any? = null)
 
         private fun migrate(plugin: CV)
         {
-            if (plugin.config.contains("monthly_period"))
+            val keyMigrations = mapOf(
+                Pair("$DISABLED_BROADCASTS.vote_streak", DISABLED_BROADCAST_MILESTONE.path),
+                Pair("monthly_period", MONTHLY_VOTES.path)
+            )
+
+            for (migration in keyMigrations)
             {
-                plugin.config.set("monthly_votes", plugin.config.get("monthly_period"))
-                plugin.config.delete("monthly_period")
+                if (plugin.config.contains(migration.key))
+                {
+                    plugin.config.set(migration.value, plugin.config.get(migration.key))
+                    plugin.config.delete(migration.key)
+                }
             }
+            plugin.config.saveConfig()
         }
     }
 }

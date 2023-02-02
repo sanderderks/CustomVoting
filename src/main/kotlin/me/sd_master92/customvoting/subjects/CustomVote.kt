@@ -140,7 +140,7 @@ class CustomVote(
                         if (updatedVotesUntil != votesRequired && !plugin.config.getBoolean(Settings.DISABLED_BROADCAST_VOTE_PARTY_UNTIL.path))
                         {
                             val placeholders = HashMap<String, String>()
-                            placeholders["%VOTES%"] = "" + updatedVotesUntil
+                            placeholders["%VOTES%"] = "$updatedVotesUntil"
                             placeholders["%s%"] = if (updatedVotesUntil == 1) "" else "s"
                             plugin.broadcastText(Messages.VOTE_PARTY_UNTIL, placeholders)
                         }
@@ -175,13 +175,13 @@ class CustomVote(
         if (xp > 0)
         {
             val placeholders = HashMap<String, String>()
-            placeholders["%XP%"] = "" + xp
+            placeholders["%XP%"] = "$xp"
             placeholders["%s%"] = if (xp == 1) "" else "s"
             rewardMessage += if (rewardMessage.isEmpty()) "" else Messages.VOTE_REWARD_DIVIDER.getMessage(plugin)
             rewardMessage += Messages.VOTE_REWARD_XP.getMessage(plugin, placeholders)
         }
         giveLuckyReward(player)
-        giveStreakRewards(player)
+        giveMilestoneRewards(player)
 
         val message = rewardMessage
         if (message.isNotEmpty())
@@ -254,21 +254,21 @@ class CustomVote(
         }
     }
 
-    private fun giveStreakRewards(player: Player)
+    private fun giveMilestoneRewards(player: Player)
     {
         val votes = VoteFile.get(plugin, player).votes
-        if (plugin.data.contains(Data.VOTE_STREAKS + "." + votes))
+        if (plugin.data.contains(Data.MILESTONES + ".$votes"))
         {
-            Logger.OK.log("Player reached vote streak #$votes, giving streak rewards", logger)
-            if (!plugin.config.getBoolean(Settings.DISABLED_BROADCAST_STREAK.path))
+            Logger.OK.log("Player reached milestone #$votes, giving milestone rewards", logger)
+            if (!plugin.config.getBoolean(Settings.DISABLED_BROADCAST_MILESTONE.path))
             {
                 val placeholders = HashMap<String, String>()
                 placeholders["%PLAYER%"] = player.name
-                placeholders["%STREAK%"] = "" + votes
-                player.sendText(plugin, Messages.VOTE_STREAK_REACHED, placeholders)
+                placeholders["%MILESTONE%"] = "$votes"
+                player.sendText(plugin, Messages.MILESTONE_REACHED, placeholders)
             }
 
-            val permissions = plugin.data.getStringList(Data.VOTE_STREAKS + "." + votes + ".permissions")
+            val permissions = plugin.data.getStringList(Data.MILESTONES + ".$votes.permissions")
             if (CV.PERMISSION != null)
             {
                 for (permission in permissions)
@@ -276,12 +276,12 @@ class CustomVote(
                     CV.PERMISSION!!.playerAdd(null, player, permission)
                 }
             }
-            val commands = plugin.data.getStringList(Data.VOTE_STREAKS + "." + votes + ".commands")
+            val commands = plugin.data.getStringList(Data.MILESTONES + ".$votes.commands")
             for (command in commands)
             {
                 plugin.runCommand(command.replace("%PLAYER%", player.name).withPlaceholders(player))
             }
-            player.addToInventoryOrDrop(plugin.data.getItems("${Data.VOTE_STREAKS}.$votes.${Data.ITEM_REWARDS}"))
+            player.addToInventoryOrDrop(plugin.data.getItems("${Data.MILESTONES}.$votes.${Data.ITEM_REWARDS}"))
         }
     }
 

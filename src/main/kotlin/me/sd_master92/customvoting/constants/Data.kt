@@ -1,5 +1,7 @@
 package me.sd_master92.customvoting.constants
 
+import me.sd_master92.customvoting.CV
+
 object Data
 {
     const val VOTE_PARTY = "vote_party"
@@ -14,8 +16,30 @@ object Data
     const val VOTE_PARTY_COMMANDS = "vote_party_commands"
     const val VOTE_LINK_ITEMS = "vote_link_items"
     const val VOTE_LINKS = "vote_links"
-    const val VOTE_STREAKS = "vote_streaks"
+    const val MILESTONES = "milestones"
     const val VOTE_SITES = "vote_sites"
     const val VOTE_CRATES = "vote_crates"
     val CRATE_REWARD_CHANCES = listOf(50, 25, 10, 5, 1)
+
+    fun initialize(plugin: CV)
+    {
+        migrate(plugin)
+    }
+
+    private fun migrate(plugin: CV)
+    {
+        val keyMigrations = mapOf(
+            Pair("vote_streaks", MILESTONES)
+        )
+
+        for (migration in keyMigrations)
+        {
+            if (plugin.data.contains(migration.key))
+            {
+                plugin.data.set(migration.value, plugin.data.get(migration.key))
+                plugin.data.delete(migration.key)
+            }
+        }
+        plugin.data.saveConfig()
+    }
 }

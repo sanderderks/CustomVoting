@@ -197,6 +197,7 @@ class CV : CustomPlugin(
         infoLog("|___finished caching in ${time}s")
         Settings.initialize(this)
         Messages.initialize(this)
+        Data.initialize(this)
     }
 
     private fun setupDatabase()

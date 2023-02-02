@@ -27,10 +27,10 @@ database:
   user: root
   password: root
 disabled_broadcasts:
-    vote: false
-    vote_streak: false
-    vote_party:
-      until: false
-      countdown: false
-      countdown_ending: false
+  vote: false
+  milestone: false
+  vote_party:
+    until: false
+    countdown: false
+    countdown_ending: false
 first_vote_broadcast_only: false

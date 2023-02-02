@@ -80,13 +80,13 @@ class VoteCrates(private val plugin: CV) :
     {
         private fun getInventorySize(plugin: CV): Int
         {
-            val streaks = (plugin.data.getConfigurationSection(Data.VOTE_CRATES)?.getKeys(false)?.size ?: 0) + 2
-            return if (streaks % 9 == 0)
+            val crates = (plugin.data.getConfigurationSection(Data.VOTE_CRATES)?.getKeys(false)?.size ?: 0) + 2
+            return if (crates % 9 == 0)
             {
-                streaks
+                crates
             } else
             {
-                streaks + (9 - (streaks % 9))
+                crates + (9 - (crates % 9))
             }
         }
     }
