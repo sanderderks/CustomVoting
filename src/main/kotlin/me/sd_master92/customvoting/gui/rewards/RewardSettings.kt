@@ -227,7 +227,6 @@ class RewardSettings(private val plugin: CV, private val op: Boolean = false) :
                 Material.COMMAND_BLOCK
             )
         )
-        inventory.addItem(CommandsRewardItem(plugin, Data.VOTE_PARTY_COMMANDS, Material.TNT, "Vote Party Commands"))
         if (!op)
         {
             inventory.addItem(
@@ -247,6 +246,7 @@ class RewardSettings(private val plugin: CV, private val op: Boolean = false) :
                     true
                 )
             )
+            inventory.addItem(CommandsRewardItem(plugin, Data.VOTE_PARTY_COMMANDS, Material.TNT, "Vote Party Commands"))
         }
         if (op)
         {
