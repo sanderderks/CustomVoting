@@ -3,8 +3,8 @@ package me.sd_master92.customvoting.tasks
 import me.sd_master92.core.tasks.TaskTimer
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.Settings
+import me.sd_master92.customvoting.constants.enumerations.Strings
 import org.bukkit.Bukkit
-import org.bukkit.ChatColor
 import org.bukkit.entity.Player
 
 class UpdateChecker(plugin: CV)
@@ -19,7 +19,7 @@ class UpdateChecker(plugin: CV)
                 {
                     plugin.sendDownloadUrl(player)
                     player.sendMessage("")
-                    player.sendMessage(ChatColor.GRAY.toString() + "Updates can be turned off in the /votesettings")
+                    player.sendMessage(Strings.PLUGIN_UPDATE.toString())
                 }.run()
             }
         }

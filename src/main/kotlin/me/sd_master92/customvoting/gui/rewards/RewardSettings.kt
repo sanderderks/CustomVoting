@@ -9,6 +9,7 @@ import me.sd_master92.customvoting.constants.Data
 import me.sd_master92.customvoting.constants.enumerations.ItemRewardType
 import me.sd_master92.customvoting.constants.enumerations.Settings
 import me.sd_master92.customvoting.constants.enumerations.SoundType
+import me.sd_master92.customvoting.constants.enumerations.Strings
 import me.sd_master92.customvoting.gui.VoteSettings
 import me.sd_master92.customvoting.gui.items.CommandsRewardItem
 import me.sd_master92.customvoting.gui.items.ItemsRewardItem
@@ -246,7 +247,14 @@ class RewardSettings(private val plugin: CV, private val op: Boolean = false) :
                     true
                 )
             )
-            inventory.addItem(CommandsRewardItem(plugin, Data.VOTE_PARTY_COMMANDS, Material.TNT, "Vote Party Commands"))
+            inventory.addItem(
+                CommandsRewardItem(
+                    plugin,
+                    Data.VOTE_PARTY_COMMANDS,
+                    Material.TNT,
+                    Strings.GUI_COMMAND_REWARDS_VOTE_PARTY.toString()
+                )
+            )
         }
         if (op)
         {

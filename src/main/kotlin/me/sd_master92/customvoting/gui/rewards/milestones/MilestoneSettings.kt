@@ -5,11 +5,11 @@ import me.sd_master92.core.inventory.GUI
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Data
 import me.sd_master92.customvoting.constants.enumerations.SoundType
+import me.sd_master92.customvoting.constants.enumerations.Strings
 import me.sd_master92.customvoting.gui.items.CommandsRewardItem
 import me.sd_master92.customvoting.gui.items.ItemsRewardItem
 import me.sd_master92.customvoting.listeners.PlayerCommandInput
 import me.sd_master92.customvoting.listeners.PlayerPermissionInput
-import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
@@ -17,7 +17,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 
 class MilestoneSettings(private val plugin: CV, private val number: Int) :
-    GUI(plugin, "Vote Milestone Settings #$number", 9)
+    GUI(plugin, Strings.MILESTONE_SETTINGS_TITLE_X.with("$number"), 9)
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
     {
@@ -34,6 +34,7 @@ class MilestoneSettings(private val plugin: CV, private val number: Int) :
             {
                 SoundType.FAILURE.play(plugin, player)
                 plugin.data.delete(Data.MILESTONES + ".$number")
+                player.sendMessage(Strings.MILESTONE_DELETED_X.with(Strings.MILESTONE_NAME_X.with("$number")))
                 cancelCloseEvent = true
                 player.openInventory(Milestones(plugin).inventory)
             }
@@ -100,7 +101,7 @@ class MilestoneSettings(private val plugin: CV, private val number: Int) :
 
     companion object
     {
-        val DELETE_ITEM = BaseItem(Material.RED_WOOL, ChatColor.RED.toString() + "Delete")
+        val DELETE_ITEM = BaseItem(Material.RED_WOOL, Strings.GUI_DELETE.toString())
     }
 
     init
@@ -114,6 +115,6 @@ class MilestoneSettings(private val plugin: CV, private val number: Int) :
 }
 
 class PermissionsRewardItem(plugin: CV, path: String) : BaseItem(
-    Material.DIAMOND_SWORD, ChatColor.LIGHT_PURPLE.toString() + "Permission Rewards",
-    ChatColor.GRAY.toString() + "Currently: " + ChatColor.AQUA + plugin.data.getStringList(path).size + ChatColor.GRAY + " permissions"
+    Material.DIAMOND_SWORD, Strings.PERMISSION_REWARDS.toString(),
+    Strings.GUI_CURRENT_XY.with("" + plugin.data.getStringList(path).size, "permissions")
 )

@@ -4,8 +4,8 @@ import me.sd_master92.core.command.SimpleCommand
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Voter
 import me.sd_master92.customvoting.constants.enumerations.Messages
+import me.sd_master92.customvoting.constants.enumerations.Strings
 import me.sd_master92.customvoting.sendText
-import org.bukkit.ChatColor
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
@@ -18,10 +18,10 @@ class ClearMonthlyVotesCommand(private val plugin: CV) : SimpleCommand(plugin, "
             if (sender is Player)
             {
                 Voter.get(plugin, sender).clearMonthlyVotes()
-                sender.sendMessage(ChatColor.GREEN.toString() + "Your monthly votes have been reset.")
+                sender.sendMessage(Strings.MONTHLY_VOTES_RESET_SELF.toString())
             } else
             {
-                sender.sendMessage(ChatColor.RED.toString() + "- /clearmonthlyvotes <name>")
+                sender.sendMessage(Strings.MONTHLY_VOTES_RESET_COMMAND_USAGE.toString())
             }
         } else
         {
@@ -30,7 +30,7 @@ class ClearMonthlyVotesCommand(private val plugin: CV) : SimpleCommand(plugin, "
             if (voter != null)
             {
                 voter.clearMonthlyVotes()
-                sender.sendMessage(ChatColor.AQUA.toString() + voter.name + "'s " + ChatColor.GREEN + "monthly votes have been reset.")
+                sender.sendMessage(Strings.MONTHLY_VOTES_RESET_OTHER_X.with(voter.name))
             } else
             {
                 sender.sendText(plugin, Messages.INVALID_PLAYER)

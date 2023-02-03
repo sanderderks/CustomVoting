@@ -6,8 +6,8 @@ import me.sd_master92.customvoting.constants.Data
 import me.sd_master92.customvoting.constants.Voter
 import me.sd_master92.customvoting.constants.enumerations.Messages
 import me.sd_master92.customvoting.constants.enumerations.Settings
+import me.sd_master92.customvoting.constants.enumerations.Strings
 import org.bukkit.Bukkit
-import org.bukkit.ChatColor
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.block.BlockFace
@@ -171,7 +171,7 @@ class VoteTopSign @JvmOverloads constructor(
         if (plugin.data.deleteLocation(Data.VOTE_TOP_SIGNS + "." + if (top == 0) "title" else top))
         {
             voteTops.remove(top)
-            player.sendMessage(ChatColor.RED.toString() + "Unregistered Vote Sign #" + if (top == 0) "title" else top)
+            player.sendMessage(Strings.VOTE_TOP_SIGN_DELETED_X.with(if (top == 0) "title" else "$top"))
         }
     }
 
@@ -227,7 +227,7 @@ class VoteTopSign @JvmOverloads constructor(
     {
         if (player != null && (top == 0 || !voteTops.containsKey(top)))
         {
-            player.sendMessage(ChatColor.GREEN.toString() + "Registered Vote Sign #" + if (top == 0) "title" else top)
+            player.sendMessage(Strings.VOTE_TOP_SIGN_CREATED_X.with(if (top == 0) "title" else "$top"))
         }
         voteTops[top] = this
         update()

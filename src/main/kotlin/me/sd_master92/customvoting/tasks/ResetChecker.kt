@@ -4,8 +4,8 @@ import me.sd_master92.core.tasks.TaskTimer
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.commands.ReloadCommand
 import me.sd_master92.customvoting.constants.enumerations.Settings
+import me.sd_master92.customvoting.constants.enumerations.Strings
 import org.bukkit.Bukkit
-import org.bukkit.ChatColor
 import java.util.*
 
 class ResetChecker(private val plugin: CV)
@@ -29,7 +29,7 @@ class ResetChecker(private val plugin: CV)
                     {
                         if (player.isOp)
                         {
-                            player.sendMessage(ChatColor.GREEN.toString() + "A new month has started and votes can be reset in the /votesettings.")
+                            player.sendMessage(Strings.RESET_VOTES_CONFIRM.toString())
                         }
                     }
                 }

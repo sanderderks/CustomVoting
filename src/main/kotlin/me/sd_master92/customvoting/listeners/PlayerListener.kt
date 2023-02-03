@@ -10,6 +10,7 @@ import me.sd_master92.customvoting.constants.Voter
 import me.sd_master92.customvoting.constants.enumerations.Messages
 import me.sd_master92.customvoting.constants.enumerations.Settings
 import me.sd_master92.customvoting.constants.enumerations.SoundType
+import me.sd_master92.customvoting.constants.enumerations.Strings
 import me.sd_master92.customvoting.gui.rewards.crate.VoteCrate
 import me.sd_master92.customvoting.gui.voteparty.VotePartyRewards
 import me.sd_master92.customvoting.sendText
@@ -64,11 +65,11 @@ class PlayerListener(private val plugin: CV) : Listener
         val queue = voter.queue
         if (!voter.clearQueue())
         {
-            plugin.errorLog("failed to delete queue of ${player.uniqueId}|${player.name}")
+            plugin.errorLog(Strings.QUEUE_DELETE_ERROR_XY.with(player.uniqueId.toString(), player.name))
         }
         if (queue.isNotEmpty())
         {
-            plugin.infoLog(queue.size.toString() + " queued votes found for " + player.name + ". Forwarding in 10 seconds...")
+            plugin.infoLog(Strings.QUEUE_FORWARD_XY.with(queue.size.toString(), player.name))
             val iterator = queue.iterator()
             TaskTimer.repeat(plugin, 20, 200)
             {
@@ -127,12 +128,12 @@ class PlayerListener(private val plugin: CV) : Listener
                         {
                             plugin.data.deleteItems(Data.VOTE_PARTY + ".$key")
                             event.isDropItems = false
-                            event.player.sendMessage(ChatColor.RED.toString() + "Vote Party Chest #$key deleted.")
+                            event.player.sendMessage(Strings.VOTE_PARTY_CHEST_DELETED_X.with(key))
                         }
                     } else
                     {
                         event.isCancelled = true
-                        player.sendMessage(ChatColor.RED.toString() + "You do not have permission to break this block.")
+                        player.sendMessage(Strings.BREAK_BLOCK_NO_PERMISSION.toString())
                     }
                 }
             }
@@ -151,12 +152,16 @@ class PlayerListener(private val plugin: CV) : Listener
                             )
                             stand?.remove()
                             plugin.data.delete("$path.stand")
-                            event.player.sendMessage(ChatColor.RED.toString() + plugin.data.getString("$path.name") + " deleted.")
+                            event.player.sendMessage(
+                                Strings.VOTE_CRATE_DELETED_X.with(
+                                    plugin.data.getString("$path.name") ?: ""
+                                )
+                            )
                         }
                     } else
                     {
                         event.isCancelled = true
-                        player.sendMessage(ChatColor.RED.toString() + "You do not have permission to break this block.")
+                        player.sendMessage(Strings.BREAK_BLOCK_NO_PERMISSION.toString())
                     }
                 }
             }
@@ -200,18 +205,18 @@ class PlayerListener(private val plugin: CV) : Listener
             {
                 val chests: Set<String> = plugin.data.getLocations(Data.VOTE_PARTY).keys
                 var i = 1
-                while (chests.contains("" + i))
+                while (chests.contains("$i"))
                 {
                     i++
                 }
-                plugin.data.setLocation(Data.VOTE_PARTY + "." + i, event.block.location)
+                plugin.data.setLocation(Data.VOTE_PARTY + ".$i", event.block.location)
                 SoundType.SUCCESS.play(plugin, player)
-                player.sendMessage(ChatColor.GREEN.toString() + "Vote Party Chest #" + i + " registered.")
+                player.sendMessage(Strings.VOTE_PARTY_CHEST_CREATED_X.with("$i"))
                 player.inventory.setItemInMainHand(VoteParty.VOTE_PARTY_ITEM)
             } else
             {
                 event.isCancelled = true
-                player.sendMessage(ChatColor.RED.toString() + "You do not have permission to place this block.")
+                player.sendMessage(Strings.BREAK_BLOCK_NO_PERMISSION.toString())
             }
         }
     }
@@ -237,7 +242,7 @@ class PlayerListener(private val plugin: CV) : Listener
                             player.openInventory(VotePartyRewards(plugin, key).inventory)
                         } else
                         {
-                            player.sendMessage(ChatColor.RED.toString() + "You do not have permission to open this chest.")
+                            player.sendMessage(Strings.OPEN_CHEST_NO_PERMISSION.toString())
                         }
                     }
                 }
@@ -250,7 +255,7 @@ class PlayerListener(private val plugin: CV) : Listener
                     )
                     {
                         event.isCancelled = true
-                        player.sendMessage(ChatColor.RED.toString() + "You need a key to open this crate.")
+                        player.sendMessage(Strings.OPEN_CHEST_NEED_KEY.toString())
                     }
                 }
             }
@@ -268,50 +273,59 @@ class PlayerListener(private val plugin: CV) : Listener
                         {
                             if (player.hasPermission("customvoting.crate"))
                             {
+                                event.isCancelled = true
                                 val loc = event.clickedBlock!!.location
-                                val confirm = object : ConfirmGUI(plugin, "Place '$name' here?")
+                                if (!plugin.data.getLocations(Data.VOTE_CRATES).containsValue(loc))
                                 {
-                                    override fun onCancel(event: InventoryClickEvent, player: Player)
-                                    {
-                                        SoundType.FAILURE.play(plugin, player)
-                                        player.closeInventory()
-                                    }
+                                    val confirm =
+                                        object : ConfirmGUI(plugin, Strings.VOTE_CRATE_PLACE_HERE_X.with(name))
+                                        {
+                                            override fun onCancel(event: InventoryClickEvent, player: Player)
+                                            {
+                                                SoundType.FAILURE.play(plugin, player)
+                                                player.closeInventory()
+                                            }
 
-                                    override fun onClose(event: InventoryCloseEvent, player: Player)
-                                    {
-                                        SoundType.FAILURE.play(plugin, player)
-                                    }
+                                            override fun onClose(event: InventoryCloseEvent, player: Player)
+                                            {
+                                                SoundType.FAILURE.play(plugin, player)
+                                            }
 
-                                    override fun onConfirm(event: InventoryClickEvent, player: Player)
-                                    {
-                                        val location = Location(loc.world, loc.x, loc.y + 1, loc.z)
-                                        location.block.type = Material.ENDER_CHEST
-                                        val directional = location.block.blockData as Directional
-                                        directional.facing = player.facing.oppositeFace
-                                        location.block.blockData = directional
-                                        plugin.data.setLocation(path, location)
+                                            override fun onConfirm(event: InventoryClickEvent, player: Player)
+                                            {
+                                                val location = Location(loc.world, loc.x, loc.y + 1, loc.z)
+                                                location.block.type = Material.ENDER_CHEST
+                                                val directional = location.block.blockData as Directional
+                                                directional.facing = player.facing.oppositeFace
+                                                location.block.blockData = directional
+                                                plugin.data.setLocation(path, location)
 
-                                        val stand =
-                                            VoteTopStand.spawnArmorStand(
-                                                Location(
-                                                    loc.world,
-                                                    loc.x + 0.5,
-                                                    loc.y + 1,
-                                                    loc.z + 0.5
-                                                )
-                                            )
-                                        stand.customName = ChatColor.AQUA.toString() + name
-                                        stand.setGravity(false)
-                                        plugin.data.set("$path.stand", stand.uniqueId.toString())
+                                                val stand =
+                                                    VoteTopStand.spawnArmorStand(
+                                                        Location(
+                                                            loc.world,
+                                                            loc.x + 0.5,
+                                                            loc.y + 1,
+                                                            loc.z + 0.5
+                                                        )
+                                                    )
+                                                stand.customName = ChatColor.AQUA.toString() + name
+                                                stand.setGravity(false)
+                                                plugin.data.set("$path.stand", stand.uniqueId.toString())
 
-                                        plugin.data.saveConfig()
+                                                plugin.data.saveConfig()
 
-                                        SoundType.SUCCESS.play(plugin, player)
-                                        player.closeInventory()
-                                    }
+                                                SoundType.SUCCESS.play(plugin, player)
+                                                player.closeInventory()
+                                            }
+                                        }
+                                    SoundType.CLICK.play(plugin, player)
+                                    player.openInventory(confirm.inventory)
+                                } else
+                                {
+                                    SoundType.FAILURE.play(plugin, player)
+                                    player.sendMessage(Strings.OPEN_CHEST_WRONG_KEY.toString())
                                 }
-                                SoundType.CLICK.play(plugin, player)
-                                player.openInventory(confirm.inventory)
                             }
                         } else if (event.clickedBlock!!.type == Material.ENDER_CHEST && event.clickedBlock?.location?.equals(
                                 plugin.data.getLocation(path)
@@ -329,7 +343,7 @@ class PlayerListener(private val plugin: CV) : Listener
                         } else
                         {
                             event.isCancelled = true
-                            player.sendMessage(ChatColor.RED.toString() + "You need to open a crate with this key.")
+                            player.sendMessage(Strings.INTERACT_OPEN_CRATE.toString())
                         }
                     }
                 }

@@ -7,6 +7,7 @@ import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.addToInventoryOrDrop
 import me.sd_master92.customvoting.constants.Data
 import me.sd_master92.customvoting.constants.enumerations.SoundType
+import me.sd_master92.customvoting.constants.enumerations.Strings
 import me.sd_master92.customvoting.gui.items.ItemsRewardItem
 import org.bukkit.ChatColor
 import org.bukkit.Material
@@ -17,7 +18,7 @@ import org.bukkit.inventory.ItemStack
 
 class VoteCrateSettings(private val plugin: CV, private val number: Int) : GUI(
     plugin,
-    (plugin.data.getString(Data.VOTE_CRATES + ".$number.name") ?: "Vote Crate"),
+    (plugin.data.getString(Data.VOTE_CRATES + ".$number.name") ?: Strings.VOTE_CRATE_NAME_DEFAULT_X.with("$number")),
     9
 )
 {
@@ -36,6 +37,7 @@ class VoteCrateSettings(private val plugin: CV, private val number: Int) : GUI(
             {
                 SoundType.FAILURE.play(plugin, player)
                 plugin.data.delete(Data.VOTE_CRATES + ".$number")
+                player.sendMessage(Strings.INPUT_VOTE_CRATE_DELETED_X.with(Strings.VOTE_CRATE_NAME_X.with("$number")))
                 cancelCloseEvent = true
                 player.openInventory(VoteCrates(plugin).inventory)
             }
@@ -76,8 +78,8 @@ class VoteCrateSettings(private val plugin: CV, private val number: Int) : GUI(
                 SoundType.CHANGE.play(plugin, player)
                 cancelCloseEvent = true
                 player.closeInventory()
-                player.sendMessage(ChatColor.GREEN.toString() + "Please enter a new name")
-                player.sendMessage(ChatColor.GRAY.toString() + "Type 'cancel' to go back")
+                player.sendMessage(Strings.INPUT_VOTE_CRATE_NAME_CHANGE.toString())
+                player.sendMessage(Strings.INPUT_CANCEL_BACK.toString())
                 object : PlayerStringInput(plugin, player)
                 {
                     override fun onInputReceived(input: String)
@@ -85,7 +87,7 @@ class VoteCrateSettings(private val plugin: CV, private val number: Int) : GUI(
                         SoundType.SUCCESS.play(plugin, player)
                         plugin.data.set(Data.VOTE_CRATES + ".$number.name", input)
                         plugin.data.saveConfig()
-                        player.sendMessage(ChatColor.GREEN.toString() + "Name changed to $input!")
+                        player.sendMessage(Strings.INPUT_VOTE_CRATE_NAME_CHANGED_X.with(input))
                         player.openInventory(VoteCrateSettings(plugin, number).inventory)
                         cancel()
                     }
@@ -111,20 +113,20 @@ class VoteCrateSettings(private val plugin: CV, private val number: Int) : GUI(
 
     companion object
     {
-        val DELETE_ITEM = BaseItem(Material.RED_WOOL, ChatColor.RED.toString() + "Delete")
+        val DELETE_ITEM = BaseItem(Material.RED_WOOL, Strings.GUI_DELETE.toString())
     }
 
     init
     {
-        inventory.addItem(BaseItem(Material.OAK_SIGN, ChatColor.LIGHT_PURPLE.toString() + "Change Name"))
-        inventory.addItem(BaseItem(Material.DIAMOND, ChatColor.AQUA.toString() + "Get Key", null, true))
+        inventory.addItem(BaseItem(Material.OAK_SIGN, Strings.GUI_VOTE_CRATE_RENAME.toString()))
+        inventory.addItem(BaseItem(Material.DIAMOND, Strings.GUI_VOTE_CRATE_KEY.toString(), null, true))
         for (chance in Data.CRATE_REWARD_CHANCES)
         {
             inventory.addItem(
                 ItemsRewardItem(
                     plugin,
                     "${Data.VOTE_CRATES}.$number.${Data.ITEM_REWARDS}.$chance",
-                    "Crate Rewards $chance%"
+                    Strings.GUI_VOTE_CRATE_REWARDS_PERCENTAGE_X.with("$chance")
                 )
             )
         }

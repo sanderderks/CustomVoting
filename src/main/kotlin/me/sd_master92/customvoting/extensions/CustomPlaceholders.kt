@@ -6,6 +6,7 @@ import me.sd_master92.customvoting.VoteFile
 import me.sd_master92.customvoting.constants.Data
 import me.sd_master92.customvoting.constants.Voter
 import me.sd_master92.customvoting.constants.enumerations.Settings
+import me.sd_master92.customvoting.constants.enumerations.Strings
 import me.sd_master92.customvoting.database.PlayerTable
 import org.bukkit.entity.Player
 
@@ -119,7 +120,7 @@ class CustomPlaceholders(private val plugin: CV) : PlaceholderExpansion()
                         val topVoter = Voter.getTopVoter(plugin, key)
                         return if (params.endsWith("NAME"))
                         {
-                            topVoter?.name ?: "Unknown"
+                            topVoter?.name ?: Strings.PLAYER_NAME_UNKNOWN.toString()
                         } else
                         {
                             if (topVoter == null) "0" else "${topVoter.monthlyVotes}"

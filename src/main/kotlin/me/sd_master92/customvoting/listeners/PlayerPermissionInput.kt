@@ -2,6 +2,7 @@ package me.sd_master92.customvoting.listeners
 
 import me.sd_master92.core.input.PlayerStringInput
 import me.sd_master92.customvoting.CV
+import me.sd_master92.customvoting.constants.enumerations.Strings
 import org.bukkit.ChatColor
 import org.bukkit.entity.Player
 
@@ -26,11 +27,21 @@ abstract class PlayerPermissionInput(
         if (permissions.contains(permission))
         {
             permissions.remove(permission)
-            player.sendMessage(ChatColor.RED.toString() + "Removed " + permission + " from permissions")
+            player.sendMessage(
+                Strings.INPUT_REMOVED_FROM_LIST_XY.with(
+                    permission,
+                    Strings.INPUT_PERMISSION_TYPE_MULTIPLE.toString()
+                )
+            )
         } else
         {
             permissions.add(permission)
-            player.sendMessage(ChatColor.GREEN.toString() + "Added " + permission + " to permissions")
+            player.sendMessage(
+                Strings.INPUT_ADDED_TO_LIST_XY.with(
+                    permission,
+                    Strings.INPUT_PERMISSION_TYPE_MULTIPLE.toString()
+                )
+            )
         }
         plugin.data[path] = permissions
         plugin.data.saveConfig()
@@ -40,12 +51,12 @@ abstract class PlayerPermissionInput(
 
     init
     {
-        player.sendMessage(ChatColor.GREEN.toString() + "Please enter a permission to add or remove from the list")
-        player.sendMessage(ChatColor.GRAY.toString() + "Type 'cancel' to go back")
+        player.sendMessage(Strings.INPUT_ALTER_LIST_X.with(Strings.INPUT_PERMISSION_TYPE.toString()))
+        player.sendMessage(Strings.INPUT_CANCEL_BACK.toString())
         player.sendMessage("")
         if (permissions.isEmpty())
         {
-            player.sendMessage(ChatColor.RED.toString() + "There are currently no permissions.")
+            player.sendMessage(Strings.INPUT_LIST_EMPTY_X.with(Strings.INPUT_PERMISSION_TYPE_MULTIPLE.toString()))
         } else
         {
             player.sendMessage(ChatColor.GRAY.toString() + "Permissions:")

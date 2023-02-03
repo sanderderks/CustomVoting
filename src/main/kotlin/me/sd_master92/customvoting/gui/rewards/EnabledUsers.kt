@@ -5,6 +5,7 @@ import me.sd_master92.core.inventory.GUI
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Voter
 import me.sd_master92.customvoting.constants.enumerations.SoundType
+import me.sd_master92.customvoting.constants.enumerations.Strings
 import me.sd_master92.customvoting.getOfflinePlayer
 import me.sd_master92.customvoting.getSkull
 import org.bukkit.ChatColor
@@ -15,13 +16,13 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 
 class EnabledUsers(private val plugin: CV, private var page: Int = 0) :
-    GUI(plugin, "Enabled Users #${page + 1}", 54)
+    GUI(plugin, Strings.GUI_TITLE_ENABLED_USERS_X.with("" + (page + 1)), 54)
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
     {
         when (item.type)
         {
-            Material.BARRIER     ->
+            Material.BARRIER ->
             {
                 SoundType.CLICK.play(plugin, player)
                 cancelCloseEvent = true
@@ -47,14 +48,17 @@ class EnabledUsers(private val plugin: CV, private var page: Int = 0) :
                 }
             }
 
-            else                 ->
+            else ->
             {
-                if (item.itemMeta?.displayName?.contains("Previous") == true && page > 0)
+                if (item.itemMeta?.displayName?.contains(Strings.GUI_PAGINATION_PREVIOUS.toString()) == true && page > 0)
                 {
                     SoundType.CLICK.play(plugin, player)
                     cancelCloseEvent = true
                     player.openInventory(EnabledUsers(plugin, page - 1).inventory)
-                } else if (item.itemMeta?.displayName?.contains("Next") == true && Voter.getTopVoters(plugin).size > (page + 1) * 51)
+                } else if (item.itemMeta?.displayName?.contains(Strings.GUI_PAGINATION_NEXT.toString()) == true && Voter.getTopVoters(
+                        plugin
+                    ).size > (page + 1) * 51
+                )
                 {
                     SoundType.CLICK.play(plugin, player)
                     cancelCloseEvent = true
@@ -80,8 +84,8 @@ class EnabledUsers(private val plugin: CV, private var page: Int = 0) :
         {
             inventory.addItem(EnabledUser(voter).getSkull())
         }
-        inventory.setItem(51, BaseItem(Material.FEATHER, ChatColor.AQUA.toString() + "Previous"))
-        inventory.setItem(52, BaseItem(Material.FEATHER, ChatColor.AQUA.toString() + "Next"))
+        inventory.setItem(51, BaseItem(Material.FEATHER, Strings.GUI_PAGINATION_PREVIOUS.toString()))
+        inventory.setItem(52, BaseItem(Material.FEATHER, Strings.GUI_PAGINATION_NEXT.toString()))
         inventory.setItem(53, BACK_ITEM)
     }
 }
@@ -93,10 +97,12 @@ class EnabledUser(private val voter: Voter)
         val skull = voter.name.getOfflinePlayer().getSkull()
         val meta = skull.itemMeta
         meta!!.lore = listOf(
-            ChatColor.GRAY.toString() + "Enabled: " + if (voter.isOpUser)
-                ChatColor.GREEN.toString() + "Yes" else ChatColor.RED.toString() + "No",
-            ChatColor.GRAY.toString() + "This setting overrides", ChatColor.GRAY.toString() + "the group permissions."
+            Strings.GUI_ENABLED_X.with(
+                if (voter.isOpUser)
+                    Strings.YES.toString() else Strings.NO.toString()
+            )
         )
+        meta.lore!!.addAll(Strings.ENABLED_USERS_LORE.toString().split(";;"))
         if (meta.displayName != voter.name)
         {
             meta.setDisplayName(ChatColor.AQUA.toString() + voter.name)

@@ -5,6 +5,7 @@ import me.sd_master92.core.inventory.GUI
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Voter
 import me.sd_master92.customvoting.constants.enumerations.SoundType
+import me.sd_master92.customvoting.constants.enumerations.Strings
 import me.sd_master92.customvoting.getOfflinePlayer
 import me.sd_master92.customvoting.getSkull
 import org.bukkit.ChatColor
@@ -16,7 +17,7 @@ import org.bukkit.inventory.ItemStack
 import java.util.*
 
 class PlayerInfo(private val plugin: CV, private var page: Int = 0) :
-    GUI(plugin, "Player Info #${page + 1}", 54)
+    GUI(plugin, Strings.GUI_TITLE_PLAYER_INFO_X.with("" + (page + 1)), 54)
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
     {
@@ -31,12 +32,15 @@ class PlayerInfo(private val plugin: CV, private var page: Int = 0) :
 
             else             ->
             {
-                if (item.itemMeta?.displayName?.contains("Previous") == true && page > 0)
+                if (item.itemMeta?.displayName?.contains(Strings.GUI_PAGINATION_PREVIOUS.toString()) == true && page > 0)
                 {
                     SoundType.CLICK.play(plugin, player)
                     cancelCloseEvent = true
                     player.openInventory(PlayerInfo(plugin, page - 1).inventory)
-                } else if (item.itemMeta?.displayName?.contains("Next") == true && Voter.getTopVoters(plugin).size > (page + 1) * 51)
+                } else if (item.itemMeta?.displayName?.contains(Strings.GUI_PAGINATION_NEXT.toString()) == true && Voter.getTopVoters(
+                        plugin
+                    ).size > (page + 1) * 51
+                )
                 {
                     SoundType.CLICK.play(plugin, player)
                     cancelCloseEvent = true
@@ -57,8 +61,8 @@ class PlayerInfo(private val plugin: CV, private var page: Int = 0) :
         {
             inventory.addItem(InfoPlayer(voter).getSkull())
         }
-        inventory.setItem(51, BaseItem(Material.FEATHER, ChatColor.AQUA.toString() + "Previous"))
-        inventory.setItem(52, BaseItem(Material.FEATHER, ChatColor.AQUA.toString() + "Next"))
+        inventory.setItem(51, BaseItem(Material.FEATHER, Strings.GUI_PAGINATION_PREVIOUS.toString()))
+        inventory.setItem(52, BaseItem(Material.FEATHER, Strings.GUI_PAGINATION_NEXT.toString()))
         inventory.setItem(53, BACK_ITEM)
     }
 }
@@ -70,12 +74,12 @@ class InfoPlayer(private val voter: Voter)
         val skull = voter.name.getOfflinePlayer().getSkull()
         val meta = skull.itemMeta
         val lastVote = if (voter.votes > 0) java.text.SimpleDateFormat(("dd-M-yyyy HH:mm:ss"))
-            .format(Date(voter.last)) else ChatColor.RED.toString() + "never"
+            .format(Date(voter.last)) else Strings.NEVER.toString()
         meta!!.lore = listOf(
-            ChatColor.GRAY.toString() + "Votes: " + ChatColor.LIGHT_PURPLE + voter.votes,
-            ChatColor.GRAY.toString() + "Monthly votes: " + ChatColor.LIGHT_PURPLE + voter.monthlyVotes,
-            ChatColor.GRAY.toString() + "Last vote: " + ChatColor.LIGHT_PURPLE + lastVote,
-            ChatColor.GRAY.toString() + "Permission rewards: " + ChatColor.LIGHT_PURPLE + voter.isOpUser,
+            Strings.PLAYER_INFO_VOTES_X.with("" + voter.votes),
+            Strings.PLAYER_INFO_MONTHLY_VOTES_X.with("" + voter.monthlyVotes),
+            Strings.PLAYER_INFO_LAST_X.with(lastVote),
+            Strings.PLAYER_INFO_PERMISSION_X.with("" + voter.isOpUser),
         )
         if (meta.displayName != voter.name)
         {

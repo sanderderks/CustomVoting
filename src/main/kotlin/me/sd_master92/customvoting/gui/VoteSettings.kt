@@ -6,11 +6,11 @@ import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.Materials
 import me.sd_master92.customvoting.constants.enumerations.Settings
 import me.sd_master92.customvoting.constants.enumerations.SoundType
+import me.sd_master92.customvoting.constants.enumerations.Strings
 import me.sd_master92.customvoting.gui.general.GeneralSettings
 import me.sd_master92.customvoting.gui.messages.MessageSettings
 import me.sd_master92.customvoting.gui.rewards.RewardSettings
 import me.sd_master92.customvoting.gui.support.Support
-import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -19,7 +19,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.event.inventory.InventoryOpenEvent
 import org.bukkit.inventory.ItemStack
 
-class VoteSettings(private val plugin: CV) : GUI(plugin, "Vote Settings", 9)
+class VoteSettings(private val plugin: CV) : GUI(plugin, Strings.GUI_TITLE_VOTE_SETTINGS.toString(), 9)
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
     {
@@ -70,26 +70,26 @@ class VoteSettings(private val plugin: CV) : GUI(plugin, "Vote Settings", 9)
         if (isThisInventory(event) && !plugin.config.getBoolean(Settings.SETTINGS_ENABLED.path))
         {
             event.isCancelled = true
-            event.player.sendMessage(ChatColor.RED.toString() + "The /votesettings GUI has been disabled. You can change this in the settings.yml.")
+            event.player.sendMessage(Strings.VOTE_SETTINGS_DISABLED.toString())
         }
     }
 
     companion object
     {
         val GENERAL_SETTINGS = BaseItem(
-            Material.COMMAND_BLOCK, ChatColor.AQUA.toString() + "General",
+            Material.COMMAND_BLOCK, Strings.VOTE_SETTINGS_GENERAL.toString(),
             null, true
         )
         val REWARD_SETTINGS = BaseItem(
-            Material.DIAMOND, ChatColor.LIGHT_PURPLE.toString() + "Rewards",
+            Material.DIAMOND, Strings.VOTE_SETTINGS_REWARDS.toString(),
             null, true
         )
         val MESSAGES = BaseItem(
-            Material.WRITABLE_BOOK, ChatColor.YELLOW.toString() + "Messages",
+            Material.WRITABLE_BOOK, Strings.VOTE_SETTINGS_MESSAGES.toString(),
             null, true
         )
         val SUPPORT = BaseItem(
-            Materials.SPYGLASS.get(), ChatColor.GREEN.toString() + "Support",
+            Materials.SPYGLASS.get(), Strings.VOTE_SETTINGS_SUPPORT.toString(),
             null, true
         )
     }

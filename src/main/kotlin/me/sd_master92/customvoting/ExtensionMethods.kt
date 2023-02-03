@@ -28,6 +28,15 @@ fun String.withPlaceholders(player: Player): String
     }
 }
 
+fun String.replaceIfNotNull(oldValue: String, newValue: String?): String
+{
+    if (newValue != null)
+    {
+        return this.replace(oldValue, newValue)
+    }
+    return this
+}
+
 fun CommandSender?.sendText(message: String)
 {
     if (this is Player)

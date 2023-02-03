@@ -3,7 +3,7 @@ package me.sd_master92.customvoting.commands.voteparty
 import me.sd_master92.core.command.SimpleCommand
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.Messages
-import org.bukkit.ChatColor
+import me.sd_master92.customvoting.constants.enumerations.Strings
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
@@ -20,7 +20,7 @@ class VotePartyCommand(plugin: CV) :
 
     init
     {
-        withUsage(ChatColor.RED.toString() + "- /voteparty create | start")
+        withUsage(Strings.VOTE_PARTY_COMMAND_USAGE.toString())
         withNoPermMessage(Messages.NO_PERMISSION.getMessage(plugin))
         withPlayer(Messages.MUST_BE_PLAYER.getMessage(plugin))
     }

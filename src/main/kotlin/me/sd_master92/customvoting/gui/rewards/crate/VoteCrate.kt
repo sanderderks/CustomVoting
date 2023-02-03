@@ -7,8 +7,8 @@ import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.addToInventoryOrDrop
 import me.sd_master92.customvoting.constants.Data
 import me.sd_master92.customvoting.constants.enumerations.SoundType
+import me.sd_master92.customvoting.constants.enumerations.Strings
 import me.sd_master92.customvoting.helpers.ParticleHelper
-import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
@@ -17,7 +17,7 @@ import org.bukkit.inventory.ItemStack
 import java.util.*
 
 class VoteCrate(private val plugin: CV, private val player: Player, path: String) :
-    GUI(plugin, (plugin.data.getString("$path.name") ?: "Vote Crate"), 45)
+    GUI(plugin, (plugin.data.getString("$path.name") ?: Strings.GUI_TITLE_VOTE_CRATE.toString()), 45)
 {
     private var searching = true
     private var rewards = mutableMapOf<Int, Array<ItemStack>>()
@@ -50,7 +50,7 @@ class VoteCrate(private val plugin: CV, private val player: Player, path: String
         inventory.setItem(
             22, reward ?: BaseItem(
                 Material.BARRIER,
-                ChatColor.RED.toString() + "No price!"
+                Strings.VOTE_CRATE_NO_PRICE.toString()
             )
         )
 
@@ -58,14 +58,11 @@ class VoteCrate(private val plugin: CV, private val player: Player, path: String
         {
             player.addToInventoryOrDrop(reward)
             ParticleHelper.shootFirework(plugin, player.location)
-            player.sendMessage(
-                ChatColor.GREEN.toString() + "You received a " +
-                        ChatColor.AQUA + "$number% " + ChatColor.GREEN + "chance reward!"
-            )
+            player.sendMessage(Strings.VOTE_CRATE_REWARD_X.with("$number"))
         } else
         {
             SoundType.FAILURE.play(plugin, player)
-            player.sendMessage(ChatColor.RED.toString() + "No price this time :\"(")
+            player.sendMessage(Strings.VOTE_CRATE_NO_PRICE_MESSAGE.toString())
         }
         keepAlive = false
     }
@@ -120,7 +117,7 @@ class VoteCrate(private val plugin: CV, private val player: Player, path: String
         {
             keepAlive = false
             player.closeInventory()
-            player.sendMessage(ChatColor.RED.toString() + "There are no rewards inside this crate...")
+            player.sendMessage(Strings.VOTE_CRATE_EMPTY.toString())
         }
     }
 

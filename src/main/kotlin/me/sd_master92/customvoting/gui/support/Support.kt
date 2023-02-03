@@ -7,6 +7,7 @@ import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.VoteFile
 import me.sd_master92.customvoting.constants.enumerations.Settings
 import me.sd_master92.customvoting.constants.enumerations.SoundType
+import me.sd_master92.customvoting.constants.enumerations.Strings
 import me.sd_master92.customvoting.gui.VoteSettings
 import org.bukkit.ChatColor
 import org.bukkit.Material
@@ -15,7 +16,7 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 
-class Support(private val plugin: CV) : GUI(plugin, "Support", 9)
+class Support(private val plugin: CV) : GUI(plugin, Strings.GUI_TITLE_SUPPORT.toString(), 9)
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
     {
@@ -52,8 +53,8 @@ class Support(private val plugin: CV) : GUI(plugin, "Support", 9)
                 SoundType.CLICK.play(plugin, player)
                 cancelCloseEvent = true
                 player.closeInventory()
-                player.sendMessage(ChatColor.AQUA.toString() + "Join the Discord server:")
-                player.sendMessage(ChatColor.GREEN.toString() + "https://discord.gg/v3qmJu7jWD")
+                player.sendMessage(Strings.SUPPORT_DISCORD_CHAT.toString())
+                player.sendMessage(Strings.SUPPORT_DISCORD_CHAT_URL.toString())
             }
 
             Material.CREEPER_HEAD   ->
@@ -74,14 +75,11 @@ class Support(private val plugin: CV) : GUI(plugin, "Support", 9)
             {
                 SoundType.CHANGE.play(plugin, player)
                 val deleted = VoteFile.mergeDuplicates(plugin)
+                player.sendMessage(Strings.VOTE_FILES_DELETED_X.with("$deleted"))
                 if (deleted > 0)
                 {
                     SoundType.SUCCESS
-                    player.sendMessage(ChatColor.GREEN.toString() + "Deleted $deleted votefiles!")
                     event.currentItem = MergeItem(plugin)
-                } else
-                {
-                    player.sendMessage(ChatColor.RED.toString() + "Deleted 0 votefiles!")
                 }
             }
 
@@ -110,33 +108,33 @@ class Support(private val plugin: CV) : GUI(plugin, "Support", 9)
         inventory.addItem(
             BaseItem(
                 Material.ENCHANTED_BOOK,
-                ChatColor.LIGHT_PURPLE.toString() + "Discord",
-                ChatColor.GRAY.toString() + "Join the discord server"
+                Strings.SUPPORT_DISCORD.toString(),
+                Strings.SUPPORT_DISCORD_LORE.toString()
             )
         )
         inventory.addItem(
             BaseItem(
-                Material.ENCHANTING_TABLE, ChatColor.LIGHT_PURPLE.toString() + "Database",
-                ChatColor.GRAY.toString() + "Status: " + if (plugin.hasDatabaseConnection()) ChatColor.GREEN.toString() + "Connected" else ChatColor.RED.toString() + "Disabled"
+                Material.ENCHANTING_TABLE, Strings.SUPPORT_DATABASE.toString(),
+                Strings.GUI_STATUS_X.with(if (plugin.hasDatabaseConnection()) Strings.DATABASE_CONNECTED.toString() else Strings.DATABASE_DISABLED.toString())
             )
         )
         inventory.addItem(
             BaseItem(
-                Material.CREEPER_HEAD, ChatColor.LIGHT_PURPLE.toString() + "Donators",
-                ChatColor.GRAY.toString() + "CustomVoting supporters!"
+                Material.CREEPER_HEAD, Strings.SUPPORT_DONATORS.toString(),
+                Strings.SUPPORT_DONATORS_LORE.toString()
             )
         )
         inventory.addItem(
             BaseItem(
-                Material.PLAYER_HEAD, ChatColor.LIGHT_PURPLE.toString() + "Player Info",
-                ChatColor.GRAY.toString() + "Player vote information"
+                Material.PLAYER_HEAD, Strings.SUPPORT_PLAYER_INFO.toString(),
+                Strings.SUPPORT_PLAYER_INFO_LORE.toString()
             )
         )
         inventory.addItem(MergeItem(plugin))
         inventory.addItem(
             BaseItem(
-                Material.CARVED_PUMPKIN, ChatColor.LIGHT_PURPLE.toString() + "Statistics",
-                ChatColor.GRAY.toString() + "CustomVoting BStats"
+                Material.CARVED_PUMPKIN, Strings.SUPPORT_STATISTICS.toString(),
+                Strings.SUPPORT_STATISTICS_LORE.toString()
             )
         )
         inventory.setItem(8, BACK_ITEM)
@@ -144,21 +142,18 @@ class Support(private val plugin: CV) : GUI(plugin, "Support", 9)
 }
 
 class UpdateItem(plugin: CV) : BaseItem(
-    Material.CLOCK, ChatColor.LIGHT_PURPLE.toString() + "Up to date?",
-    if (plugin.isUpToDate()) ChatColor.GREEN.toString() + "Yes;" + ChatColor.GRAY.toString() + "Currently: " +
-            ChatColor.GREEN + plugin.version else ChatColor.GRAY.toString() +
-            "Currently: " + ChatColor.RED + plugin.version + ";" + ChatColor.GRAY +
-            "Latest: " + ChatColor.GREEN + plugin.latestVersion + ";;" + ChatColor.GRAY + "Click to " +
-            "download"
+    Material.CLOCK, Strings.SUPPORT_UP_TO_DATE.toString(),
+    if (plugin.isUpToDate()) Strings.YES.toString() + ";" + Strings.GUI_CURRENT_X.with(ChatColor.GREEN.toString() + plugin.version) else Strings.GUI_CURRENT_X.with(
+        ChatColor.RED.toString() + plugin.version
+    ) + ";" + Strings.SUPPORT_LATEST_X.with(plugin.latestVersion)
 )
 
 class IngameUpdateItem(plugin: CV) : StatusItem(
-    Material.FILLED_MAP, "Ingame Updates",
+    Material.FILLED_MAP, Strings.SUPPORT_INGAME_UPDATE.toString(),
     plugin.config, Settings.INGAME_UPDATES.path
 )
 
 class MergeItem(plugin: CV) : BaseItem(
-    Material.HOPPER, ChatColor.RED.toString() + "Merge Duplicates",
-    ChatColor.GRAY.toString() + "Find and merge duplicate;" + ChatColor.GRAY + "playerfiles;" + ChatColor.GRAY + "Currently: " +
-            ChatColor.GREEN + VoteFile.getAll(plugin).size + " files"
+    Material.HOPPER, Strings.SUPPORT_MERGE_DUPLICATES.toString(),
+    Strings.SUPPORT_MERGE_DUPLICATES_L0RE_X.with("" + VoteFile.getAll(plugin).size)
 )

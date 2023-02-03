@@ -5,16 +5,15 @@ import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Voter
 import me.sd_master92.customvoting.constants.enumerations.Messages
 import me.sd_master92.customvoting.constants.enumerations.SoundType
+import me.sd_master92.customvoting.constants.enumerations.Strings
 import me.sd_master92.customvoting.tasks.ResetChecker
-import org.bukkit.ChatColor
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
-import kotlin.jvm.internal.Intrinsics
 
 
 class ConfirmVotesReset(private val plugin: CV, private val monthly: Boolean) :
-    ConfirmGUI(plugin, if (monthly) "Reset monthly votes?" else "Reset ALL votes?")
+    ConfirmGUI(plugin, if (monthly) Strings.RESET_VOTES_MONTHLY.toString() else Strings.RESET_VOTES_ALL.toString())
 {
     override fun onConfirm(event: InventoryClickEvent, player: Player)
     {
@@ -38,7 +37,7 @@ class ConfirmVotesReset(private val plugin: CV, private val monthly: Boolean) :
     {
         SoundType.CLICK.play(plugin, player)
         ResetChecker.FIRST_OF_MONTH = false
-        player.sendMessage(Intrinsics.stringPlus(ChatColor.RED.toString(), "Votes are not reset."))
+        player.sendMessage(Strings.RESET_VOTES_CANCEL.toString())
         player.openInventory(VoteSettings(plugin).inventory)
     }
 

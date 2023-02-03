@@ -5,8 +5,8 @@ import me.sd_master92.core.inventory.GUI
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Data
 import me.sd_master92.customvoting.constants.enumerations.SoundType
+import me.sd_master92.customvoting.constants.enumerations.Strings
 import me.sd_master92.customvoting.gui.rewards.RewardSettings
-import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
@@ -14,7 +14,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 
 class VoteCrates(private val plugin: CV) :
-    GUI(plugin, "Vote Crates", getInventorySize(plugin))
+    GUI(plugin, Strings.GUI_TITLE_VOTE_CRATES.toString(), getInventorySize(plugin))
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
     {
@@ -59,9 +59,9 @@ class VoteCrates(private val plugin: CV) :
                     i++
                 }
                 SoundType.SUCCESS.play(plugin, player)
-                plugin.data.set(Data.VOTE_CRATES + ".$i.name", "Crate $i")
+                plugin.data.set(Data.VOTE_CRATES + ".$i.name", Strings.VOTE_CRATE_NAME_DEFAULT_X.with("$i"))
                 plugin.data.saveConfig()
-                player.closeInventory()
+                cancelCloseEvent = true
                 player.openInventory(VoteCrates(plugin).inventory)
             }
 
@@ -100,12 +100,15 @@ class VoteCrates(private val plugin: CV) :
             inventory.addItem(
                 BaseItem(
                     Material.TRIPWIRE_HOOK,
-                    ChatColor.LIGHT_PURPLE.toString() + (plugin.data.getString(Data.VOTE_CRATES + ".$key.name")
-                        ?: "Vote Crate"), ChatColor.GRAY.toString() + "#$key", true
+                    Strings.VOTE_CRATE_NAME_X.with(
+                        plugin.data.getString(Data.VOTE_CRATES + ".$key.name")
+                            ?: Strings.VOTE_CRATE_NAME_DEFAULT_X.with("$key")
+                    ),
+                    Strings.VOTE_CRATE_LORE_X.with("$key"), true
                 )
             )
         }
-        inventory.setItem(7, BaseItem(Material.CRAFTING_TABLE, ChatColor.GREEN.toString() + "Add Crate"))
+        inventory.setItem(7, BaseItem(Material.CRAFTING_TABLE, Strings.GUI_VOTE_CRATE_ADD.toString()))
         inventory.setItem(8, BACK_ITEM)
     }
 }

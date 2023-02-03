@@ -5,6 +5,7 @@ import me.sd_master92.core.inventory.GUI
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.Settings
 import me.sd_master92.customvoting.constants.enumerations.SoundType
+import me.sd_master92.customvoting.constants.enumerations.Strings
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Material
@@ -13,7 +14,7 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 
-class DisabledWorlds(private val plugin: CV) : GUI(plugin, "Disabled Worlds", 27)
+class DisabledWorlds(private val plugin: CV) : GUI(plugin, Strings.GUI_DISABLED_WORLDS.toString(), 27)
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
     {
@@ -70,8 +71,10 @@ class DisabledWorlds(private val plugin: CV) : GUI(plugin, "Disabled Worlds", 27
 
 class DisabledWorld(plugin: CV, world: String) : BaseItem(
     Material.GRASS_BLOCK, ChatColor.LIGHT_PURPLE.toString() + world,
-    ChatColor.GRAY.toString() + "Disabled: " + if (plugin.config.getStringList(Settings.DISABLED_WORLDS.path)
-            .contains(world)
+    Strings.GUI_DISABLED_X.with(
+        if (plugin.config.getStringList(Settings.DISABLED_WORLDS.path)
+                .contains(world)
+        )
+            Strings.YES.toString() else Strings.NO.toString()
     )
-        ChatColor.GREEN.toString() + "Yes" else ChatColor.RED.toString() + "No"
 )

@@ -39,13 +39,18 @@ enum class Settings(val path: String, private val defaultValue: Any? = null)
     USE_DATABASE("use_database", false),
 
     DATABASE("database"),
-    DATABASE_HOST("${DATABASE.path}.host", "localhost"),
-    DATABASE_PORT("${DATABASE.path}.port", 3306),
-    DATABASE_DATABASE("${DATABASE.path}.database", "customvoting"),
-    DATABASE_USER("${DATABASE.path}.user", "root"),
-    DATABASE_PASSWORD("${DATABASE.path}.password", "root"),
+    DATABASE_HOST("$DATABASE.host", "localhost"),
+    DATABASE_PORT("$DATABASE.port", 3306),
+    DATABASE_DATABASE("$DATABASE.database", "customvoting"),
+    DATABASE_USER("$DATABASE.user", "root"),
+    DATABASE_PASSWORD("$DATABASE.password", "root"),
 
     SETTINGS_ENABLED("vote_settings_enabled", true);
+
+    override fun toString(): String
+    {
+        return path
+    }
 
     companion object
     {

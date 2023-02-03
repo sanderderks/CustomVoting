@@ -5,13 +5,9 @@ import me.sd_master92.core.tasks.TaskTimer
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.addToInventoryOrDrop
 import me.sd_master92.customvoting.constants.Data
-import me.sd_master92.customvoting.constants.enumerations.Messages
-import me.sd_master92.customvoting.constants.enumerations.Settings
-import me.sd_master92.customvoting.constants.enumerations.SoundType
-import me.sd_master92.customvoting.constants.enumerations.VotePartyType
+import me.sd_master92.customvoting.constants.enumerations.*
 import me.sd_master92.customvoting.withPlaceholders
 import org.bukkit.Bukkit
-import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.potion.PotionEffect
@@ -248,11 +244,9 @@ class VoteParty(private val plugin: CV)
     companion object
     {
         val VOTE_PARTY_ITEM = BaseItem(
-            Material.ENDER_CHEST, ChatColor.LIGHT_PURPLE.toString() +
-                    "Vote Party Chest",
-            ChatColor.GRAY.toString() + "Place this chest somewhere in the sky.;" + ChatColor.GRAY + "The contents of this chest" +
-                    " will;" +
-                    ChatColor.GRAY + "start dropping when the voteparty starts."
+            Material.ENDER_CHEST,
+            Strings.VOTE_PARTY_CHEST.toString(),
+            Strings.VOTE_PARTY_CHEST_LORE.toString()
         )
         private val queue: MutableList<VoteParty> = ArrayList()
         private var isActive = false

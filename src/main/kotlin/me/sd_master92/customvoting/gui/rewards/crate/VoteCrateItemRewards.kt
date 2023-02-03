@@ -4,7 +4,7 @@ import me.sd_master92.core.inventory.GUI
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Data
 import me.sd_master92.customvoting.constants.enumerations.SoundType
-import org.bukkit.ChatColor
+import me.sd_master92.customvoting.constants.enumerations.Strings
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
@@ -13,7 +13,9 @@ import org.bukkit.inventory.ItemStack
 
 class VoteCrateItemRewards(private val plugin: CV, private val number: Int, private val percentage: Int) : GUI(
     plugin,
-    "$percentage% Rewards '" + plugin.data.getString(Data.VOTE_CRATES + ".$number.name") + "'", 27, false
+    Strings.VOTE_CRATE_REWARDS_NAME_XY.with("$percentage", plugin.data.getString(Data.VOTE_CRATES + ".$number.name")),
+    27,
+    false
 )
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
@@ -45,30 +47,22 @@ class VoteCrateItemRewards(private val plugin: CV, private val number: Int, priv
             inv.setItem(25, null)
             inv.setItem(26, null)
             val path = "${Data.VOTE_CRATES}.$number.${Data.ITEM_REWARDS}.$percentage"
+            val name = Strings.VOTE_CRATE_REWARDS_NAME_XY.with(
+                "$percentage",
+                plugin.data.getString(Data.VOTE_CRATES + ".$number.name")
+            )
             if (plugin.data.getItems(path).contentEquals(inv.contents.filterNotNull().toTypedArray()))
             {
                 SoundType.SUCCESS.play(plugin, player)
-                player.sendMessage(ChatColor.GRAY.toString() + "Nothing changed!")
+                player.sendMessage(Strings.UPDATE_NOTHING_CHANGED.toString())
             } else if (plugin.data.setItems(path, inv.contents))
             {
                 SoundType.SUCCESS.play(plugin, player)
-                player.sendMessage(
-                    ChatColor.GREEN.toString() + "Successfully updated the $percentage% Crate Rewards of ${
-                        plugin.data.getString(
-                            Data.VOTE_CRATES + ".$number.name"
-                        )
-                    }!"
-                )
+                player.sendMessage(Strings.UPDATE_SUCCESS_X.with(name))
             } else
             {
                 SoundType.FAILURE.play(plugin, player)
-                player.sendMessage(
-                    ChatColor.RED.toString() + "Failed to update the $percentage% Crate Rewards of ${
-                        plugin.data.getString(
-                            Data.VOTE_CRATES + ".$number.name"
-                        )
-                    }!"
-                )
+                player.sendMessage(Strings.UPDATE_FAIL_X.with(name))
             }
         }
     }

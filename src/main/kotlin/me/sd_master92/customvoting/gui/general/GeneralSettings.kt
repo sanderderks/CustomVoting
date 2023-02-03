@@ -7,16 +7,16 @@ import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Data
 import me.sd_master92.customvoting.constants.enumerations.Settings
 import me.sd_master92.customvoting.constants.enumerations.SoundType
+import me.sd_master92.customvoting.constants.enumerations.Strings
 import me.sd_master92.customvoting.constants.enumerations.VotePartyType
 import me.sd_master92.customvoting.gui.VoteSettings
-import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 
-class GeneralSettings(private val plugin: CV) : GUI(plugin, "General Settings", 18)
+class GeneralSettings(private val plugin: CV) : GUI(plugin, Strings.GUI_TITLE_GENERAL_SETTINGS.toString(), 18)
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
     {
@@ -151,16 +151,16 @@ class GeneralSettings(private val plugin: CV) : GUI(plugin, "General Settings", 
         inventory.addItem(VotePartyTypeItem(plugin))
         inventory.addItem(VotesUntilItem.getInstance(plugin))
         inventory.addItem(VotePartyCountdownItem(plugin))
-        inventory.addItem(BaseItem(Material.GRASS_BLOCK, ChatColor.LIGHT_PURPLE.toString() + "Disabled Worlds"))
+        inventory.addItem(BaseItem(Material.GRASS_BLOCK, Strings.GUI_DISABLED_WORLDS.toString()))
         inventory.addItem(UUIDSupportItem(plugin))
         inventory.setItem(17, BACK_ITEM)
     }
 }
 
 class VotesUntilItem private constructor(votesRequired: Int, votesUntil: Int) : BaseItem(
-    Material.ENCHANTED_BOOK, ChatColor.LIGHT_PURPLE.toString() + "Votes until Vote Party",
-    ChatColor.GRAY.toString() + "Required: " + ChatColor.AQUA + votesRequired + ";" + ChatColor.GRAY + "Votes left:" +
-            " " + ChatColor.GREEN + votesUntil
+    Material.ENCHANTED_BOOK,
+    Strings.GUI_VOTE_PARTY_VOTES_UNTIL.toString(),
+    Strings.GUI_VOTE_PARTY_VOTES_UNTIL_XY.with("$votesRequired", "$votesUntil")
 )
 {
     companion object
@@ -175,50 +175,49 @@ class VotesUntilItem private constructor(votesRequired: Int, votesUntil: Int) : 
 }
 
 class VotePartyTypeItem(plugin: CV) : BaseItem(
-    Material.SPLASH_POTION, ChatColor.LIGHT_PURPLE.toString() + "Vote Party Type",
-    ChatColor.GRAY.toString() + "Status: " + ChatColor.AQUA + VotePartyType.valueOf(
-        plugin.config.getNumber(
-            Settings.VOTE_PARTY_TYPE.path
-        )
-    ).label
+    Material.SPLASH_POTION, Strings.GUI_VOTE_PARTY_TYPE.toString(),
+    Strings.GUI_CURRENT_X.with(VotePartyType.valueOf(plugin.config.getNumber(Settings.VOTE_PARTY_TYPE.path)).label)
 )
 
 class VotePartyCountdownItem(plugin: CV) : BaseItem(
-    Material.ENDER_CHEST, ChatColor.LIGHT_PURPLE.toString() + "Vote Party Countdown",
-    ChatColor.GRAY.toString() + "Currently: " + ChatColor.AQUA + plugin.config.getNumber(Settings.VOTE_PARTY_COUNTDOWN.path)
+    Material.ENDER_CHEST, Strings.GUI_VOTE_PARTY_COUNTDOWN.toString(),
+    Strings.GUI_CURRENT_XY.with(
+        "" + plugin.config.getNumber(Settings.VOTE_PARTY_COUNTDOWN.path),
+        Strings.SECOND_TYPE_MULTIPLE.toString()
+    )
 )
 
 class SoundEffectsItem(plugin: CV) : StatusItem(
-    Material.MUSIC_DISC_CAT, "Sound Effects",
+    Material.MUSIC_DISC_CAT, Strings.GUI_SOUND_EFFECTS.toString(),
     plugin.config, Settings.USE_SOUND_EFFECTS.path
 )
 
 class MonthlyResetItem(plugin: CV) : StatusItem(
-    Material.CLOCK, "Monthly Reset",
+    Material.CLOCK, Strings.GUI_MONTHLY_RESET.toString(),
     plugin.config, Settings.MONTHLY_RESET.path
 )
 
 class MonthlyVotesItem(plugin: CV) : StatusItem(
-    Material.TNT, "Monthly Votes",
+    Material.TNT, Strings.GUI_MONTHLY_VOTES.toString(),
     plugin.config, Settings.MONTHLY_VOTES.path
 )
 
 class LuckyVoteItem(plugin: CV) : StatusItem(
-    Material.TOTEM_OF_UNDYING, "Lucky Vote",
+    Material.TOTEM_OF_UNDYING, Strings.GUI_LUCKY_VOTE.toString(),
     plugin.config, Settings.LUCKY_VOTE.path
 )
 
 class FireworkItem(plugin: CV) : StatusItem(
-    Material.FIREWORK_ROCKET, "Firework",
+    Material.FIREWORK_ROCKET, Strings.GUI_FIREWORK.toString(),
     plugin.config, Settings.FIREWORK.path
 )
 
 class DoVotePartyItem(plugin: CV) : StatusItem(
-    Material.EXPERIENCE_BOTTLE, "Vote Party",
+    Material.EXPERIENCE_BOTTLE, Strings.GUI_VOTE_PARTY.toString(),
     plugin.config, Settings.VOTE_PARTY.path
 )
 
 class UUIDSupportItem(plugin: CV) : StatusItem(
-    Material.PLAYER_HEAD, ChatColor.RED.toString() + "UUID Storage",
+    Material.PLAYER_HEAD, Strings.GUI_UUID_STORAGE.toString(),
     plugin.config, Settings.UUID_STORAGE.path
 )

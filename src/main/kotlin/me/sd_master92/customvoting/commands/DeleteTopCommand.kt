@@ -4,8 +4,8 @@ import me.sd_master92.core.command.SimpleCommand
 import me.sd_master92.core.errorLog
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.Messages
+import me.sd_master92.customvoting.constants.enumerations.Strings
 import me.sd_master92.customvoting.subjects.VoteTopStand
-import org.bukkit.ChatColor
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
@@ -26,22 +26,22 @@ class DeleteTopCommand(private val plugin: CV) : SimpleCommand(plugin, "deleteto
                 voteTopStand.delete(player)
             } else
             {
-                player.sendMessage(ChatColor.RED.toString() + "That Vote Stand does not exist.")
+                player.sendMessage(Strings.NOT_EXIST_X.with(Strings.VOTE_TOP_STAND_NAME.toString()))
             }
         } catch (e: NumberFormatException)
         {
-            player.sendMessage(ChatColor.RED.toString() + "Invalid argument: 'top' must be a number.")
+            player.sendMessage(Strings.INVALID_ARGUMENT_NOT_NUMBER_X.with("top"))
         } catch (e: Exception)
         {
-            player.sendMessage(ChatColor.RED.toString() + "Something went wrong!")
-            plugin.errorLog("Error while deleting vote top", e)
+            player.sendMessage(Strings.ERROR.toString())
+            plugin.errorLog(Strings.VOTE_TOP_DELETE_ERROR.toString(), e)
         }
     }
 
     init
     {
         withPlayer(Messages.MUST_BE_PLAYER.getMessage(plugin))
-        withUsage(ChatColor.RED.toString() + "- /deletetop <top>")
+        withUsage(Strings.VOTE_TOP_DELETE_COMMAND_USAGE.toString())
         withNoPermMessage(Messages.NO_PERMISSION.getMessage(plugin))
     }
 }

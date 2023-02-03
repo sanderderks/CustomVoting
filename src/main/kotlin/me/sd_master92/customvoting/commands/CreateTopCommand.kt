@@ -4,8 +4,8 @@ import me.sd_master92.core.command.SimpleCommand
 import me.sd_master92.core.errorLog
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.Messages
+import me.sd_master92.customvoting.constants.enumerations.Strings
 import me.sd_master92.customvoting.subjects.VoteTopStand
-import org.bukkit.ChatColor
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
@@ -25,22 +25,22 @@ class CreateTopCommand(private val plugin: CV) : SimpleCommand(plugin, "createto
                 VoteTopStand(plugin, top, player)
             } else
             {
-                player.sendMessage(ChatColor.RED.toString() + "Invalid argument: 'top' must be a positive number.")
+                player.sendMessage(Strings.INVALID_ARGUMENT_NOT_POSITIVE_X.with("top"))
             }
         } catch (e: NumberFormatException)
         {
-            player.sendMessage(ChatColor.RED.toString() + "Invalid argument: 'top' must be a number.")
+            player.sendMessage(Strings.INVALID_ARGUMENT_NOT_NUMBER_X.with("top"))
         } catch (e: Exception)
         {
-            player.sendMessage(ChatColor.RED.toString() + "Something went wrong!")
-            plugin.errorLog("Error while creating vote top", e)
+            player.sendMessage(Strings.ERROR.toString())
+            plugin.errorLog(Strings.VOTE_TOP_CREATE_ERROR.toString(), e)
         }
     }
 
     init
     {
         withPlayer(Messages.MUST_BE_PLAYER.getMessage(plugin))
-        withUsage(ChatColor.RED.toString() + "- /createtop <top>")
+        withUsage(Strings.VOTE_TOP_CREATE_COMMAND_USAGE.toString())
         withNoPermMessage(Messages.NO_PERMISSION.getMessage(plugin))
     }
 }

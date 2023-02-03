@@ -5,6 +5,7 @@ import me.sd_master92.core.inventory.GUI
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.Settings
 import me.sd_master92.customvoting.constants.enumerations.SoundType
+import me.sd_master92.customvoting.constants.enumerations.Strings
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -13,7 +14,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 
 class EnabledGroups(private val plugin: CV) :
-    GUI(plugin, "Enabled Groups", 36)
+    GUI(plugin, Strings.GUI_TITLE_ENABLED_GROUPS.toString(), 36)
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
     {
@@ -73,10 +74,12 @@ class EnabledGroups(private val plugin: CV) :
 
 class EnabledGroup(private val plugin: CV, private val name: String) : BaseItem(
     Material.GREEN_WOOL, ChatColor.LIGHT_PURPLE.toString() + name.lowercase(),
-    ChatColor.GRAY.toString() + "Enabled: " + if (plugin.config.getStringList(Settings.ENABLED_OP_GROUPS.path)
-            .contains(name.lowercase())
+    Strings.GUI_ENABLED_X.with(
+        if (plugin.config.getStringList(Settings.ENABLED_OP_GROUPS.path)
+                .contains(name.lowercase())
+        )
+            Strings.YES.toString() else Strings.NO.toString()
     )
-        ChatColor.GREEN.toString() + "Yes" else ChatColor.RED.toString() + "No"
 )
 {
     fun update(): EnabledGroup

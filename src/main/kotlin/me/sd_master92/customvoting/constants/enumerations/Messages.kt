@@ -67,7 +67,7 @@ enum class Messages(private val path: String, private val defaultValue: Any?)
     VOTE_PARTY_PIG_KILLED("$VOTE_PARTY.pig_killed", "&dPig killed by &b%KILLER%&d! Only &b%TOGO% &dpig%s% to go!"),
 
     MILESTONE("milestone", null),
-    MILESTONE_REACHED("milestone.milestone_reached", "&b%PLAYER% &dreached milestone #&b%MILESTONE%&d!"),
+    MILESTONE_REACHED("$MILESTONE.milestone_reached", "&b%PLAYER% &dreached milestone #&b%MILESTONE%&d!"),
     VOTE_REMINDER(
         "vote_reminder",
         listOf("&bYou haven't voted for our server yet today.", "&dUse /vote for nice rewards!")
@@ -81,6 +81,11 @@ enum class Messages(private val path: String, private val defaultValue: Any?)
     fun getMessages(plugin: CV, placeholders: Map<String, String> = HashMap()): List<String>
     {
         return plugin.messages.getMessages(path, placeholders)
+    }
+
+    override fun toString(): String
+    {
+        return path
     }
 
     companion object
@@ -102,7 +107,7 @@ enum class Messages(private val path: String, private val defaultValue: Any?)
         {
             val keyMigrations = mapOf(
                 Pair("vote_streak", MILESTONE.path),
-                Pair("${MILESTONE.path}.streak_reached", MILESTONE_REACHED.path),
+                Pair("$MILESTONE.streak_reached", MILESTONE_REACHED.path),
             )
 
             for (migration in keyMigrations)
