@@ -1,9 +1,9 @@
 package me.sd_master92.customvoting
 
 import me.sd_master92.core.file.PlayerFile
-import me.sd_master92.customvoting.constants.enumerations.Data
 import me.sd_master92.customvoting.constants.TopVoter
 import me.sd_master92.customvoting.constants.Voter
+import me.sd_master92.customvoting.constants.enumerations.Data
 import me.sd_master92.customvoting.constants.enumerations.Settings
 import org.bukkit.entity.Player
 

@@ -1,7 +1,6 @@
 package me.sd_master92.customvoting.constants.enumerations
 
 import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.constants.enumerations.Data
 import java.util.*
 
 enum class ItemRewardType(val value: Int, val label: String)
