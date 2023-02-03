@@ -322,20 +322,27 @@ class PlayerListener(private val plugin: CV) : Listener
                                     SoundType.FAILURE.play(plugin, player)
                                     player.sendMessage(Strings.OPEN_CHEST_WRONG_KEY.toString())
                                 }
+                            } else
+                            {
+                                player.sendMessage(Strings.OPEN_CHEST_NO_PERMISSION.toString())
                             }
-                        } else if (event.clickedBlock!!.type == Material.ENDER_CHEST && event.clickedBlock?.location?.equals(
-                                plugin.data.getLocation(path)
-                            ) == true
-                        )
+                        } else if (event.clickedBlock!!.type == Material.ENDER_CHEST)
                         {
                             event.isCancelled = true
-                            item.amount--
-                            player.inventory.setItemInMainHand(item)
+                            if (event.clickedBlock?.location?.equals(plugin.data.getLocation(path)) == true)
+                            {
+                                item.amount--
+                                player.inventory.setItemInMainHand(item)
 
-                            val crate = VoteCrate(plugin, player, path)
-                            SoundType.OPEN.play(plugin, player)
-                            player.openInventory(crate.inventory)
-                            crate.run()
+                                val crate = VoteCrate(plugin, player, path)
+                                SoundType.OPEN.play(plugin, player)
+                                player.openInventory(crate.inventory)
+                                crate.run()
+                            } else
+                            {
+                                SoundType.FAILURE.play(plugin, player)
+                                player.sendMessage(Strings.OPEN_CHEST_WRONG_KEY.toString())
+                            }
                         } else
                         {
                             event.isCancelled = true
