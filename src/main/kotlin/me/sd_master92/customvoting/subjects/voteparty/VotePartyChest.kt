@@ -20,8 +20,8 @@ import java.util.*
 
 class VotePartyChest(private val plugin: CV, key: String)
 {
-    val items: MutableList<ItemStack> = plugin.data.getItems(Data.VOTE_PARTY + ".$key").toMutableList()
-    val loc: Location = plugin.data.getLocation(Data.VOTE_PARTY + ".$key")!!.clone()
+    val items: MutableList<ItemStack> = plugin.data.getItems(Data.VOTE_PARTY.path + ".$key").toMutableList()
+    val loc: Location = plugin.data.getLocation(Data.VOTE_PARTY.path + ".$key")!!.clone()
     var dropLoc: Location = Location(loc.world, loc.x + 0.5, loc.y - 1, loc.z + 0.5)
     private val fireworkLoc: Location = Location(loc.world, loc.x + 0.5, loc.y + 1, loc.z + 0.5)
     private val random: Random = Random()
@@ -128,7 +128,7 @@ class VotePartyChest(private val plugin: CV, key: String)
         fun getAll(plugin: CV): MutableList<VotePartyChest>
         {
             val list = mutableListOf<VotePartyChest>()
-            for (key in plugin.data.getLocations(Data.VOTE_PARTY).keys)
+            for (key in plugin.data.getLocations(Data.VOTE_PARTY.path).keys)
             {
                 list.add(VotePartyChest(plugin, key))
             }
