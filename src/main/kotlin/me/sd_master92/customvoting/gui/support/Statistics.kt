@@ -4,7 +4,7 @@ import me.sd_master92.core.inventory.BaseItem
 import me.sd_master92.core.inventory.GUI
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.BStatsData
-import me.sd_master92.customvoting.constants.Data
+import me.sd_master92.customvoting.constants.enumerations.Data
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.constants.enumerations.Strings
 import org.bukkit.ChatColor
@@ -55,7 +55,7 @@ class Statistics(private val plugin: CV) : GUI(plugin, Strings.GUI_TITLE_STATIST
                 Material.CARVED_PUMPKIN, Strings.STATISTICS_VOTE_TOP_SITES.toString(),
                 Strings.STATISTICS_VOTE_TOP_SITES_LORE.toString() +
                         voteSites.take(8).mapIndexed { i, site ->
-                            ";" + ChatColor.AQUA + "${i + 1}. " + (if (plugin.data.getStringList(Data.VOTE_SITES)
+                            ";" + ChatColor.AQUA + "${i + 1}. " + (if (plugin.data.getStringList(Data.VOTE_SITES.path)
                                     .contains(site.name)
                             ) ChatColor.GREEN else ChatColor.RED) + site.name + ChatColor.GRAY + " ${(site.y.toDouble() / voteSites.sumOf { it.y } * 100).roundToInt()}%"
                         }.joinToString("") + Strings.STATISTICS_VOTE_TOP_SITES_LORE_END.toString()

@@ -2,7 +2,7 @@ package me.sd_master92.customvoting.gui.voteparty
 
 import me.sd_master92.core.inventory.GUI
 import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.constants.Data
+import me.sd_master92.customvoting.constants.enumerations.Data
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.constants.enumerations.Strings
 import org.bukkit.entity.Player
@@ -20,7 +20,7 @@ class VotePartyRewards(private val plugin: CV, private val key: String) : GUI(
 
     override fun onClose(event: InventoryCloseEvent, player: Player)
     {
-        val path = Data.VOTE_PARTY + "." + key
+        val path = Data.VOTE_PARTY.path + "." + key
         if (plugin.data.getItems(path).contentEquals(event.inventory.contents.filterNotNull().toTypedArray()))
         {
             SoundType.SUCCESS.play(plugin, player)
@@ -38,6 +38,6 @@ class VotePartyRewards(private val plugin: CV, private val key: String) : GUI(
 
     init
     {
-        inventory.contents = plugin.data.getItems(Data.VOTE_PARTY + "." + key)
+        inventory.contents = plugin.data.getItems(Data.VOTE_PARTY.path + "." + key)
     }
 }

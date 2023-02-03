@@ -5,7 +5,7 @@ import me.sd_master92.core.infoLog
 import me.sd_master92.core.inventory.ConfirmGUI
 import me.sd_master92.core.tasks.TaskTimer
 import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.constants.Data
+import me.sd_master92.customvoting.constants.enumerations.Data
 import me.sd_master92.customvoting.constants.Voter
 import me.sd_master92.customvoting.constants.enumerations.Messages
 import me.sd_master92.customvoting.constants.enumerations.Settings
@@ -89,7 +89,7 @@ class PlayerListener(private val plugin: CV) : Listener
     {
         if (event.rightClicked.type == EntityType.ARMOR_STAND)
         {
-            val section = plugin.data.getConfigurationSection(Data.VOTE_TOP_STANDS)
+            val section = plugin.data.getConfigurationSection(Data.VOTE_TOP_STANDS.path)
             if (section != null)
             {
                 for (top in section.getKeys(false))
@@ -117,16 +117,16 @@ class PlayerListener(private val plugin: CV) : Listener
         val block = event.block
         if (block.type == Material.ENDER_CHEST)
         {
-            var chests = plugin.data.getLocations(Data.VOTE_PARTY)
+            var chests = plugin.data.getLocations(Data.VOTE_PARTY.path)
             for (key in chests.keys)
             {
                 if (chests[key] == event.block.location)
                 {
                     if (player.hasPermission("çustomvoting.voteparty"))
                     {
-                        if (plugin.data.deleteLocation(Data.VOTE_PARTY + ".$key"))
+                        if (plugin.data.deleteLocation(Data.VOTE_PARTY.path + ".$key"))
                         {
-                            plugin.data.deleteItems(Data.VOTE_PARTY + ".$key")
+                            plugin.data.deleteItems(Data.VOTE_PARTY.path + ".$key")
                             event.isDropItems = false
                             event.player.sendMessage(Strings.VOTE_PARTY_CHEST_DELETED_X.with(key))
                         }
@@ -137,16 +137,16 @@ class PlayerListener(private val plugin: CV) : Listener
                     }
                 }
             }
-            chests = plugin.data.getLocations(Data.VOTE_CRATES)
+            chests = plugin.data.getLocations(Data.VOTE_CRATES.path)
             for (key in chests.keys)
             {
                 if (chests[key] == event.block.location)
                 {
                     if (player.hasPermission("customvoting.crate"))
                     {
-                        if (plugin.data.deleteLocation(Data.VOTE_CRATES + ".$key"))
+                        if (plugin.data.deleteLocation(Data.VOTE_CRATES.path + ".$key"))
                         {
-                            val path = Data.VOTE_CRATES + ".$key"
+                            val path = Data.VOTE_CRATES.path + ".$key"
                             val stand = Bukkit.getEntity(
                                 UUID.fromString(plugin.data.getString("$path.stand") ?: "")
                             )
@@ -203,13 +203,13 @@ class PlayerListener(private val plugin: CV) : Listener
             val player = event.player
             if (player.hasPermission("customvoting.voteparty"))
             {
-                val chests: Set<String> = plugin.data.getLocations(Data.VOTE_PARTY).keys
+                val chests: Set<String> = plugin.data.getLocations(Data.VOTE_PARTY.path).keys
                 var i = 1
                 while (chests.contains("$i"))
                 {
                     i++
                 }
-                plugin.data.setLocation(Data.VOTE_PARTY + ".$i", event.block.location)
+                plugin.data.setLocation(Data.VOTE_PARTY.path + ".$i", event.block.location)
                 SoundType.SUCCESS.play(plugin, player)
                 player.sendMessage(Strings.VOTE_PARTY_CHEST_CREATED_X.with("$i"))
                 player.inventory.setItemInMainHand(VoteParty.VOTE_PARTY_ITEM)
@@ -230,7 +230,7 @@ class PlayerListener(private val plugin: CV) : Listener
             if (event.clickedBlock!!.type == Material.ENDER_CHEST)
             {
                 val loc = event.clickedBlock!!.location
-                var chests = plugin.data.getLocations(Data.VOTE_PARTY)
+                var chests = plugin.data.getLocations(Data.VOTE_PARTY.path)
                 for (key in chests.keys)
                 {
                     if (chests[key] == loc)
@@ -246,7 +246,7 @@ class PlayerListener(private val plugin: CV) : Listener
                         }
                     }
                 }
-                chests = plugin.data.getLocations(Data.VOTE_CRATES)
+                chests = plugin.data.getLocations(Data.VOTE_CRATES.path)
                 for (key in chests.keys)
                 {
                     if (chests[key]?.equals(loc) == true &&
@@ -265,7 +265,7 @@ class PlayerListener(private val plugin: CV) : Listener
                 val lore = item.itemMeta?.lore?.get(0)
                 if (lore != null && lore.contains("#"))
                 {
-                    val path = Data.VOTE_CRATES + "." + lore.split("#")[1]
+                    val path = Data.VOTE_CRATES.path + "." + lore.split("#")[1]
                     val name = plugin.data.getString("$path.name")
                     if (name != null)
                     {
@@ -275,7 +275,7 @@ class PlayerListener(private val plugin: CV) : Listener
                             {
                                 event.isCancelled = true
                                 val loc = event.clickedBlock!!.location
-                                if (!plugin.data.getLocations(Data.VOTE_CRATES).containsValue(loc))
+                                if (!plugin.data.getLocations(Data.VOTE_CRATES.path).containsValue(loc))
                                 {
                                     val confirm =
                                         object : ConfirmGUI(plugin, Strings.VOTE_CRATE_PLACE_HERE_X.with(name))

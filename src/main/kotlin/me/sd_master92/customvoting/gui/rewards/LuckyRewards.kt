@@ -2,7 +2,7 @@ package me.sd_master92.customvoting.gui.rewards
 
 import me.sd_master92.core.inventory.GUI
 import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.constants.Data
+import me.sd_master92.customvoting.constants.enumerations.Data
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.constants.enumerations.Strings
 import org.bukkit.entity.Player
@@ -42,11 +42,13 @@ class LuckyRewards(private val plugin: CV) : GUI(plugin, name, 27, false)
         {
             inv.setItem(25, null)
             inv.setItem(26, null)
-            if (plugin.data.getItems(Data.LUCKY_REWARDS).contentEquals(inv.contents.filterNotNull().toTypedArray()))
+            if (plugin.data.getItems(Data.LUCKY_REWARDS.path)
+                    .contentEquals(inv.contents.filterNotNull().toTypedArray())
+            )
             {
                 SoundType.SUCCESS.play(plugin, player)
                 player.sendMessage(Strings.UPDATE_NOTHING_CHANGED.toString())
-            } else if (plugin.data.setItems(Data.LUCKY_REWARDS, inv.contents))
+            } else if (plugin.data.setItems(Data.LUCKY_REWARDS.path, inv.contents))
             {
                 SoundType.SUCCESS.play(plugin, player)
                 player.sendMessage(Strings.UPDATE_SUCCESS_X.with(name))
@@ -60,7 +62,7 @@ class LuckyRewards(private val plugin: CV) : GUI(plugin, name, 27, false)
 
     init
     {
-        for (reward in plugin.data.getItems(Data.LUCKY_REWARDS))
+        for (reward in plugin.data.getItems(Data.LUCKY_REWARDS.path))
         {
             inventory.addItem(reward)
         }

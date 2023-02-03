@@ -4,7 +4,7 @@ import me.sd_master92.core.inventory.BaseItem
 import me.sd_master92.core.tasks.TaskTimer
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.addToInventoryOrDrop
-import me.sd_master92.customvoting.constants.Data
+import me.sd_master92.customvoting.constants.enumerations.Data
 import me.sd_master92.customvoting.constants.enumerations.*
 import me.sd_master92.customvoting.withPlaceholders
 import org.bukkit.Bukkit
@@ -97,7 +97,7 @@ class VoteParty(private val plugin: CV)
 
     private fun executeCommands()
     {
-        for (command in plugin.data.getStringList(Data.VOTE_PARTY_COMMANDS))
+        for (command in plugin.data.getStringList(Data.VOTE_PARTY_COMMANDS.path))
         {
             if (command.contains("%PLAYER%"))
             {

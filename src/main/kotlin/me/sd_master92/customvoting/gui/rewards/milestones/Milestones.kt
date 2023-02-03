@@ -4,7 +4,7 @@ import me.sd_master92.core.input.PlayerNumberInput
 import me.sd_master92.core.inventory.BaseItem
 import me.sd_master92.core.inventory.GUI
 import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.constants.Data
+import me.sd_master92.customvoting.constants.enumerations.Data
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.constants.enumerations.Strings
 import me.sd_master92.customvoting.gui.rewards.RewardSettings
@@ -56,13 +56,13 @@ class Milestones(private val plugin: CV) :
                     override fun onNumberReceived(input: Int)
                     {
                         val name = Strings.MILESTONE_NAME_X.with("$input")
-                        if (plugin.data.contains(Data.MILESTONES + ".$input"))
+                        if (plugin.data.contains(Data.MILESTONES.path + ".$input"))
                         {
                             player.sendMessage(Strings.ALREADY_EXIST_X.with(name))
                         } else
                         {
                             SoundType.SUCCESS.play(plugin, player)
-                            plugin.data.set(Data.MILESTONES + ".$input.permissions", ArrayList<String>())
+                            plugin.data.set(Data.MILESTONES.path + ".$input.permissions", ArrayList<String>())
                             plugin.data.saveConfig()
                             player.sendMessage(Strings.CREATE_SUCCESS_X.with(name))
                             player.openInventory(Milestones(plugin).inventory)
@@ -93,7 +93,7 @@ class Milestones(private val plugin: CV) :
     {
         private fun getInventorySize(plugin: CV): Int
         {
-            val milestones = (plugin.data.getConfigurationSection(Data.MILESTONES)?.getKeys(false)?.size ?: 0) + 2
+            val milestones = (plugin.data.getConfigurationSection(Data.MILESTONES.path)?.getKeys(false)?.size ?: 0) + 2
             return if (milestones % 9 == 0)
             {
                 milestones
@@ -109,7 +109,7 @@ class Milestones(private val plugin: CV) :
         inventory.setItem(7, BaseItem(Material.CRAFTING_TABLE, Strings.MILESTONE_ADD.toString()))
         inventory.setItem(8, BACK_ITEM)
 
-        for (key in plugin.data.getConfigurationSection(Data.MILESTONES)?.getKeys(false)?.mapNotNull { key ->
+        for (key in plugin.data.getConfigurationSection(Data.MILESTONES.path)?.getKeys(false)?.mapNotNull { key ->
             key.toIntOrNull()
         }?.sorted() ?: ArrayList())
         {

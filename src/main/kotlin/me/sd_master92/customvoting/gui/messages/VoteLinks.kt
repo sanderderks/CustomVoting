@@ -3,7 +3,7 @@ package me.sd_master92.customvoting.gui.messages
 import me.sd_master92.core.input.PlayerStringInput
 import me.sd_master92.core.inventory.GUI
 import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.constants.Data
+import me.sd_master92.customvoting.constants.enumerations.Data
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.constants.enumerations.Strings
 import org.bukkit.ChatColor
@@ -31,7 +31,7 @@ class VoteLinks @JvmOverloads constructor(private val plugin: CV, private val is
         } else
         {
             event.isCancelled = true
-            val voteLink: String = plugin.data.getMessage(Data.VOTE_LINKS + "." + event.slot)
+            val voteLink: String = plugin.data.getMessage(Data.VOTE_LINKS.path + "." + event.slot)
             if (voteLink.isNotEmpty())
             {
                 SoundType.SUCCESS.play(plugin, player)
@@ -60,7 +60,7 @@ class VoteLinks @JvmOverloads constructor(private val plugin: CV, private val is
             override fun onInputReceived(input: String)
             {
                 val message = ChatColor.translateAlternateColorCodes('&', input)
-                val items = plugin.data.getItems(Data.VOTE_LINK_ITEMS)
+                val items = plugin.data.getItems(Data.VOTE_LINK_ITEMS.path)
                 val item = items[slot]
                 val meta = item.itemMeta
                 if (meta != null)
@@ -102,7 +102,7 @@ class VoteLinks @JvmOverloads constructor(private val plugin: CV, private val is
             override fun onInputReceived(input: String)
             {
                 val message = ChatColor.translateAlternateColorCodes('&', input)
-                val items = plugin.data.getItems(Data.VOTE_LINK_ITEMS)
+                val items = plugin.data.getItems(Data.VOTE_LINK_ITEMS.path)
                 val item = items[slot]
                 val meta = item.itemMeta
                 if (meta != null)
@@ -146,7 +146,7 @@ class VoteLinks @JvmOverloads constructor(private val plugin: CV, private val is
         {
             override fun onInputReceived(input: String)
             {
-                plugin.data[Data.VOTE_LINKS + ".$slot"] = input
+                plugin.data[Data.VOTE_LINKS.path + ".$slot"] = input
                 plugin.data.saveConfig()
 
                 SoundType.SUCCESS.play(plugin, player)
@@ -164,13 +164,13 @@ class VoteLinks @JvmOverloads constructor(private val plugin: CV, private val is
 
     private fun save(player: Player, items: Array<ItemStack?>, notify: Boolean)
     {
-        if (plugin.data.getItems(Data.VOTE_LINK_ITEMS).contentEquals(items.map { item ->
+        if (plugin.data.getItems(Data.VOTE_LINK_ITEMS.path).contentEquals(items.map { item ->
                 item ?: ItemStack(Material.AIR)
             }.toTypedArray()))
         {
             SoundType.SUCCESS.play(plugin, player)
             player.sendMessage(Strings.UPDATE_NOTHING_CHANGED.toString())
-        } else if (plugin.data.setItemsWithNull(Data.VOTE_LINK_ITEMS, items))
+        } else if (plugin.data.setItemsWithNull(Data.VOTE_LINK_ITEMS.path, items))
         {
             if (notify)
             {
@@ -186,7 +186,7 @@ class VoteLinks @JvmOverloads constructor(private val plugin: CV, private val is
 
     init
     {
-        val items = plugin.data.getItems(Data.VOTE_LINK_ITEMS)
+        val items = plugin.data.getItems(Data.VOTE_LINK_ITEMS.path)
         for (i in items.indices)
         {
             inventory.setItem(i, items[i])

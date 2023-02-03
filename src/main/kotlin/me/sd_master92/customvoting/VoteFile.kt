@@ -1,7 +1,7 @@
 package me.sd_master92.customvoting
 
 import me.sd_master92.core.file.PlayerFile
-import me.sd_master92.customvoting.constants.Data
+import me.sd_master92.customvoting.constants.enumerations.Data
 import me.sd_master92.customvoting.constants.TopVoter
 import me.sd_master92.customvoting.constants.Voter
 import me.sd_master92.customvoting.constants.enumerations.Settings
@@ -25,7 +25,7 @@ class VoteFile : Voter
     override val isOpUser: Boolean
         get() = playerFile.getBoolean("opUser")
     override val queue: List<String>
-        get() = plugin.data.getStringList(Data.VOTE_QUEUE + "." + uuid)
+        get() = plugin.data.getStringList(Data.VOTE_QUEUE.path + ".$uuid")
 
     private constructor(uuid: String, plugin: CV)
     {
@@ -99,12 +99,12 @@ class VoteFile : Voter
 
     override fun clearQueue(): Boolean
     {
-        return plugin.data.delete(Data.VOTE_QUEUE + "." + uuid)
+        return plugin.data.delete(Data.VOTE_QUEUE.path + ".$uuid")
     }
 
     override fun addQueue(site: String): Boolean
     {
-        val path = Data.VOTE_QUEUE + "." + uuid
+        val path = Data.VOTE_QUEUE.path + ".$uuid"
         val queue = plugin.data.getStringList(path)
         queue.add(site)
         plugin.data[path] = queue

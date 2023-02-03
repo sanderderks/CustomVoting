@@ -7,7 +7,7 @@ import me.sd_master92.core.infoLog
 import me.sd_master92.core.plugin.CustomPlugin
 import me.sd_master92.customvoting.commands.*
 import me.sd_master92.customvoting.commands.voteparty.VotePartyCommand
-import me.sd_master92.customvoting.constants.Data
+import me.sd_master92.customvoting.constants.enumerations.Data
 import me.sd_master92.customvoting.constants.Voter
 import me.sd_master92.customvoting.constants.enumerations.Messages
 import me.sd_master92.customvoting.constants.enumerations.Settings
@@ -235,7 +235,7 @@ class CV : CustomPlugin(
             ).label else "None"
         })
         metrics.addCustomChart(SimplePie("vote_crates") {
-            if (data.getLocations(Data.VOTE_CRATES).isNotEmpty()) "true" else "false"
+            if (data.getLocations(Data.VOTE_CRATES.path).isNotEmpty()) "true" else "false"
         })
         metrics.addCustomChart(SimplePie("number_of_playerfiles") {
             val number = VoteFile.getAll(this).size
@@ -257,7 +257,7 @@ class CV : CustomPlugin(
         })
         metrics.addCustomChart(AdvancedPie("vote_sites") {
             val valueMap: MutableMap<String, Int> = HashMap()
-            for (site in data.getStringList(Data.VOTE_SITES).filter { site -> !site.lowercase().contains("test") })
+            for (site in data.getStringList(Data.VOTE_SITES.path).filter { site -> !site.lowercase().contains("test") })
             {
                 valueMap[site] = 1
             }

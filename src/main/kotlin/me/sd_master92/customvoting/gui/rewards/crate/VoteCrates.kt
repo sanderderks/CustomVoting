@@ -3,7 +3,7 @@ package me.sd_master92.customvoting.gui.rewards.crate
 import me.sd_master92.core.inventory.BaseItem
 import me.sd_master92.core.inventory.GUI
 import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.constants.Data
+import me.sd_master92.customvoting.constants.enumerations.Data
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.constants.enumerations.Strings
 import me.sd_master92.customvoting.gui.rewards.RewardSettings
@@ -44,7 +44,7 @@ class VoteCrates(private val plugin: CV) :
 
             Material.CRAFTING_TABLE ->
             {
-                val numbers = plugin.data.getConfigurationSection(Data.VOTE_CRATES)?.getKeys(false)?.map {
+                val numbers = plugin.data.getConfigurationSection(Data.VOTE_CRATES.path)?.getKeys(false)?.map {
                     try
                     {
                         it.toInt()
@@ -59,7 +59,7 @@ class VoteCrates(private val plugin: CV) :
                     i++
                 }
                 SoundType.SUCCESS.play(plugin, player)
-                plugin.data.set(Data.VOTE_CRATES + ".$i.name", Strings.VOTE_CRATE_NAME_DEFAULT_X.with("$i"))
+                plugin.data.set(Data.VOTE_CRATES.path + ".$i.name", Strings.VOTE_CRATE_NAME_DEFAULT_X.with("$i"))
                 plugin.data.saveConfig()
                 cancelCloseEvent = true
                 player.openInventory(VoteCrates(plugin).inventory)
@@ -80,7 +80,7 @@ class VoteCrates(private val plugin: CV) :
     {
         private fun getInventorySize(plugin: CV): Int
         {
-            val crates = (plugin.data.getConfigurationSection(Data.VOTE_CRATES)?.getKeys(false)?.size ?: 0) + 2
+            val crates = (plugin.data.getConfigurationSection(Data.VOTE_CRATES.path)?.getKeys(false)?.size ?: 0) + 2
             return if (crates % 9 == 0)
             {
                 crates
@@ -93,7 +93,7 @@ class VoteCrates(private val plugin: CV) :
 
     init
     {
-        for (key in plugin.data.getConfigurationSection(Data.VOTE_CRATES)?.getKeys(false)?.mapNotNull { key ->
+        for (key in plugin.data.getConfigurationSection(Data.VOTE_CRATES.path)?.getKeys(false)?.mapNotNull { key ->
             key.toIntOrNull()
         }?.sorted() ?: listOf())
         {
@@ -101,7 +101,7 @@ class VoteCrates(private val plugin: CV) :
                 BaseItem(
                     Material.TRIPWIRE_HOOK,
                     Strings.VOTE_CRATE_NAME_X.with(
-                        plugin.data.getString(Data.VOTE_CRATES + ".$key.name")
+                        plugin.data.getString(Data.VOTE_CRATES.path + ".$key.name")
                             ?: Strings.VOTE_CRATE_NAME_DEFAULT_X.with("$key")
                     ),
                     Strings.VOTE_CRATE_LORE_X.with("$key"), true

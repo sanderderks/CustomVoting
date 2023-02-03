@@ -3,7 +3,7 @@ package me.sd_master92.customvoting.extensions
 import me.clip.placeholderapi.expansion.PlaceholderExpansion
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.VoteFile
-import me.sd_master92.customvoting.constants.Data
+import me.sd_master92.customvoting.constants.enumerations.Data
 import me.sd_master92.customvoting.constants.Voter
 import me.sd_master92.customvoting.constants.enumerations.Settings
 import me.sd_master92.customvoting.constants.enumerations.Strings
@@ -89,14 +89,14 @@ class CustomPlaceholders(private val plugin: CV) : PlaceholderExpansion()
 
                 VOTE_PARTY_CURRENT                  ->
                 {
-                    val current = plugin.data.getInt(Data.CURRENT_VOTES)
+                    val current = plugin.data.getInt(Data.CURRENT_VOTES.path)
                     return "$current"
                 }
 
                 VOTE_PARTY_UNTIL                    ->
                 {
                     val total = plugin.config.getInt(Settings.VOTES_REQUIRED_FOR_VOTE_PARTY.path)
-                    val current = plugin.data.getInt(Data.CURRENT_VOTES)
+                    val current = plugin.data.getInt(Data.CURRENT_VOTES.path)
                     val until = total - current
                     return "$until"
                 }

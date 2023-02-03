@@ -5,7 +5,7 @@ import me.sd_master92.core.input.PlayerNumberInput
 import me.sd_master92.core.inventory.BaseItem
 import me.sd_master92.core.inventory.GUI
 import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.constants.Data
+import me.sd_master92.customvoting.constants.enumerations.Data
 import me.sd_master92.customvoting.constants.enumerations.ItemRewardType
 import me.sd_master92.customvoting.constants.enumerations.Settings
 import me.sd_master92.customvoting.constants.enumerations.SoundType
@@ -112,7 +112,7 @@ class RewardSettings(private val plugin: CV, private val op: Boolean = false) :
                 SoundType.CHANGE.play(plugin, player)
                 cancelCloseEvent = true
                 player.closeInventory()
-                object : PlayerCommandInput(plugin, player, Data.VOTE_COMMANDS.appendWhenTrue(op, Data.OP_REWARDS))
+                object : PlayerCommandInput(plugin, player, Data.VOTE_COMMANDS.path.appendWhenTrue(op, Data.OP_REWARDS))
                 {
                     override fun onCommandReceived()
                     {
@@ -171,7 +171,7 @@ class RewardSettings(private val plugin: CV, private val op: Boolean = false) :
                 SoundType.CHANGE.play(plugin, player)
                 cancelCloseEvent = true
                 player.closeInventory()
-                object : PlayerCommandInput(plugin, player, Data.VOTE_PARTY_COMMANDS)
+                object : PlayerCommandInput(plugin, player, Data.VOTE_PARTY_COMMANDS.path)
                 {
                     override fun onCommandReceived()
                     {
@@ -221,14 +221,14 @@ class RewardSettings(private val plugin: CV, private val op: Boolean = false) :
 
     init
     {
-        inventory.addItem(ItemsRewardItem(plugin, Data.ITEM_REWARDS.appendWhenTrue(op, Data.OP_REWARDS)))
+        inventory.addItem(ItemsRewardItem(plugin, Data.ITEM_REWARDS.path.appendWhenTrue(op, Data.OP_REWARDS)))
         inventory.addItem(ItemsRewardTypeItem(plugin, op))
         inventory.addItem(MoneyRewardItem(plugin, op))
         inventory.addItem(ExperienceRewardItem(plugin, op))
         inventory.addItem(
             CommandsRewardItem(
                 plugin,
-                Data.VOTE_COMMANDS.appendWhenTrue(op, Data.OP_REWARDS),
+                Data.VOTE_COMMANDS.path.appendWhenTrue(op, Data.OP_REWARDS),
                 Material.COMMAND_BLOCK
             )
         )
@@ -238,7 +238,7 @@ class RewardSettings(private val plugin: CV, private val op: Boolean = false) :
                 BaseItem(
                     Material.ENDER_CHEST, Strings.GUI_LUCKY_VOTE_REWARDS.toString(),
                     Strings.GUI_CURRENT_XY.with(
-                        "" + plugin.data.getItems(Data.LUCKY_REWARDS).size,
+                        "" + plugin.data.getItems(Data.LUCKY_REWARDS.path).size,
                         Strings.ITEM_STACK_TYPE_MULTIPLE.toString()
                     )
                 )
@@ -256,7 +256,7 @@ class RewardSettings(private val plugin: CV, private val op: Boolean = false) :
             inventory.addItem(
                 CommandsRewardItem(
                     plugin,
-                    Data.VOTE_PARTY_COMMANDS,
+                    Data.VOTE_PARTY_COMMANDS.path,
                     Material.TNT,
                     Strings.GUI_COMMAND_REWARDS_VOTE_PARTY.toString()
                 )

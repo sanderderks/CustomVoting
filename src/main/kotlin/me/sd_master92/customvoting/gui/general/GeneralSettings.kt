@@ -4,7 +4,7 @@ import me.sd_master92.core.inventory.BaseItem
 import me.sd_master92.core.inventory.GUI
 import me.sd_master92.core.inventory.StatusItem
 import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.constants.Data
+import me.sd_master92.customvoting.constants.enumerations.Data
 import me.sd_master92.customvoting.constants.enumerations.Settings
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.constants.enumerations.Strings
@@ -168,7 +168,7 @@ class VotesUntilItem private constructor(votesRequired: Int, votesUntil: Int) : 
         fun getInstance(plugin: CV): VotesUntilItem
         {
             val votesRequired = plugin.config.getNumber(Settings.VOTES_REQUIRED_FOR_VOTE_PARTY.path)
-            val votesUntil = votesRequired - plugin.data.getNumber(Data.CURRENT_VOTES)
+            val votesUntil = votesRequired - plugin.data.getNumber(Data.CURRENT_VOTES.path)
             return VotesUntilItem(votesRequired, votesUntil)
         }
     }

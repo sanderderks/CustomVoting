@@ -3,7 +3,7 @@ package me.sd_master92.customvoting.subjects
 import me.sd_master92.core.inventory.BaseItem
 import me.sd_master92.core.tasks.TaskTimer
 import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.constants.Data
+import me.sd_master92.customvoting.constants.enumerations.Data
 import me.sd_master92.customvoting.constants.Voter
 import me.sd_master92.customvoting.constants.enumerations.Messages
 import me.sd_master92.customvoting.constants.enumerations.Strings
@@ -28,7 +28,7 @@ class VoteTopStand @JvmOverloads constructor(private val plugin: CV, private val
     private var nameStand: ArmorStand? = null
     private var votesStand: ArmorStand? = null
     private var citizen: NPC? = null
-    private val path = Data.VOTE_TOP_STANDS + "." + top
+    private val path = Data.VOTE_TOP_STANDS.path + ".$top"
 
     private fun registerArmorStands()
     {
@@ -308,7 +308,7 @@ class VoteTopStand @JvmOverloads constructor(private val plugin: CV, private val
 
         private fun initialize(plugin: CV)
         {
-            val section = plugin.data.getConfigurationSection(Data.VOTE_TOP_STANDS)
+            val section = plugin.data.getConfigurationSection(Data.VOTE_TOP_STANDS.path)
             if (section != null)
             {
                 for (n in section.getKeys(false))

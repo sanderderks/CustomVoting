@@ -5,7 +5,7 @@ import me.sd_master92.core.inventory.BaseItem
 import me.sd_master92.core.inventory.GUI
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.addToInventoryOrDrop
-import me.sd_master92.customvoting.constants.Data
+import me.sd_master92.customvoting.constants.enumerations.Data
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.constants.enumerations.Strings
 import me.sd_master92.customvoting.gui.items.ItemsRewardItem
@@ -18,7 +18,8 @@ import org.bukkit.inventory.ItemStack
 
 class VoteCrateSettings(private val plugin: CV, private val number: Int) : GUI(
     plugin,
-    (plugin.data.getString(Data.VOTE_CRATES + ".$number.name") ?: Strings.VOTE_CRATE_NAME_DEFAULT_X.with("$number")),
+    (plugin.data.getString(Data.VOTE_CRATES.path + ".$number.name")
+        ?: Strings.VOTE_CRATE_NAME_DEFAULT_X.with("$number")),
     9
 )
 {
@@ -36,7 +37,7 @@ class VoteCrateSettings(private val plugin: CV, private val number: Int) : GUI(
             Material.RED_WOOL ->
             {
                 SoundType.FAILURE.play(plugin, player)
-                plugin.data.delete(Data.VOTE_CRATES + ".$number")
+                plugin.data.delete(Data.VOTE_CRATES.path + ".$number")
                 player.sendMessage(Strings.INPUT_VOTE_CRATE_DELETED_X.with(Strings.VOTE_CRATE_NAME_X.with("$number")))
                 cancelCloseEvent = true
                 player.openInventory(VoteCrates(plugin).inventory)
@@ -66,7 +67,7 @@ class VoteCrateSettings(private val plugin: CV, private val number: Int) : GUI(
                 player.addToInventoryOrDrop(
                     BaseItem(
                         Material.TRIPWIRE_HOOK,
-                        ChatColor.AQUA.toString() + plugin.data.getString(Data.VOTE_CRATES + ".$number.name"),
+                        ChatColor.AQUA.toString() + plugin.data.getString(Data.VOTE_CRATES.path + ".$number.name"),
                         ChatColor.GRAY.toString() + "#$number",
                         true
                     )
@@ -85,7 +86,7 @@ class VoteCrateSettings(private val plugin: CV, private val number: Int) : GUI(
                     override fun onInputReceived(input: String)
                     {
                         SoundType.SUCCESS.play(plugin, player)
-                        plugin.data.set(Data.VOTE_CRATES + ".$number.name", input)
+                        plugin.data.set(Data.VOTE_CRATES.path + ".$number.name", input)
                         plugin.data.saveConfig()
                         player.sendMessage(Strings.INPUT_VOTE_CRATE_NAME_CHANGED_X.with(input))
                         player.openInventory(VoteCrateSettings(plugin, number).inventory)

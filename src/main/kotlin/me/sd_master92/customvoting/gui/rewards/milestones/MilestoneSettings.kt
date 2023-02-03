@@ -3,7 +3,7 @@ package me.sd_master92.customvoting.gui.rewards.milestones
 import me.sd_master92.core.inventory.BaseItem
 import me.sd_master92.core.inventory.GUI
 import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.constants.Data
+import me.sd_master92.customvoting.constants.enumerations.Data
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.constants.enumerations.Strings
 import me.sd_master92.customvoting.gui.items.CommandsRewardItem
@@ -33,7 +33,7 @@ class MilestoneSettings(private val plugin: CV, private val number: Int) :
             Material.RED_WOOL      ->
             {
                 SoundType.FAILURE.play(plugin, player)
-                plugin.data.delete(Data.MILESTONES + ".$number")
+                plugin.data.delete(Data.MILESTONES.path + ".$number")
                 player.sendMessage(Strings.MILESTONE_DELETED_X.with(Strings.MILESTONE_NAME_X.with("$number")))
                 cancelCloseEvent = true
                 player.openInventory(Milestones(plugin).inventory)
@@ -44,7 +44,7 @@ class MilestoneSettings(private val plugin: CV, private val number: Int) :
                 SoundType.CHANGE.play(plugin, player)
                 cancelCloseEvent = true
                 player.closeInventory()
-                object : PlayerPermissionInput(plugin, player, Data.MILESTONES + ".$number.permissions")
+                object : PlayerPermissionInput(plugin, player, Data.MILESTONES.path + ".$number.permissions")
                 {
                     override fun onPermissionReceived()
                     {
@@ -65,7 +65,7 @@ class MilestoneSettings(private val plugin: CV, private val number: Int) :
                 SoundType.CHANGE.play(plugin, player)
                 cancelCloseEvent = true
                 player.closeInventory()
-                object : PlayerCommandInput(plugin, player, Data.MILESTONES + ".$number.commands")
+                object : PlayerCommandInput(plugin, player, Data.MILESTONES.path + ".$number.commands")
                 {
                     override fun onCommandReceived()
                     {

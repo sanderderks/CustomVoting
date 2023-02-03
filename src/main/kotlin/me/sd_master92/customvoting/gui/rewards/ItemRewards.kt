@@ -3,7 +3,7 @@ package me.sd_master92.customvoting.gui.rewards
 import me.sd_master92.core.appendWhenTrue
 import me.sd_master92.core.inventory.GUI
 import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.constants.Data
+import me.sd_master92.customvoting.constants.enumerations.Data
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.constants.enumerations.Strings
 import org.bukkit.entity.Player
@@ -15,7 +15,7 @@ import org.bukkit.inventory.ItemStack
 class ItemRewards(private val plugin: CV, private val op: Boolean = false) :
     GUI(plugin, Strings.GUI_TITLE_ITEM_REWARDS.toString(), 27, false)
 {
-    private var path = Data.ITEM_REWARDS.appendWhenTrue(op, Data.OP_REWARDS)
+    private var path = Data.ITEM_REWARDS.path.appendWhenTrue(op, Data.OP_REWARDS)
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
     {
         if (event.slot >= 25)

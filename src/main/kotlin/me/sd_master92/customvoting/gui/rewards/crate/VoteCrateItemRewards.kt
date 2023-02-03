@@ -2,7 +2,7 @@ package me.sd_master92.customvoting.gui.rewards.crate
 
 import me.sd_master92.core.inventory.GUI
 import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.constants.Data
+import me.sd_master92.customvoting.constants.enumerations.Data
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.constants.enumerations.Strings
 import org.bukkit.entity.Player
@@ -13,7 +13,10 @@ import org.bukkit.inventory.ItemStack
 
 class VoteCrateItemRewards(private val plugin: CV, private val number: Int, private val percentage: Int) : GUI(
     plugin,
-    Strings.VOTE_CRATE_REWARDS_NAME_XY.with("$percentage", plugin.data.getString(Data.VOTE_CRATES + ".$number.name")),
+    Strings.VOTE_CRATE_REWARDS_NAME_XY.with(
+        "$percentage",
+        plugin.data.getString(Data.VOTE_CRATES.path + ".$number.name")
+    ),
     27,
     false
 )
@@ -49,7 +52,7 @@ class VoteCrateItemRewards(private val plugin: CV, private val number: Int, priv
             val path = "${Data.VOTE_CRATES}.$number.${Data.ITEM_REWARDS}.$percentage"
             val name = Strings.VOTE_CRATE_REWARDS_NAME_XY.with(
                 "$percentage",
-                plugin.data.getString(Data.VOTE_CRATES + ".$number.name")
+                plugin.data.getString(Data.VOTE_CRATES.path + ".$number.name")
             )
             if (plugin.data.getItems(path).contentEquals(inv.contents.filterNotNull().toTypedArray()))
             {

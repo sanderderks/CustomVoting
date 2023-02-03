@@ -2,7 +2,7 @@ package me.sd_master92.customvoting.subjects
 
 import me.sd_master92.core.tasks.TaskTimer
 import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.constants.Data
+import me.sd_master92.customvoting.constants.enumerations.Data
 import me.sd_master92.customvoting.constants.Voter
 import me.sd_master92.customvoting.constants.enumerations.Messages
 import me.sd_master92.customvoting.constants.enumerations.Settings
@@ -57,7 +57,7 @@ class VoteTopSign @JvmOverloads constructor(
             val topVoter = Voter.getTopVoter(plugin, top)
             if (topVoter != null)
             {
-                val oldLoc = plugin.data.getLocation(Data.VOTE_TOP_SIGNS + "." + top)
+                val oldLoc = plugin.data.getLocation(Data.VOTE_TOP_SIGNS.path + "." + top)
                 if (oldLoc != null && oldLoc != location)
                 {
                     if (oldLoc.block.state is Sign)
@@ -79,7 +79,7 @@ class VoteTopSign @JvmOverloads constructor(
                         oldSign.update(true)
                     }
                 }
-                plugin.data.setLocation(Data.VOTE_TOP_SIGNS + "." + top, location)
+                plugin.data.setLocation(Data.VOTE_TOP_SIGNS.path + "." + top, location)
                 val placeholders = HashMap<String, String>()
                 placeholders["%NUMBER%"] = "" + top
                 placeholders["%PLAYER%"] = topVoter.name
@@ -168,7 +168,7 @@ class VoteTopSign @JvmOverloads constructor(
 
     fun delete(player: Player)
     {
-        if (plugin.data.deleteLocation(Data.VOTE_TOP_SIGNS + "." + if (top == 0) "title" else top))
+        if (plugin.data.deleteLocation(Data.VOTE_TOP_SIGNS.path + "." + if (top == 0) "title" else top))
         {
             voteTops.remove(top)
             player.sendMessage(Strings.VOTE_TOP_SIGN_DELETED_X.with(if (top == 0) "title" else "$top"))
@@ -208,7 +208,7 @@ class VoteTopSign @JvmOverloads constructor(
 
         private fun initialize(plugin: CV)
         {
-            val locations = plugin.data.getLocations(Data.VOTE_TOP_SIGNS)
+            val locations = plugin.data.getLocations(Data.VOTE_TOP_SIGNS.path)
             for (key in locations.keys)
             {
                 val loc = locations[key]
