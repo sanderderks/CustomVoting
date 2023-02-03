@@ -70,7 +70,7 @@ class DisabledWorlds(private val plugin: CV) : GUI(plugin, Strings.GUI_DISABLED_
 }
 
 class DisabledWorld(plugin: CV, world: String) : BaseItem(
-    Material.GRASS_BLOCK, ChatColor.LIGHT_PURPLE.toString() + world,
+    Material.GRASS_BLOCK, Strings.GUI_DISABLED_WORLD_X.with(world),
     Strings.GUI_DISABLED_X.with(
         if (plugin.config.getStringList(Settings.DISABLED_WORLDS.path)
                 .contains(world)

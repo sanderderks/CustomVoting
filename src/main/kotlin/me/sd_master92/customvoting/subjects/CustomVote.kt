@@ -9,13 +9,12 @@ import me.sd_master92.customvoting.*
 import me.sd_master92.customvoting.constants.Data
 import me.sd_master92.customvoting.constants.Voter
 import me.sd_master92.customvoting.constants.enumerations.ItemRewardType
-import me.sd_master92.customvoting.constants.enumerations.Logger
 import me.sd_master92.customvoting.constants.enumerations.Messages
 import me.sd_master92.customvoting.constants.enumerations.Settings
+import me.sd_master92.customvoting.constants.enumerations.Strings
 import me.sd_master92.customvoting.helpers.ParticleHelper
 import me.sd_master92.customvoting.subjects.voteparty.VoteParty
 import org.bukkit.Bukkit
-import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import java.text.DecimalFormat
 import java.util.*
@@ -23,43 +22,27 @@ import java.util.*
 class CustomVote(
     private val plugin: CV,
     vote: Vote,
-    private val queued: Boolean = false,
-    private val logger: CommandSender? = null
+    private val queued: Boolean = false
 ) : Vote(vote)
 {
     private fun forwardVote()
     {
-        Logger.OK.log("Now examining incoming vote of $username...", logger)
-        Logger.INFO.log("Website: $serviceName", logger)
         val player = Bukkit.getPlayer(username)
         if (player == null)
         {
-            plugin.infoLog("The player is not online, adding vote to queue")
+            plugin.infoLog(Strings.PLAYER_NOT_ONLINE_QUEUE.toString())
             queue()
-            Logger.ERROR.log("End of log", logger)
         } else if (plugin.config.getStringList(Settings.DISABLED_WORLDS.path).contains(player.world.name))
         {
-            Logger.INFO.log(
-                "The player is in a disabled world called '${player.world.name}', adding vote to queue",
-                logger
-            )
             if (!plugin.config.getBoolean(Settings.DISABLED_MESSAGE_DISABLED_WORLD.path))
             {
                 player.sendText(plugin, Messages.DISABLED_WORLD)
             }
             queue()
-            Logger.ERROR.log("End of log", logger)
         } else
         {
-            Logger.OK.log("Player online and in an enabled world", logger)
             broadcast(player)
-            if (Voter.get(plugin, player).addVote())
-            {
-                Logger.INFO.log("Added vote to player", logger)
-            } else
-            {
-                Logger.ERROR.log("Could not add vote to player", logger)
-            }
+            Voter.get(plugin, player).addVote()
             ParticleHelper.shootFirework(plugin, player.location)
             giveRewards(player, player.hasPermissionRewards(plugin))
             if (plugin.config.getBoolean(Settings.VOTE_PARTY.path))
@@ -74,16 +57,10 @@ class CustomVote(
         val voter = Voter.getByName(plugin, username)
         if (voter != null)
         {
-            if (voter.addQueue(serviceName))
-            {
-                Logger.INFO.log("Added vote to queue", logger)
-            } else
-            {
-                Logger.ERROR.log("Could not add vote to queue", logger)
-            }
+            voter.addQueue(serviceName)
         } else
         {
-            plugin.errorLog("A player with name $username does not exist")
+            plugin.errorLog(Strings.PLAYER_NOT_EXIST_X.with(username))
         }
     }
 
@@ -153,14 +130,6 @@ class CustomVote(
 
     private fun giveRewards(player: Player, op: Boolean)
     {
-        if (op)
-        {
-            Logger.WARNING.log("Giving PERMISSION BASED rewards to player", logger)
-            Logger.INFO.log("^ This happens because the player has the permission 'customvoting.extra'", logger)
-        } else
-        {
-            Logger.INFO.log("Giving regular rewards to player", logger)
-        }
         giveItems(player, op)
         executeCommands(player, op)
         var rewardMessage = ""
@@ -199,7 +168,6 @@ class CustomVote(
         val typePath = Settings.ITEM_REWARD_TYPE.path.appendWhenTrue(op, Data.OP_REWARDS)
         val random = plugin.config.getNumber(typePath) != ItemRewardType.ALL_ITEMS.value
         val items = plugin.data.getItems(path)
-        Logger.INFO.log("Giving ${items.size} items to player", logger)
         player.addToInventoryOrDrop(items, random)
     }
 
@@ -210,12 +178,8 @@ class CustomVote(
         {
             val path = Settings.VOTE_REWARD_MONEY.path.appendWhenTrue(op, Data.OP_REWARDS)
             val amount = plugin.config.getDouble(path)
-            Logger.INFO.log("Giving $$amount to player", logger)
             economy.depositPlayer(player, amount)
             return amount
-        } else
-        {
-            Logger.WARNING.log("Money reward disabled", logger)
         }
         return 0.0
     }
@@ -224,7 +188,6 @@ class CustomVote(
     {
         val path = Settings.VOTE_REWARD_EXPERIENCE.path.appendWhenTrue(op, Data.OP_REWARDS)
         val amount = plugin.config.getNumber(path)
-        Logger.INFO.log("Giving ${amount}xp to player", logger)
         player.level = player.level + amount
         return amount
     }
@@ -236,7 +199,6 @@ class CustomVote(
             val luckyRewards = plugin.data.getItems(Data.LUCKY_REWARDS)
             if (luckyRewards.isNotEmpty())
             {
-                Logger.OK.log("Giving 1 random lucky reward to player", logger)
                 player.addToInventoryOrDrop(luckyRewards, true)
                 player.sendMessage(Messages.VOTE_LUCKY.getMessage(plugin))
             }
@@ -247,7 +209,6 @@ class CustomVote(
     {
         val path = Data.VOTE_COMMANDS.appendWhenTrue(op, Data.OP_REWARDS)
         val commands = plugin.data.getStringList(path)
-        Logger.INFO.log("Executing ${commands.size} commands", logger)
         for (command in commands)
         {
             plugin.runCommand(command.replace("%PLAYER%", player.name).withPlaceholders(player))
@@ -259,7 +220,6 @@ class CustomVote(
         val votes = VoteFile.get(plugin, player).votes
         if (plugin.data.contains(Data.MILESTONES + ".$votes"))
         {
-            Logger.OK.log("Player reached milestone #$votes, giving milestone rewards", logger)
             if (!plugin.config.getBoolean(Settings.DISABLED_BROADCAST_MILESTONE.path))
             {
                 val placeholders = HashMap<String, String>()
@@ -292,13 +252,11 @@ class CustomVote(
         fun create(
             plugin: CV,
             name: String,
-            service: String,
-            queued: Boolean = false,
-            logger: CommandSender? = null
+            service: String
         )
         {
             val vote = Vote(service, name, "0.0.0.0", Date().time.toString())
-            CustomVote(plugin, vote, queued, logger)
+            CustomVote(plugin, vote)
         }
     }
 

@@ -22,7 +22,7 @@ class EnabledUsers(private val plugin: CV, private var page: Int = 0) :
     {
         when (item.type)
         {
-            Material.BARRIER ->
+            Material.BARRIER     ->
             {
                 SoundType.CLICK.play(plugin, player)
                 cancelCloseEvent = true
@@ -48,7 +48,7 @@ class EnabledUsers(private val plugin: CV, private var page: Int = 0) :
                 }
             }
 
-            else ->
+            else                 ->
             {
                 if (item.itemMeta?.displayName?.contains(Strings.GUI_PAGINATION_PREVIOUS.toString()) == true && page > 0)
                 {
@@ -105,7 +105,7 @@ class EnabledUser(private val voter: Voter)
         meta.lore!!.addAll(Strings.ENABLED_USERS_LORE.toString().split(";;"))
         if (meta.displayName != voter.name)
         {
-            meta.setDisplayName(ChatColor.AQUA.toString() + voter.name)
+            meta.setDisplayName(Strings.PLAYER_SKULL_NAME_X.with(voter.name))
         }
         skull.itemMeta = meta
         return skull

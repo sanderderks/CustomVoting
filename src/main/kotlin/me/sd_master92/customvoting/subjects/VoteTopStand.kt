@@ -10,7 +10,6 @@ import me.sd_master92.customvoting.constants.enumerations.Strings
 import net.citizensnpcs.api.CitizensAPI
 import net.citizensnpcs.api.npc.NPC
 import org.bukkit.Bukkit
-import org.bukkit.ChatColor
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.entity.ArmorStand
@@ -197,7 +196,7 @@ class VoteTopStand @JvmOverloads constructor(private val plugin: CV, private val
             }
         } else
         {
-            placeholders["%PLAYER%"] = ChatColor.RED.toString() + Strings.PLAYER_NAME_UNKNOWN
+            placeholders["%PLAYER%"] = Strings.PLAYER_NAME_UNKNOWN_COLORED.toString()
             placeholders["%VOTES%"] = "0"
             placeholders["%MONTHLY_VOTES%"] = "0"
             if (CV.CITIZENS && citizen != null && citizen!!.name != Strings.PLAYER_NAME_UNKNOWN.toString())

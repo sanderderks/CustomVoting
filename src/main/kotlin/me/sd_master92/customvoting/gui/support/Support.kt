@@ -115,7 +115,7 @@ class Support(private val plugin: CV) : GUI(plugin, Strings.GUI_TITLE_SUPPORT.to
         inventory.addItem(
             BaseItem(
                 Material.ENCHANTING_TABLE, Strings.SUPPORT_DATABASE.toString(),
-                Strings.GUI_STATUS_X.with(if (plugin.hasDatabaseConnection()) Strings.DATABASE_CONNECTED.toString() else Strings.DATABASE_DISABLED.toString())
+                Strings.GUI_STATUS_X.with(if (plugin.hasDatabaseConnection()) Strings.CONNECTED.toString() else Strings.DISABLED.toString())
             )
         )
         inventory.addItem(

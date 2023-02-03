@@ -73,7 +73,7 @@ class EnabledGroups(private val plugin: CV) :
 }
 
 class EnabledGroup(private val plugin: CV, private val name: String) : BaseItem(
-    Material.GREEN_WOOL, ChatColor.LIGHT_PURPLE.toString() + name.lowercase(),
+    Material.GREEN_WOOL, Strings.GUI_ENABLED_GROUP_X.with(name.lowercase()),
     Strings.GUI_ENABLED_X.with(
         if (plugin.config.getStringList(Settings.ENABLED_OP_GROUPS.path)
                 .contains(name.lowercase())

@@ -12,8 +12,8 @@ enum class Strings(private val value: String)
     NEVER(ChatColor.RED.toString() + "never"),
     REFRESH(ChatColor.RED.toString() + "Refresh"),
 
-    DATABASE_CONNECTED(ChatColor.GREEN.toString() + "Connected"),
-    DATABASE_DISABLED(ChatColor.RED.toString() + "Disabled"),
+    CONNECTED(ChatColor.GREEN.toString() + "Connected"),
+    DISABLED(ChatColor.RED.toString() + "Disabled"),
 
     NOT_EXIST_X(ChatColor.RED.toString() + "That %X% does not exist."),
     ALREADY_EXIST_X(ChatColor.RED.toString() + "That %X% already exists."),
@@ -21,6 +21,10 @@ enum class Strings(private val value: String)
     INVALID_ARGUMENT_NOT_POSITIVE_X(ChatColor.RED.toString() + "Invalid argument: \'%X%\' must be a positive number."),
 
     PLAYER_NAME_UNKNOWN("Unknown"),
+    PLAYER_NAME_UNKNOWN_COLORED(ChatColor.RED.toString() + "Unknown"),
+    PLAYER_NOT_EXIST_X("A player with name %X% does not exist"),
+    PLAYER_NOT_ONLINE_QUEUE("The player is not online, adding vote to queue"),
+    PLAYER_SKULL_NAME_X(ChatColor.AQUA.toString() + "%X%"),
 
     BREAK_BLOCK_NO_PERMISSION(ChatColor.RED.toString() + "You do not have permission to break this block."),
     OPEN_CHEST_NO_PERMISSION(ChatColor.RED.toString() + "You do not have permission to open this chest."),
@@ -28,7 +32,7 @@ enum class Strings(private val value: String)
     OPEN_CHEST_WRONG_KEY(ChatColor.RED.toString() + "Wrong key for this crate!"),
     INTERACT_OPEN_CRATE(ChatColor.RED.toString() + "You need to open a crate with this key."),
 
-    GUI_STATUS_X(ChatColor.GRAY.toString() + "Status: %X%"),
+    GUI_STATUS_X(ChatColor.GRAY.toString() + "Status: " + ChatColor.AQUA + "%X%"),
     GUI_CURRENT_X(ChatColor.GRAY.toString() + "Currently: " + ChatColor.AQUA + "%X%"),
     GUI_CURRENT_XY(ChatColor.GRAY.toString() + "Currently: " + ChatColor.AQUA + "%X% " + ChatColor.GRAY + "%Y%"),
     GUI_ENABLED_X(ChatColor.GRAY.toString() + "Enabled: %X%"),
@@ -53,6 +57,10 @@ enum class Strings(private val value: String)
     GUI_PAGINATION_NEXT(ChatColor.AQUA.toString() + "Next"),
     GUI_PAGINATION_PREVIOUS(ChatColor.AQUA.toString() + "Previous"),
     GUI_DISABLED_WORLDS(ChatColor.LIGHT_PURPLE.toString() + "Disabled Worlds"),
+    GUI_DISABLED_WORLD_X(ChatColor.LIGHT_PURPLE.toString() + "%X%"),
+    GUI_ENABLED_GROUP(ChatColor.LIGHT_PURPLE.toString() + "Enabled Groups"),
+    GUI_ENABLED_GROUP_X(ChatColor.LIGHT_PURPLE.toString() + "%X%"),
+    GUI_ENABLED_USERS(ChatColor.LIGHT_PURPLE.toString() + "Enabled Users"),
     GUI_VOTE_PARTY(ChatColor.LIGHT_PURPLE.toString() + "Vote Party"),
     GUI_VOTE_PARTY_VOTES_UNTIL(ChatColor.LIGHT_PURPLE.toString() + "Votes until Vote Party"),
     GUI_VOTE_PARTY_VOTES_UNTIL_XY(ChatColor.GRAY.toString() + "Required: " + ChatColor.AQUA + "%X%;" + ChatColor.GRAY + "Votes left: " + ChatColor.GREEN + "%Y%"),
@@ -62,8 +70,14 @@ enum class Strings(private val value: String)
     GUI_MONTHLY_RESET(ChatColor.LIGHT_PURPLE.toString() + "Monthly Reset"),
     GUI_MONTHLY_VOTES(ChatColor.LIGHT_PURPLE.toString() + "Monthly Votes"),
     GUI_LUCKY_VOTE(ChatColor.LIGHT_PURPLE.toString() + "Lucky Vote"),
+    GUI_LUCKY_VOTE_CHANCE(ChatColor.LIGHT_PURPLE.toString() + "Lucky Vote Chance"),
+    GUI_LUCKY_VOTE_REWARDS(ChatColor.LIGHT_PURPLE.toString() + "Lucky Rewards"),
+    GUI_MONEY_REWARD(ChatColor.LIGHT_PURPLE.toString() + "Money Reward"),
+    GUI_CRATE_REWARDS(ChatColor.LIGHT_PURPLE.toString() + "Crate Rewards"),
     GUI_FIREWORK(ChatColor.LIGHT_PURPLE.toString() + "Firework"),
     GUI_UUID_STORAGE(ChatColor.RED.toString() + "UUID Storage"),
+    GUI_XP_REWARD(ChatColor.LIGHT_PURPLE.toString() + "XP Reward"),
+    GUI_ITEM_REWARD(ChatColor.LIGHT_PURPLE.toString() + "Item Reward Type"),
     GUI_COMMAND_REWARDS(ChatColor.LIGHT_PURPLE.toString() + "Command Rewards"),
     GUI_COMMAND_REWARDS_VOTE_PARTY(ChatColor.LIGHT_PURPLE.toString() + "Vote Party Commands"),
     GUI_ITEM_REWARDS(ChatColor.LIGHT_PURPLE.toString() + "Item Rewards"),
@@ -85,6 +99,8 @@ enum class Strings(private val value: String)
     GUI_MILESTONE_REWARDS_X("Milestone Item Rewards #%X%"),
 
     SECOND_TYPE_MULTIPLE("seconds"),
+    XP_TYPE_MULTIPLE("levels"),
+    ITEM_STACK_TYPE_MULTIPLE("item stacks"),
 
     RESET_VOTES_MONTHLY("Reset monthly votes?"),
     RESET_VOTES_ALL("Reset ALL votes?"),
@@ -119,6 +135,7 @@ enum class Strings(private val value: String)
     INPUT_REMOVED_FROM_LIST_XY(ChatColor.RED.toString() + "Removed %X% from %Y%"),
     INPUT_ALTER_LIST_X(ChatColor.GREEN.toString() + "Please enter a %X% to add or remove from the list"),
     INPUT_LIST_EMPTY_X(ChatColor.RED.toString() + "There are currently no %X%."),
+    INPUT_NUMBER(ChatColor.GREEN.toString() + "Please enter a number"),
     INPUT_COMMANDS(ChatColor.GRAY.toString() + "Commands:"),
     INPUT_COMMAND_TYPE("command"),
     INPUT_COMMAND_TYPE_MULTIPLE("commands"),
@@ -135,9 +152,15 @@ enum class Strings(private val value: String)
     INPUT_VOTE_CRATE_DELETED_X(ChatColor.RED.toString() + "%X% deleted!"),
     INPUT_MILESTONE(ChatColor.GREEN.toString() + "Please enter a milestone number"),
 
+    GUI_TITLE_VOTE_REWARDS("Vote Rewards"),
+    GUI_TITLE_VOTE_REWARDS_PERMISSION_BASED("Vote Rewards (permission based)"),
+    MONEY_REWARD("money reward"),
+
     ENABLED_USERS_LORE(ChatColor.GRAY.toString() + "This setting overrides;;" + ChatColor.GRAY + "the group permissions."),
     PERMISSION_REWARDS(ChatColor.LIGHT_PURPLE.toString() + "Permission Rewards"),
+    PERMISSION_BASED_REWARDS(ChatColor.LIGHT_PURPLE.toString() + "Permission Rewards"),
 
+    MILESTONES(ChatColor.LIGHT_PURPLE.toString() + "Milestones"),
     MILESTONE_SETTINGS_TITLE_X("Vote Milestone Settings #%X%"),
     MILESTONE_NAME_X("Milestone #%X%"),
     MILESTONE_ADD(ChatColor.GREEN.toString() + "Add Milestone"),
@@ -155,6 +178,7 @@ enum class Strings(private val value: String)
     VOTE_PARTY_CHEST_DELETED_X(ChatColor.RED.toString() + "Vote Party Chest #%X% deleted."),
     VOTE_PARTY_CHEST_CREATED_X(ChatColor.GREEN.toString() + "Vote Party Chest #%X% registered."),
     VOTE_PARTY_CHEST_NONE(ChatColor.RED.toString() + "There are no registered Vote Party Chests."),
+    VOTE_PARTY_PIG_TITLE_X(ChatColor.LIGHT_PURPLE.toString() + ChatColor.BOLD + "%X%"),
 
     MONTHLY_VOTES_RESET_COMMAND_USAGE(ChatColor.RED.toString() + "- /clearmonthlyvotes <name>"),
     MONTHLY_VOTES_RESET_SELF(ChatColor.GREEN.toString() + "Your monthly votes have been reset."),
@@ -198,8 +222,6 @@ enum class Strings(private val value: String)
 
     FAKE_VOTE_WEBSITE("fakevote.com"),
     FAKE_VOTE_COMMAND_USAGE(ChatColor.RED.toString() + "- /fakevote <name> [website]"),
-
-    INSPECT_VOTE_COMMAND_USAGE(ChatColor.RED.toString() + "- /inspectvote <name> [website]"),
 
     RELOAD_START_X(ChatColor.GRAY.toString() + "Reloading configuration" + "%X%" + "..."),
     RELOAD_FINISH_X(ChatColor.GREEN.toString() + "Configuration" + "%X%" + " reloaded!"),

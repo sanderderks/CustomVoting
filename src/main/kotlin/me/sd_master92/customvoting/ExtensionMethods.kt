@@ -4,11 +4,11 @@ import me.clip.placeholderapi.PlaceholderAPI
 import me.sd_master92.core.file.PlayerFile
 import me.sd_master92.customvoting.constants.enumerations.Messages
 import me.sd_master92.customvoting.constants.enumerations.Settings
+import me.sd_master92.customvoting.constants.enumerations.Strings
 import me.sd_master92.customvoting.database.PlayerTable
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
 import org.bukkit.Bukkit
-import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.OfflinePlayer
 import org.bukkit.command.CommandSender
@@ -83,11 +83,6 @@ fun Player?.sendActionBar(message: String)
     )
 }
 
-fun Player?.sendActionBar(plugin: CV, message: Messages, placeholders: Map<String, String> = HashMap())
-{
-    this?.sendActionBar(message.getMessage(plugin, placeholders))
-}
-
 fun Player.addToInventoryOrDrop(items: Array<ItemStack>, random: Boolean = false)
 {
     if (items.isNotEmpty())
@@ -155,7 +150,7 @@ fun OfflinePlayer?.getSkull(): ItemStack
     skullMeta.owningPlayer = this
     if (this != null)
     {
-        skullMeta.setDisplayName(ChatColor.AQUA.toString() + name)
+        skullMeta.setDisplayName(Strings.PLAYER_SKULL_NAME_X.with(this.name ?: Strings.PLAYER_NAME_UNKNOWN.toString()))
     }
     skull.itemMeta = skullMeta
     return skull

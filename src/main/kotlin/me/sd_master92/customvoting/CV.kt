@@ -295,7 +295,6 @@ class CV : CustomPlugin(
         CreateTopCommand(this).register()
         DeleteTopCommand(this).register()
         FakeVoteCommand(this).register()
-        InspectVoteCommand(this).register()
         ReloadCommand(this).register()
         SettingsCommand(this).register()
         SetVotesCommand(this).register()
