@@ -37,7 +37,7 @@ class LuckyRewards(private val plugin: CV) : GUI(plugin, name, 27, false)
 
     companion object
     {
-        private val name = Strings.GUI_TITLE_LUCKY_REWARDS.toString()
+        private val name = Strings.LUCKY_REWARDS_INVENTORY_NAME.toString()
         fun save(plugin: CV, player: Player, inv: Inventory)
         {
             inv.setItem(25, null)
@@ -47,15 +47,15 @@ class LuckyRewards(private val plugin: CV) : GUI(plugin, name, 27, false)
             )
             {
                 SoundType.SUCCESS.play(plugin, player)
-                player.sendMessage(Strings.UPDATE_NOTHING_CHANGED.toString())
+                player.sendMessage(Strings.GENERAL_MESSAGE_UPDATE_NOTHING_CHANGED.toString())
             } else if (plugin.data.setItems(Data.LUCKY_REWARDS.path, inv.contents))
             {
                 SoundType.SUCCESS.play(plugin, player)
-                player.sendMessage(Strings.UPDATE_SUCCESS_X.with(name))
+                player.sendMessage(Strings.GENERAL_MESSAGE_UPDATE_SUCCESS_X.with(name))
             } else
             {
                 SoundType.FAILURE.play(plugin, player)
-                player.sendMessage(Strings.UPDATE_FAIL_X.with(name))
+                player.sendMessage(Strings.GENERAL_MESSAGE_UPDATE_FAIL_X.with(name))
             }
         }
     }

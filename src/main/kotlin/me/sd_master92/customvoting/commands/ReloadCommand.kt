@@ -17,13 +17,13 @@ class ReloadCommand(private val plugin: CV) : SimpleCommand(plugin, "votereload"
     override fun onCommand(sender: CommandSender, args: Array<String>)
     {
         val cache = args.isNotEmpty() && args[0] == "cache"
-        sender.sendMessage(Strings.RELOAD_START_X.with("".appendWhenTrue(cache, " and cache")))
+        sender.sendMessage(Strings.RELOAD_MESSAGE_START_X.with("".appendWhenTrue(cache, " and cache")))
         if (reload(plugin, cache))
         {
-            sender.sendMessage(Strings.RELOAD_FINISH_X.with("".appendWhenTrue(cache, " and cache")))
+            sender.sendMessage(Strings.RELOAD_MESSAGE_FINISH_X.with("".appendWhenTrue(cache, " and cache")))
         } else
         {
-            sender.sendMessage(Strings.RELOAD_FAIL.toString())
+            sender.sendMessage(Strings.RELOAD_ERROR_FAIL.toString())
         }
     }
 

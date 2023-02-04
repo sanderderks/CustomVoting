@@ -13,8 +13,8 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 
-class VoteCrates(private val plugin: CV) :
-    GUI(plugin, Strings.GUI_TITLE_VOTE_CRATES.toString(), getInventorySize(plugin))
+class Crates(private val plugin: CV) :
+    GUI(plugin, Strings.CRATE_OVERVIEW_INVENTORY_NAME.toString(), getInventorySize(plugin))
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
     {
@@ -35,7 +35,7 @@ class VoteCrates(private val plugin: CV) :
                     val number: Int = key!!.toInt()
                     SoundType.CLICK.play(plugin, player)
                     cancelCloseEvent = true
-                    player.openInventory(VoteCrateSettings(plugin, number).inventory)
+                    player.openInventory(CrateSettings(plugin, number).inventory)
                 } catch (e: Exception)
                 {
                     SoundType.FAILURE.play(plugin, player)
@@ -59,10 +59,10 @@ class VoteCrates(private val plugin: CV) :
                     i++
                 }
                 SoundType.SUCCESS.play(plugin, player)
-                plugin.data.set(Data.VOTE_CRATES.path + ".$i.name", Strings.VOTE_CRATE_NAME_DEFAULT_X.with("$i"))
+                plugin.data.set(Data.VOTE_CRATES.path + ".$i.name", Strings.CRATE_NAME_DEFAULT_X.with("$i"))
                 plugin.data.saveConfig()
                 cancelCloseEvent = true
-                player.openInventory(VoteCrates(plugin).inventory)
+                player.openInventory(Crates(plugin).inventory)
             }
 
             else                    ->
@@ -100,15 +100,15 @@ class VoteCrates(private val plugin: CV) :
             inventory.addItem(
                 BaseItem(
                     Material.TRIPWIRE_HOOK,
-                    Strings.VOTE_CRATE_NAME_X.with(
+                    Strings.CRATE_NAME_X.with(
                         plugin.data.getString(Data.VOTE_CRATES.path + ".$key.name")
-                            ?: Strings.VOTE_CRATE_NAME_DEFAULT_X.with("$key")
+                            ?: Strings.CRATE_NAME_DEFAULT_X.with("$key")
                     ),
-                    Strings.VOTE_CRATE_LORE_X.with("$key"), true
+                    Strings.CRATE_ITEM_LORE_X.with("$key"), true
                 )
             )
         }
-        inventory.setItem(7, BaseItem(Material.CRAFTING_TABLE, Strings.GUI_VOTE_CRATE_ADD.toString()))
+        inventory.setItem(7, BaseItem(Material.CRAFTING_TABLE, Strings.CRATE_ITEM_NAME_ADD.toString()))
         inventory.setItem(8, BACK_ITEM)
     }
 }

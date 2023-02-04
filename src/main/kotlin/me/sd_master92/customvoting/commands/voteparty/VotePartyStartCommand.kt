@@ -17,7 +17,7 @@ class VotePartyStartCommand(private val plugin: CV) : SimpleSubCommand("start")
             VoteParty(plugin).start()
         } else
         {
-            sender.sendMessage(Strings.VOTE_PARTY_CHEST_NONE.toString())
+            sender.sendMessage(Strings.VOTE_PARTY_ERROR_NO_CHESTS.toString())
         }
     }
 

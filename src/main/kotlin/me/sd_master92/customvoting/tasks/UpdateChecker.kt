@@ -19,7 +19,7 @@ class UpdateChecker(plugin: CV)
                 {
                     plugin.sendDownloadUrl(player)
                     player.sendMessage("")
-                    player.sendMessage(Strings.PLUGIN_UPDATE.toString())
+                    player.sendMessage(Strings.PLUGIN_UPDATE_MESSAGE_DISABLE.toString())
                 }.run()
             }
         }

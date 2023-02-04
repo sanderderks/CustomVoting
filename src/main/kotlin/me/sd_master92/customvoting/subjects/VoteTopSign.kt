@@ -171,7 +171,7 @@ class VoteTopSign @JvmOverloads constructor(
         if (plugin.data.deleteLocation(Data.VOTE_TOP_SIGNS.path + "." + if (top == 0) "title" else top))
         {
             voteTops.remove(top)
-            player.sendMessage(Strings.VOTE_TOP_SIGN_DELETED_X.with(if (top == 0) "title" else "$top"))
+            player.sendMessage(Strings.VOTE_TOP_MESSAGE_SIGN_DELETED_X.with(if (top == 0) "title" else "$top"))
         }
     }
 
@@ -227,7 +227,7 @@ class VoteTopSign @JvmOverloads constructor(
     {
         if (player != null && (top == 0 || !voteTops.containsKey(top)))
         {
-            player.sendMessage(Strings.VOTE_TOP_SIGN_CREATED_X.with(if (top == 0) "title" else "$top"))
+            player.sendMessage(Strings.VOTE_TOP_MESSAGE_SIGN_CREATED_X.with(if (top == 0) "title" else "$top"))
         }
         voteTops[top] = this
         update()

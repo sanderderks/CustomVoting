@@ -13,7 +13,7 @@ import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 
 class ItemRewards(private val plugin: CV, private val op: Boolean = false) :
-    GUI(plugin, Strings.GUI_TITLE_ITEM_REWARDS.toString(), 27, false)
+    GUI(plugin, Strings.ITEM_REWARDS_INVENTORY_NAME.toString(), 27, false)
 {
     private var path = Data.ITEM_REWARDS.path.appendWhenTrue(op, Data.OP_REWARDS)
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
@@ -45,15 +45,15 @@ class ItemRewards(private val plugin: CV, private val op: Boolean = false) :
         if (plugin.data.getItems(path).contentEquals(inv.contents.filterNotNull().toTypedArray()))
         {
             SoundType.SUCCESS.play(plugin, player)
-            player.sendMessage(Strings.UPDATE_NOTHING_CHANGED.toString())
+            player.sendMessage(Strings.GENERAL_MESSAGE_UPDATE_NOTHING_CHANGED.toString())
         } else if (plugin.data.setItems(path, inv.contents))
         {
             SoundType.SUCCESS.play(plugin, player)
-            player.sendMessage(Strings.UPDATE_SUCCESS_X.with(name))
+            player.sendMessage(Strings.GENERAL_MESSAGE_UPDATE_SUCCESS_X.with(name))
         } else
         {
             SoundType.FAILURE.play(plugin, player)
-            player.sendMessage(Strings.UPDATE_FAIL_X.with(name))
+            player.sendMessage(Strings.GENERAL_MESSAGE_UPDATE_FAIL_X.with(name))
         }
     }
 

@@ -17,7 +17,7 @@ import org.bukkit.inventory.ItemStack
 import java.util.*
 
 class PlayerInfo(private val plugin: CV, private var page: Int = 0) :
-    GUI(plugin, Strings.GUI_TITLE_PLAYER_INFO_X.with("" + (page + 1)), 54)
+    GUI(plugin, Strings.PLAYER_INFO_INVENTORY_NAME_X.with("" + (page + 1)), 54)
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
     {
@@ -32,12 +32,12 @@ class PlayerInfo(private val plugin: CV, private var page: Int = 0) :
 
             else             ->
             {
-                if (item.itemMeta?.displayName?.contains(Strings.GUI_PAGINATION_PREVIOUS.toString()) == true && page > 0)
+                if (item.itemMeta?.displayName?.contains(Strings.GENERAL_ITEM_NAME_PREVIOUS.toString()) == true && page > 0)
                 {
                     SoundType.CLICK.play(plugin, player)
                     cancelCloseEvent = true
                     player.openInventory(PlayerInfo(plugin, page - 1).inventory)
-                } else if (item.itemMeta?.displayName?.contains(Strings.GUI_PAGINATION_NEXT.toString()) == true && Voter.getTopVoters(
+                } else if (item.itemMeta?.displayName?.contains(Strings.GENERAL_ITEM_NAME_NEXT.toString()) == true && Voter.getTopVoters(
                         plugin
                     ).size > (page + 1) * 51
                 )
@@ -61,8 +61,8 @@ class PlayerInfo(private val plugin: CV, private var page: Int = 0) :
         {
             inventory.addItem(InfoPlayer(voter).getSkull())
         }
-        inventory.setItem(51, BaseItem(Material.FEATHER, Strings.GUI_PAGINATION_PREVIOUS.toString()))
-        inventory.setItem(52, BaseItem(Material.FEATHER, Strings.GUI_PAGINATION_NEXT.toString()))
+        inventory.setItem(51, BaseItem(Material.FEATHER, Strings.GENERAL_ITEM_NAME_PREVIOUS.toString()))
+        inventory.setItem(52, BaseItem(Material.FEATHER, Strings.GENERAL_ITEM_NAME_NEXT.toString()))
         inventory.setItem(53, BACK_ITEM)
     }
 }
@@ -74,12 +74,12 @@ class InfoPlayer(private val voter: Voter)
         val skull = voter.name.getOfflinePlayer().getSkull()
         val meta = skull.itemMeta
         val lastVote = if (voter.votes > 0) java.text.SimpleDateFormat(("dd-M-yyyy HH:mm:ss"))
-            .format(Date(voter.last)) else Strings.NEVER.toString()
+            .format(Date(voter.last)) else Strings.GENERAL_VALUE_NEVER.toString()
         meta!!.lore = listOf(
-            Strings.PLAYER_INFO_VOTES_X.with("" + voter.votes),
-            Strings.PLAYER_INFO_MONTHLY_VOTES_X.with("" + voter.monthlyVotes),
-            Strings.PLAYER_INFO_LAST_X.with(lastVote),
-            Strings.PLAYER_INFO_PERMISSION_X.with("" + voter.isOpUser),
+            Strings.PLAYER_INFO_ITEM_LORE_VOTES_X.with("" + voter.votes),
+            Strings.PLAYER_INFO_ITEM_LORE_MONTHLY_VOTES_X.with("" + voter.monthlyVotes),
+            Strings.PLAYER_INFO_ITEM_LORE_LAST_X.with(lastVote),
+            Strings.PLAYER_INFO_ITEM_LORE_PERMISSION_X.with("" + voter.isOpUser),
         )
         if (meta.displayName != voter.name)
         {

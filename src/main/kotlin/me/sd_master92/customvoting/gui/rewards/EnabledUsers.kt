@@ -16,7 +16,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 
 class EnabledUsers(private val plugin: CV, private var page: Int = 0) :
-    GUI(plugin, Strings.GUI_TITLE_ENABLED_USERS_X.with("" + (page + 1)), 54)
+    GUI(plugin, Strings.ENABLED_USER_OVERVIEW_INVENTORY_NAME_X.with("" + (page + 1)), 54)
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
     {
@@ -50,12 +50,12 @@ class EnabledUsers(private val plugin: CV, private var page: Int = 0) :
 
             else                 ->
             {
-                if (item.itemMeta?.displayName?.contains(Strings.GUI_PAGINATION_PREVIOUS.toString()) == true && page > 0)
+                if (item.itemMeta?.displayName?.contains(Strings.GENERAL_ITEM_NAME_PREVIOUS.toString()) == true && page > 0)
                 {
                     SoundType.CLICK.play(plugin, player)
                     cancelCloseEvent = true
                     player.openInventory(EnabledUsers(plugin, page - 1).inventory)
-                } else if (item.itemMeta?.displayName?.contains(Strings.GUI_PAGINATION_NEXT.toString()) == true && Voter.getTopVoters(
+                } else if (item.itemMeta?.displayName?.contains(Strings.GENERAL_ITEM_NAME_NEXT.toString()) == true && Voter.getTopVoters(
                         plugin
                     ).size > (page + 1) * 51
                 )
@@ -84,8 +84,8 @@ class EnabledUsers(private val plugin: CV, private var page: Int = 0) :
         {
             inventory.addItem(EnabledUser(voter).getSkull())
         }
-        inventory.setItem(51, BaseItem(Material.FEATHER, Strings.GUI_PAGINATION_PREVIOUS.toString()))
-        inventory.setItem(52, BaseItem(Material.FEATHER, Strings.GUI_PAGINATION_NEXT.toString()))
+        inventory.setItem(51, BaseItem(Material.FEATHER, Strings.GENERAL_ITEM_NAME_PREVIOUS.toString()))
+        inventory.setItem(52, BaseItem(Material.FEATHER, Strings.GENERAL_ITEM_NAME_NEXT.toString()))
         inventory.setItem(53, BACK_ITEM)
     }
 }
@@ -97,15 +97,15 @@ class EnabledUser(private val voter: Voter)
         val skull = voter.name.getOfflinePlayer().getSkull()
         val meta = skull.itemMeta
         meta!!.lore = listOf(
-            Strings.GUI_ENABLED_X.with(
+            Strings.GENERAL_ITEM_LORE_ENABLED_X.with(
                 if (voter.isOpUser)
-                    Strings.YES.toString() else Strings.NO.toString()
+                    Strings.GENERAL_VALUE_YES.toString() else Strings.GENERAL_VALUE_NO.toString()
             )
         )
-        meta.lore!!.addAll(Strings.ENABLED_USERS_LORE.toString().split(";;"))
+        meta.lore!!.addAll(Strings.ENABLED_USER_OVERVIEW_ITEM_LORE.toString().split(";;"))
         if (meta.displayName != voter.name)
         {
-            meta.setDisplayName(Strings.PLAYER_SKULL_NAME_X.with(voter.name))
+            meta.setDisplayName(Strings.PLAYER_ITEM_NAME_SKULL_X.with(voter.name))
         }
         skull.itemMeta = meta
         return skull

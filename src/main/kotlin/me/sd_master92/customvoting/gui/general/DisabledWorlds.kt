@@ -14,7 +14,8 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 
-class DisabledWorlds(private val plugin: CV) : GUI(plugin, Strings.GUI_DISABLED_WORLDS.toString(), 27)
+class DisabledWorlds(private val plugin: CV) :
+    GUI(plugin, Strings.DISABLED_WORLD_OVERVIEW_INVENTORY_NAME.toString(), 27)
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
     {
@@ -70,11 +71,11 @@ class DisabledWorlds(private val plugin: CV) : GUI(plugin, Strings.GUI_DISABLED_
 }
 
 class DisabledWorld(plugin: CV, world: String) : BaseItem(
-    Material.GRASS_BLOCK, Strings.GUI_DISABLED_WORLD_X.with(world),
-    Strings.GUI_DISABLED_X.with(
+    Material.GRASS_BLOCK, Strings.DISABLED_WORLD_ITEM_NAME_X.with(world),
+    Strings.GENERAL_ITEM_LORE_DISABLED_X.with(
         if (plugin.config.getStringList(Settings.DISABLED_WORLDS.path)
                 .contains(world)
         )
-            Strings.YES.toString() else Strings.NO.toString()
+            Strings.GENERAL_VALUE_YES.toString() else Strings.GENERAL_VALUE_NO.toString()
     )
 )

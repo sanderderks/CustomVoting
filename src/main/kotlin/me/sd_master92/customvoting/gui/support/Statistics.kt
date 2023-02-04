@@ -15,7 +15,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 import kotlin.math.roundToInt
 
-class Statistics(private val plugin: CV) : GUI(plugin, Strings.GUI_TITLE_STATISTICS.toString(), 9)
+class Statistics(private val plugin: CV) : GUI(plugin, Strings.STATISTICS_INVENTORY_NAME.toString(), 9)
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
     {
@@ -52,19 +52,19 @@ class Statistics(private val plugin: CV) : GUI(plugin, Strings.GUI_TITLE_STATIST
         val voteSites = BStatsData.VOTE_SITES.sortedByDescending { it.y }
         inventory.addItem(
             BaseItem(
-                Material.CARVED_PUMPKIN, Strings.STATISTICS_VOTE_TOP_SITES.toString(),
-                Strings.STATISTICS_VOTE_TOP_SITES_LORE.toString() +
+                Material.CARVED_PUMPKIN, Strings.STATISTICS_ITEM_NAME_VOTE_TOP_SITES.toString(),
+                Strings.STATISTICS_ITEM_LORE_VOTE_TOP_SITES.toString() +
                         voteSites.take(8).mapIndexed { i, site ->
                             ";" + ChatColor.AQUA + "${i + 1}. " + (if (plugin.data.getStringList(Data.VOTE_SITES.path)
                                     .contains(site.name)
                             ) ChatColor.GREEN else ChatColor.RED) + site.name + ChatColor.GRAY + " ${(site.y.toDouble() / voteSites.sumOf { it.y } * 100).roundToInt()}%"
-                        }.joinToString("") + Strings.STATISTICS_VOTE_TOP_SITES_LORE_END.toString()
+                        }.joinToString("") + Strings.STATISTICS_ITEM_LORE_VOTE_TOP_SITES_END.toString()
             )
         )
         inventory.addItem(
             BaseItem(
-                Material.GRASS_BLOCK, Strings.STATISTICS_MC_VERSION.toString(),
-                Strings.STATISTICS_MC_VERSION_LORE_X.with(
+                Material.GRASS_BLOCK, Strings.STATISTICS_ITEM_NAME_MC_VERSION.toString(),
+                Strings.STATISTICS_ITEM_LORE_MC_VERSION_X.with(
                     BStatsData.MINECRAFT_VERSIONS.maxByOrNull { it.y }!!.name
                 )
             )
@@ -72,15 +72,15 @@ class Statistics(private val plugin: CV) : GUI(plugin, Strings.GUI_TITLE_STATIST
         val locations = BStatsData.COUNTRIES.sortedByDescending { it.y }
         inventory.addItem(
             BaseItem(
-                Material.FILLED_MAP, Strings.STATISTICS_COUNTRY.toString(),
-                Strings.STATISTICS_COUNTRY_LORE.toString() +
+                Material.FILLED_MAP, Strings.STATISTICS_ITEM_NAME_COUNTRY.toString(),
+                Strings.STATISTICS_ITEM_LORE_COUNTRY.toString() +
                         locations.take(3).mapIndexed { i, country ->
                             ";" + ChatColor.GRAY.toString() + "${i + 1}. " + ChatColor.AQUA + country.name +
                                     ChatColor.GRAY + " ${(country.y.toDouble() / locations.sumOf { it.y } * 100).roundToInt()}%"
                         }.joinToString("")
             )
         )
-        inventory.setItem(7, BaseItem(Material.CLOCK, Strings.REFRESH.toString()))
+        inventory.setItem(7, BaseItem(Material.CLOCK, Strings.GENERAL_ITEM_NAME_REFRESH.toString()))
         inventory.setItem(8, BACK_ITEM)
     }
 }

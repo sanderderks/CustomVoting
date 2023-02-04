@@ -12,7 +12,7 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 
-class Donators(private val plugin: CV) : GUI(plugin, Strings.GUI_TITLE_DONATORS.toString(), 9)
+class Donators(private val plugin: CV) : GUI(plugin, Strings.DONATORS_INVENTORY_NAME.toString(), 9)
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
     {

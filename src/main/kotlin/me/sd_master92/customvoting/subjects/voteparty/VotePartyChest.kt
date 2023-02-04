@@ -88,7 +88,7 @@ class VotePartyChest(private val plugin: CV, key: String)
         {
             if (it.count > 0)
             {
-                pig.customName = Strings.VOTE_PARTY_PIG_TITLE_X.with("" + it.count)
+                pig.customName = Strings.VOTE_PARTY_NAME_PIG_X.with("" + it.count)
                 SoundType.CLICK.play(plugin, pig.location)
             } else
             {

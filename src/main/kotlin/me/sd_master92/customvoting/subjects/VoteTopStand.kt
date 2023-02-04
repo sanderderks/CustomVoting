@@ -117,7 +117,7 @@ class VoteTopStand @JvmOverloads constructor(private val plugin: CV, private val
             }
         }
         plugin.data.setLocation(path, player.location)
-        player.sendMessage(Strings.VOTE_TOP_STAND_CREATED_X.with("$top"))
+        player.sendMessage(Strings.VOTE_TOP_MESSAGE_STAND_CREATED_X.with("$top"))
     }
 
     private fun createCitizen(loc: Location, name: String? = null): NPC
@@ -267,7 +267,7 @@ class VoteTopStand @JvmOverloads constructor(private val plugin: CV, private val
         plugin.data[path] = null
         plugin.data.saveConfig()
         voteTops.remove(top)
-        player?.sendMessage(Strings.VOTE_TOP_STAND_DELETED_X.with("$top"))
+        player?.sendMessage(Strings.VOTE_TOP_MESSAGE_STAND_DELETED_X.with("$top"))
     }
 
     companion object
@@ -332,7 +332,7 @@ class VoteTopStand @JvmOverloads constructor(private val plugin: CV, private val
         {
             if (player != null)
             {
-                player.sendMessage(Strings.ALREADY_EXIST_X.with(Strings.VOTE_TOP_STAND_NAME.toString()))
+                player.sendMessage(Strings.GENERAL_ERROR_ALREADY_EXIST_X.with(Strings.VOTE_TOP_UNIT_STAND.toString()))
             } else
             {
                 registerArmorStands()

@@ -28,18 +28,18 @@ abstract class PlayerPermissionInput(
         {
             permissions.remove(permission)
             player.sendMessage(
-                Strings.INPUT_REMOVED_FROM_LIST_XY.with(
+                Strings.GENERAL_MESSAGE_LIST_REMOVED_XY.with(
                     permission,
-                    Strings.INPUT_PERMISSION_TYPE_MULTIPLE.toString()
+                    Strings.PERMISSION_REWARDS_UNIT_MULTIPLE.toString()
                 )
             )
         } else
         {
             permissions.add(permission)
             player.sendMessage(
-                Strings.INPUT_ADDED_TO_LIST_XY.with(
+                Strings.GENERAL_MESSAGE_LIST_ADDED_XY.with(
                     permission,
-                    Strings.INPUT_PERMISSION_TYPE_MULTIPLE.toString()
+                    Strings.PERMISSION_REWARDS_UNIT_MULTIPLE.toString()
                 )
             )
         }
@@ -51,12 +51,12 @@ abstract class PlayerPermissionInput(
 
     init
     {
-        player.sendMessage(Strings.INPUT_ALTER_LIST_X.with(Strings.INPUT_PERMISSION_TYPE.toString()))
-        player.sendMessage(Strings.INPUT_CANCEL_BACK.toString())
+        player.sendMessage(Strings.GENERAL_MESSAGE_LIST_ALTER_X.with(Strings.PERMISSION_REWARDS_UNIT.toString()))
+        player.sendMessage(Strings.GENERAL_MESSAGE_CANCEL_BACK.toString())
         player.sendMessage("")
         if (permissions.isEmpty())
         {
-            player.sendMessage(Strings.INPUT_LIST_EMPTY_X.with(Strings.INPUT_PERMISSION_TYPE_MULTIPLE.toString()))
+            player.sendMessage(Strings.GENERAL_MESSAGE_LIST_EMPTY_X.with(Strings.PERMISSION_REWARDS_UNIT_MULTIPLE.toString()))
         } else
         {
             player.sendMessage(ChatColor.GRAY.toString() + "Permissions:")

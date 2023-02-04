@@ -17,7 +17,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 
 class MilestoneSettings(private val plugin: CV, private val number: Int) :
-    GUI(plugin, Strings.MILESTONE_SETTINGS_TITLE_X.with("$number"), 9)
+    GUI(plugin, Strings.MILESTONE_INVENTORY_NAME_X.with("$number"), 9)
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
     {
@@ -34,7 +34,7 @@ class MilestoneSettings(private val plugin: CV, private val number: Int) :
             {
                 SoundType.FAILURE.play(plugin, player)
                 plugin.data.delete(Data.MILESTONES.path + ".$number")
-                player.sendMessage(Strings.MILESTONE_DELETED_X.with(Strings.MILESTONE_NAME_X.with("$number")))
+                player.sendMessage(Strings.MILESTONE_MESSAGE_DELETED_X.with(Strings.MILESTONE_NAME_X.with("$number")))
                 cancelCloseEvent = true
                 player.openInventory(Milestones(plugin).inventory)
             }
@@ -101,7 +101,7 @@ class MilestoneSettings(private val plugin: CV, private val number: Int) :
 
     companion object
     {
-        val DELETE_ITEM = BaseItem(Material.RED_WOOL, Strings.GUI_DELETE.toString())
+        val DELETE_ITEM = BaseItem(Material.RED_WOOL, Strings.GENERAL_ITEM_NAME_DELETE.toString())
     }
 
     init
@@ -115,6 +115,6 @@ class MilestoneSettings(private val plugin: CV, private val number: Int) :
 }
 
 class PermissionsRewardItem(plugin: CV, path: String) : BaseItem(
-    Material.DIAMOND_SWORD, Strings.PERMISSION_REWARDS.toString(),
-    Strings.GUI_CURRENT_XY.with("" + plugin.data.getStringList(path).size, "permissions")
+    Material.DIAMOND_SWORD, Strings.PERMISSION_REWARDS_ITEM_NAME.toString(),
+    Strings.GENERAL_ITEM_LORE_CURRENT_XY.with("" + plugin.data.getStringList(path).size, "permissions")
 )

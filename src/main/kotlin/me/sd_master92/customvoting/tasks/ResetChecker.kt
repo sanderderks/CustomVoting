@@ -29,7 +29,7 @@ class ResetChecker(private val plugin: CV)
                     {
                         if (player.isOp)
                         {
-                            player.sendMessage(Strings.RESET_VOTES_CONFIRM.toString())
+                            player.sendMessage(Strings.RESET_VOTES_MESSAGE_CONFIRM.toString())
                         }
                     }
                 }

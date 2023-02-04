@@ -16,8 +16,8 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 import java.util.*
 
-class VoteCrate(private val plugin: CV, private val player: Player, path: String) :
-    GUI(plugin, (plugin.data.getString("$path.name") ?: Strings.GUI_TITLE_VOTE_CRATE.toString()), 45)
+class Crate(private val plugin: CV, private val player: Player, path: String) :
+    GUI(plugin, (plugin.data.getString("$path.name") ?: Strings.CRATE_INVENTORY_NAME.toString()), 45)
 {
     private var searching = true
     private var rewards = mutableMapOf<Int, Array<ItemStack>>()
@@ -50,7 +50,7 @@ class VoteCrate(private val plugin: CV, private val player: Player, path: String
         inventory.setItem(
             22, reward ?: BaseItem(
                 Material.BARRIER,
-                Strings.VOTE_CRATE_NO_PRICE.toString()
+                Strings.CRATE_ITEM_NAME_NO_PRICE.toString()
             )
         )
 
@@ -58,11 +58,11 @@ class VoteCrate(private val plugin: CV, private val player: Player, path: String
         {
             player.addToInventoryOrDrop(reward)
             ParticleHelper.shootFirework(plugin, player.location)
-            player.sendMessage(Strings.VOTE_CRATE_REWARD_X.with("$number"))
+            player.sendMessage(Strings.CRATE_MESSAGE_REWARD_X.with("$number"))
         } else
         {
             SoundType.FAILURE.play(plugin, player)
-            player.sendMessage(Strings.VOTE_CRATE_NO_PRICE_MESSAGE.toString())
+            player.sendMessage(Strings.CRATE_MESSAGE_NO_PRICE.toString())
         }
         keepAlive = false
     }
@@ -117,7 +117,7 @@ class VoteCrate(private val plugin: CV, private val player: Player, path: String
         {
             keepAlive = false
             player.closeInventory()
-            player.sendMessage(Strings.VOTE_CRATE_EMPTY.toString())
+            player.sendMessage(Strings.CRATE_ERROR_EMPTY.toString())
         }
     }
 

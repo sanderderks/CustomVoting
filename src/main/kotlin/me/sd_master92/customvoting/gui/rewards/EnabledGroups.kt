@@ -14,7 +14,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 
 class EnabledGroups(private val plugin: CV) :
-    GUI(plugin, Strings.GUI_TITLE_ENABLED_GROUPS.toString(), 36)
+    GUI(plugin, Strings.ENABLED_GROUP_OVERVIEW_INVENTORY_NAME.toString(), 36)
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
     {
@@ -73,12 +73,12 @@ class EnabledGroups(private val plugin: CV) :
 }
 
 class EnabledGroup(private val plugin: CV, private val name: String) : BaseItem(
-    Material.GREEN_WOOL, Strings.GUI_ENABLED_GROUP_X.with(name.lowercase()),
-    Strings.GUI_ENABLED_X.with(
+    Material.GREEN_WOOL, Strings.ENABLED_GROUP_ITEM_NAME_X.with(name.lowercase()),
+    Strings.GENERAL_ITEM_LORE_ENABLED_X.with(
         if (plugin.config.getStringList(Settings.ENABLED_OP_GROUPS.path)
                 .contains(name.lowercase())
         )
-            Strings.YES.toString() else Strings.NO.toString()
+            Strings.GENERAL_VALUE_YES.toString() else Strings.GENERAL_VALUE_NO.toString()
     )
 )
 {

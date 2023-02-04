@@ -7,7 +7,7 @@ import me.sd_master92.core.tasks.TaskTimer
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Voter
 import me.sd_master92.customvoting.constants.enumerations.*
-import me.sd_master92.customvoting.gui.rewards.crate.VoteCrate
+import me.sd_master92.customvoting.gui.rewards.crate.Crate
 import me.sd_master92.customvoting.gui.voteparty.VotePartyRewards
 import me.sd_master92.customvoting.sendText
 import me.sd_master92.customvoting.subjects.CustomVote
@@ -61,11 +61,11 @@ class PlayerListener(private val plugin: CV) : Listener
         val queue = voter.queue
         if (!voter.clearQueue())
         {
-            plugin.errorLog(Strings.QUEUE_DELETE_ERROR_XY.with(player.uniqueId.toString(), player.name))
+            plugin.errorLog(Strings.QUEUE_ERROR_DELETE_XY.with(player.uniqueId.toString(), player.name))
         }
         if (queue.isNotEmpty())
         {
-            plugin.infoLog(Strings.QUEUE_FORWARD_XY.with(queue.size.toString(), player.name))
+            plugin.infoLog(Strings.QUEUE_MESSAGE_FORWARD_XY.with(queue.size.toString(), player.name))
             val iterator = queue.iterator()
             TaskTimer.repeat(plugin, 20, 200)
             {
@@ -124,12 +124,12 @@ class PlayerListener(private val plugin: CV) : Listener
                         {
                             plugin.data.deleteItems(Data.VOTE_PARTY.path + ".$key")
                             event.isDropItems = false
-                            event.player.sendMessage(Strings.VOTE_PARTY_CHEST_DELETED_X.with(key))
+                            event.player.sendMessage(Strings.VOTE_PARTY_MESSAGE_CHEST_DELETED_X.with(key))
                         }
                     } else
                     {
                         event.isCancelled = true
-                        player.sendMessage(Strings.BREAK_BLOCK_NO_PERMISSION.toString())
+                        player.sendMessage(Strings.ACTION_ERROR_BREAK_BLOCK_NO_PERMISSION.toString())
                     }
                 }
             }
@@ -149,7 +149,7 @@ class PlayerListener(private val plugin: CV) : Listener
                             stand?.remove()
                             plugin.data.delete("$path.stand")
                             event.player.sendMessage(
-                                Strings.VOTE_CRATE_DELETED_X.with(
+                                Strings.CRATE_MESSAGE_DELETED_X.with(
                                     plugin.data.getString("$path.name") ?: ""
                                 )
                             )
@@ -157,7 +157,7 @@ class PlayerListener(private val plugin: CV) : Listener
                     } else
                     {
                         event.isCancelled = true
-                        player.sendMessage(Strings.BREAK_BLOCK_NO_PERMISSION.toString())
+                        player.sendMessage(Strings.ACTION_ERROR_BREAK_BLOCK_NO_PERMISSION.toString())
                     }
                 }
             }
@@ -207,12 +207,12 @@ class PlayerListener(private val plugin: CV) : Listener
                 }
                 plugin.data.setLocation(Data.VOTE_PARTY.path + ".$i", event.block.location)
                 SoundType.SUCCESS.play(plugin, player)
-                player.sendMessage(Strings.VOTE_PARTY_CHEST_CREATED_X.with("$i"))
+                player.sendMessage(Strings.VOTE_PARTY_MESSAGE_CHEST_CREATED_X.with("$i"))
                 player.inventory.setItemInMainHand(VoteParty.VOTE_PARTY_ITEM)
             } else
             {
                 event.isCancelled = true
-                player.sendMessage(Strings.BREAK_BLOCK_NO_PERMISSION.toString())
+                player.sendMessage(Strings.ACTION_ERROR_BREAK_BLOCK_NO_PERMISSION.toString())
             }
         }
     }
@@ -238,7 +238,7 @@ class PlayerListener(private val plugin: CV) : Listener
                             player.openInventory(VotePartyRewards(plugin, key).inventory)
                         } else
                         {
-                            player.sendMessage(Strings.OPEN_CHEST_NO_PERMISSION.toString())
+                            player.sendMessage(Strings.ACTION_ERROR_OPEN_CHEST_NO_PERMISSION.toString())
                         }
                     }
                 }
@@ -251,7 +251,7 @@ class PlayerListener(private val plugin: CV) : Listener
                     )
                     {
                         event.isCancelled = true
-                        player.sendMessage(Strings.OPEN_CHEST_NEED_KEY.toString())
+                        player.sendMessage(Strings.ACTION_ERROR_OPEN_CHEST_NEED_KEY.toString())
                     }
                 }
             }
@@ -274,7 +274,8 @@ class PlayerListener(private val plugin: CV) : Listener
                                 if (!plugin.data.getLocations(Data.VOTE_CRATES.path).containsValue(loc))
                                 {
                                     val confirm =
-                                        object : ConfirmGUI(plugin, Strings.VOTE_CRATE_PLACE_HERE_X.with(name))
+                                        object :
+                                            ConfirmGUI(plugin, Strings.CRATE_INVENTORY_NAME_PLACE_CONFIRM_X.with(name))
                                         {
                                             override fun onCancel(event: InventoryClickEvent, player: Player)
                                             {
@@ -320,11 +321,11 @@ class PlayerListener(private val plugin: CV) : Listener
                                 } else
                                 {
                                     SoundType.FAILURE.play(plugin, player)
-                                    player.sendMessage(Strings.OPEN_CHEST_WRONG_KEY.toString())
+                                    player.sendMessage(Strings.ACTION_ERROR_OPEN_CHEST_WRONG_KEY.toString())
                                 }
                             } else
                             {
-                                player.sendMessage(Strings.OPEN_CHEST_NO_PERMISSION.toString())
+                                player.sendMessage(Strings.ACTION_ERROR_OPEN_CHEST_NO_PERMISSION.toString())
                             }
                         } else if (event.clickedBlock!!.type == Material.ENDER_CHEST)
                         {
@@ -334,19 +335,19 @@ class PlayerListener(private val plugin: CV) : Listener
                                 item.amount--
                                 player.inventory.setItemInMainHand(item)
 
-                                val crate = VoteCrate(plugin, player, path)
+                                val crate = Crate(plugin, player, path)
                                 SoundType.OPEN.play(plugin, player)
                                 player.openInventory(crate.inventory)
                                 crate.run()
                             } else
                             {
                                 SoundType.FAILURE.play(plugin, player)
-                                player.sendMessage(Strings.OPEN_CHEST_WRONG_KEY.toString())
+                                player.sendMessage(Strings.ACTION_ERROR_OPEN_CHEST_WRONG_KEY.toString())
                             }
                         } else
                         {
                             event.isCancelled = true
-                            player.sendMessage(Strings.INTERACT_OPEN_CRATE.toString())
+                            player.sendMessage(Strings.ACTION_ERROR_INTERACT_NEED_CRATE.toString())
                         }
                     }
                 }

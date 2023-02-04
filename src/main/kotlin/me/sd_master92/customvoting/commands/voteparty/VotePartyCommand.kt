@@ -20,7 +20,7 @@ class VotePartyCommand(plugin: CV) :
 
     init
     {
-        withUsage(Strings.VOTE_PARTY_COMMAND_USAGE.toString())
+        withUsage(Strings.VOTE_PARTY_MESSAGE_COMMAND_USAGE.toString())
         withNoPermMessage(Messages.NO_PERMISSION.getMessage(plugin))
         withPlayer(Messages.MUST_BE_PLAYER.getMessage(plugin))
     }

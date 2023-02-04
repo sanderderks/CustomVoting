@@ -16,7 +16,7 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 
-class Support(private val plugin: CV) : GUI(plugin, Strings.GUI_TITLE_SUPPORT.toString(), 9)
+class Support(private val plugin: CV) : GUI(plugin, Strings.SUPPORT_INVENTORY_NAME.toString(), 9)
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
     {
@@ -53,8 +53,8 @@ class Support(private val plugin: CV) : GUI(plugin, Strings.GUI_TITLE_SUPPORT.to
                 SoundType.CLICK.play(plugin, player)
                 cancelCloseEvent = true
                 player.closeInventory()
-                player.sendMessage(Strings.SUPPORT_DISCORD_CHAT.toString())
-                player.sendMessage(Strings.SUPPORT_DISCORD_CHAT_URL.toString())
+                player.sendMessage(Strings.SUPPORT_MESSAGE_DISCORD.toString())
+                player.sendMessage(Strings.SUPPORT_MESSAGE_DISCORD_URL.toString())
             }
 
             Material.CREEPER_HEAD   ->
@@ -75,7 +75,7 @@ class Support(private val plugin: CV) : GUI(plugin, Strings.GUI_TITLE_SUPPORT.to
             {
                 SoundType.CHANGE.play(plugin, player)
                 val deleted = VoteFile.mergeDuplicates(plugin)
-                player.sendMessage(Strings.VOTE_FILES_DELETED_X.with("$deleted"))
+                player.sendMessage(Strings.MERGE_DUPLICATES_MESSAGE_DELETED_X.with("$deleted"))
                 if (deleted > 0)
                 {
                     SoundType.SUCCESS
@@ -108,33 +108,33 @@ class Support(private val plugin: CV) : GUI(plugin, Strings.GUI_TITLE_SUPPORT.to
         inventory.addItem(
             BaseItem(
                 Material.ENCHANTED_BOOK,
-                Strings.SUPPORT_DISCORD.toString(),
-                Strings.SUPPORT_DISCORD_LORE.toString()
+                Strings.SUPPORT_ITEM_NAME_DISCORD.toString(),
+                Strings.SUPPORT_ITEM_LORE_DISCORD.toString()
             )
         )
         inventory.addItem(
             BaseItem(
-                Material.ENCHANTING_TABLE, Strings.SUPPORT_DATABASE.toString(),
-                Strings.GUI_STATUS_X.with(if (plugin.hasDatabaseConnection()) Strings.CONNECTED.toString() else Strings.DISABLED.toString())
+                Material.ENCHANTING_TABLE, Strings.SUPPORT_ITEM_NAME_DATABASE.toString(),
+                Strings.GENERAL_ITEM_LORE_STATUS_X.with(if (plugin.hasDatabaseConnection()) Strings.GENERAL_VALUE_CONNECTED.toString() else Strings.GENERAL_VALUE_DISABLED.toString())
             )
         )
         inventory.addItem(
             BaseItem(
-                Material.CREEPER_HEAD, Strings.SUPPORT_DONATORS.toString(),
-                Strings.SUPPORT_DONATORS_LORE.toString()
+                Material.CREEPER_HEAD, Strings.SUPPORT_ITEM_NAME_DONATORS.toString(),
+                Strings.SUPPORT_ITEM_LORE_DONATORS.toString()
             )
         )
         inventory.addItem(
             BaseItem(
-                Material.PLAYER_HEAD, Strings.SUPPORT_PLAYER_INFO.toString(),
-                Strings.SUPPORT_PLAYER_INFO_LORE.toString()
+                Material.PLAYER_HEAD, Strings.SUPPORT_ITEM_NAME_PLAYER_INFO.toString(),
+                Strings.SUPPORT_ITEM_LORE_PLAYER_INFO.toString()
             )
         )
         inventory.addItem(MergeItem(plugin))
         inventory.addItem(
             BaseItem(
-                Material.CARVED_PUMPKIN, Strings.SUPPORT_STATISTICS.toString(),
-                Strings.SUPPORT_STATISTICS_LORE.toString()
+                Material.CARVED_PUMPKIN, Strings.SUPPORT_ITEM_NAME_STATISTICS.toString(),
+                Strings.SUPPORT_ITEM_LORE_STATISTICS.toString()
             )
         )
         inventory.setItem(8, BACK_ITEM)
@@ -142,18 +142,20 @@ class Support(private val plugin: CV) : GUI(plugin, Strings.GUI_TITLE_SUPPORT.to
 }
 
 class UpdateItem(plugin: CV) : BaseItem(
-    Material.CLOCK, Strings.SUPPORT_UP_TO_DATE.toString(),
-    if (plugin.isUpToDate()) Strings.YES.toString() + ";" + Strings.GUI_CURRENT_X.with(ChatColor.GREEN.toString() + plugin.version) else Strings.GUI_CURRENT_X.with(
+    Material.CLOCK, Strings.SUPPORT_ITEM_NAME_VERSION.toString(),
+    if (plugin.isUpToDate()) Strings.GENERAL_VALUE_YES.toString() + ";" + Strings.GENERAL_ITEM_LORE_CURRENT_X.with(
+        ChatColor.GREEN.toString() + plugin.version
+    ) else Strings.GENERAL_ITEM_LORE_CURRENT_X.with(
         ChatColor.RED.toString() + plugin.version
-    ) + ";" + Strings.SUPPORT_LATEST_X.with(plugin.latestVersion)
+    ) + ";" + Strings.SUPPORT_ITEM_LORE_VERSION_LATEST_X.with(plugin.latestVersion)
 )
 
 class IngameUpdateItem(plugin: CV) : StatusItem(
-    Material.FILLED_MAP, Strings.SUPPORT_INGAME_UPDATE.toString(),
+    Material.FILLED_MAP, Strings.SUPPORT_ITEM_NAME_INGAME_UPDATE.toString(),
     plugin.config, Settings.INGAME_UPDATES.path
 )
 
 class MergeItem(plugin: CV) : BaseItem(
-    Material.HOPPER, Strings.SUPPORT_MERGE_DUPLICATES.toString(),
-    Strings.SUPPORT_MERGE_DUPLICATES_L0RE_X.with("" + VoteFile.getAll(plugin).size)
+    Material.HOPPER, Strings.MERGE_DUPLICATES_ITEM_NAME.toString(),
+    Strings.MERGE_DUPLICATES_ITEM_LORE.with("" + VoteFile.getAll(plugin).size)
 )

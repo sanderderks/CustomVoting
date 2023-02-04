@@ -6,6 +6,6 @@ import me.sd_master92.customvoting.constants.enumerations.Strings
 import org.bukkit.Material
 
 class ItemsRewardItem(plugin: CV, path: String, name: String? = null) : BaseItem(
-    Material.CHEST, name ?: Strings.GUI_ITEM_REWARDS.toString(),
-    Strings.GUI_CURRENT_XY.with("" + plugin.data.getItems(path).size, "item stacks")
+    Material.CHEST, name ?: Strings.ITEM_REWARDS_ITEM_NAME.toString(),
+    Strings.GENERAL_ITEM_LORE_CURRENT_XY.with("" + plugin.data.getItems(path).size, "item stacks")
 )

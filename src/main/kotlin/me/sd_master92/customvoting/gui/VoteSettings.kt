@@ -19,7 +19,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.event.inventory.InventoryOpenEvent
 import org.bukkit.inventory.ItemStack
 
-class VoteSettings(private val plugin: CV) : GUI(plugin, Strings.GUI_TITLE_VOTE_SETTINGS.toString(), 9)
+class VoteSettings(private val plugin: CV) : GUI(plugin, Strings.SETTINGS_INVENTORY_NAME.toString(), 9)
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
     {
@@ -70,26 +70,26 @@ class VoteSettings(private val plugin: CV) : GUI(plugin, Strings.GUI_TITLE_VOTE_
         if (isThisInventory(event) && !plugin.config.getBoolean(Settings.SETTINGS_ENABLED.path))
         {
             event.isCancelled = true
-            event.player.sendMessage(Strings.VOTE_SETTINGS_DISABLED.toString())
+            event.player.sendMessage(Strings.SETTINGS_ERROR_DISABLED.toString())
         }
     }
 
     companion object
     {
         val GENERAL_SETTINGS = BaseItem(
-            Material.COMMAND_BLOCK, Strings.VOTE_SETTINGS_GENERAL.toString(),
+            Material.COMMAND_BLOCK, Strings.SETTINGS_ITEM_NAME_GENERAL.toString(),
             null, true
         )
         val REWARD_SETTINGS = BaseItem(
-            Material.DIAMOND, Strings.VOTE_SETTINGS_REWARDS.toString(),
+            Material.DIAMOND, Strings.SETTINGS_ITEM_NAME_REWARDS.toString(),
             null, true
         )
         val MESSAGES = BaseItem(
-            Material.WRITABLE_BOOK, Strings.VOTE_SETTINGS_MESSAGES.toString(),
+            Material.WRITABLE_BOOK, Strings.SETTINGS_ITEM_NAME_MESSAGES.toString(),
             null, true
         )
         val SUPPORT = BaseItem(
-            Materials.SPYGLASS.get(), Strings.VOTE_SETTINGS_SUPPORT.toString(),
+            Materials.SPYGLASS.get(), Strings.SETTINGS_ITEM_NAME_SUPPORT.toString(),
             null, true
         )
     }

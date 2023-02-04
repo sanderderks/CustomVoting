@@ -16,10 +16,10 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 
-class VoteCrateSettings(private val plugin: CV, private val number: Int) : GUI(
+class CrateSettings(private val plugin: CV, private val number: Int) : GUI(
     plugin,
     (plugin.data.getString(Data.VOTE_CRATES.path + ".$number.name")
-        ?: Strings.VOTE_CRATE_NAME_DEFAULT_X.with("$number")),
+        ?: Strings.CRATE_NAME_DEFAULT_X.with("$number")),
     9
 )
 {
@@ -31,16 +31,16 @@ class VoteCrateSettings(private val plugin: CV, private val number: Int) : GUI(
             {
                 SoundType.CLICK.play(plugin, player)
                 cancelCloseEvent = true
-                player.openInventory(VoteCrates(plugin).inventory)
+                player.openInventory(Crates(plugin).inventory)
             }
 
             Material.RED_WOOL ->
             {
                 SoundType.FAILURE.play(plugin, player)
                 plugin.data.delete(Data.VOTE_CRATES.path + ".$number")
-                player.sendMessage(Strings.INPUT_VOTE_CRATE_DELETED_X.with(Strings.VOTE_CRATE_NAME_X.with("$number")))
+                player.sendMessage(Strings.CRATE_MESSAGE_DELETED_X.with(Strings.CRATE_NAME_X.with("$number")))
                 cancelCloseEvent = true
-                player.openInventory(VoteCrates(plugin).inventory)
+                player.openInventory(Crates(plugin).inventory)
             }
 
             Material.CHEST    ->
@@ -50,7 +50,7 @@ class VoteCrateSettings(private val plugin: CV, private val number: Int) : GUI(
                 try
                 {
                     player.openInventory(
-                        VoteCrateItemRewards(
+                        CrateItemRewards(
                             plugin,
                             number,
                             item.itemMeta?.displayName?.filter { it.isDigit() }?.toInt() ?: Data.CRATE_REWARD_CHANCES[0]
@@ -79,8 +79,8 @@ class VoteCrateSettings(private val plugin: CV, private val number: Int) : GUI(
                 SoundType.CHANGE.play(plugin, player)
                 cancelCloseEvent = true
                 player.closeInventory()
-                player.sendMessage(Strings.INPUT_VOTE_CRATE_NAME_CHANGE.toString())
-                player.sendMessage(Strings.INPUT_CANCEL_BACK.toString())
+                player.sendMessage(Strings.CRATE_MESSAGE_NAME_ENTER.toString())
+                player.sendMessage(Strings.GENERAL_MESSAGE_CANCEL_BACK.toString())
                 object : PlayerStringInput(plugin, player)
                 {
                     override fun onInputReceived(input: String)
@@ -88,15 +88,15 @@ class VoteCrateSettings(private val plugin: CV, private val number: Int) : GUI(
                         SoundType.SUCCESS.play(plugin, player)
                         plugin.data.set(Data.VOTE_CRATES.path + ".$number.name", input)
                         plugin.data.saveConfig()
-                        player.sendMessage(Strings.INPUT_VOTE_CRATE_NAME_CHANGED_X.with(input))
-                        player.openInventory(VoteCrateSettings(plugin, number).inventory)
+                        player.sendMessage(Strings.CRATE_MESSAGE_NAME_CHANGED_X.with(input))
+                        player.openInventory(CrateSettings(plugin, number).inventory)
                         cancel()
                     }
 
                     override fun onCancel()
                     {
                         SoundType.FAILURE.play(plugin, player)
-                        player.openInventory(VoteCrateSettings(plugin, number).inventory)
+                        player.openInventory(CrateSettings(plugin, number).inventory)
                     }
                 }
             }
@@ -114,20 +114,20 @@ class VoteCrateSettings(private val plugin: CV, private val number: Int) : GUI(
 
     companion object
     {
-        val DELETE_ITEM = BaseItem(Material.RED_WOOL, Strings.GUI_DELETE.toString())
+        val DELETE_ITEM = BaseItem(Material.RED_WOOL, Strings.GENERAL_ITEM_NAME_DELETE.toString())
     }
 
     init
     {
-        inventory.addItem(BaseItem(Material.OAK_SIGN, Strings.GUI_VOTE_CRATE_RENAME.toString()))
-        inventory.addItem(BaseItem(Material.DIAMOND, Strings.GUI_VOTE_CRATE_KEY.toString(), null, true))
+        inventory.addItem(BaseItem(Material.OAK_SIGN, Strings.CRATE_ITEM_NAME_RENAME.toString()))
+        inventory.addItem(BaseItem(Material.DIAMOND, Strings.CRATE_ITEM_NAME_KEY.toString(), null, true))
         for (chance in Data.CRATE_REWARD_CHANCES)
         {
             inventory.addItem(
                 ItemsRewardItem(
                     plugin,
                     "${Data.VOTE_CRATES}.$number.${Data.ITEM_REWARDS}.$chance",
-                    Strings.GUI_VOTE_CRATE_REWARDS_PERCENTAGE_X.with("$chance")
+                    Strings.CRATE_ITEM_NAME_REWARDS_PERCENTAGE_X.with("$chance")
                 )
             )
         }

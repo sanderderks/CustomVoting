@@ -15,7 +15,7 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 
-class MessageSettings(private val plugin: CV) : GUI(plugin, Strings.GUI_TITLE_MESSAGE_SETTINGS.toString(), 18)
+class MessageSettings(private val plugin: CV) : GUI(plugin, Strings.MESSAGE_SETTINGS_INVENTORY_NAME.toString(), 18)
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
     {
@@ -148,7 +148,9 @@ class MessageSettings(private val plugin: CV) : GUI(plugin, Strings.GUI_TITLE_ME
     companion object
     {
         val VOTE_LINKS = BaseItem(
-            Materials.SOUL_TORCH.get(), Strings.GUI_VOTE_LINKS.toString(), Strings.GUI_VOTE_LINKS_LORE.toString()
+            Materials.SOUL_TORCH.get(),
+            Strings.VOTE_LINKS_ITEM_NAME.toString(),
+            Strings.VOTE_LINKS_ITEM_LORE.toString()
         )
     }
 
@@ -169,54 +171,54 @@ class MessageSettings(private val plugin: CV) : GUI(plugin, Strings.GUI_TITLE_ME
 }
 
 class UseVoteLinkItem(plugin: CV) : StatusItem(
-    Material.CHEST, Strings.GUI_VOTE_LINKS_INVENTORY.toString(),
+    Material.CHEST, Strings.VOTE_LINKS_ITEM_NAME_GUI.toString(),
     plugin.config, Settings.VOTE_LINK_INVENTORY.path
 )
 
 class VoteBroadcast(plugin: CV) : StatusItem(
-    Material.DIAMOND, Strings.GUI_VOTE_BROADCAST.toString(),
+    Material.DIAMOND, Strings.VOTE_ITEM_NAME_BROADCAST.toString(),
     plugin.config, Settings.DISABLED_BROADCAST_VOTE.path,
     true
 )
 
 class MilestoneBroadcast(plugin: CV) : StatusItem(
-    Material.ENDER_PEARL, Strings.GUI_MILESTONE_BROADCAST.toString(),
+    Material.ENDER_PEARL, Strings.MILESTONE_ITEM_NAME_BROADCAST.toString(),
     plugin.config, Settings.DISABLED_BROADCAST_MILESTONE.path,
     true
 )
 
 class VotePartyUntilBroadcast(plugin: CV) : StatusItem(
-    Material.BOOKSHELF, Strings.GUI_BROADCAST_VOTE_PARTY_UNTIL.toString(),
+    Material.BOOKSHELF, Strings.VOTE_PARTY_ITEM_NAME_BROADCAST_UNTIL.toString(),
     plugin.config, Settings.DISABLED_BROADCAST_VOTE_PARTY_UNTIL.path,
     true
 )
 
 class VotePartyCountBroadcast(plugin: CV) : StatusItem(
-    Material.NOTE_BLOCK, Strings.GUI_BROADCAST_VOTE_PARTY_COUNT.toString(),
+    Material.NOTE_BLOCK, Strings.VOTE_PARTY_ITEM_NAME_BROADCAST_COUNT.toString(),
     plugin.config, Settings.DISABLED_BROADCAST_VOTE_PARTY_COUNTDOWN.path,
     true
 )
 
 class VotePartyCountEndBroadcast(plugin: CV) : StatusItem(
-    Material.FIREWORK_ROCKET, Strings.GUI_BROADCAST_VOTE_PARTY_COUNTDOWN_END.toString(),
+    Material.FIREWORK_ROCKET, Strings.VOTE_PARTY_ITEM_NAME_BROADCAST_COUNTDOWN_END.toString(),
     plugin.config, Settings.DISABLED_BROADCAST_VOTE_PARTY_COUNTDOWN_ENDING.path,
     true
 )
 
 class ArmorStandBreakMessage(plugin: CV) : StatusItem(
-    Material.ARMOR_STAND, Strings.GUI_VOTE_STAND_BREAK.toString(),
+    Material.ARMOR_STAND, Strings.VOTE_TOP_ITEM_NAME_STAND_BREAK_MESSAGE.toString(),
     plugin.config, Settings.DISABLED_MESSAGE_ARMOR_STAND.path,
     true
 )
 
 class DisabledWorldMessage(plugin: CV) : StatusItem(
-    Material.GRASS_BLOCK, Strings.GUI_DISABLED_WORLD_MESSAGE.toString(),
+    Material.GRASS_BLOCK, Strings.DISABLED_WORLD_ITEM_NAME_MESSAGE.toString(),
     plugin.config, Settings.DISABLED_MESSAGE_DISABLED_WORLD.path,
     true
 )
 
 class VoteRemindMessage(plugin: CV) : StatusItem(
-    Material.OAK_SIGN, Strings.GUI_VOTE_REMINDER.toString(),
+    Material.OAK_SIGN, Strings.VOTE_REMINDER_ITEM_NAME.toString(),
     plugin.config, Settings.DISABLED_MESSAGE_VOTE_REMINDER.path,
     true
 )

@@ -26,22 +26,22 @@ class DeleteTopCommand(private val plugin: CV) : SimpleCommand(plugin, "deleteto
                 voteTopStand.delete(player)
             } else
             {
-                player.sendMessage(Strings.NOT_EXIST_X.with(Strings.VOTE_TOP_STAND_NAME.toString()))
+                player.sendMessage(Strings.GENERAL_ERROR_NOT_EXIST_X.with(Strings.VOTE_TOP_UNIT_STAND.toString()))
             }
         } catch (e: NumberFormatException)
         {
-            player.sendMessage(Strings.INVALID_ARGUMENT_NOT_NUMBER_X.with("top"))
+            player.sendMessage(Strings.GENERAL_ERROR_INVALID_ARGUMENT_NOT_NUMBER_X.with("top"))
         } catch (e: Exception)
         {
-            player.sendMessage(Strings.ERROR.toString())
-            plugin.errorLog(Strings.VOTE_TOP_DELETE_ERROR.toString(), e)
+            player.sendMessage(Strings.GENERAL_ERROR.toString())
+            plugin.errorLog(Strings.VOTE_TOP_ERROR_DELETE.toString(), e)
         }
     }
 
     init
     {
         withPlayer(Messages.MUST_BE_PLAYER.getMessage(plugin))
-        withUsage(Strings.VOTE_TOP_DELETE_COMMAND_USAGE.toString())
+        withUsage(Strings.VOTE_TOP_MESSAGE_DELETE_COMMAND_USAGE.toString())
         withNoPermMessage(Messages.NO_PERMISSION.getMessage(plugin))
     }
 }

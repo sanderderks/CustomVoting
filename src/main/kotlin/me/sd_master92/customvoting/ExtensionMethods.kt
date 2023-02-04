@@ -150,7 +150,11 @@ fun OfflinePlayer?.getSkull(): ItemStack
     skullMeta.owningPlayer = this
     if (this != null)
     {
-        skullMeta.setDisplayName(Strings.PLAYER_SKULL_NAME_X.with(this.name ?: Strings.PLAYER_NAME_UNKNOWN.toString()))
+        skullMeta.setDisplayName(
+            Strings.PLAYER_ITEM_NAME_SKULL_X.with(
+                this.name ?: Strings.PLAYER_NAME_UNKNOWN.toString()
+            )
+        )
     }
     skull.itemMeta = skullMeta
     return skull

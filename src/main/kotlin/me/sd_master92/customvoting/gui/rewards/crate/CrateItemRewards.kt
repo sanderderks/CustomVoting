@@ -11,9 +11,9 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 
-class VoteCrateItemRewards(private val plugin: CV, private val number: Int, private val percentage: Int) : GUI(
+class CrateItemRewards(private val plugin: CV, private val number: Int, private val percentage: Int) : GUI(
     plugin,
-    Strings.VOTE_CRATE_REWARDS_NAME_XY.with(
+    Strings.CRATE_ITEM_NAME_PERC_REWARDS_XY.with(
         "$percentage",
         plugin.data.getString(Data.VOTE_CRATES.path + ".$number.name")
     ),
@@ -34,7 +34,7 @@ class VoteCrateItemRewards(private val plugin: CV, private val number: Int, priv
                 SoundType.CLICK.play(plugin, player)
             }
             cancelCloseEvent = true
-            player.openInventory(VoteCrateSettings(plugin, number).inventory)
+            player.openInventory(CrateSettings(plugin, number).inventory)
         }
     }
 
@@ -50,22 +50,22 @@ class VoteCrateItemRewards(private val plugin: CV, private val number: Int, priv
             inv.setItem(25, null)
             inv.setItem(26, null)
             val path = "${Data.VOTE_CRATES}.$number.${Data.ITEM_REWARDS}.$percentage"
-            val name = Strings.VOTE_CRATE_REWARDS_NAME_XY.with(
+            val name = Strings.CRATE_ITEM_NAME_PERC_REWARDS_XY.with(
                 "$percentage",
                 plugin.data.getString(Data.VOTE_CRATES.path + ".$number.name")
             )
             if (plugin.data.getItems(path).contentEquals(inv.contents.filterNotNull().toTypedArray()))
             {
                 SoundType.SUCCESS.play(plugin, player)
-                player.sendMessage(Strings.UPDATE_NOTHING_CHANGED.toString())
+                player.sendMessage(Strings.GENERAL_MESSAGE_UPDATE_NOTHING_CHANGED.toString())
             } else if (plugin.data.setItems(path, inv.contents))
             {
                 SoundType.SUCCESS.play(plugin, player)
-                player.sendMessage(Strings.UPDATE_SUCCESS_X.with(name))
+                player.sendMessage(Strings.GENERAL_MESSAGE_UPDATE_SUCCESS_X.with(name))
             } else
             {
                 SoundType.FAILURE.play(plugin, player)
-                player.sendMessage(Strings.UPDATE_FAIL_X.with(name))
+                player.sendMessage(Strings.GENERAL_MESSAGE_UPDATE_FAIL_X.with(name))
             }
         }
     }

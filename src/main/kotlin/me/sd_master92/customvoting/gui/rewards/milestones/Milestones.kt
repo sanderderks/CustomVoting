@@ -16,7 +16,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 
 class Milestones(private val plugin: CV) :
-    GUI(plugin, Strings.GUI_TITLE_MILESTONES.toString(), getInventorySize(plugin))
+    GUI(plugin, Strings.MILESTONE_INVENTORY_NAME_OVERVIEW.toString(), getInventorySize(plugin))
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
     {
@@ -49,8 +49,8 @@ class Milestones(private val plugin: CV) :
                 SoundType.CHANGE.play(plugin, player)
                 cancelCloseEvent = true
                 player.closeInventory()
-                player.sendMessage(Strings.INPUT_MILESTONE.toString())
-                player.sendMessage(Strings.INPUT_CANCEL_BACK.toString())
+                player.sendMessage(Strings.MILESTONE_MESSAGE_NUMBER_ENTER.toString())
+                player.sendMessage(Strings.GENERAL_MESSAGE_CANCEL_BACK.toString())
                 object : PlayerNumberInput(plugin, player)
                 {
                     override fun onNumberReceived(input: Int)
@@ -58,13 +58,13 @@ class Milestones(private val plugin: CV) :
                         val name = Strings.MILESTONE_NAME_X.with("$input")
                         if (plugin.data.contains(Data.MILESTONES.path + ".$input"))
                         {
-                            player.sendMessage(Strings.ALREADY_EXIST_X.with(name))
+                            player.sendMessage(Strings.GENERAL_ERROR_ALREADY_EXIST_X.with(name))
                         } else
                         {
                             SoundType.SUCCESS.play(plugin, player)
                             plugin.data.set(Data.MILESTONES.path + ".$input.permissions", ArrayList<String>())
                             plugin.data.saveConfig()
-                            player.sendMessage(Strings.CREATE_SUCCESS_X.with(name))
+                            player.sendMessage(Strings.GENERAL_MESSAGE_CREATE_SUCCESS_X.with(name))
                             player.openInventory(Milestones(plugin).inventory)
                             cancel()
                         }
@@ -106,7 +106,7 @@ class Milestones(private val plugin: CV) :
 
     init
     {
-        inventory.setItem(7, BaseItem(Material.CRAFTING_TABLE, Strings.MILESTONE_ADD.toString()))
+        inventory.setItem(7, BaseItem(Material.CRAFTING_TABLE, Strings.MILESTONE_ITEM_NAME_ADD.toString()))
         inventory.setItem(8, BACK_ITEM)
 
         for (key in plugin.data.getConfigurationSection(Data.MILESTONES.path)?.getKeys(false)?.mapNotNull { key ->

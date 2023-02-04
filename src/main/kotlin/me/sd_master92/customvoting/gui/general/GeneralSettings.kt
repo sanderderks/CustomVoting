@@ -12,7 +12,7 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 
-class GeneralSettings(private val plugin: CV) : GUI(plugin, Strings.GUI_TITLE_GENERAL_SETTINGS.toString(), 18)
+class GeneralSettings(private val plugin: CV) : GUI(plugin, Strings.GENERAL_SETTINGS_INVENTORY_NAME.toString(), 18)
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
     {
@@ -147,7 +147,7 @@ class GeneralSettings(private val plugin: CV) : GUI(plugin, Strings.GUI_TITLE_GE
         inventory.addItem(VotePartyTypeItem(plugin))
         inventory.addItem(VotesUntilItem.getInstance(plugin))
         inventory.addItem(VotePartyCountdownItem(plugin))
-        inventory.addItem(BaseItem(Material.GRASS_BLOCK, Strings.GUI_DISABLED_WORLDS.toString()))
+        inventory.addItem(BaseItem(Material.GRASS_BLOCK, Strings.DISABLED_WORLD_OVERVIEW_ITEM_NAME.toString()))
         inventory.addItem(UUIDSupportItem(plugin))
         inventory.setItem(17, BACK_ITEM)
     }
@@ -155,8 +155,8 @@ class GeneralSettings(private val plugin: CV) : GUI(plugin, Strings.GUI_TITLE_GE
 
 class VotesUntilItem private constructor(votesRequired: Int, votesUntil: Int) : BaseItem(
     Material.ENCHANTED_BOOK,
-    Strings.GUI_VOTE_PARTY_VOTES_UNTIL.toString(),
-    Strings.GUI_VOTE_PARTY_VOTES_UNTIL_XY.with("$votesRequired", "$votesUntil")
+    Strings.VOTE_PARTY_ITEM_NAME_VOTES_UNTIL.toString(),
+    Strings.VOTE_PARTY_ITEM_LORE_VOTES_UNTIL_XY.with("$votesRequired", "$votesUntil")
 )
 {
     companion object
@@ -171,49 +171,49 @@ class VotesUntilItem private constructor(votesRequired: Int, votesUntil: Int) : 
 }
 
 class VotePartyTypeItem(plugin: CV) : BaseItem(
-    Material.SPLASH_POTION, Strings.GUI_VOTE_PARTY_TYPE.toString(),
-    Strings.GUI_CURRENT_X.with(VotePartyType.valueOf(plugin.config.getNumber(Settings.VOTE_PARTY_TYPE.path)).label)
+    Material.SPLASH_POTION, Strings.VOTE_PARTY_ITEM_NAME_TYPE.toString(),
+    Strings.GENERAL_ITEM_LORE_CURRENT_X.with(VotePartyType.valueOf(plugin.config.getNumber(Settings.VOTE_PARTY_TYPE.path)).label)
 )
 
 class VotePartyCountdownItem(plugin: CV) : BaseItem(
-    Material.ENDER_CHEST, Strings.GUI_VOTE_PARTY_COUNTDOWN.toString(),
-    Strings.GUI_CURRENT_XY.with(
+    Material.ENDER_CHEST, Strings.VOTE_PARTY_ITEM_NAME_COUNTDOWN.toString(),
+    Strings.GENERAL_ITEM_LORE_CURRENT_XY.with(
         "" + plugin.config.getNumber(Settings.VOTE_PARTY_COUNTDOWN.path),
-        Strings.SECOND_TYPE_MULTIPLE.toString()
+        Strings.TIME_UNIT_SECONDS_MULTIPLE.toString()
     )
 )
 
 class SoundEffectsItem(plugin: CV) : StatusItem(
-    Material.MUSIC_DISC_CAT, Strings.GUI_SOUND_EFFECTS.toString(),
+    Material.MUSIC_DISC_CAT, Strings.SOUND_EFFECTS_ITEM_NAME.toString(),
     plugin.config, Settings.USE_SOUND_EFFECTS.path
 )
 
 class MonthlyResetItem(plugin: CV) : StatusItem(
-    Material.CLOCK, Strings.GUI_MONTHLY_RESET.toString(),
+    Material.CLOCK, Strings.RESET_VOTES_ITEM_NAME_MONTHLY.toString(),
     plugin.config, Settings.MONTHLY_RESET.path
 )
 
 class MonthlyVotesItem(plugin: CV) : StatusItem(
-    Material.TNT, Strings.GUI_MONTHLY_VOTES.toString(),
+    Material.TNT, Strings.MONTHLY_VOTES_ITEM_NAME.toString(),
     plugin.config, Settings.MONTHLY_VOTES.path
 )
 
 class LuckyVoteItem(plugin: CV) : StatusItem(
-    Material.TOTEM_OF_UNDYING, Strings.GUI_LUCKY_VOTE.toString(),
+    Material.TOTEM_OF_UNDYING, Strings.LUCKY_VOTE_ITEM_NAME.toString(),
     plugin.config, Settings.LUCKY_VOTE.path
 )
 
 class FireworkItem(plugin: CV) : StatusItem(
-    Material.FIREWORK_ROCKET, Strings.GUI_FIREWORK.toString(),
+    Material.FIREWORK_ROCKET, Strings.FIREWORK_ITEM_NAME.toString(),
     plugin.config, Settings.FIREWORK.path
 )
 
 class DoVotePartyItem(plugin: CV) : StatusItem(
-    Material.EXPERIENCE_BOTTLE, Strings.GUI_VOTE_PARTY.toString(),
+    Material.EXPERIENCE_BOTTLE, Strings.VOTE_PARTY_ITEM_NAME.toString(),
     plugin.config, Settings.VOTE_PARTY.path
 )
 
 class UUIDSupportItem(plugin: CV) : StatusItem(
-    Material.PLAYER_HEAD, Strings.GUI_UUID_STORAGE.toString(),
+    Material.PLAYER_HEAD, Strings.UUID_STORAGE_ITEM_NAME.toString(),
     plugin.config, Settings.UUID_STORAGE.path
 )

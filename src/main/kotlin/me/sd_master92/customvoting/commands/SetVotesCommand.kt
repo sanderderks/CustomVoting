@@ -24,18 +24,18 @@ class SetVotesCommand(private val plugin: CV) : SimpleCommand(plugin, "setvotes"
                     if (n >= 0)
                     {
                         Voter.get(plugin, sender).setVotes(n, true)
-                        sender.sendMessage(Strings.VOTES_SET_SELF_X.with("$n"))
+                        sender.sendMessage(Strings.VOTES_SET_MESSAGE_SELF_X.with("$n"))
                     } else
                     {
-                        sender.sendMessage(Strings.INVALID_ARGUMENT_NOT_POSITIVE_X.with("amount"))
+                        sender.sendMessage(Strings.GENERAL_ERROR_INVALID_ARGUMENT_NOT_POSITIVE_X.with("amount"))
                     }
                 } catch (e: Exception)
                 {
-                    sender.sendMessage(Strings.INVALID_ARGUMENT_NOT_NUMBER_X.with("amount"))
+                    sender.sendMessage(Strings.GENERAL_ERROR_INVALID_ARGUMENT_NOT_NUMBER_X.with("amount"))
                 }
             } else
             {
-                sender.sendMessage(Strings.VOTES_SET_COMMAND_USAGE.toString())
+                sender.sendMessage(Strings.VOTES_SET_MESSAGE_COMMAND_USAGE.toString())
             }
         } else
         {
@@ -50,18 +50,18 @@ class SetVotesCommand(private val plugin: CV) : SimpleCommand(plugin, "setvotes"
                     if (voter != null)
                     {
                         voter.setVotes(n, true)
-                        sender.sendMessage(Strings.VOTES_SET_OTHER_XY.with(voter.name, "$n"))
+                        sender.sendMessage(Strings.VOTES_SET_MESSAGE_OTHER_XY.with(voter.name, "$n"))
                     } else
                     {
                         sender.sendText(plugin, Messages.INVALID_PLAYER)
                     }
                 } else
                 {
-                    sender.sendMessage(Strings.INVALID_ARGUMENT_NOT_POSITIVE_X.with("amount"))
+                    sender.sendMessage(Strings.GENERAL_ERROR_INVALID_ARGUMENT_NOT_POSITIVE_X.with("amount"))
                 }
             } catch (e: Exception)
             {
-                sender.sendMessage(Strings.INVALID_ARGUMENT_NOT_NUMBER_X.with("amount"))
+                sender.sendMessage(Strings.GENERAL_ERROR_INVALID_ARGUMENT_NOT_NUMBER_X.with("amount"))
             }
         }
     }
@@ -72,7 +72,7 @@ class SetVotesCommand(private val plugin: CV) : SimpleCommand(plugin, "setvotes"
 
     init
     {
-        withUsage(Strings.VOTES_SET_COMMAND_USAGE.toString())
+        withUsage(Strings.VOTES_SET_MESSAGE_COMMAND_USAGE.toString())
         withNoPermMessage(Messages.NO_PERMISSION.getMessage(plugin))
     }
 }

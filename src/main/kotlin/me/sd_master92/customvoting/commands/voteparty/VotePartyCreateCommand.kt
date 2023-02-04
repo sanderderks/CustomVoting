@@ -15,7 +15,7 @@ class VotePartyCreateCommand : SimpleSubCommand("create")
     override fun onCommand(player: Player, args: Array<String>)
     {
         player.inventory.addItem(VoteParty.VOTE_PARTY_ITEM)
-        player.sendMessage(Strings.VOTE_PARTY_CHEST_RECEIVE.toString())
+        player.sendMessage(Strings.VOTE_PARTY_MESSAGE_CHEST_RECEIVED.toString())
     }
 
     init

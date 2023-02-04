@@ -24,7 +24,7 @@ abstract class PlayerCommandInput(
         {
             if (command.lowercase().contains(forbidden))
             {
-                player.sendMessage(Strings.INPUT_COMMAND_FORBIDDEN.toString())
+                player.sendMessage(Strings.COMMAND_REWARDS_ERROR_FORBIDDEN.toString())
                 return
             }
         }
@@ -37,18 +37,18 @@ abstract class PlayerCommandInput(
         {
             commands.remove(command)
             player.sendMessage(
-                Strings.INPUT_REMOVED_FROM_LIST_XY.with(
+                Strings.GENERAL_MESSAGE_LIST_REMOVED_XY.with(
                     "/$command",
-                    Strings.INPUT_COMMAND_TYPE_MULTIPLE.toString()
+                    Strings.COMMAND_REWARDS_UNIT_MULTIPLE.toString()
                 )
             )
         } else
         {
             commands.add(command)
             player.sendMessage(
-                Strings.INPUT_ADDED_TO_LIST_XY.with(
+                Strings.GENERAL_MESSAGE_LIST_ADDED_XY.with(
                     "/$command",
-                    Strings.INPUT_COMMAND_TYPE_MULTIPLE.toString()
+                    Strings.COMMAND_REWARDS_UNIT_MULTIPLE.toString()
                 )
             )
         }
@@ -60,16 +60,16 @@ abstract class PlayerCommandInput(
 
     init
     {
-        player.sendMessage(Strings.INPUT_ALTER_LIST_X.with(Strings.INPUT_COMMAND_TYPE.toString()))
-        player.sendMessage(Strings.INPUT_COMMANDS_ADD_LORE.toString())
-        player.sendMessage(Strings.INPUT_CANCEL_BACK.toString())
+        player.sendMessage(Strings.GENERAL_MESSAGE_LIST_ALTER_X.with(Strings.COMMAND_REWARDS_UNIT.toString()))
+        player.sendMessage(Strings.COMMAND_REWARDS_MESSAGE_PLACEHOLDER.toString())
+        player.sendMessage(Strings.GENERAL_MESSAGE_CANCEL_BACK.toString())
         player.sendMessage("")
         if (commands.isEmpty())
         {
-            player.sendMessage(Strings.INPUT_LIST_EMPTY_X.with(Strings.INPUT_COMMAND_TYPE_MULTIPLE.toString()))
+            player.sendMessage(Strings.GENERAL_MESSAGE_LIST_EMPTY_X.with(Strings.COMMAND_REWARDS_UNIT_MULTIPLE.toString()))
         } else
         {
-            player.sendMessage(Strings.INPUT_COMMANDS.toString())
+            player.sendMessage(Strings.COMMAND_REWARDS_MESSAGE_TITLE.toString())
             for (command in commands)
             {
                 player.sendMessage(ChatColor.GRAY.toString() + "/" + ChatColor.GREEN + command)

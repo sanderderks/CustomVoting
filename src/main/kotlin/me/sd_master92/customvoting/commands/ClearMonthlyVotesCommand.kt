@@ -18,10 +18,10 @@ class ClearMonthlyVotesCommand(private val plugin: CV) : SimpleCommand(plugin, "
             if (sender is Player)
             {
                 Voter.get(plugin, sender).clearMonthlyVotes()
-                sender.sendMessage(Strings.MONTHLY_VOTES_RESET_SELF.toString())
+                sender.sendMessage(Strings.MONTHLY_VOTES_MESSAGE_RESET_SUCCESS_SELF.toString())
             } else
             {
-                sender.sendMessage(Strings.MONTHLY_VOTES_RESET_COMMAND_USAGE.toString())
+                sender.sendMessage(Strings.MONTHLY_VOTES_MESSAGE_RESET_COMMAND_USAGE.toString())
             }
         } else
         {
@@ -30,7 +30,7 @@ class ClearMonthlyVotesCommand(private val plugin: CV) : SimpleCommand(plugin, "
             if (voter != null)
             {
                 voter.clearMonthlyVotes()
-                sender.sendMessage(Strings.MONTHLY_VOTES_RESET_OTHER_X.with(voter.name))
+                sender.sendMessage(Strings.MONTHLY_VOTES_MESSAGE_RESET_SUCCESS_OTHER_X.with(voter.name))
             } else
             {
                 sender.sendText(plugin, Messages.INVALID_PLAYER)

@@ -7,6 +7,6 @@ import org.bukkit.Material
 
 class CommandsRewardItem(plugin: CV, path: String, mat: Material, name: String? = null) : BaseItem(
     mat,
-    name ?: Strings.GUI_COMMAND_REWARDS.toString(),
-    Strings.GUI_CURRENT_XY.with("" + plugin.data.getStringList(path).size, "commands")
+    name ?: Strings.COMMAND_REWARDS_ITEM_NAME.toString(),
+    Strings.GENERAL_ITEM_LORE_CURRENT_XY.with("" + plugin.data.getStringList(path).size, "commands")
 )
