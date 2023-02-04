@@ -3,7 +3,7 @@ package me.sd_master92.customvoting
 import me.clip.placeholderapi.PlaceholderAPI
 import me.sd_master92.core.file.PlayerFile
 import me.sd_master92.customvoting.constants.enumerations.Message
-import me.sd_master92.customvoting.constants.enumerations.Settings
+import me.sd_master92.customvoting.constants.enumerations.Setting
 import me.sd_master92.customvoting.constants.enumerations.Strings
 import me.sd_master92.customvoting.database.PlayerTable
 import net.md_5.bungee.api.ChatMessageType
@@ -121,7 +121,7 @@ fun Player.hasPermissionRewardsByGroup(plugin: CV): Boolean
         {
             for (group in CV.PERMISSION!!.getPlayerGroups(this))
             {
-                if (plugin.config.getStringList(Settings.ENABLED_OP_GROUPS.path).contains(group.lowercase()))
+                if (plugin.config.getStringList(Setting.ENABLED_OP_GROUPS.path).contains(group.lowercase()))
                 {
                     return true
                 }
@@ -142,7 +142,7 @@ fun Player.hasPermissionRewardsByUser(plugin: CV): Boolean
 
 fun Player.getPlayerFile(plugin: CV): PlayerFile
 {
-    val player = if (plugin.config.getBoolean(Settings.UUID_STORAGE.path)) PlayerFile.getByUuid(
+    val player = if (plugin.config.getBoolean(Setting.UUID_STORAGE.path)) PlayerFile.getByUuid(
         plugin,
         this
     ) else PlayerFile.getByName(this.name)

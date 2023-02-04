@@ -53,7 +53,7 @@ class RewardSettings(private val plugin: CV, private val op: Boolean = false) :
             Material.REPEATER          ->
             {
                 SoundType.CHANGE.play(plugin, player)
-                val path = Settings.ITEM_REWARD_TYPE.path.appendWhenTrue(op, Data.OP_REWARDS)
+                val path = Setting.ITEM_REWARD_TYPE.path.appendWhenTrue(op, Data.OP_REWARDS)
                 plugin.config.setNumber(path, ItemRewardType.next(plugin, op).value)
                 event.currentItem = ItemsRewardTypeItem(plugin, op)
             }
@@ -70,7 +70,7 @@ class RewardSettings(private val plugin: CV, private val op: Boolean = false) :
                     override fun onNumberReceived(input: Int)
                     {
                         SoundType.SUCCESS.play(plugin, player)
-                        val path = Settings.VOTE_REWARD_MONEY.path.appendWhenTrue(op, Data.OP_REWARDS)
+                        val path = Setting.VOTE_REWARD_MONEY.path.appendWhenTrue(op, Data.OP_REWARDS)
                         plugin.config[path] = input
                         plugin.config.saveConfig()
                         player.sendMessage(Strings.GENERAL_MESSAGE_UPDATE_SUCCESS_X.with(Strings.MONEY_REWARD_UNIT.toString()))
@@ -92,7 +92,7 @@ class RewardSettings(private val plugin: CV, private val op: Boolean = false) :
             Material.EXPERIENCE_BOTTLE ->
             {
                 SoundType.CHANGE.play(plugin, player)
-                val path = Settings.VOTE_REWARD_EXPERIENCE.path.appendWhenTrue(op, Data.OP_REWARDS)
+                val path = Setting.VOTE_REWARD_EXPERIENCE.path.appendWhenTrue(op, Data.OP_REWARDS)
                 if (plugin.config.getNumber(path) < 10)
                 {
                     plugin.config.addNumber(path, 1)
@@ -134,16 +134,16 @@ class RewardSettings(private val plugin: CV, private val op: Boolean = false) :
             Material.ENDER_EYE         ->
             {
                 SoundType.CHANGE.play(plugin, player)
-                val chance: Int = plugin.config.getNumber(Settings.LUCKY_VOTE_CHANCE.path)
+                val chance: Int = plugin.config.getNumber(Setting.LUCKY_VOTE_CHANCE.path)
                 if (chance < 10)
                 {
-                    plugin.config.addNumber(Settings.LUCKY_VOTE_CHANCE.path, 1)
+                    plugin.config.addNumber(Setting.LUCKY_VOTE_CHANCE.path, 1)
                 } else if (chance < 100)
                 {
-                    plugin.config.addNumber(Settings.LUCKY_VOTE_CHANCE.path, 5)
+                    plugin.config.addNumber(Setting.LUCKY_VOTE_CHANCE.path, 5)
                 } else
                 {
-                    plugin.config.setNumber(Settings.LUCKY_VOTE_CHANCE.path, 1)
+                    plugin.config.setNumber(Setting.LUCKY_VOTE_CHANCE.path, 1)
                 }
                 event.currentItem = LuckyVoteChanceItem(plugin)
             }
@@ -293,21 +293,21 @@ class MoneyRewardItem(plugin: CV, op: Boolean) : BaseItem(
     if (CV.ECONOMY != null) Strings.GENERAL_ITEM_LORE_CURRENT_X.with(
         ChatColor.GREEN.toString() +
                 CV.ECONOMY!!.format(
-                    plugin.config.getDouble(Settings.VOTE_REWARD_MONEY.path.appendWhenTrue(op, Data.OP_REWARDS))
+                    plugin.config.getDouble(Setting.VOTE_REWARD_MONEY.path.appendWhenTrue(op, Data.OP_REWARDS))
                 )
     ) else Strings.GENERAL_VALUE_DISABLED.toString()
 )
 
 class LuckyVoteChanceItem(plugin: CV) : BaseItem(
     Material.ENDER_EYE, Strings.LUCKY_VOTE_ITEM_NAME_CHANCE.toString(),
-    Strings.GENERAL_ITEM_LORE_CURRENT_XY.with("" + plugin.config.getNumber(Settings.LUCKY_VOTE_CHANCE.path), "%")
+    Strings.GENERAL_ITEM_LORE_CURRENT_XY.with("" + plugin.config.getNumber(Setting.LUCKY_VOTE_CHANCE.path), "%")
 )
 
 class ItemsRewardTypeItem(plugin: CV, op: Boolean) : BaseItem(
     Material.REPEATER, Strings.ITEM_REWARDS_ITEM_NAME_TYPE.toString(),
     Strings.GENERAL_ITEM_LORE_STATUS_X.with(
         ItemRewardType.valueOf(
-            plugin.config.getNumber(Settings.ITEM_REWARD_TYPE.path.appendWhenTrue(op, Data.OP_REWARDS))
+            plugin.config.getNumber(Setting.ITEM_REWARD_TYPE.path.appendWhenTrue(op, Data.OP_REWARDS))
         ).label
     )
 )
@@ -316,7 +316,7 @@ class ExperienceRewardItem(plugin: CV, op: Boolean) : BaseItem(
     Material.EXPERIENCE_BOTTLE, Strings.XP_REWARD_ITEM_NAME.toString(),
     Strings.GENERAL_ITEM_LORE_CURRENT_XY.with(
         "" + plugin.config.getNumber(
-            Settings.VOTE_REWARD_EXPERIENCE.path.appendWhenTrue(
+            Setting.VOTE_REWARD_EXPERIENCE.path.appendWhenTrue(
                 op,
                 Data.OP_REWARDS
             )

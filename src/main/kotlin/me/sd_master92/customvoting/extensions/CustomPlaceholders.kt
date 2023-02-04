@@ -5,7 +5,7 @@ import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.VoteFile
 import me.sd_master92.customvoting.constants.Voter
 import me.sd_master92.customvoting.constants.enumerations.Data
-import me.sd_master92.customvoting.constants.enumerations.Settings
+import me.sd_master92.customvoting.constants.enumerations.Setting
 import me.sd_master92.customvoting.constants.enumerations.Strings
 import me.sd_master92.customvoting.database.PlayerTable
 import org.bukkit.entity.Player
@@ -83,7 +83,7 @@ class CustomPlaceholders(private val plugin: CV) : PlaceholderExpansion()
 
                 VOTE_PARTY_TOTAL                    ->
                 {
-                    val total = plugin.config.getInt(Settings.VOTES_REQUIRED_FOR_VOTE_PARTY.path)
+                    val total = plugin.config.getInt(Setting.VOTES_REQUIRED_FOR_VOTE_PARTY.path)
                     return "$total"
                 }
 
@@ -95,7 +95,7 @@ class CustomPlaceholders(private val plugin: CV) : PlaceholderExpansion()
 
                 VOTE_PARTY_UNTIL                    ->
                 {
-                    val total = plugin.config.getInt(Settings.VOTES_REQUIRED_FOR_VOTE_PARTY.path)
+                    val total = plugin.config.getInt(Setting.VOTES_REQUIRED_FOR_VOTE_PARTY.path)
                     val current = plugin.data.getInt(Data.CURRENT_VOTES.path)
                     val until = total - current
                     return "$until"

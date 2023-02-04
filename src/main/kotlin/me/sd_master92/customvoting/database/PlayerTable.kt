@@ -3,7 +3,7 @@ package me.sd_master92.customvoting.database
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.TopVoter
 import me.sd_master92.customvoting.constants.Voter
-import me.sd_master92.customvoting.constants.enumerations.Settings
+import me.sd_master92.customvoting.constants.enumerations.Setting
 import me.sd_master92.customvoting.constants.enumerations.Strings
 import org.bukkit.entity.Player
 
@@ -105,7 +105,7 @@ class PlayerTable(private val plugin: CV, override val uuid: String) : Voter
 
         fun get(plugin: CV, player: Player): PlayerTable
         {
-            return if (plugin.config.getBoolean(Settings.UUID_STORAGE.path)) getByUuid(plugin, player) else getByName(
+            return if (plugin.config.getBoolean(Setting.UUID_STORAGE.path)) getByUuid(plugin, player) else getByName(
                 plugin,
                 player
             )

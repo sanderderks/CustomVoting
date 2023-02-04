@@ -15,19 +15,19 @@ import java.util.*
 
 class VoteParty(private val plugin: CV)
 {
-    private var votePartyType = VotePartyType.valueOf(plugin.config.getNumber(Settings.VOTE_PARTY_TYPE.path))
+    private var votePartyType = VotePartyType.valueOf(plugin.config.getNumber(Setting.VOTE_PARTY_TYPE.path))
 
     fun start()
     {
         if (!isActive)
         {
             isActive = true
-            TaskTimer.repeat(plugin, 20, 0, plugin.config.getNumber(Settings.VOTE_PARTY_COUNTDOWN.path)) {
+            TaskTimer.repeat(plugin, 20, 0, plugin.config.getNumber(Setting.VOTE_PARTY_COUNTDOWN.path)) {
                 when (it.count)
                 {
                     30, 15, 10    ->
                     {
-                        if (!plugin.config.getBoolean(Settings.DISABLED_BROADCAST_VOTE_PARTY_COUNTDOWN.path))
+                        if (!plugin.config.getBoolean(Setting.DISABLED_BROADCAST_VOTE_PARTY_COUNTDOWN.path))
                         {
                             val placeholders = HashMap<String, String>()
                             placeholders["%TIME%"] = "" + it.count
@@ -38,7 +38,7 @@ class VoteParty(private val plugin: CV)
 
                     5, 4, 3, 2, 1 ->
                     {
-                        if (!plugin.config.getBoolean(Settings.DISABLED_BROADCAST_VOTE_PARTY_COUNTDOWN_ENDING.path))
+                        if (!plugin.config.getBoolean(Setting.DISABLED_BROADCAST_VOTE_PARTY_COUNTDOWN_ENDING.path))
                         {
                             val placeholders = HashMap<String, String>()
                             placeholders["%TIME%"] = "" + it.count

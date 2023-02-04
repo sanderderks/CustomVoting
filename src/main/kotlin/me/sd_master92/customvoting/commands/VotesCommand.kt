@@ -4,7 +4,7 @@ import me.sd_master92.core.command.SimpleCommand
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Voter
 import me.sd_master92.customvoting.constants.enumerations.Message
-import me.sd_master92.customvoting.constants.enumerations.Settings
+import me.sd_master92.customvoting.constants.enumerations.Setting
 import me.sd_master92.customvoting.sendText
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -21,7 +21,7 @@ class VotesCommand(private val plugin: CV) : SimpleCommand(plugin, "votes")
                 val voter = Voter.get(plugin, sender)
                 placeholders["%VOTES%"] = "${voter.votes}"
                 placeholders["%MONTHLY_VOTES%"] = "${voter.monthlyVotes}"
-                if (plugin.config.getBoolean(Settings.MONTHLY_VOTES.path))
+                if (plugin.config.getBoolean(Setting.MONTHLY_VOTES.path))
                 {
                     placeholders["%s%"] = if (voter.monthlyVotes == 1) "" else "s"
                 } else
@@ -40,7 +40,7 @@ class VotesCommand(private val plugin: CV) : SimpleCommand(plugin, "votes")
                 placeholders["%PLAYER%"] = voter.name
                 placeholders["%VOTES%"] = "${voter.votes}"
                 placeholders["%MONTHLY_VOTES%"] = "${voter.monthlyVotes}"
-                if (plugin.config.getBoolean(Settings.MONTHLY_VOTES.path))
+                if (plugin.config.getBoolean(Setting.MONTHLY_VOTES.path))
                 {
                     placeholders["%s%"] = if (voter.monthlyVotes == 1) "" else "s"
                 } else

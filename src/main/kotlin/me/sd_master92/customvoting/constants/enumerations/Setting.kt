@@ -2,7 +2,7 @@ package me.sd_master92.customvoting.constants.enumerations
 
 import me.sd_master92.customvoting.CV
 
-enum class Settings(val path: String, private val defaultValue: Any? = null)
+enum class Setting(val path: String, private val defaultValue: Any? = null)
 {
     MONTHLY_RESET("monthly_reset", false),
     MONTHLY_VOTES("monthly_votes", false),

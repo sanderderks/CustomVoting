@@ -2,7 +2,7 @@ package me.sd_master92.customvoting.listeners
 
 import me.sd_master92.core.input.PlayerStringInput
 import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.constants.enumerations.Settings
+import me.sd_master92.customvoting.constants.enumerations.Setting
 import me.sd_master92.customvoting.constants.enumerations.Strings
 import org.bukkit.ChatColor
 import org.bukkit.entity.Player
@@ -20,7 +20,7 @@ abstract class PlayerCommandInput(
     override fun onInputReceived(input: String)
     {
         var command = input
-        for (forbidden in plugin.config.getStringList(Settings.FORBIDDEN_COMMANDS.path))
+        for (forbidden in plugin.config.getStringList(Setting.FORBIDDEN_COMMANDS.path))
         {
             if (command.lowercase().contains(forbidden))
             {

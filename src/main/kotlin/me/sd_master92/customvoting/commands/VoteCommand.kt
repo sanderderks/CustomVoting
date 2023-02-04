@@ -3,7 +3,7 @@ package me.sd_master92.customvoting.commands
 import me.sd_master92.core.command.SimpleCommand
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.Message
-import me.sd_master92.customvoting.constants.enumerations.Settings
+import me.sd_master92.customvoting.constants.enumerations.Setting
 import me.sd_master92.customvoting.gui.messages.VoteLinks
 import me.sd_master92.customvoting.sendTexts
 import org.bukkit.command.CommandSender
@@ -17,7 +17,7 @@ class VoteCommand(private val plugin: CV) : SimpleCommand(plugin, "vote")
 
     override fun onCommand(player: Player, args: Array<String>)
     {
-        if (plugin.config.getBoolean(Settings.VOTE_LINK_INVENTORY.path))
+        if (plugin.config.getBoolean(Setting.VOTE_LINK_INVENTORY.path))
         {
             player.openInventory(VoteLinks(plugin, true).inventory)
         } else

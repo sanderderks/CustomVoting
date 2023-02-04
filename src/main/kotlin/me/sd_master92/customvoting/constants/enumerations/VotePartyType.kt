@@ -23,7 +23,7 @@ enum class VotePartyType(val value: Int, val label: String)
 
         fun next(plugin: CV): VotePartyType
         {
-            val currentValue = valueOf(plugin.config.getNumber(Settings.VOTE_PARTY_TYPE.path)).value
+            val currentValue = valueOf(plugin.config.getNumber(Setting.VOTE_PARTY_TYPE.path)).value
             return if (currentValue < values().size - 1)
             {
                 valueOf(currentValue + 1)

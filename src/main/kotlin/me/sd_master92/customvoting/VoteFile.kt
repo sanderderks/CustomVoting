@@ -4,7 +4,7 @@ import me.sd_master92.core.file.PlayerFile
 import me.sd_master92.customvoting.constants.TopVoter
 import me.sd_master92.customvoting.constants.Voter
 import me.sd_master92.customvoting.constants.enumerations.Data
-import me.sd_master92.customvoting.constants.enumerations.Settings
+import me.sd_master92.customvoting.constants.enumerations.Setting
 import org.bukkit.entity.Player
 
 class VoteFile : Voter
@@ -144,7 +144,7 @@ class VoteFile : Voter
 
         fun get(plugin: CV, player: Player): VoteFile
         {
-            return if (plugin.config.getBoolean(Settings.UUID_STORAGE.path)) getByUuid(plugin, player) else getByName(
+            return if (plugin.config.getBoolean(Setting.UUID_STORAGE.path)) getByUuid(plugin, player) else getByName(
                 plugin,
                 player
             )

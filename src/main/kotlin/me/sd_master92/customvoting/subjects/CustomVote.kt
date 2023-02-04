@@ -28,9 +28,9 @@ class CustomVote(
         {
             plugin.infoLog(Strings.QUEUE_MESSAGE_ADD.toString())
             queue()
-        } else if (plugin.config.getStringList(Settings.DISABLED_WORLDS.path).contains(player.world.name))
+        } else if (plugin.config.getStringList(Setting.DISABLED_WORLDS.path).contains(player.world.name))
         {
-            if (!plugin.config.getBoolean(Settings.DISABLED_MESSAGE_DISABLED_WORLD.path))
+            if (!plugin.config.getBoolean(Setting.DISABLED_MESSAGE_DISABLED_WORLD.path))
             {
                 player.sendText(plugin, Message.DISABLED_WORLD)
             }
@@ -41,7 +41,7 @@ class CustomVote(
             Voter.get(plugin, player).addVote()
             ParticleHelper.shootFirework(plugin, player.location)
             giveRewards(player, player.hasPermissionRewards(plugin))
-            if (plugin.config.getBoolean(Settings.VOTE_PARTY.path))
+            if (plugin.config.getBoolean(Setting.VOTE_PARTY.path))
             {
                 subtractVotesUntilVoteParty()
             }
@@ -62,9 +62,9 @@ class CustomVote(
 
     private fun broadcast(player: Player)
     {
-        if (!plugin.config.getBoolean(Settings.DISABLED_BROADCAST_VOTE.path))
+        if (!plugin.config.getBoolean(Setting.DISABLED_BROADCAST_VOTE.path))
         {
-            if (plugin.config.getBoolean(Settings.FIRST_VOTE_BROADCAST_ONLY.path))
+            if (plugin.config.getBoolean(Setting.FIRST_VOTE_BROADCAST_ONLY.path))
             {
                 val last = Voter.get(plugin, player).last
                 val date1 = Calendar.getInstance()
@@ -79,7 +79,7 @@ class CustomVote(
                 }
             }
 
-            if (plugin.config.getBoolean(Settings.DISABLED_BROADCAST_OFFLINE.path) && queued)
+            if (plugin.config.getBoolean(Setting.DISABLED_BROADCAST_OFFLINE.path) && queued)
             {
                 return
             }
@@ -95,7 +95,7 @@ class CustomVote(
     {
         if (plugin.data.getLocations(Data.VOTE_PARTY.path).isNotEmpty())
         {
-            val votesRequired = plugin.config.getNumber(Settings.VOTES_REQUIRED_FOR_VOTE_PARTY.path)
+            val votesRequired = plugin.config.getNumber(Setting.VOTES_REQUIRED_FOR_VOTE_PARTY.path)
             val votesUntil = votesRequired - plugin.data.getNumber(Data.CURRENT_VOTES.path)
             if (votesUntil <= 1)
             {
@@ -110,7 +110,7 @@ class CustomVote(
                     TaskTimer.delay(plugin, 40)
                     {
                         val updatedVotesUntil = votesRequired - plugin.data.getNumber(Data.CURRENT_VOTES.path)
-                        if (updatedVotesUntil != votesRequired && !plugin.config.getBoolean(Settings.DISABLED_BROADCAST_VOTE_PARTY_UNTIL.path))
+                        if (updatedVotesUntil != votesRequired && !plugin.config.getBoolean(Setting.DISABLED_BROADCAST_VOTE_PARTY_UNTIL.path))
                         {
                             val placeholders = HashMap<String, String>()
                             placeholders["%VOTES%"] = "$updatedVotesUntil"
@@ -161,7 +161,7 @@ class CustomVote(
     private fun giveItems(player: Player, op: Boolean)
     {
         val path = Data.ITEM_REWARDS.path.appendWhenTrue(op, Data.OP_REWARDS)
-        val typePath = Settings.ITEM_REWARD_TYPE.path.appendWhenTrue(op, Data.OP_REWARDS)
+        val typePath = Setting.ITEM_REWARD_TYPE.path.appendWhenTrue(op, Data.OP_REWARDS)
         val random = plugin.config.getNumber(typePath) != ItemRewardType.ALL_ITEMS.value
         val items = plugin.data.getItems(path)
         player.addToInventoryOrDrop(items, random)
@@ -172,7 +172,7 @@ class CustomVote(
         val economy = CV.ECONOMY
         if (economy != null && economy.hasAccount(player))
         {
-            val path = Settings.VOTE_REWARD_MONEY.path.appendWhenTrue(op, Data.OP_REWARDS)
+            val path = Setting.VOTE_REWARD_MONEY.path.appendWhenTrue(op, Data.OP_REWARDS)
             val amount = plugin.config.getDouble(path)
             economy.depositPlayer(player, amount)
             return amount
@@ -182,7 +182,7 @@ class CustomVote(
 
     private fun giveExperience(player: Player, op: Boolean): Int
     {
-        val path = Settings.VOTE_REWARD_EXPERIENCE.path.appendWhenTrue(op, Data.OP_REWARDS)
+        val path = Setting.VOTE_REWARD_EXPERIENCE.path.appendWhenTrue(op, Data.OP_REWARDS)
         val amount = plugin.config.getNumber(path)
         player.level = player.level + amount
         return amount
@@ -190,7 +190,7 @@ class CustomVote(
 
     private fun giveLuckyReward(player: Player)
     {
-        if (Random().nextInt(100) < plugin.config.getNumber(Settings.LUCKY_VOTE_CHANCE.path))
+        if (Random().nextInt(100) < plugin.config.getNumber(Setting.LUCKY_VOTE_CHANCE.path))
         {
             val luckyRewards = plugin.data.getItems(Data.LUCKY_REWARDS.path)
             if (luckyRewards.isNotEmpty())
@@ -216,7 +216,7 @@ class CustomVote(
         val votes = VoteFile.get(plugin, player).votes
         if (plugin.data.contains(Data.MILESTONES.path + ".$votes"))
         {
-            if (!plugin.config.getBoolean(Settings.DISABLED_BROADCAST_MILESTONE.path))
+            if (!plugin.config.getBoolean(Setting.DISABLED_BROADCAST_MILESTONE.path))
             {
                 val placeholders = HashMap<String, String>()
                 placeholders["%PLAYER%"] = player.name

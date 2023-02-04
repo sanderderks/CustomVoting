@@ -10,7 +10,7 @@ import me.sd_master92.customvoting.commands.voteparty.VotePartyCommand
 import me.sd_master92.customvoting.constants.Voter
 import me.sd_master92.customvoting.constants.enumerations.Data
 import me.sd_master92.customvoting.constants.enumerations.Message
-import me.sd_master92.customvoting.constants.enumerations.Settings
+import me.sd_master92.customvoting.constants.enumerations.Setting
 import me.sd_master92.customvoting.constants.enumerations.VotePartyType
 import me.sd_master92.customvoting.database.PlayerDatabase
 import me.sd_master92.customvoting.database.PlayerTable
@@ -195,7 +195,7 @@ class CV : CustomPlugin(
             Voter.init(this)
         } / 1000
         infoLog("|___finished caching in ${time}s")
-        Settings.initialize(this)
+        Setting.initialize(this)
         Message.initialize(this)
         Data.initialize(this)
     }
@@ -207,7 +207,7 @@ class CV : CustomPlugin(
         infoLog("|")
         if (useDatabase())
         {
-            val database = CustomDatabase(config, Settings.DATABASE.path)
+            val database = CustomDatabase(config, Setting.DATABASE.path)
             if (!database.connect())
             {
                 errorLog("|___could not connect to database")
@@ -224,14 +224,14 @@ class CV : CustomPlugin(
     private fun setupBStatsMetrics()
     {
         val metrics = Metrics(this, 13544)
-        metrics.addCustomChart(SimplePie("ingame_updates_enabled") { if (config.getBoolean(Settings.INGAME_UPDATES.path)) "true" else "false" })
+        metrics.addCustomChart(SimplePie("ingame_updates_enabled") { if (config.getBoolean(Setting.INGAME_UPDATES.path)) "true" else "false" })
         metrics.addCustomChart(SimplePie("database_enabled") { if (useDatabase()) "true" else "false" })
-        metrics.addCustomChart(SimplePie("vote_party_enabled") { if (config.getBoolean(Settings.VOTE_PARTY.path)) "true" else "false" })
-        metrics.addCustomChart(SimplePie("lucky_vote_enabled") { if (config.getBoolean(Settings.LUCKY_VOTE.path)) "true" else "false" })
-        metrics.addCustomChart(SimplePie("uuid_support") { if (config.getBoolean(Settings.UUID_STORAGE.path)) "true" else "false" })
+        metrics.addCustomChart(SimplePie("vote_party_enabled") { if (config.getBoolean(Setting.VOTE_PARTY.path)) "true" else "false" })
+        metrics.addCustomChart(SimplePie("lucky_vote_enabled") { if (config.getBoolean(Setting.LUCKY_VOTE.path)) "true" else "false" })
+        metrics.addCustomChart(SimplePie("uuid_support") { if (config.getBoolean(Setting.UUID_STORAGE.path)) "true" else "false" })
         metrics.addCustomChart(SimplePie("vote_party_type") {
-            if (config.getBoolean(Settings.VOTE_PARTY.path)) VotePartyType.valueOf(
-                config.getNumber(Settings.VOTE_PARTY_TYPE.path)
+            if (config.getBoolean(Setting.VOTE_PARTY.path)) VotePartyType.valueOf(
+                config.getNumber(Setting.VOTE_PARTY_TYPE.path)
             ).label else "None"
         })
         metrics.addCustomChart(SimplePie("vote_crates") {
@@ -267,7 +267,7 @@ class CV : CustomPlugin(
 
     private fun useDatabase(): Boolean
     {
-        return config.getBoolean(Settings.USE_DATABASE.path)
+        return config.getBoolean(Setting.USE_DATABASE.path)
     }
 
     fun hasDatabaseConnection(): Boolean

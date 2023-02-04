@@ -3,7 +3,7 @@ package me.sd_master92.customvoting.gui.general
 import me.sd_master92.core.inventory.BaseItem
 import me.sd_master92.core.inventory.GUI
 import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.constants.enumerations.Settings
+import me.sd_master92.customvoting.constants.enumerations.Setting
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.constants.enumerations.Strings
 import org.bukkit.Bukkit
@@ -36,7 +36,7 @@ class DisabledWorlds(private val plugin: CV) :
                 {
                     world = ""
                 }
-                val worlds = plugin.config.getStringList(Settings.DISABLED_WORLDS.path)
+                val worlds = plugin.config.getStringList(Setting.DISABLED_WORLDS.path)
                 if (worlds.contains(world))
                 {
                     worlds.remove(world)
@@ -44,7 +44,7 @@ class DisabledWorlds(private val plugin: CV) :
                 {
                     worlds.add(world)
                 }
-                plugin.config[Settings.DISABLED_WORLDS.path] = worlds
+                plugin.config[Setting.DISABLED_WORLDS.path] = worlds
                 plugin.config.saveConfig()
                 event.currentItem = DisabledWorld(plugin, world)
             }
@@ -73,7 +73,7 @@ class DisabledWorlds(private val plugin: CV) :
 class DisabledWorld(plugin: CV, world: String) : BaseItem(
     Material.GRASS_BLOCK, Strings.DISABLED_WORLD_ITEM_NAME_X.with(world),
     Strings.GENERAL_ITEM_LORE_DISABLED_X.with(
-        if (plugin.config.getStringList(Settings.DISABLED_WORLDS.path)
+        if (plugin.config.getStringList(Setting.DISABLED_WORLDS.path)
                 .contains(world)
         )
             Strings.GENERAL_VALUE_YES.toString() else Strings.GENERAL_VALUE_NO.toString()

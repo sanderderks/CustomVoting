@@ -4,7 +4,7 @@ import me.sd_master92.core.command.SimpleCommand
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Voter
 import me.sd_master92.customvoting.constants.enumerations.Message
-import me.sd_master92.customvoting.constants.enumerations.Settings
+import me.sd_master92.customvoting.constants.enumerations.Setting
 import me.sd_master92.customvoting.sendText
 import me.sd_master92.customvoting.sendTexts
 import org.bukkit.command.CommandSender
@@ -34,7 +34,7 @@ class VoteTopCommand(private val plugin: CV) : SimpleCommand(plugin, "votetop")
                         placeholders["%PLAYER%"] = topVoter.name
                         placeholders["%VOTES%"] = "${topVoter.votes}"
                         placeholders["%MONTHLY_VOTES%"] = "${topVoter.monthlyVotes}"
-                        if (plugin.config.getBoolean(Settings.MONTHLY_VOTES.path))
+                        if (plugin.config.getBoolean(Setting.MONTHLY_VOTES.path))
                         {
                             placeholders["%s%"] = if (topVoter.monthlyVotes == 1) "" else "s"
                         } else

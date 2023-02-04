@@ -95,7 +95,7 @@ class PlayerListener(private val plugin: CV) : Listener
                         if (section.getString("$top.$sub") == event.rightClicked.uniqueId.toString())
                         {
                             event.isCancelled = true
-                            if (!plugin.config.getBoolean(Settings.DISABLED_MESSAGE_ARMOR_STAND.path))
+                            if (!plugin.config.getBoolean(Setting.DISABLED_MESSAGE_ARMOR_STAND.path))
                             {
                                 event.player.sendText(plugin, Message.VOTE_TOP_STANDS_DONT)
                             }

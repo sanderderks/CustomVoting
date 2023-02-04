@@ -5,7 +5,7 @@ import me.sd_master92.core.inventory.GUI
 import me.sd_master92.core.inventory.StatusItem
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.VoteFile
-import me.sd_master92.customvoting.constants.enumerations.Settings
+import me.sd_master92.customvoting.constants.enumerations.Setting
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.constants.enumerations.Strings
 import me.sd_master92.customvoting.gui.VoteSettings
@@ -41,8 +41,8 @@ class Support(private val plugin: CV) : GUI(plugin, Strings.SUPPORT_INVENTORY_NA
             {
                 SoundType.CHANGE.play(plugin, player)
                 plugin.config.set(
-                    Settings.INGAME_UPDATES.path,
-                    !plugin.config.getBoolean(Settings.INGAME_UPDATES.path)
+                    Setting.INGAME_UPDATES.path,
+                    !plugin.config.getBoolean(Setting.INGAME_UPDATES.path)
                 )
                 plugin.config.saveConfig()
                 event.currentItem = IngameUpdateItem(plugin)
@@ -152,7 +152,7 @@ class UpdateItem(plugin: CV) : BaseItem(
 
 class IngameUpdateItem(plugin: CV) : StatusItem(
     Material.FILLED_MAP, Strings.SUPPORT_ITEM_NAME_INGAME_UPDATE.toString(),
-    plugin.config, Settings.INGAME_UPDATES.path
+    plugin.config, Setting.INGAME_UPDATES.path
 )
 
 class MergeItem(plugin: CV) : BaseItem(

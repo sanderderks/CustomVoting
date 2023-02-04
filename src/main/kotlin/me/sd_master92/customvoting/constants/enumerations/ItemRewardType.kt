@@ -13,7 +13,7 @@ enum class ItemRewardType(val value: Int, val label: String)
         fun next(plugin: CV, op: Boolean): ItemRewardType
         {
             val currentValue =
-                valueOf(plugin.config.getNumber(Settings.ITEM_REWARD_TYPE.path + if (op) Data.OP_REWARDS else "")).value
+                valueOf(plugin.config.getNumber(Setting.ITEM_REWARD_TYPE.path + if (op) Data.OP_REWARDS else "")).value
             return if (currentValue < values().size - 1)
             {
                 valueOf(currentValue + 1)

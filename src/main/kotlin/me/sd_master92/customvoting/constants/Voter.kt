@@ -2,7 +2,7 @@ package me.sd_master92.customvoting.constants
 
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.VoteFile
-import me.sd_master92.customvoting.constants.enumerations.Settings
+import me.sd_master92.customvoting.constants.enumerations.Setting
 import me.sd_master92.customvoting.database.PlayerTable
 import me.sd_master92.customvoting.subjects.VoteTopSign
 import me.sd_master92.customvoting.subjects.VoteTopStand
@@ -41,7 +41,7 @@ interface Voter
             {
                 val type = if (plugin.hasDatabaseConnection()) PlayerTable else VoteFile
                 val topVoters = type.getAll(plugin)
-                val useMonthly = plugin.config.getBoolean(Settings.MONTHLY_VOTES.path)
+                val useMonthly = plugin.config.getBoolean(Setting.MONTHLY_VOTES.path)
 
                 topVoters.sortWith { x: Voter, y: Voter ->
                     var compare = if (useMonthly)

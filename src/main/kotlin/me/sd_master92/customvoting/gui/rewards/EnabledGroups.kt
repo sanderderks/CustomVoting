@@ -3,7 +3,7 @@ package me.sd_master92.customvoting.gui.rewards
 import me.sd_master92.core.inventory.BaseItem
 import me.sd_master92.core.inventory.GUI
 import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.constants.enumerations.Settings
+import me.sd_master92.customvoting.constants.enumerations.Setting
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.constants.enumerations.Strings
 import org.bukkit.ChatColor
@@ -35,7 +35,7 @@ class EnabledGroups(private val plugin: CV) :
                 {
                     group = ""
                 }
-                val groups = plugin.config.getStringList(Settings.ENABLED_OP_GROUPS.path)
+                val groups = plugin.config.getStringList(Setting.ENABLED_OP_GROUPS.path)
                 if (groups.contains(group.lowercase()))
                 {
                     groups.remove(group)
@@ -43,7 +43,7 @@ class EnabledGroups(private val plugin: CV) :
                 {
                     groups.add(group)
                 }
-                plugin.config[Settings.ENABLED_OP_GROUPS.path] = groups
+                plugin.config[Setting.ENABLED_OP_GROUPS.path] = groups
                 plugin.config.saveConfig()
                 event.currentItem = EnabledGroup(plugin, group).update()
             }
@@ -75,7 +75,7 @@ class EnabledGroups(private val plugin: CV) :
 class EnabledGroup(private val plugin: CV, private val name: String) : BaseItem(
     Material.GREEN_WOOL, Strings.ENABLED_GROUP_ITEM_NAME_X.with(name.lowercase()),
     Strings.GENERAL_ITEM_LORE_ENABLED_X.with(
-        if (plugin.config.getStringList(Settings.ENABLED_OP_GROUPS.path)
+        if (plugin.config.getStringList(Setting.ENABLED_OP_GROUPS.path)
                 .contains(name.lowercase())
         )
             Strings.GENERAL_VALUE_YES.toString() else Strings.GENERAL_VALUE_NO.toString()
@@ -84,7 +84,7 @@ class EnabledGroup(private val plugin: CV, private val name: String) : BaseItem(
 {
     fun update(): EnabledGroup
     {
-        if (!plugin.config.getStringList(Settings.ENABLED_OP_GROUPS.path).contains(name.lowercase()))
+        if (!plugin.config.getStringList(Setting.ENABLED_OP_GROUPS.path).contains(name.lowercase()))
         {
             type = Material.RED_WOOL
         }

@@ -4,7 +4,7 @@ import me.sd_master92.core.inventory.BaseItem
 import me.sd_master92.core.inventory.GUI
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.Materials
-import me.sd_master92.customvoting.constants.enumerations.Settings
+import me.sd_master92.customvoting.constants.enumerations.Setting
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.constants.enumerations.Strings
 import me.sd_master92.customvoting.gui.general.GeneralSettings
@@ -67,7 +67,7 @@ class VoteSettings(private val plugin: CV) : GUI(plugin, Strings.SETTINGS_INVENT
     @EventHandler
     fun onInventoryOpen(event: InventoryOpenEvent)
     {
-        if (isThisInventory(event) && !plugin.config.getBoolean(Settings.SETTINGS_ENABLED.path))
+        if (isThisInventory(event) && !plugin.config.getBoolean(Setting.SETTINGS_ENABLED.path))
         {
             event.isCancelled = true
             event.player.sendMessage(Strings.SETTINGS_ERROR_DISABLED.toString())

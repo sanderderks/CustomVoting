@@ -4,7 +4,7 @@ import me.sd_master92.core.tasks.TaskTimer
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Voter
 import me.sd_master92.customvoting.constants.enumerations.Message
-import me.sd_master92.customvoting.constants.enumerations.Settings
+import me.sd_master92.customvoting.constants.enumerations.Setting
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.sendTexts
 import org.bukkit.Bukkit
@@ -17,7 +17,7 @@ class VoteReminder(private val plugin: CV)
     {
         fun remindPlayer(plugin: CV, player: Player)
         {
-            if (!plugin.config.getBoolean(Settings.DISABLED_MESSAGE_VOTE_REMINDER.path))
+            if (!plugin.config.getBoolean(Setting.DISABLED_MESSAGE_VOTE_REMINDER.path))
             {
                 TaskTimer.delay(plugin, 20 * 10)
                 {
