@@ -117,7 +117,7 @@ enum class Strings(
     GENERAL_SETTINGS_INVENTORY_NAME("General Settings"),
     GENERAL_VALUE_CONNECTED("Connected", GREEN),
     GENERAL_VALUE_DISABLED("Disabled", RED),
-    GENERAL_VALUE_NEVER("Never", RED),
+    GENERAL_VALUE_NEVER("never", RED),
     GENERAL_VALUE_NO("No", RED),
     GENERAL_VALUE_YES("Yes", GREEN),
 
