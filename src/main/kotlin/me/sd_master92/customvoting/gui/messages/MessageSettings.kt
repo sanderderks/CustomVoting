@@ -4,10 +4,10 @@ import me.sd_master92.core.inventory.BaseItem
 import me.sd_master92.core.inventory.GUI
 import me.sd_master92.core.inventory.StatusItem
 import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.constants.enumerations.Materials
 import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.Setting
 import me.sd_master92.customvoting.constants.enumerations.SoundType
+import me.sd_master92.customvoting.constants.enumerations.VMaterial
 import me.sd_master92.customvoting.gui.VoteSettings
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -21,7 +21,7 @@ class MessageSettings(private val plugin: CV) : GUI(plugin, PMessage.MESSAGE_SET
     {
         when (item.type)
         {
-            Materials.SOUL_TORCH.get() ->
+            VMaterial.SOUL_TORCH.get() ->
             {
                 SoundType.CLICK.play(plugin, player)
                 cancelCloseEvent = true
@@ -148,7 +148,7 @@ class MessageSettings(private val plugin: CV) : GUI(plugin, PMessage.MESSAGE_SET
     companion object
     {
         val VOTE_LINKS = BaseItem(
-            Materials.SOUL_TORCH.get(),
+            VMaterial.SOUL_TORCH.get(),
             PMessage.VOTE_LINKS_ITEM_NAME.toString(),
             PMessage.VOTE_LINKS_ITEM_LORE.toString()
         )

@@ -3,10 +3,10 @@ package me.sd_master92.customvoting.gui
 import me.sd_master92.core.inventory.BaseItem
 import me.sd_master92.core.inventory.GUI
 import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.constants.enumerations.Materials
 import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.Setting
 import me.sd_master92.customvoting.constants.enumerations.SoundType
+import me.sd_master92.customvoting.constants.enumerations.VMaterial
 import me.sd_master92.customvoting.gui.general.GeneralSettings
 import me.sd_master92.customvoting.gui.messages.MessageSettings
 import me.sd_master92.customvoting.gui.rewards.RewardSettings
@@ -46,7 +46,7 @@ class VoteSettings(private val plugin: CV) : GUI(plugin, PMessage.SETTINGS_INVEN
                 player.openInventory(MessageSettings(plugin).inventory)
             }
 
-            Materials.SPYGLASS.get() ->
+            VMaterial.SPYGLASS.get() ->
             {
                 SoundType.CLICK.play(plugin, player)
                 cancelCloseEvent = true
@@ -89,7 +89,7 @@ class VoteSettings(private val plugin: CV) : GUI(plugin, PMessage.SETTINGS_INVEN
             null, true
         )
         val SUPPORT = BaseItem(
-            Materials.SPYGLASS.get(), PMessage.SETTINGS_ITEM_NAME_SUPPORT.toString(),
+            VMaterial.SPYGLASS.get(), PMessage.SETTINGS_ITEM_NAME_SUPPORT.toString(),
             null, true
         )
     }

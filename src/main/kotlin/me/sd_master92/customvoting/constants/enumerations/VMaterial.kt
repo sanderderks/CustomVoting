@@ -3,7 +3,7 @@ package me.sd_master92.customvoting.constants.enumerations
 import me.sd_master92.customvoting.CV
 import org.bukkit.Material
 
-enum class Materials(
+enum class VMaterial(
     private val material_1_17_plus: String,
     private val material_1_13_plus: String
 )
@@ -19,6 +19,7 @@ enum class Materials(
             {
                 Material.valueOf(material_1_17_plus)
             }
+
             else                ->
             {
                 Material.valueOf(material_1_13_plus)
