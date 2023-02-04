@@ -3,7 +3,7 @@ package me.sd_master92.customvoting.commands
 import me.sd_master92.core.command.SimpleCommand
 import me.sd_master92.core.file.PlayerFile
 import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.constants.enumerations.Messages
+import me.sd_master92.customvoting.constants.enumerations.Message
 import me.sd_master92.customvoting.constants.enumerations.Strings
 import me.sd_master92.customvoting.sendText
 import me.sd_master92.customvoting.subjects.CustomVote
@@ -32,7 +32,7 @@ class FakeVoteCommand(private val plugin: CV) : SimpleCommand(plugin, "fakevote"
                 fakeVote(name, service)
             } else
             {
-                sender.sendText(plugin, Messages.INVALID_PLAYER)
+                sender.sendText(plugin, Message.INVALID_PLAYER)
             }
         }
     }
@@ -48,6 +48,6 @@ class FakeVoteCommand(private val plugin: CV) : SimpleCommand(plugin, "fakevote"
 
     init
     {
-        withNoPermMessage(Messages.NO_PERMISSION.getMessage(plugin))
+        withNoPermMessage(Message.NO_PERMISSION.getMessage(plugin))
     }
 }

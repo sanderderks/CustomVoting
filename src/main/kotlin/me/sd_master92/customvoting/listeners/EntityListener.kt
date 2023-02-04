@@ -1,7 +1,7 @@
 package me.sd_master92.customvoting.listeners
 
 import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.constants.enumerations.Messages
+import me.sd_master92.customvoting.constants.enumerations.Message
 import me.sd_master92.customvoting.helpers.ParticleHelper
 import me.sd_master92.customvoting.subjects.voteparty.VoteParty
 import me.sd_master92.customvoting.subjects.voteparty.VotePartyChest
@@ -55,7 +55,7 @@ class EntityListener(private val plugin: CV) : Listener
                 placeholders["%TOGO%"] = "" + PIG_HUNT.size
                 placeholders["%KILLER%"] = event.entity.killer?.name ?: event.entity.type.toString()
                 placeholders["%s%"] = if (PIG_HUNT.size == 1) "" else "s"
-                plugin.broadcastText(Messages.VOTE_PARTY_PIG_KILLED, placeholders)
+                plugin.broadcastText(Message.VOTE_PARTY_PIG_KILLED, placeholders)
             }
         }
     }

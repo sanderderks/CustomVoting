@@ -32,7 +32,7 @@ class VoteParty(private val plugin: CV)
                             val placeholders = HashMap<String, String>()
                             placeholders["%TIME%"] = "" + it.count
                             SoundType.NOTIFY.playForAll(plugin)
-                            plugin.broadcastText(Messages.VOTE_PARTY_COUNTDOWN, placeholders)
+                            plugin.broadcastText(Message.VOTE_PARTY_COUNTDOWN, placeholders)
                         }
                     }
 
@@ -44,7 +44,7 @@ class VoteParty(private val plugin: CV)
                             placeholders["%TIME%"] = "" + it.count
                             placeholders["%s%"] = if (it.count == 1) "" else "s"
                             SoundType.NOTIFY.playForAll(plugin)
-                            plugin.broadcastText(Messages.VOTE_PARTY_COUNTDOWN_ENDING, placeholders)
+                            plugin.broadcastText(Message.VOTE_PARTY_COUNTDOWN_ENDING, placeholders)
                         }
                     }
 
@@ -63,7 +63,7 @@ class VoteParty(private val plugin: CV)
                         }
                         val placeholders = HashMap<String, String>()
                         placeholders["%TYPE%"] = votePartyType.label
-                        plugin.broadcastText(Messages.VOTE_PARTY_START, placeholders)
+                        plugin.broadcastText(Message.VOTE_PARTY_START, placeholders)
                         executeCommands()
                         when (votePartyType)
                         {
@@ -252,7 +252,7 @@ class VoteParty(private val plugin: CV)
 
         fun stop(plugin: CV)
         {
-            plugin.broadcastText(Messages.VOTE_PARTY_END)
+            plugin.broadcastText(Message.VOTE_PARTY_END)
 
             isActive = false
             queue.removeFirstOrNull()

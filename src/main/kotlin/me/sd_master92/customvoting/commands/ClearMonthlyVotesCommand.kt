@@ -3,7 +3,7 @@ package me.sd_master92.customvoting.commands
 import me.sd_master92.core.command.SimpleCommand
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Voter
-import me.sd_master92.customvoting.constants.enumerations.Messages
+import me.sd_master92.customvoting.constants.enumerations.Message
 import me.sd_master92.customvoting.constants.enumerations.Strings
 import me.sd_master92.customvoting.sendText
 import org.bukkit.command.CommandSender
@@ -33,7 +33,7 @@ class ClearMonthlyVotesCommand(private val plugin: CV) : SimpleCommand(plugin, "
                 sender.sendMessage(Strings.MONTHLY_VOTES_MESSAGE_RESET_SUCCESS_OTHER_X.with(voter.name))
             } else
             {
-                sender.sendText(plugin, Messages.INVALID_PLAYER)
+                sender.sendText(plugin, Message.INVALID_PLAYER)
             }
         }
     }
@@ -44,6 +44,6 @@ class ClearMonthlyVotesCommand(private val plugin: CV) : SimpleCommand(plugin, "
 
     init
     {
-        withNoPermMessage(Messages.NO_PERMISSION.getMessage(plugin))
+        withNoPermMessage(Message.NO_PERMISSION.getMessage(plugin))
     }
 }

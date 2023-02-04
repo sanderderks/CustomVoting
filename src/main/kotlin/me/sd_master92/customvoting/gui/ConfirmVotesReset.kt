@@ -3,7 +3,7 @@ package me.sd_master92.customvoting.gui
 import me.sd_master92.core.inventory.ConfirmGUI
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Voter
-import me.sd_master92.customvoting.constants.enumerations.Messages
+import me.sd_master92.customvoting.constants.enumerations.Message
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.constants.enumerations.Strings
 import me.sd_master92.customvoting.tasks.ResetChecker
@@ -32,7 +32,7 @@ class ConfirmVotesReset(private val plugin: CV, private val monthly: Boolean) :
             }
         }
         ResetChecker.FIRST_OF_MONTH = false
-        plugin.broadcastText(Messages.MONTHLY_RESET)
+        plugin.broadcastText(Message.MONTHLY_RESET)
         player.openInventory(VoteSettings(plugin).inventory)
     }
 

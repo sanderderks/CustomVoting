@@ -9,7 +9,7 @@ import me.sd_master92.customvoting.commands.*
 import me.sd_master92.customvoting.commands.voteparty.VotePartyCommand
 import me.sd_master92.customvoting.constants.Voter
 import me.sd_master92.customvoting.constants.enumerations.Data
-import me.sd_master92.customvoting.constants.enumerations.Messages
+import me.sd_master92.customvoting.constants.enumerations.Message
 import me.sd_master92.customvoting.constants.enumerations.Settings
 import me.sd_master92.customvoting.constants.enumerations.VotePartyType
 import me.sd_master92.customvoting.database.PlayerDatabase
@@ -196,7 +196,7 @@ class CV : CustomPlugin(
         } / 1000
         infoLog("|___finished caching in ${time}s")
         Settings.initialize(this)
-        Messages.initialize(this)
+        Message.initialize(this)
         Data.initialize(this)
     }
 
@@ -318,7 +318,7 @@ class CV : CustomPlugin(
         this.server.dispatchCommand(this.server.consoleSender, command)
     }
 
-    fun broadcastText(message: Messages, placeholders: Map<String, String> = HashMap())
+    fun broadcastText(message: Message, placeholders: Map<String, String> = HashMap())
     {
         server.broadcastMessage(message.getMessage(this, placeholders))
     }

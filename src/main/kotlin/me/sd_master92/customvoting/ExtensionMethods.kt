@@ -2,7 +2,7 @@ package me.sd_master92.customvoting
 
 import me.clip.placeholderapi.PlaceholderAPI
 import me.sd_master92.core.file.PlayerFile
-import me.sd_master92.customvoting.constants.enumerations.Messages
+import me.sd_master92.customvoting.constants.enumerations.Message
 import me.sd_master92.customvoting.constants.enumerations.Settings
 import me.sd_master92.customvoting.constants.enumerations.Strings
 import me.sd_master92.customvoting.database.PlayerTable
@@ -54,7 +54,7 @@ fun CommandSender?.sendText(message: String)
     }
 }
 
-fun CommandSender?.sendText(plugin: CV, message: Messages, placeholders: Map<String, String> = HashMap())
+fun CommandSender?.sendText(plugin: CV, message: Message, placeholders: Map<String, String> = HashMap())
 {
     this?.sendText(message.getMessage(plugin, placeholders))
 }
@@ -70,7 +70,7 @@ fun CommandSender?.sendTexts(messages: List<String>)
     }
 }
 
-fun CommandSender?.sendTexts(plugin: CV, message: Messages, placeholders: Map<String, String> = HashMap())
+fun CommandSender?.sendTexts(plugin: CV, message: Message, placeholders: Map<String, String> = HashMap())
 {
     if (this != null)
     {

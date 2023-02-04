@@ -97,7 +97,7 @@ class PlayerListener(private val plugin: CV) : Listener
                             event.isCancelled = true
                             if (!plugin.config.getBoolean(Settings.DISABLED_MESSAGE_ARMOR_STAND.path))
                             {
-                                event.player.sendText(plugin, Messages.VOTE_TOP_STANDS_DONT)
+                                event.player.sendText(plugin, Message.VOTE_TOP_STANDS_DONT)
                             }
                         }
                     }

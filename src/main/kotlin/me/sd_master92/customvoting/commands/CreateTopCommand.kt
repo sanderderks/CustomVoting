@@ -3,7 +3,7 @@ package me.sd_master92.customvoting.commands
 import me.sd_master92.core.command.SimpleCommand
 import me.sd_master92.core.errorLog
 import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.constants.enumerations.Messages
+import me.sd_master92.customvoting.constants.enumerations.Message
 import me.sd_master92.customvoting.constants.enumerations.Strings
 import me.sd_master92.customvoting.subjects.VoteTopStand
 import org.bukkit.command.CommandSender
@@ -39,8 +39,8 @@ class CreateTopCommand(private val plugin: CV) : SimpleCommand(plugin, "createto
 
     init
     {
-        withPlayer(Messages.MUST_BE_PLAYER.getMessage(plugin))
+        withPlayer(Message.MUST_BE_PLAYER.getMessage(plugin))
         withUsage(Strings.VOTE_TOP_MESSAGE_CREATE_COMMAND_USAGE.toString())
-        withNoPermMessage(Messages.NO_PERMISSION.getMessage(plugin))
+        withNoPermMessage(Message.NO_PERMISSION.getMessage(plugin))
     }
 }

@@ -5,7 +5,7 @@ import me.sd_master92.core.command.SimpleCommand
 import me.sd_master92.core.file.PlayerFile
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Voter
-import me.sd_master92.customvoting.constants.enumerations.Messages
+import me.sd_master92.customvoting.constants.enumerations.Message
 import me.sd_master92.customvoting.constants.enumerations.Strings
 import me.sd_master92.customvoting.subjects.VoteTopSign
 import me.sd_master92.customvoting.subjects.VoteTopStand
@@ -54,6 +54,6 @@ class ReloadCommand(private val plugin: CV) : SimpleCommand(plugin, "votereload"
 
     init
     {
-        withNoPermMessage(Messages.NO_PERMISSION.getMessage(plugin))
+        withNoPermMessage(Message.NO_PERMISSION.getMessage(plugin))
     }
 }

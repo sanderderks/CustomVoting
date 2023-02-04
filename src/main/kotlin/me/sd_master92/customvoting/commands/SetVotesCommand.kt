@@ -3,7 +3,7 @@ package me.sd_master92.customvoting.commands
 import me.sd_master92.core.command.SimpleCommand
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Voter
-import me.sd_master92.customvoting.constants.enumerations.Messages
+import me.sd_master92.customvoting.constants.enumerations.Message
 import me.sd_master92.customvoting.constants.enumerations.Strings
 import me.sd_master92.customvoting.sendText
 import org.bukkit.command.CommandSender
@@ -53,7 +53,7 @@ class SetVotesCommand(private val plugin: CV) : SimpleCommand(plugin, "setvotes"
                         sender.sendMessage(Strings.VOTES_SET_MESSAGE_OTHER_XY.with(voter.name, "$n"))
                     } else
                     {
-                        sender.sendText(plugin, Messages.INVALID_PLAYER)
+                        sender.sendText(plugin, Message.INVALID_PLAYER)
                     }
                 } else
                 {
@@ -73,6 +73,6 @@ class SetVotesCommand(private val plugin: CV) : SimpleCommand(plugin, "setvotes"
     init
     {
         withUsage(Strings.VOTES_SET_MESSAGE_COMMAND_USAGE.toString())
-        withNoPermMessage(Messages.NO_PERMISSION.getMessage(plugin))
+        withNoPermMessage(Message.NO_PERMISSION.getMessage(plugin))
     }
 }

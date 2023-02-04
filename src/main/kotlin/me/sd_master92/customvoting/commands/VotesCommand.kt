@@ -3,7 +3,7 @@ package me.sd_master92.customvoting.commands
 import me.sd_master92.core.command.SimpleCommand
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Voter
-import me.sd_master92.customvoting.constants.enumerations.Messages
+import me.sd_master92.customvoting.constants.enumerations.Message
 import me.sd_master92.customvoting.constants.enumerations.Settings
 import me.sd_master92.customvoting.sendText
 import org.bukkit.command.CommandSender
@@ -28,7 +28,7 @@ class VotesCommand(private val plugin: CV) : SimpleCommand(plugin, "votes")
                 {
                     placeholders["%s%"] = if (voter.votes == 1) "" else "s"
                 }
-                sender.sendText(plugin, Messages.VOTES_COMMAND_SELF, placeholders)
+                sender.sendText(plugin, Message.VOTES_COMMAND_SELF, placeholders)
             }
         } else
         {
@@ -47,10 +47,10 @@ class VotesCommand(private val plugin: CV) : SimpleCommand(plugin, "votes")
                 {
                     placeholders["%s%"] = if (voter.votes == 1) "" else "s"
                 }
-                sender.sendText(plugin, Messages.VOTES_COMMAND_OTHERS, placeholders)
+                sender.sendText(plugin, Message.VOTES_COMMAND_OTHERS, placeholders)
             } else
             {
-                sender.sendText(plugin, Messages.VOTES_COMMAND_NOT_FOUND)
+                sender.sendText(plugin, Message.VOTES_COMMAND_NOT_FOUND)
             }
         }
     }
@@ -61,6 +61,6 @@ class VotesCommand(private val plugin: CV) : SimpleCommand(plugin, "votes")
 
     init
     {
-        withNoPermMessage(Messages.NO_PERMISSION.getMessage(plugin))
+        withNoPermMessage(Message.NO_PERMISSION.getMessage(plugin))
     }
 }

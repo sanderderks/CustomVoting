@@ -4,7 +4,7 @@ import me.sd_master92.core.tasks.TaskTimer
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Voter
 import me.sd_master92.customvoting.constants.enumerations.Data
-import me.sd_master92.customvoting.constants.enumerations.Messages
+import me.sd_master92.customvoting.constants.enumerations.Message
 import me.sd_master92.customvoting.constants.enumerations.Settings
 import me.sd_master92.customvoting.constants.enumerations.Strings
 import org.bukkit.Bukkit
@@ -40,7 +40,7 @@ class VoteTopSign @JvmOverloads constructor(
         if (location!!.block.state is Sign)
         {
             val sign = location.block.state as Sign
-            val messages = Messages.VOTE_TOP_SIGNS_TITLE_SIGN.getMessages(plugin)
+            val messages = Message.VOTE_TOP_SIGNS_TITLE_SIGN.getMessages(plugin)
             for (i in messages.indices)
             {
                 sign.setLine(i, messages[i])
@@ -69,7 +69,7 @@ class VoteTopSign @JvmOverloads constructor(
                             {
                                 oldSign.setLine(
                                     i,
-                                    Messages.VOTE_TOP_SIGNS_PLAYER_SIGNS_OUTDATED.getMessage(plugin)
+                                    Message.VOTE_TOP_SIGNS_PLAYER_SIGNS_OUTDATED.getMessage(plugin)
                                 )
                             } else
                             {
@@ -92,7 +92,7 @@ class VoteTopSign @JvmOverloads constructor(
                 {
                     placeholders["%s%"] = if (topVoter.votes == 1) "" else "s"
                 }
-                for ((i, message) in Messages.VOTE_TOP_SIGNS_PLAYER_SIGNS_FORMAT.getMessages(plugin, placeholders)
+                for ((i, message) in Message.VOTE_TOP_SIGNS_PLAYER_SIGNS_FORMAT.getMessages(plugin, placeholders)
                     .withIndex())
                 {
                     sign.setLine(i, message)
@@ -106,7 +106,7 @@ class VoteTopSign @JvmOverloads constructor(
                     {
                         sign.setLine(
                             i,
-                            Messages.VOTE_TOP_SIGNS_PLAYER_SIGNS_NOT_FOUND.getMessage(plugin)
+                            Message.VOTE_TOP_SIGNS_PLAYER_SIGNS_NOT_FOUND.getMessage(plugin)
                         )
                     } else
                     {

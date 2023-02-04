@@ -5,7 +5,7 @@ import me.sd_master92.core.tasks.TaskTimer
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Voter
 import me.sd_master92.customvoting.constants.enumerations.Data
-import me.sd_master92.customvoting.constants.enumerations.Messages
+import me.sd_master92.customvoting.constants.enumerations.Message
 import me.sd_master92.customvoting.constants.enumerations.Strings
 import net.citizensnpcs.api.CitizensAPI
 import net.citizensnpcs.api.npc.NPC
@@ -228,9 +228,9 @@ class VoteTopStand @JvmOverloads constructor(private val plugin: CV, private val
             }
             votesStand?.equipment?.helmet = skull
         }
-        topStand?.customName = Messages.VOTE_TOP_STANDS_TOP.getMessage(plugin, placeholders)
-        nameStand?.customName = Messages.VOTE_TOP_STANDS_CENTER.getMessage(plugin, placeholders)
-        votesStand?.customName = Messages.VOTE_TOP_STANDS_BOTTOM.getMessage(plugin, placeholders)
+        topStand?.customName = Message.VOTE_TOP_STANDS_TOP.getMessage(plugin, placeholders)
+        nameStand?.customName = Message.VOTE_TOP_STANDS_CENTER.getMessage(plugin, placeholders)
+        votesStand?.customName = Message.VOTE_TOP_STANDS_BOTTOM.getMessage(plugin, placeholders)
     }
 
     private fun doesNotExist(): Boolean

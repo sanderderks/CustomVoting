@@ -2,7 +2,7 @@ package me.sd_master92.customvoting.constants.enumerations
 
 import me.sd_master92.customvoting.CV
 
-enum class Messages(private val path: String, private val defaultValue: Any?)
+enum class Message(private val path: String, private val defaultValue: Any?)
 {
     NO_PERMISSION("no_permission", "&cYou do not have permission to perform this command."),
     MUST_BE_PLAYER("must_be_player", "&cYou must be a player to perform this command."),

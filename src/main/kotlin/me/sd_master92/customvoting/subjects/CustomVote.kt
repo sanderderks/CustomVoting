@@ -32,7 +32,7 @@ class CustomVote(
         {
             if (!plugin.config.getBoolean(Settings.DISABLED_MESSAGE_DISABLED_WORLD.path))
             {
-                player.sendText(plugin, Messages.DISABLED_WORLD)
+                player.sendText(plugin, Message.DISABLED_WORLD)
             }
             queue()
         } else
@@ -87,7 +87,7 @@ class CustomVote(
             val placeholders = HashMap<String, String>()
             placeholders["%PLAYER%"] = username
             placeholders["%SERVICE%"] = serviceName
-            plugin.broadcastText(Messages.VOTE_BROADCAST, placeholders)
+            plugin.broadcastText(Message.VOTE_BROADCAST, placeholders)
         }
     }
 
@@ -115,7 +115,7 @@ class CustomVote(
                             val placeholders = HashMap<String, String>()
                             placeholders["%VOTES%"] = "$updatedVotesUntil"
                             placeholders["%s%"] = if (updatedVotesUntil == 1) "" else "s"
-                            plugin.broadcastText(Messages.VOTE_PARTY_UNTIL, placeholders)
+                            plugin.broadcastText(Message.VOTE_PARTY_UNTIL, placeholders)
                         }
                         isAwaitingBroadcast = false
                     }.run()
@@ -134,7 +134,7 @@ class CustomVote(
         {
             val placeholders = HashMap<String, String>()
             placeholders["%MONEY%"] = DecimalFormat("#.##").format(money)
-            rewardMessage += Messages.VOTE_REWARD_MONEY.getMessage(plugin, placeholders)
+            rewardMessage += Message.VOTE_REWARD_MONEY.getMessage(plugin, placeholders)
         }
         val xp = giveExperience(player, op)
         if (xp > 0)
@@ -142,8 +142,8 @@ class CustomVote(
             val placeholders = HashMap<String, String>()
             placeholders["%XP%"] = "$xp"
             placeholders["%s%"] = if (xp == 1) "" else "s"
-            rewardMessage += if (rewardMessage.isEmpty()) "" else Messages.VOTE_REWARD_DIVIDER.getMessage(plugin)
-            rewardMessage += Messages.VOTE_REWARD_XP.getMessage(plugin, placeholders)
+            rewardMessage += if (rewardMessage.isEmpty()) "" else Message.VOTE_REWARD_DIVIDER.getMessage(plugin)
+            rewardMessage += Message.VOTE_REWARD_XP.getMessage(plugin, placeholders)
         }
         giveLuckyReward(player)
         giveMilestoneRewards(player)
@@ -153,7 +153,7 @@ class CustomVote(
         {
             TaskTimer.repeat(plugin, 1, 0, 40)
             {
-                player.sendActionBar(Messages.VOTE_REWARD_PREFIX.getMessage(plugin) + message)
+                player.sendActionBar(Message.VOTE_REWARD_PREFIX.getMessage(plugin) + message)
             }.run()
         }
     }
@@ -196,7 +196,7 @@ class CustomVote(
             if (luckyRewards.isNotEmpty())
             {
                 player.addToInventoryOrDrop(luckyRewards, true)
-                player.sendMessage(Messages.VOTE_LUCKY.getMessage(plugin))
+                player.sendMessage(Message.VOTE_LUCKY.getMessage(plugin))
             }
         }
     }
@@ -221,7 +221,7 @@ class CustomVote(
                 val placeholders = HashMap<String, String>()
                 placeholders["%PLAYER%"] = player.name
                 placeholders["%MILESTONE%"] = "$votes"
-                player.sendText(plugin, Messages.MILESTONE_REACHED, placeholders)
+                player.sendText(plugin, Message.MILESTONE_REACHED, placeholders)
             }
 
             val permissions = plugin.data.getStringList(Data.MILESTONES.path + ".$votes.permissions")

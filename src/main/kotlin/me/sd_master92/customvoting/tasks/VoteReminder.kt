@@ -3,7 +3,7 @@ package me.sd_master92.customvoting.tasks
 import me.sd_master92.core.tasks.TaskTimer
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Voter
-import me.sd_master92.customvoting.constants.enumerations.Messages
+import me.sd_master92.customvoting.constants.enumerations.Message
 import me.sd_master92.customvoting.constants.enumerations.Settings
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.sendTexts
@@ -30,7 +30,7 @@ class VoteReminder(private val plugin: CV)
 
                     if (voter.votes == 0 || now >= next)
                     {
-                        player.sendTexts(plugin, Messages.VOTE_REMINDER)
+                        player.sendTexts(plugin, Message.VOTE_REMINDER)
                         SoundType.NOTIFY.play(plugin, player)
                     }
                 }.run()

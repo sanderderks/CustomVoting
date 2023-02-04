@@ -3,7 +3,7 @@ package me.sd_master92.customvoting.commands
 import me.sd_master92.core.command.SimpleCommand
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Voter
-import me.sd_master92.customvoting.constants.enumerations.Messages
+import me.sd_master92.customvoting.constants.enumerations.Message
 import me.sd_master92.customvoting.constants.enumerations.Settings
 import me.sd_master92.customvoting.sendText
 import me.sd_master92.customvoting.sendTexts
@@ -19,7 +19,7 @@ class VoteTopCommand(private val plugin: CV) : SimpleCommand(plugin, "votetop")
         if (topVoters.isNotEmpty())
         {
             val messages: MutableList<String> = ArrayList()
-            for (message in Messages.VOTE_TOP_COMMAND_FORMAT.getMessages(plugin))
+            for (message in Message.VOTE_TOP_COMMAND_FORMAT.getMessages(plugin))
             {
                 if (!message.contains("%PLAYERS%"))
                 {
@@ -41,14 +41,14 @@ class VoteTopCommand(private val plugin: CV) : SimpleCommand(plugin, "votetop")
                         {
                             placeholders["%s%"] = if (topVoter.votes == 1) "" else "s"
                         }
-                        messages.add(Messages.VOTE_TOP_COMMAND_PLAYERS.getMessage(plugin, placeholders))
+                        messages.add(Message.VOTE_TOP_COMMAND_PLAYERS.getMessage(plugin, placeholders))
                     }
                 }
             }
             sender.sendTexts(messages)
         } else
         {
-            sender.sendText(plugin, Messages.VOTE_TOP_COMMAND_NOT_FOUND)
+            sender.sendText(plugin, Message.VOTE_TOP_COMMAND_NOT_FOUND)
         }
     }
 
@@ -58,6 +58,6 @@ class VoteTopCommand(private val plugin: CV) : SimpleCommand(plugin, "votetop")
 
     init
     {
-        withNoPermMessage(Messages.NO_PERMISSION.getMessage(plugin))
+        withNoPermMessage(Message.NO_PERMISSION.getMessage(plugin))
     }
 }

@@ -2,7 +2,7 @@ package me.sd_master92.customvoting.commands
 
 import me.sd_master92.core.command.SimpleCommand
 import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.constants.enumerations.Messages
+import me.sd_master92.customvoting.constants.enumerations.Message
 import me.sd_master92.customvoting.constants.enumerations.Settings
 import me.sd_master92.customvoting.gui.messages.VoteLinks
 import me.sd_master92.customvoting.sendTexts
@@ -22,13 +22,13 @@ class VoteCommand(private val plugin: CV) : SimpleCommand(plugin, "vote")
             player.openInventory(VoteLinks(plugin, true).inventory)
         } else
         {
-            player.sendTexts(plugin, Messages.VOTE_COMMAND)
+            player.sendTexts(plugin, Message.VOTE_COMMAND)
         }
     }
 
     init
     {
-        withPlayer(Messages.MUST_BE_PLAYER.getMessage(plugin))
-        withNoPermMessage(Messages.NO_PERMISSION.getMessage(plugin))
+        withPlayer(Message.MUST_BE_PLAYER.getMessage(plugin))
+        withNoPermMessage(Message.NO_PERMISSION.getMessage(plugin))
     }
 }
