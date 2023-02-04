@@ -11,6 +11,7 @@ import org.bukkit.ChatColor
  * - MESSAGE
  * - ERROR (message)
  * - UNIT
+ * - FORMAT
  * - ITEM_NAME
  * - ITEM_LORE
  * - INVENTORY_NAME
@@ -120,6 +121,7 @@ enum class Strings(
     GENERAL_VALUE_NEVER("never", RED),
     GENERAL_VALUE_NO("No", RED),
     GENERAL_VALUE_YES("Yes", GREEN),
+    GENERAL_FORMAT_DATE("dd-MM-yyyy"),
 
     ITEM_REWARDS_INVENTORY_NAME("Item Rewards"),
     ITEM_REWARDS_ITEM_NAME("Item Rewards", PURPLE),

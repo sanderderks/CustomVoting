@@ -73,7 +73,7 @@ class InfoPlayer(private val voter: Voter)
     {
         val skull = voter.name.getOfflinePlayer().getSkull()
         val meta = skull.itemMeta
-        val lastVote = if (voter.votes > 0) java.text.SimpleDateFormat(("dd-MM-yyyy"))
+        val lastVote = if (voter.votes > 0) java.text.SimpleDateFormat(Strings.GENERAL_FORMAT_DATE.toString())
             .format(Date(voter.last)) else Strings.GENERAL_VALUE_NEVER.toString()
         meta!!.lore = listOf(
             Strings.PLAYER_INFO_ITEM_LORE_VOTES_X.with("" + voter.votes),
