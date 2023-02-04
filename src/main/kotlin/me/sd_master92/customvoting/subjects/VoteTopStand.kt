@@ -76,7 +76,7 @@ class VoteTopStand @JvmOverloads constructor(private val plugin: CV, private val
     {
         if (uuid != null)
         {
-            val entity = plugin.server.getEntity(UUID.fromString(uuid))
+            val entity = Bukkit.getEntity(UUID.fromString(uuid))
             if (entity is ArmorStand)
             {
                 return entity

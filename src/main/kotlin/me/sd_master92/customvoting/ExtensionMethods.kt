@@ -9,6 +9,7 @@ import me.sd_master92.customvoting.database.PlayerTable
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
 import org.bukkit.Bukkit
+import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.OfflinePlayer
 import org.bukkit.command.CommandSender
@@ -35,6 +36,11 @@ fun String.replaceIfNotNull(oldValue: String, newValue: String?): String
         return this.replace(oldValue, newValue)
     }
     return this
+}
+
+fun String.stripColor(): String
+{
+    return ChatColor.stripColor(this)!!
 }
 
 fun CommandSender?.sendText(message: String)

@@ -9,12 +9,14 @@ import me.sd_master92.customvoting.constants.enumerations.Data
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.constants.enumerations.Strings
 import me.sd_master92.customvoting.gui.items.ItemsRewardItem
-import org.bukkit.ChatColor
+import org.bukkit.Bukkit
 import org.bukkit.Material
+import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
+import java.util.*
 
 class CrateSettings(private val plugin: CV, private val number: Int) : GUI(
     plugin,
@@ -38,7 +40,7 @@ class CrateSettings(private val plugin: CV, private val number: Int) : GUI(
             {
                 SoundType.FAILURE.play(plugin, player)
                 plugin.data.delete(Data.VOTE_CRATES.path + ".$number")
-                player.sendMessage(Strings.CRATE_MESSAGE_DELETED_X.with(Strings.CRATE_NAME_X.with("$number")))
+                player.sendMessage(Strings.CRATE_MESSAGE_DELETED_X.with(Strings.CRATE_NAME_X.with(name)))
                 cancelCloseEvent = true
                 player.openInventory(Crates(plugin).inventory)
             }
@@ -67,8 +69,10 @@ class CrateSettings(private val plugin: CV, private val number: Int) : GUI(
                 player.addToInventoryOrDrop(
                     BaseItem(
                         Material.TRIPWIRE_HOOK,
-                        ChatColor.AQUA.toString() + plugin.data.getString(Data.VOTE_CRATES.path + ".$number.name"),
-                        ChatColor.GRAY.toString() + "#$number",
+                        Strings.CRATE_ITEM_NAME_KEY_X.with(
+                            plugin.data.getString(Data.VOTE_CRATES.path + ".$number.name") ?: ""
+                        ),
+                        Strings.CRATE_ITEM_LORE_KEY_X.with("$number"),
                         true
                     )
                 )
@@ -90,6 +94,15 @@ class CrateSettings(private val plugin: CV, private val number: Int) : GUI(
                         plugin.data.saveConfig()
                         player.sendMessage(Strings.CRATE_MESSAGE_NAME_CHANGED_X.with(input))
                         player.openInventory(CrateSettings(plugin, number).inventory)
+                        val uuid = plugin.data.getString(Data.VOTE_CRATES.path + ".$number.stand")
+                        if (uuid != null)
+                        {
+                            val entity = Bukkit.getEntity(UUID.fromString(uuid))
+                            if (entity is ArmorStand)
+                            {
+                                entity.customName = Strings.CRATE_NAME_STAND_X.with(input)
+                            }
+                        }
                         cancel()
                     }
 
@@ -120,7 +133,7 @@ class CrateSettings(private val plugin: CV, private val number: Int) : GUI(
     init
     {
         inventory.addItem(BaseItem(Material.OAK_SIGN, Strings.CRATE_ITEM_NAME_RENAME.toString()))
-        inventory.addItem(BaseItem(Material.DIAMOND, Strings.CRATE_ITEM_NAME_KEY.toString(), null, true))
+        inventory.addItem(BaseItem(Material.DIAMOND, Strings.CRATE_ITEM_NAME_KEY_GET.toString(), null, true))
         for (chance in Data.CRATE_REWARD_CHANCES)
         {
             inventory.addItem(

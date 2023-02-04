@@ -8,6 +8,7 @@ import me.sd_master92.customvoting.constants.enumerations.Data
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.constants.enumerations.Strings
 import me.sd_master92.customvoting.gui.rewards.RewardSettings
+import me.sd_master92.customvoting.stripColor
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -31,7 +32,7 @@ class Milestones(private val plugin: CV) :
 
             Material.ENDER_PEARL    ->
             {
-                val key = item.itemMeta?.displayName?.split("#")?.get(1)
+                val key = item.itemMeta?.displayName?.split("#")?.get(1)?.stripColor()
                 try
                 {
                     val number: Int = key!!.toInt()

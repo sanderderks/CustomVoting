@@ -13,7 +13,7 @@ import org.bukkit.inventory.ItemStack
 
 class CrateItemRewards(private val plugin: CV, private val number: Int, private val percentage: Int) : GUI(
     plugin,
-    Strings.CRATE_ITEM_NAME_PERC_REWARDS_XY.with(
+    Strings.CRATE_INVENTORY_NAME_PERC_REWARDS_XY.with(
         "$percentage",
         plugin.data.getString(Data.VOTE_CRATES.path + ".$number.name")
     ),
@@ -50,7 +50,7 @@ class CrateItemRewards(private val plugin: CV, private val number: Int, private 
             inv.setItem(25, null)
             inv.setItem(26, null)
             val path = "${Data.VOTE_CRATES}.$number.${Data.ITEM_REWARDS}.$percentage"
-            val name = Strings.CRATE_ITEM_NAME_PERC_REWARDS_XY.with(
+            val name = Strings.CRATE_INVENTORY_NAME_PERC_REWARDS_XY.with(
                 "$percentage",
                 plugin.data.getString(Data.VOTE_CRATES.path + ".$number.name")
             )

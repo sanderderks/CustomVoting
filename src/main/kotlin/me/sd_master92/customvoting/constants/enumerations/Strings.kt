@@ -51,11 +51,12 @@ enum class Strings(
     CRATE_OVERVIEW_ITEM_NAME("Crates", PURPLE),
     CRATE_INVENTORY_NAME("Crate"),
     CRATE_INVENTORY_NAME_PLACE_CONFIRM_X("Place '$X' here?"),
-    CRATE_ITEM_LORE_X("#$X", GRAY),
+    CRATE_INVENTORY_NAME_PERC_REWARDS_XY("$X% Rewards '$Y'"),
+    CRATE_ITEM_LORE_KEY_X("#$X", GRAY),
     CRATE_ITEM_NAME_ADD("Add Crate", GREEN),
-    CRATE_ITEM_NAME_KEY("Get Key", AQUA),
+    CRATE_ITEM_NAME_KEY_X("$X", AQUA),
+    CRATE_ITEM_NAME_KEY_GET("Get Key", AQUA),
     CRATE_ITEM_NAME_NO_PRICE("No price!", RED),
-    CRATE_ITEM_NAME_PERC_REWARDS_XY("$X% Rewards '$Y'"),
     CRATE_ITEM_NAME_RENAME("Change Name", PURPLE),
     CRATE_ITEM_NAME_REWARDS_PERCENTAGE_X("Crate Rewards $X%", PURPLE),
     CRATE_MESSAGE_DELETED_X("$X deleted.", RED),
@@ -66,6 +67,7 @@ enum class Strings(
     CRATE_ERROR_EMPTY("There are no rewards inside this crate...", RED),
     CRATE_NAME_DEFAULT_X("Crate $X", PURPLE),
     CRATE_NAME_X("$X", PURPLE),
+    CRATE_NAME_STAND_X("$X", AQUA),
 
     DISABLED_WORLD_OVERVIEW_INVENTORY_NAME("Disabled Worlds"),
     DISABLED_WORLD_OVERVIEW_ITEM_NAME("Disabled Worlds", PURPLE),
@@ -277,7 +279,7 @@ enum class Strings(
     VOTE_TOP_UNIT_STAND("Vote Stand"),
 
     XP_REWARD_ITEM_NAME("XP Reward", PURPLE),
-    
+
     XP_UNIT_LEVELS_MULTIPLE("levels");
 
     fun getValue(): String
@@ -296,12 +298,14 @@ enum class Strings(
         var x = x_
         if (colorX != null)
         {
-            x = "$colorX$x$color"
+            x = "$colorX$x"
+            color?.let { x += it }
         }
         var y = y_
         if (colorY != null && y != null)
         {
-            y = "$colorY$y$color"
+            y = "$colorY$y"
+            color?.let { y += it }
         }
         return getValue().replace("$X", x).replaceIfNotNull("$Y", y)
     }

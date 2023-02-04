@@ -10,6 +10,7 @@ import me.sd_master92.customvoting.constants.enumerations.*
 import me.sd_master92.customvoting.gui.rewards.crate.Crate
 import me.sd_master92.customvoting.gui.voteparty.VotePartyRewards
 import me.sd_master92.customvoting.sendText
+import me.sd_master92.customvoting.stripColor
 import me.sd_master92.customvoting.subjects.CustomVote
 import me.sd_master92.customvoting.subjects.VoteTopSign
 import me.sd_master92.customvoting.subjects.VoteTopStand
@@ -17,7 +18,6 @@ import me.sd_master92.customvoting.subjects.voteparty.VoteParty
 import me.sd_master92.customvoting.tasks.UpdateChecker
 import me.sd_master92.customvoting.tasks.VoteReminder
 import org.bukkit.Bukkit
-import org.bukkit.ChatColor
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.block.BlockFace
@@ -143,16 +143,16 @@ class PlayerListener(private val plugin: CV) : Listener
                         if (plugin.data.deleteLocation(Data.VOTE_CRATES.path + ".$key"))
                         {
                             val path = Data.VOTE_CRATES.path + ".$key"
-                            val stand = Bukkit.getEntity(
-                                UUID.fromString(plugin.data.getString("$path.stand") ?: "")
-                            )
-                            stand?.remove()
-                            plugin.data.delete("$path.stand")
+                            plugin.data.getString("$path.stand")?.let {
+                                val stand = Bukkit.getEntity(UUID.fromString(it))
+                                stand?.remove()
+                            }
                             event.player.sendMessage(
                                 Strings.CRATE_MESSAGE_DELETED_X.with(
                                     plugin.data.getString("$path.name") ?: ""
                                 )
                             )
+                            plugin.data.delete(path)
                         }
                     } else
                     {
@@ -261,8 +261,19 @@ class PlayerListener(private val plugin: CV) : Listener
                 val lore = item.itemMeta?.lore?.get(0)
                 if (lore != null && lore.contains("#"))
                 {
-                    val path = Data.VOTE_CRATES.path + "." + lore.split("#")[1]
+                    val key = lore.split("#")[1].stripColor()
+                    val path = Data.VOTE_CRATES.path + ".$key"
                     val name = plugin.data.getString("$path.name")
+
+                    val meta = item.itemMeta!!
+                    meta.setDisplayName(
+                        Strings.CRATE_ITEM_NAME_KEY_X.with(
+                            name ?: Strings.CRATE_NAME_DEFAULT_X.with(key)
+                        )
+                    )
+                    item.itemMeta = meta
+                    player.inventory.setItemInMainHand(item)
+
                     if (name != null)
                     {
                         if (plugin.data.getLocation(path) == null)
@@ -306,7 +317,7 @@ class PlayerListener(private val plugin: CV) : Listener
                                                             loc.z + 0.5
                                                         )
                                                     )
-                                                stand.customName = ChatColor.AQUA.toString() + name
+                                                stand.customName = Strings.CRATE_NAME_STAND_X.with(name)
                                                 stand.setGravity(false)
                                                 plugin.data.set("$path.stand", stand.uniqueId.toString())
 

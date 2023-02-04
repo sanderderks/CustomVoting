@@ -7,6 +7,7 @@ import me.sd_master92.customvoting.constants.enumerations.Data
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.constants.enumerations.Strings
 import me.sd_master92.customvoting.gui.rewards.RewardSettings
+import me.sd_master92.customvoting.stripColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
@@ -29,7 +30,7 @@ class Crates(private val plugin: CV) :
 
             Material.TRIPWIRE_HOOK  ->
             {
-                val key = item.itemMeta?.lore?.get(0)?.split("#")?.get(1)
+                val key = item.itemMeta?.lore?.get(0)?.split("#")?.get(1)?.stripColor()
                 try
                 {
                     val number: Int = key!!.toInt()
@@ -104,7 +105,7 @@ class Crates(private val plugin: CV) :
                         plugin.data.getString(Data.VOTE_CRATES.path + ".$key.name")
                             ?: Strings.CRATE_NAME_DEFAULT_X.with("$key")
                     ),
-                    Strings.CRATE_ITEM_LORE_X.with("$key"), true
+                    Strings.CRATE_ITEM_LORE_KEY_X.with("$key"), true
                 )
             )
         }
