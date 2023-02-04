@@ -4,8 +4,8 @@ import me.sd_master92.core.inventory.BaseItem
 import me.sd_master92.core.inventory.GUI
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.Data
+import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.SoundType
-import me.sd_master92.customvoting.constants.enumerations.Strings
 import me.sd_master92.customvoting.gui.items.CommandsRewardItem
 import me.sd_master92.customvoting.gui.items.ItemsRewardItem
 import me.sd_master92.customvoting.listeners.PlayerCommandInput
@@ -17,7 +17,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 
 class MilestoneSettings(private val plugin: CV, private val number: Int) :
-    GUI(plugin, Strings.MILESTONE_INVENTORY_NAME_X.with("$number"), 9)
+    GUI(plugin, PMessage.MILESTONE_INVENTORY_NAME_X.with("$number"), 9)
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
     {
@@ -34,7 +34,7 @@ class MilestoneSettings(private val plugin: CV, private val number: Int) :
             {
                 SoundType.FAILURE.play(plugin, player)
                 plugin.data.delete(Data.MILESTONES.path + ".$number")
-                player.sendMessage(Strings.MILESTONE_MESSAGE_DELETED_X.with(Strings.MILESTONE_NAME_X.with("$number")))
+                player.sendMessage(PMessage.MILESTONE_MESSAGE_DELETED_X.with(PMessage.MILESTONE_NAME_X.with("$number")))
                 cancelCloseEvent = true
                 player.openInventory(Milestones(plugin).inventory)
             }
@@ -101,7 +101,7 @@ class MilestoneSettings(private val plugin: CV, private val number: Int) :
 
     companion object
     {
-        val DELETE_ITEM = BaseItem(Material.RED_WOOL, Strings.GENERAL_ITEM_NAME_DELETE.toString())
+        val DELETE_ITEM = BaseItem(Material.RED_WOOL, PMessage.GENERAL_ITEM_NAME_DELETE.toString())
     }
 
     init
@@ -115,6 +115,6 @@ class MilestoneSettings(private val plugin: CV, private val number: Int) :
 }
 
 class PermissionsRewardItem(plugin: CV, path: String) : BaseItem(
-    Material.DIAMOND_SWORD, Strings.PERMISSION_REWARDS_ITEM_NAME.toString(),
-    Strings.GENERAL_ITEM_LORE_CURRENT_XY.with("" + plugin.data.getStringList(path).size, "permissions")
+    Material.DIAMOND_SWORD, PMessage.PERMISSION_REWARDS_ITEM_NAME.toString(),
+    PMessage.GENERAL_ITEM_LORE_CURRENT_XY.with("" + plugin.data.getStringList(path).size, "permissions")
 )

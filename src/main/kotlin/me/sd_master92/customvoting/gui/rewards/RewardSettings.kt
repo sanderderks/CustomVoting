@@ -22,7 +22,7 @@ import org.bukkit.inventory.ItemStack
 class RewardSettings(private val plugin: CV, private val op: Boolean = false) :
     GUI(
         plugin,
-        if (!op) Strings.VOTE_REWARDS_INVENTORY_NAME.toString() else Strings.PERMISSION_BASED_REWARDS_INVENTORY_NAME.toString(),
+        if (!op) PMessage.VOTE_REWARDS_INVENTORY_NAME.toString() else PMessage.PERMISSION_BASED_REWARDS_INVENTORY_NAME.toString(),
         if (op) 9 else 18
     )
 {
@@ -63,8 +63,8 @@ class RewardSettings(private val plugin: CV, private val op: Boolean = false) :
                 SoundType.CHANGE.play(plugin, player)
                 cancelCloseEvent = true
                 player.closeInventory()
-                player.sendMessage(Strings.GENERAL_MESSAGE_NUMBER_ENTER.toString())
-                player.sendMessage(Strings.GENERAL_MESSAGE_CANCEL_BACK.toString())
+                player.sendMessage(PMessage.GENERAL_MESSAGE_NUMBER_ENTER.toString())
+                player.sendMessage(PMessage.GENERAL_MESSAGE_CANCEL_BACK.toString())
                 object : PlayerNumberInput(plugin, player)
                 {
                     override fun onNumberReceived(input: Int)
@@ -73,7 +73,7 @@ class RewardSettings(private val plugin: CV, private val op: Boolean = false) :
                         val path = Setting.VOTE_REWARD_MONEY.path.appendWhenTrue(op, Data.OP_REWARDS)
                         plugin.config[path] = input
                         plugin.config.saveConfig()
-                        player.sendMessage(Strings.GENERAL_MESSAGE_UPDATE_SUCCESS_X.with(Strings.MONEY_REWARD_UNIT.toString()))
+                        player.sendMessage(PMessage.GENERAL_MESSAGE_UPDATE_SUCCESS_X.with(PMessage.MONEY_REWARD_UNIT.toString()))
                         player.openInventory(RewardSettings(plugin, op).inventory)
                         cancel()
                     }
@@ -232,19 +232,19 @@ class RewardSettings(private val plugin: CV, private val op: Boolean = false) :
         {
             inventory.addItem(
                 BaseItem(
-                    Material.ENDER_CHEST, Strings.LUCKY_VOTE_ITEM_NAME_REWARDS.toString(),
-                    Strings.GENERAL_ITEM_LORE_CURRENT_XY.with(
+                    Material.ENDER_CHEST, PMessage.LUCKY_VOTE_ITEM_NAME_REWARDS.toString(),
+                    PMessage.GENERAL_ITEM_LORE_CURRENT_XY.with(
                         "" + plugin.data.getItems(Data.LUCKY_REWARDS.path).size,
-                        Strings.ITEM_REWARDS_UNIT_STACKS_MULTIPLE.toString()
+                        PMessage.ITEM_REWARDS_UNIT_STACKS_MULTIPLE.toString()
                     )
                 )
             )
             inventory.addItem(LuckyVoteChanceItem(plugin))
-            inventory.addItem(BaseItem(Material.NETHER_STAR, Strings.MILESTONE_ITEM_NAME_OVERVIEW.toString()))
+            inventory.addItem(BaseItem(Material.NETHER_STAR, PMessage.MILESTONE_ITEM_NAME_OVERVIEW.toString()))
             inventory.addItem(
                 BaseItem(
                     Material.DIAMOND_BLOCK,
-                    Strings.PERMISSION_BASED_REWARDS_ITEM_NAME.toString(),
+                    PMessage.PERMISSION_BASED_REWARDS_ITEM_NAME.toString(),
                     null,
                     true
                 )
@@ -254,7 +254,7 @@ class RewardSettings(private val plugin: CV, private val op: Boolean = false) :
                     plugin,
                     Data.VOTE_PARTY_COMMANDS.path,
                     Material.TNT,
-                    Strings.COMMAND_REWARDS_ITEM_NAME_VOTE_PARTY.toString()
+                    PMessage.COMMAND_REWARDS_ITEM_NAME_VOTE_PARTY.toString()
                 )
             )
         }
@@ -265,21 +265,21 @@ class RewardSettings(private val plugin: CV, private val op: Boolean = false) :
                 inventory.addItem(
                     BaseItem(
                         Material.BELL,
-                        Strings.ENABLED_GROUP_OVERVIEW_ITEM_NAME.toString()
+                        PMessage.ENABLED_GROUP_OVERVIEW_ITEM_NAME.toString()
                     )
                 )
             }
             inventory.addItem(
                 BaseItem(
                     Material.PLAYER_HEAD,
-                    Strings.ENABLED_USER_OVERVIEW_ITEM_NAME.toString()
+                    PMessage.ENABLED_USER_OVERVIEW_ITEM_NAME.toString()
                 )
             )
         }
         inventory.addItem(
             BaseItem(
                 Material.TRIPWIRE_HOOK,
-                Strings.CRATE_OVERVIEW_ITEM_NAME.toString(),
+                PMessage.CRATE_OVERVIEW_ITEM_NAME.toString(),
                 null,
                 true
             )
@@ -289,23 +289,23 @@ class RewardSettings(private val plugin: CV, private val op: Boolean = false) :
 }
 
 class MoneyRewardItem(plugin: CV, op: Boolean) : BaseItem(
-    Material.GOLD_INGOT, Strings.MONEY_REWARD_ITEM_NAME.toString(),
-    if (CV.ECONOMY != null) Strings.GENERAL_ITEM_LORE_CURRENT_X.with(
+    Material.GOLD_INGOT, PMessage.MONEY_REWARD_ITEM_NAME.toString(),
+    if (CV.ECONOMY != null) PMessage.GENERAL_ITEM_LORE_CURRENT_X.with(
         ChatColor.GREEN.toString() +
                 CV.ECONOMY!!.format(
                     plugin.config.getDouble(Setting.VOTE_REWARD_MONEY.path.appendWhenTrue(op, Data.OP_REWARDS))
                 )
-    ) else Strings.GENERAL_VALUE_DISABLED.toString()
+    ) else PMessage.GENERAL_VALUE_DISABLED.toString()
 )
 
 class LuckyVoteChanceItem(plugin: CV) : BaseItem(
-    Material.ENDER_EYE, Strings.LUCKY_VOTE_ITEM_NAME_CHANCE.toString(),
-    Strings.GENERAL_ITEM_LORE_CURRENT_XY.with("" + plugin.config.getNumber(Setting.LUCKY_VOTE_CHANCE.path), "%")
+    Material.ENDER_EYE, PMessage.LUCKY_VOTE_ITEM_NAME_CHANCE.toString(),
+    PMessage.GENERAL_ITEM_LORE_CURRENT_XY.with("" + plugin.config.getNumber(Setting.LUCKY_VOTE_CHANCE.path), "%")
 )
 
 class ItemsRewardTypeItem(plugin: CV, op: Boolean) : BaseItem(
-    Material.REPEATER, Strings.ITEM_REWARDS_ITEM_NAME_TYPE.toString(),
-    Strings.GENERAL_ITEM_LORE_STATUS_X.with(
+    Material.REPEATER, PMessage.ITEM_REWARDS_ITEM_NAME_TYPE.toString(),
+    PMessage.GENERAL_ITEM_LORE_STATUS_X.with(
         ItemRewardType.valueOf(
             plugin.config.getNumber(Setting.ITEM_REWARD_TYPE.path.appendWhenTrue(op, Data.OP_REWARDS))
         ).label
@@ -313,13 +313,13 @@ class ItemsRewardTypeItem(plugin: CV, op: Boolean) : BaseItem(
 )
 
 class ExperienceRewardItem(plugin: CV, op: Boolean) : BaseItem(
-    Material.EXPERIENCE_BOTTLE, Strings.XP_REWARD_ITEM_NAME.toString(),
-    Strings.GENERAL_ITEM_LORE_CURRENT_XY.with(
+    Material.EXPERIENCE_BOTTLE, PMessage.XP_REWARD_ITEM_NAME.toString(),
+    PMessage.GENERAL_ITEM_LORE_CURRENT_XY.with(
         "" + plugin.config.getNumber(
             Setting.VOTE_REWARD_EXPERIENCE.path.appendWhenTrue(
                 op,
                 Data.OP_REWARDS
             )
-        ), Strings.XP_UNIT_LEVELS_MULTIPLE.toString()
+        ), PMessage.XP_UNIT_LEVELS_MULTIPLE.toString()
     )
 )

@@ -3,8 +3,8 @@ package me.sd_master92.customvoting
 import me.clip.placeholderapi.PlaceholderAPI
 import me.sd_master92.core.file.PlayerFile
 import me.sd_master92.customvoting.constants.enumerations.Message
+import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.Setting
-import me.sd_master92.customvoting.constants.enumerations.Strings
 import me.sd_master92.customvoting.database.PlayerTable
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
@@ -157,8 +157,8 @@ fun OfflinePlayer?.getSkull(): ItemStack
     if (this != null)
     {
         skullMeta.setDisplayName(
-            Strings.PLAYER_ITEM_NAME_SKULL_X.with(
-                this.name ?: Strings.PLAYER_NAME_UNKNOWN.toString()
+            PMessage.PLAYER_ITEM_NAME_SKULL_X.with(
+                this.name ?: PMessage.PLAYER_NAME_UNKNOWN.toString()
             )
         )
     }

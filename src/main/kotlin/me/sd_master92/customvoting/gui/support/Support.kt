@@ -5,9 +5,9 @@ import me.sd_master92.core.inventory.GUI
 import me.sd_master92.core.inventory.StatusItem
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.VoteFile
+import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.Setting
 import me.sd_master92.customvoting.constants.enumerations.SoundType
-import me.sd_master92.customvoting.constants.enumerations.Strings
 import me.sd_master92.customvoting.gui.VoteSettings
 import org.bukkit.ChatColor
 import org.bukkit.Material
@@ -16,7 +16,7 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 
-class Support(private val plugin: CV) : GUI(plugin, Strings.SUPPORT_INVENTORY_NAME.toString(), 9)
+class Support(private val plugin: CV) : GUI(plugin, PMessage.SUPPORT_INVENTORY_NAME.toString(), 9)
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
     {
@@ -53,8 +53,8 @@ class Support(private val plugin: CV) : GUI(plugin, Strings.SUPPORT_INVENTORY_NA
                 SoundType.CLICK.play(plugin, player)
                 cancelCloseEvent = true
                 player.closeInventory()
-                player.sendMessage(Strings.SUPPORT_MESSAGE_DISCORD.toString())
-                player.sendMessage(Strings.SUPPORT_MESSAGE_DISCORD_URL.toString())
+                player.sendMessage(PMessage.SUPPORT_MESSAGE_DISCORD.toString())
+                player.sendMessage(PMessage.SUPPORT_MESSAGE_DISCORD_URL.toString())
             }
 
             Material.CREEPER_HEAD   ->
@@ -75,7 +75,7 @@ class Support(private val plugin: CV) : GUI(plugin, Strings.SUPPORT_INVENTORY_NA
             {
                 SoundType.CHANGE.play(plugin, player)
                 val deleted = VoteFile.mergeDuplicates(plugin)
-                player.sendMessage(Strings.MERGE_DUPLICATES_MESSAGE_DELETED_X.with("$deleted"))
+                player.sendMessage(PMessage.MERGE_DUPLICATES_MESSAGE_DELETED_X.with("$deleted"))
                 if (deleted > 0)
                 {
                     SoundType.SUCCESS
@@ -108,33 +108,33 @@ class Support(private val plugin: CV) : GUI(plugin, Strings.SUPPORT_INVENTORY_NA
         inventory.addItem(
             BaseItem(
                 Material.ENCHANTED_BOOK,
-                Strings.SUPPORT_ITEM_NAME_DISCORD.toString(),
-                Strings.SUPPORT_ITEM_LORE_DISCORD.toString()
+                PMessage.SUPPORT_ITEM_NAME_DISCORD.toString(),
+                PMessage.SUPPORT_ITEM_LORE_DISCORD.toString()
             )
         )
         inventory.addItem(
             BaseItem(
-                Material.ENCHANTING_TABLE, Strings.SUPPORT_ITEM_NAME_DATABASE.toString(),
-                Strings.GENERAL_ITEM_LORE_STATUS_X.with(if (plugin.hasDatabaseConnection()) Strings.GENERAL_VALUE_CONNECTED.toString() else Strings.GENERAL_VALUE_DISABLED.toString())
+                Material.ENCHANTING_TABLE, PMessage.SUPPORT_ITEM_NAME_DATABASE.toString(),
+                PMessage.GENERAL_ITEM_LORE_STATUS_X.with(if (plugin.hasDatabaseConnection()) PMessage.GENERAL_VALUE_CONNECTED.toString() else PMessage.GENERAL_VALUE_DISABLED.toString())
             )
         )
         inventory.addItem(
             BaseItem(
-                Material.CREEPER_HEAD, Strings.SUPPORT_ITEM_NAME_DONATORS.toString(),
-                Strings.SUPPORT_ITEM_LORE_DONATORS.toString()
+                Material.CREEPER_HEAD, PMessage.SUPPORT_ITEM_NAME_DONATORS.toString(),
+                PMessage.SUPPORT_ITEM_LORE_DONATORS.toString()
             )
         )
         inventory.addItem(
             BaseItem(
-                Material.PLAYER_HEAD, Strings.SUPPORT_ITEM_NAME_PLAYER_INFO.toString(),
-                Strings.SUPPORT_ITEM_LORE_PLAYER_INFO.toString()
+                Material.PLAYER_HEAD, PMessage.SUPPORT_ITEM_NAME_PLAYER_INFO.toString(),
+                PMessage.SUPPORT_ITEM_LORE_PLAYER_INFO.toString()
             )
         )
         inventory.addItem(MergeItem(plugin))
         inventory.addItem(
             BaseItem(
-                Material.CARVED_PUMPKIN, Strings.SUPPORT_ITEM_NAME_STATISTICS.toString(),
-                Strings.SUPPORT_ITEM_LORE_STATISTICS.toString()
+                Material.CARVED_PUMPKIN, PMessage.SUPPORT_ITEM_NAME_STATISTICS.toString(),
+                PMessage.SUPPORT_ITEM_LORE_STATISTICS.toString()
             )
         )
         inventory.setItem(8, BACK_ITEM)
@@ -142,20 +142,20 @@ class Support(private val plugin: CV) : GUI(plugin, Strings.SUPPORT_INVENTORY_NA
 }
 
 class UpdateItem(plugin: CV) : BaseItem(
-    Material.CLOCK, Strings.SUPPORT_ITEM_NAME_VERSION.toString(),
-    if (plugin.isUpToDate()) Strings.GENERAL_VALUE_YES.toString() + ";" + Strings.GENERAL_ITEM_LORE_CURRENT_X.with(
+    Material.CLOCK, PMessage.SUPPORT_ITEM_NAME_VERSION.toString(),
+    if (plugin.isUpToDate()) PMessage.GENERAL_VALUE_YES.toString() + ";" + PMessage.GENERAL_ITEM_LORE_CURRENT_X.with(
         ChatColor.GREEN.toString() + plugin.version
-    ) else Strings.GENERAL_ITEM_LORE_CURRENT_X.with(
+    ) else PMessage.GENERAL_ITEM_LORE_CURRENT_X.with(
         ChatColor.RED.toString() + plugin.version
-    ) + ";" + Strings.SUPPORT_ITEM_LORE_VERSION_LATEST_X.with(plugin.latestVersion)
+    ) + ";" + PMessage.SUPPORT_ITEM_LORE_VERSION_LATEST_X.with(plugin.latestVersion)
 )
 
 class IngameUpdateItem(plugin: CV) : StatusItem(
-    Material.FILLED_MAP, Strings.SUPPORT_ITEM_NAME_INGAME_UPDATE.toString(),
+    Material.FILLED_MAP, PMessage.SUPPORT_ITEM_NAME_INGAME_UPDATE.toString(),
     plugin.config, Setting.INGAME_UPDATES.path
 )
 
 class MergeItem(plugin: CV) : BaseItem(
-    Material.HOPPER, Strings.MERGE_DUPLICATES_ITEM_NAME.toString(),
-    Strings.MERGE_DUPLICATES_ITEM_LORE.with("" + VoteFile.getAll(plugin).size)
+    Material.HOPPER, PMessage.MERGE_DUPLICATES_ITEM_NAME.toString(),
+    PMessage.MERGE_DUPLICATES_ITEM_LORE.with("" + VoteFile.getAll(plugin).size)
 )

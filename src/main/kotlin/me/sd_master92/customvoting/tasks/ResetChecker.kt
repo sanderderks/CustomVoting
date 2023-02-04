@@ -3,8 +3,8 @@ package me.sd_master92.customvoting.tasks
 import me.sd_master92.core.tasks.TaskTimer
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.commands.ReloadCommand
+import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.Setting
-import me.sd_master92.customvoting.constants.enumerations.Strings
 import org.bukkit.Bukkit
 import java.util.*
 
@@ -29,7 +29,7 @@ class ResetChecker(private val plugin: CV)
                     {
                         if (player.isOp)
                         {
-                            player.sendMessage(Strings.RESET_VOTES_MESSAGE_CONFIRM.toString())
+                            player.sendMessage(PMessage.RESET_VOTES_MESSAGE_CONFIRM.toString())
                         }
                     }
                 }

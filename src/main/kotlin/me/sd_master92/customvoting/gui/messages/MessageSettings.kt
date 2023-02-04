@@ -5,9 +5,9 @@ import me.sd_master92.core.inventory.GUI
 import me.sd_master92.core.inventory.StatusItem
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.Materials
+import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.Setting
 import me.sd_master92.customvoting.constants.enumerations.SoundType
-import me.sd_master92.customvoting.constants.enumerations.Strings
 import me.sd_master92.customvoting.gui.VoteSettings
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -15,7 +15,7 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 
-class MessageSettings(private val plugin: CV) : GUI(plugin, Strings.MESSAGE_SETTINGS_INVENTORY_NAME.toString(), 18)
+class MessageSettings(private val plugin: CV) : GUI(plugin, PMessage.MESSAGE_SETTINGS_INVENTORY_NAME.toString(), 18)
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
     {
@@ -149,8 +149,8 @@ class MessageSettings(private val plugin: CV) : GUI(plugin, Strings.MESSAGE_SETT
     {
         val VOTE_LINKS = BaseItem(
             Materials.SOUL_TORCH.get(),
-            Strings.VOTE_LINKS_ITEM_NAME.toString(),
-            Strings.VOTE_LINKS_ITEM_LORE.toString()
+            PMessage.VOTE_LINKS_ITEM_NAME.toString(),
+            PMessage.VOTE_LINKS_ITEM_LORE.toString()
         )
     }
 
@@ -171,54 +171,54 @@ class MessageSettings(private val plugin: CV) : GUI(plugin, Strings.MESSAGE_SETT
 }
 
 class UseVoteLinkItem(plugin: CV) : StatusItem(
-    Material.CHEST, Strings.VOTE_LINKS_ITEM_NAME_GUI.toString(),
+    Material.CHEST, PMessage.VOTE_LINKS_ITEM_NAME_GUI.toString(),
     plugin.config, Setting.VOTE_LINK_INVENTORY.path
 )
 
 class VoteBroadcast(plugin: CV) : StatusItem(
-    Material.DIAMOND, Strings.VOTE_ITEM_NAME_BROADCAST.toString(),
+    Material.DIAMOND, PMessage.VOTE_ITEM_NAME_BROADCAST.toString(),
     plugin.config, Setting.DISABLED_BROADCAST_VOTE.path,
     true
 )
 
 class MilestoneBroadcast(plugin: CV) : StatusItem(
-    Material.ENDER_PEARL, Strings.MILESTONE_ITEM_NAME_BROADCAST.toString(),
+    Material.ENDER_PEARL, PMessage.MILESTONE_ITEM_NAME_BROADCAST.toString(),
     plugin.config, Setting.DISABLED_BROADCAST_MILESTONE.path,
     true
 )
 
 class VotePartyUntilBroadcast(plugin: CV) : StatusItem(
-    Material.BOOKSHELF, Strings.VOTE_PARTY_ITEM_NAME_BROADCAST_UNTIL.toString(),
+    Material.BOOKSHELF, PMessage.VOTE_PARTY_ITEM_NAME_BROADCAST_UNTIL.toString(),
     plugin.config, Setting.DISABLED_BROADCAST_VOTE_PARTY_UNTIL.path,
     true
 )
 
 class VotePartyCountBroadcast(plugin: CV) : StatusItem(
-    Material.NOTE_BLOCK, Strings.VOTE_PARTY_ITEM_NAME_BROADCAST_COUNT.toString(),
+    Material.NOTE_BLOCK, PMessage.VOTE_PARTY_ITEM_NAME_BROADCAST_COUNT.toString(),
     plugin.config, Setting.DISABLED_BROADCAST_VOTE_PARTY_COUNTDOWN.path,
     true
 )
 
 class VotePartyCountEndBroadcast(plugin: CV) : StatusItem(
-    Material.FIREWORK_ROCKET, Strings.VOTE_PARTY_ITEM_NAME_BROADCAST_COUNTDOWN_END.toString(),
+    Material.FIREWORK_ROCKET, PMessage.VOTE_PARTY_ITEM_NAME_BROADCAST_COUNTDOWN_END.toString(),
     plugin.config, Setting.DISABLED_BROADCAST_VOTE_PARTY_COUNTDOWN_ENDING.path,
     true
 )
 
 class ArmorStandBreakMessage(plugin: CV) : StatusItem(
-    Material.ARMOR_STAND, Strings.VOTE_TOP_ITEM_NAME_STAND_BREAK_MESSAGE.toString(),
+    Material.ARMOR_STAND, PMessage.VOTE_TOP_ITEM_NAME_STAND_BREAK_MESSAGE.toString(),
     plugin.config, Setting.DISABLED_MESSAGE_ARMOR_STAND.path,
     true
 )
 
 class DisabledWorldMessage(plugin: CV) : StatusItem(
-    Material.GRASS_BLOCK, Strings.DISABLED_WORLD_ITEM_NAME_MESSAGE.toString(),
+    Material.GRASS_BLOCK, PMessage.DISABLED_WORLD_ITEM_NAME_MESSAGE.toString(),
     plugin.config, Setting.DISABLED_MESSAGE_DISABLED_WORLD.path,
     true
 )
 
 class VoteRemindMessage(plugin: CV) : StatusItem(
-    Material.OAK_SIGN, Strings.VOTE_REMINDER_ITEM_NAME.toString(),
+    Material.OAK_SIGN, PMessage.VOTE_REMINDER_ITEM_NAME.toString(),
     plugin.config, Setting.DISABLED_MESSAGE_VOTE_REMINDER.path,
     true
 )

@@ -6,8 +6,8 @@ import me.sd_master92.core.inventory.GUI
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.addToInventoryOrDrop
 import me.sd_master92.customvoting.constants.enumerations.Data
+import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.SoundType
-import me.sd_master92.customvoting.constants.enumerations.Strings
 import me.sd_master92.customvoting.gui.items.ItemsRewardItem
 import org.bukkit.Bukkit
 import org.bukkit.Material
@@ -21,7 +21,7 @@ import java.util.*
 class CrateSettings(private val plugin: CV, private val number: Int) : GUI(
     plugin,
     (plugin.data.getString(Data.VOTE_CRATES.path + ".$number.name")
-        ?: Strings.CRATE_NAME_DEFAULT_X.with("$number")),
+        ?: PMessage.CRATE_NAME_DEFAULT_X.with("$number")),
     9
 )
 {
@@ -40,7 +40,7 @@ class CrateSettings(private val plugin: CV, private val number: Int) : GUI(
             {
                 SoundType.FAILURE.play(plugin, player)
                 plugin.data.delete(Data.VOTE_CRATES.path + ".$number")
-                player.sendMessage(Strings.CRATE_MESSAGE_DELETED_X.with(Strings.CRATE_NAME_X.with(name)))
+                player.sendMessage(PMessage.CRATE_MESSAGE_DELETED_X.with(PMessage.CRATE_NAME_X.with(name)))
                 cancelCloseEvent = true
                 player.openInventory(Crates(plugin).inventory)
             }
@@ -69,10 +69,10 @@ class CrateSettings(private val plugin: CV, private val number: Int) : GUI(
                 player.addToInventoryOrDrop(
                     BaseItem(
                         Material.TRIPWIRE_HOOK,
-                        Strings.CRATE_ITEM_NAME_KEY_X.with(
+                        PMessage.CRATE_ITEM_NAME_KEY_X.with(
                             plugin.data.getString(Data.VOTE_CRATES.path + ".$number.name") ?: ""
                         ),
-                        Strings.CRATE_ITEM_LORE_KEY_X.with("$number"),
+                        PMessage.CRATE_ITEM_LORE_KEY_X.with("$number"),
                         true
                     )
                 )
@@ -83,8 +83,8 @@ class CrateSettings(private val plugin: CV, private val number: Int) : GUI(
                 SoundType.CHANGE.play(plugin, player)
                 cancelCloseEvent = true
                 player.closeInventory()
-                player.sendMessage(Strings.CRATE_MESSAGE_NAME_ENTER.toString())
-                player.sendMessage(Strings.GENERAL_MESSAGE_CANCEL_BACK.toString())
+                player.sendMessage(PMessage.CRATE_MESSAGE_NAME_ENTER.toString())
+                player.sendMessage(PMessage.GENERAL_MESSAGE_CANCEL_BACK.toString())
                 object : PlayerStringInput(plugin, player)
                 {
                     override fun onInputReceived(input: String)
@@ -92,7 +92,7 @@ class CrateSettings(private val plugin: CV, private val number: Int) : GUI(
                         SoundType.SUCCESS.play(plugin, player)
                         plugin.data.set(Data.VOTE_CRATES.path + ".$number.name", input)
                         plugin.data.saveConfig()
-                        player.sendMessage(Strings.CRATE_MESSAGE_NAME_CHANGED_X.with(input))
+                        player.sendMessage(PMessage.CRATE_MESSAGE_NAME_CHANGED_X.with(input))
                         player.openInventory(CrateSettings(plugin, number).inventory)
                         val uuid = plugin.data.getString(Data.VOTE_CRATES.path + ".$number.stand")
                         if (uuid != null)
@@ -100,7 +100,7 @@ class CrateSettings(private val plugin: CV, private val number: Int) : GUI(
                             val entity = Bukkit.getEntity(UUID.fromString(uuid))
                             if (entity is ArmorStand)
                             {
-                                entity.customName = Strings.CRATE_NAME_STAND_X.with(input)
+                                entity.customName = PMessage.CRATE_NAME_STAND_X.with(input)
                             }
                         }
                         cancel()
@@ -127,20 +127,20 @@ class CrateSettings(private val plugin: CV, private val number: Int) : GUI(
 
     companion object
     {
-        val DELETE_ITEM = BaseItem(Material.RED_WOOL, Strings.GENERAL_ITEM_NAME_DELETE.toString())
+        val DELETE_ITEM = BaseItem(Material.RED_WOOL, PMessage.GENERAL_ITEM_NAME_DELETE.toString())
     }
 
     init
     {
-        inventory.addItem(BaseItem(Material.OAK_SIGN, Strings.CRATE_ITEM_NAME_RENAME.toString()))
-        inventory.addItem(BaseItem(Material.DIAMOND, Strings.CRATE_ITEM_NAME_KEY_GET.toString(), null, true))
+        inventory.addItem(BaseItem(Material.OAK_SIGN, PMessage.CRATE_ITEM_NAME_RENAME.toString()))
+        inventory.addItem(BaseItem(Material.DIAMOND, PMessage.CRATE_ITEM_NAME_KEY_GET.toString(), null, true))
         for (chance in Data.CRATE_REWARD_CHANCES)
         {
             inventory.addItem(
                 ItemsRewardItem(
                     plugin,
                     "${Data.VOTE_CRATES}.$number.${Data.ITEM_REWARDS}.$chance",
-                    Strings.CRATE_ITEM_NAME_REWARDS_PERCENTAGE_X.with("$chance")
+                    PMessage.CRATE_ITEM_NAME_REWARDS_PERCENTAGE_X.with("$chance")
                 )
             )
         }

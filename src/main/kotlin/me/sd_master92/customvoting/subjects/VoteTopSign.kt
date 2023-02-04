@@ -5,8 +5,8 @@ import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Voter
 import me.sd_master92.customvoting.constants.enumerations.Data
 import me.sd_master92.customvoting.constants.enumerations.Message
+import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.Setting
-import me.sd_master92.customvoting.constants.enumerations.Strings
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Material
@@ -171,7 +171,7 @@ class VoteTopSign @JvmOverloads constructor(
         if (plugin.data.deleteLocation(Data.VOTE_TOP_SIGNS.path + "." + if (top == 0) "title" else top))
         {
             voteTops.remove(top)
-            player.sendMessage(Strings.VOTE_TOP_MESSAGE_SIGN_DELETED_X.with(if (top == 0) "title" else "$top"))
+            player.sendMessage(PMessage.VOTE_TOP_MESSAGE_SIGN_DELETED_X.with(if (top == 0) "title" else "$top"))
         }
     }
 
@@ -227,7 +227,7 @@ class VoteTopSign @JvmOverloads constructor(
     {
         if (player != null && (top == 0 || !voteTops.containsKey(top)))
         {
-            player.sendMessage(Strings.VOTE_TOP_MESSAGE_SIGN_CREATED_X.with(if (top == 0) "title" else "$top"))
+            player.sendMessage(PMessage.VOTE_TOP_MESSAGE_SIGN_CREATED_X.with(if (top == 0) "title" else "$top"))
         }
         voteTops[top] = this
         update()

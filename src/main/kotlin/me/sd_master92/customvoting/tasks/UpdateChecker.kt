@@ -2,8 +2,8 @@ package me.sd_master92.customvoting.tasks
 
 import me.sd_master92.core.tasks.TaskTimer
 import me.sd_master92.customvoting.CV
+import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.Setting
-import me.sd_master92.customvoting.constants.enumerations.Strings
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 
@@ -19,7 +19,7 @@ class UpdateChecker(plugin: CV)
                 {
                     plugin.sendDownloadUrl(player)
                     player.sendMessage("")
-                    player.sendMessage(Strings.PLUGIN_UPDATE_MESSAGE_DISABLE.toString())
+                    player.sendMessage(PMessage.PLUGIN_UPDATE_MESSAGE_DISABLE.toString())
                 }.run()
             }
         }

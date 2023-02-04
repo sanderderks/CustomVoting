@@ -6,8 +6,8 @@ import me.sd_master92.core.tasks.TaskTimer
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.addToInventoryOrDrop
 import me.sd_master92.customvoting.constants.enumerations.Data
+import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.SoundType
-import me.sd_master92.customvoting.constants.enumerations.Strings
 import me.sd_master92.customvoting.helpers.ParticleHelper
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -17,7 +17,7 @@ import org.bukkit.inventory.ItemStack
 import java.util.*
 
 class Crate(private val plugin: CV, private val player: Player, path: String) :
-    GUI(plugin, (plugin.data.getString("$path.name") ?: Strings.CRATE_INVENTORY_NAME.toString()), 45)
+    GUI(plugin, (plugin.data.getString("$path.name") ?: PMessage.CRATE_INVENTORY_NAME.toString()), 45)
 {
     private var searching = true
     private var rewards = mutableMapOf<Int, Array<ItemStack>>()
@@ -50,7 +50,7 @@ class Crate(private val plugin: CV, private val player: Player, path: String) :
         inventory.setItem(
             22, reward ?: BaseItem(
                 Material.BARRIER,
-                Strings.CRATE_ITEM_NAME_NO_PRICE.toString()
+                PMessage.CRATE_ITEM_NAME_NO_PRICE.toString()
             )
         )
 
@@ -58,11 +58,11 @@ class Crate(private val plugin: CV, private val player: Player, path: String) :
         {
             player.addToInventoryOrDrop(reward)
             ParticleHelper.shootFirework(plugin, player.location)
-            player.sendMessage(Strings.CRATE_MESSAGE_REWARD_X.with("$number"))
+            player.sendMessage(PMessage.CRATE_MESSAGE_REWARD_X.with("$number"))
         } else
         {
             SoundType.FAILURE.play(plugin, player)
-            player.sendMessage(Strings.CRATE_MESSAGE_NO_PRICE.toString())
+            player.sendMessage(PMessage.CRATE_MESSAGE_NO_PRICE.toString())
         }
         keepAlive = false
     }
@@ -117,7 +117,7 @@ class Crate(private val plugin: CV, private val player: Player, path: String) :
         {
             keepAlive = false
             player.closeInventory()
-            player.sendMessage(Strings.CRATE_ERROR_EMPTY.toString())
+            player.sendMessage(PMessage.CRATE_ERROR_EMPTY.toString())
         }
     }
 

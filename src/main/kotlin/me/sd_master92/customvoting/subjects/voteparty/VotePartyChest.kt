@@ -3,8 +3,8 @@ package me.sd_master92.customvoting.subjects.voteparty
 import me.sd_master92.core.tasks.TaskTimer
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.Data
+import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.SoundType
-import me.sd_master92.customvoting.constants.enumerations.Strings
 import me.sd_master92.customvoting.helpers.ParticleHelper
 import me.sd_master92.customvoting.listeners.EntityListener
 import me.sd_master92.customvoting.listeners.ItemListener
@@ -88,7 +88,7 @@ class VotePartyChest(private val plugin: CV, key: String)
         {
             if (it.count > 0)
             {
-                pig.customName = Strings.VOTE_PARTY_NAME_PIG_X.with("" + it.count)
+                pig.customName = PMessage.VOTE_PARTY_NAME_PIG_X.with("" + it.count)
                 SoundType.CLICK.play(plugin, pig.location)
             } else
             {

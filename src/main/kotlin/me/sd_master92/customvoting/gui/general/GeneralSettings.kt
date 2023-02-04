@@ -12,7 +12,7 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 
-class GeneralSettings(private val plugin: CV) : GUI(plugin, Strings.GENERAL_SETTINGS_INVENTORY_NAME.toString(), 18)
+class GeneralSettings(private val plugin: CV) : GUI(plugin, PMessage.GENERAL_SETTINGS_INVENTORY_NAME.toString(), 18)
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
     {
@@ -147,7 +147,7 @@ class GeneralSettings(private val plugin: CV) : GUI(plugin, Strings.GENERAL_SETT
         inventory.addItem(VotePartyTypeItem(plugin))
         inventory.addItem(VotesUntilItem.getInstance(plugin))
         inventory.addItem(VotePartyCountdownItem(plugin))
-        inventory.addItem(BaseItem(Material.GRASS_BLOCK, Strings.DISABLED_WORLD_OVERVIEW_ITEM_NAME.toString()))
+        inventory.addItem(BaseItem(Material.GRASS_BLOCK, PMessage.DISABLED_WORLD_OVERVIEW_ITEM_NAME.toString()))
         inventory.addItem(UUIDSupportItem(plugin))
         inventory.setItem(17, BACK_ITEM)
     }
@@ -155,8 +155,8 @@ class GeneralSettings(private val plugin: CV) : GUI(plugin, Strings.GENERAL_SETT
 
 class VotesUntilItem private constructor(votesRequired: Int, votesUntil: Int) : BaseItem(
     Material.ENCHANTED_BOOK,
-    Strings.VOTE_PARTY_ITEM_NAME_VOTES_UNTIL.toString(),
-    Strings.VOTE_PARTY_ITEM_LORE_VOTES_UNTIL_XY.with("$votesRequired", "$votesUntil")
+    PMessage.VOTE_PARTY_ITEM_NAME_VOTES_UNTIL.toString(),
+    PMessage.VOTE_PARTY_ITEM_LORE_VOTES_UNTIL_XY.with("$votesRequired", "$votesUntil")
 )
 {
     companion object
@@ -171,49 +171,49 @@ class VotesUntilItem private constructor(votesRequired: Int, votesUntil: Int) : 
 }
 
 class VotePartyTypeItem(plugin: CV) : BaseItem(
-    Material.SPLASH_POTION, Strings.VOTE_PARTY_ITEM_NAME_TYPE.toString(),
-    Strings.GENERAL_ITEM_LORE_CURRENT_X.with(VotePartyType.valueOf(plugin.config.getNumber(Setting.VOTE_PARTY_TYPE.path)).label)
+    Material.SPLASH_POTION, PMessage.VOTE_PARTY_ITEM_NAME_TYPE.toString(),
+    PMessage.GENERAL_ITEM_LORE_CURRENT_X.with(VotePartyType.valueOf(plugin.config.getNumber(Setting.VOTE_PARTY_TYPE.path)).label)
 )
 
 class VotePartyCountdownItem(plugin: CV) : BaseItem(
-    Material.ENDER_CHEST, Strings.VOTE_PARTY_ITEM_NAME_COUNTDOWN.toString(),
-    Strings.GENERAL_ITEM_LORE_CURRENT_XY.with(
+    Material.ENDER_CHEST, PMessage.VOTE_PARTY_ITEM_NAME_COUNTDOWN.toString(),
+    PMessage.GENERAL_ITEM_LORE_CURRENT_XY.with(
         "" + plugin.config.getNumber(Setting.VOTE_PARTY_COUNTDOWN.path),
-        Strings.TIME_UNIT_SECONDS_MULTIPLE.toString()
+        PMessage.TIME_UNIT_SECONDS_MULTIPLE.toString()
     )
 )
 
 class SoundEffectsItem(plugin: CV) : StatusItem(
-    Material.MUSIC_DISC_CAT, Strings.SOUND_EFFECTS_ITEM_NAME.toString(),
+    Material.MUSIC_DISC_CAT, PMessage.SOUND_EFFECTS_ITEM_NAME.toString(),
     plugin.config, Setting.USE_SOUND_EFFECTS.path
 )
 
 class MonthlyResetItem(plugin: CV) : StatusItem(
-    Material.CLOCK, Strings.RESET_VOTES_ITEM_NAME_MONTHLY.toString(),
+    Material.CLOCK, PMessage.RESET_VOTES_ITEM_NAME_MONTHLY.toString(),
     plugin.config, Setting.MONTHLY_RESET.path
 )
 
 class MonthlyVotesItem(plugin: CV) : StatusItem(
-    Material.TNT, Strings.MONTHLY_VOTES_ITEM_NAME.toString(),
+    Material.TNT, PMessage.MONTHLY_VOTES_ITEM_NAME.toString(),
     plugin.config, Setting.MONTHLY_VOTES.path
 )
 
 class LuckyVoteItem(plugin: CV) : StatusItem(
-    Material.TOTEM_OF_UNDYING, Strings.LUCKY_VOTE_ITEM_NAME.toString(),
+    Material.TOTEM_OF_UNDYING, PMessage.LUCKY_VOTE_ITEM_NAME.toString(),
     plugin.config, Setting.LUCKY_VOTE.path
 )
 
 class FireworkItem(plugin: CV) : StatusItem(
-    Material.FIREWORK_ROCKET, Strings.FIREWORK_ITEM_NAME.toString(),
+    Material.FIREWORK_ROCKET, PMessage.FIREWORK_ITEM_NAME.toString(),
     plugin.config, Setting.FIREWORK.path
 )
 
 class DoVotePartyItem(plugin: CV) : StatusItem(
-    Material.EXPERIENCE_BOTTLE, Strings.VOTE_PARTY_ITEM_NAME.toString(),
+    Material.EXPERIENCE_BOTTLE, PMessage.VOTE_PARTY_ITEM_NAME.toString(),
     plugin.config, Setting.VOTE_PARTY.path
 )
 
 class UUIDSupportItem(plugin: CV) : StatusItem(
-    Material.PLAYER_HEAD, Strings.UUID_STORAGE_ITEM_NAME.toString(),
+    Material.PLAYER_HEAD, PMessage.UUID_STORAGE_ITEM_NAME.toString(),
     plugin.config, Setting.UUID_STORAGE.path
 )

@@ -3,8 +3,8 @@ package me.sd_master92.customvoting.gui.rewards.crate
 import me.sd_master92.core.inventory.GUI
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.Data
+import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.SoundType
-import me.sd_master92.customvoting.constants.enumerations.Strings
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
@@ -13,7 +13,7 @@ import org.bukkit.inventory.ItemStack
 
 class CrateItemRewards(private val plugin: CV, private val number: Int, private val percentage: Int) : GUI(
     plugin,
-    Strings.CRATE_INVENTORY_NAME_PERC_REWARDS_XY.with(
+    PMessage.CRATE_INVENTORY_NAME_PERC_REWARDS_XY.with(
         "$percentage",
         plugin.data.getString(Data.VOTE_CRATES.path + ".$number.name")
     ),
@@ -50,22 +50,22 @@ class CrateItemRewards(private val plugin: CV, private val number: Int, private 
             inv.setItem(25, null)
             inv.setItem(26, null)
             val path = "${Data.VOTE_CRATES}.$number.${Data.ITEM_REWARDS}.$percentage"
-            val name = Strings.CRATE_INVENTORY_NAME_PERC_REWARDS_XY.with(
+            val name = PMessage.CRATE_INVENTORY_NAME_PERC_REWARDS_XY.with(
                 "$percentage",
                 plugin.data.getString(Data.VOTE_CRATES.path + ".$number.name")
             )
             if (plugin.data.getItems(path).contentEquals(inv.contents.filterNotNull().toTypedArray()))
             {
                 SoundType.SUCCESS.play(plugin, player)
-                player.sendMessage(Strings.GENERAL_MESSAGE_UPDATE_NOTHING_CHANGED.toString())
+                player.sendMessage(PMessage.GENERAL_MESSAGE_UPDATE_NOTHING_CHANGED.toString())
             } else if (plugin.data.setItems(path, inv.contents))
             {
                 SoundType.SUCCESS.play(plugin, player)
-                player.sendMessage(Strings.GENERAL_MESSAGE_UPDATE_SUCCESS_X.with(name))
+                player.sendMessage(PMessage.GENERAL_MESSAGE_UPDATE_SUCCESS_X.with(name))
             } else
             {
                 SoundType.FAILURE.play(plugin, player)
-                player.sendMessage(Strings.GENERAL_MESSAGE_UPDATE_FAIL_X.with(name))
+                player.sendMessage(PMessage.GENERAL_MESSAGE_UPDATE_FAIL_X.with(name))
             }
         }
     }

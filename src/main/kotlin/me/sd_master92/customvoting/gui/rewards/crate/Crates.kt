@@ -4,8 +4,8 @@ import me.sd_master92.core.inventory.BaseItem
 import me.sd_master92.core.inventory.GUI
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.Data
+import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.SoundType
-import me.sd_master92.customvoting.constants.enumerations.Strings
 import me.sd_master92.customvoting.gui.rewards.RewardSettings
 import me.sd_master92.customvoting.stripColor
 import org.bukkit.Material
@@ -15,7 +15,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 
 class Crates(private val plugin: CV) :
-    GUI(plugin, Strings.CRATE_OVERVIEW_INVENTORY_NAME.toString(), getInventorySize(plugin))
+    GUI(plugin, PMessage.CRATE_OVERVIEW_INVENTORY_NAME.toString(), getInventorySize(plugin))
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
     {
@@ -60,7 +60,7 @@ class Crates(private val plugin: CV) :
                     i++
                 }
                 SoundType.SUCCESS.play(plugin, player)
-                plugin.data.set(Data.VOTE_CRATES.path + ".$i.name", Strings.CRATE_NAME_DEFAULT_X.with("$i"))
+                plugin.data.set(Data.VOTE_CRATES.path + ".$i.name", PMessage.CRATE_NAME_DEFAULT_X.with("$i"))
                 plugin.data.saveConfig()
                 cancelCloseEvent = true
                 player.openInventory(Crates(plugin).inventory)
@@ -101,15 +101,15 @@ class Crates(private val plugin: CV) :
             inventory.addItem(
                 BaseItem(
                     Material.TRIPWIRE_HOOK,
-                    Strings.CRATE_NAME_X.with(
+                    PMessage.CRATE_NAME_X.with(
                         plugin.data.getString(Data.VOTE_CRATES.path + ".$key.name")
-                            ?: Strings.CRATE_NAME_DEFAULT_X.with("$key")
+                            ?: PMessage.CRATE_NAME_DEFAULT_X.with("$key")
                     ),
-                    Strings.CRATE_ITEM_LORE_KEY_X.with("$key"), true
+                    PMessage.CRATE_ITEM_LORE_KEY_X.with("$key"), true
                 )
             )
         }
-        inventory.setItem(7, BaseItem(Material.CRAFTING_TABLE, Strings.CRATE_ITEM_NAME_ADD.toString()))
+        inventory.setItem(7, BaseItem(Material.CRAFTING_TABLE, PMessage.CRATE_ITEM_NAME_ADD.toString()))
         inventory.setItem(8, BACK_ITEM)
     }
 }

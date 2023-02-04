@@ -244,8 +244,8 @@ class VoteParty(private val plugin: CV)
     {
         val VOTE_PARTY_ITEM = BaseItem(
             Material.ENDER_CHEST,
-            Strings.VOTE_PARTY_ITEM_NAME_CHEST.toString(),
-            Strings.VOTE_PARTY_ITEM_LORE_CHEST.toString()
+            PMessage.VOTE_PARTY_ITEM_NAME_CHEST.toString(),
+            PMessage.VOTE_PARTY_ITEM_LORE_CHEST.toString()
         )
         private val queue: MutableList<VoteParty> = ArrayList()
         private var isActive = false

@@ -3,8 +3,8 @@ package me.sd_master92.customvoting.gui.rewards
 import me.sd_master92.core.inventory.GUI
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.Data
+import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.SoundType
-import me.sd_master92.customvoting.constants.enumerations.Strings
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
@@ -37,7 +37,7 @@ class LuckyRewards(private val plugin: CV) : GUI(plugin, name, 27, false)
 
     companion object
     {
-        private val name = Strings.LUCKY_REWARDS_INVENTORY_NAME.toString()
+        private val name = PMessage.LUCKY_REWARDS_INVENTORY_NAME.toString()
         fun save(plugin: CV, player: Player, inv: Inventory)
         {
             inv.setItem(25, null)
@@ -47,15 +47,15 @@ class LuckyRewards(private val plugin: CV) : GUI(plugin, name, 27, false)
             )
             {
                 SoundType.SUCCESS.play(plugin, player)
-                player.sendMessage(Strings.GENERAL_MESSAGE_UPDATE_NOTHING_CHANGED.toString())
+                player.sendMessage(PMessage.GENERAL_MESSAGE_UPDATE_NOTHING_CHANGED.toString())
             } else if (plugin.data.setItems(Data.LUCKY_REWARDS.path, inv.contents))
             {
                 SoundType.SUCCESS.play(plugin, player)
-                player.sendMessage(Strings.GENERAL_MESSAGE_UPDATE_SUCCESS_X.with(name))
+                player.sendMessage(PMessage.GENERAL_MESSAGE_UPDATE_SUCCESS_X.with(name))
             } else
             {
                 SoundType.FAILURE.play(plugin, player)
-                player.sendMessage(Strings.GENERAL_MESSAGE_UPDATE_FAIL_X.with(name))
+                player.sendMessage(PMessage.GENERAL_MESSAGE_UPDATE_FAIL_X.with(name))
             }
         }
     }

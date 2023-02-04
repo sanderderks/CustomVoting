@@ -3,7 +3,7 @@ package me.sd_master92.customvoting.commands.voteparty
 import me.sd_master92.core.command.SimpleSubCommand
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.Data
-import me.sd_master92.customvoting.constants.enumerations.Strings
+import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.subjects.voteparty.VoteParty
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -17,7 +17,7 @@ class VotePartyStartCommand(private val plugin: CV) : SimpleSubCommand("start")
             VoteParty(plugin).start()
         } else
         {
-            sender.sendMessage(Strings.VOTE_PARTY_ERROR_NO_CHESTS.toString())
+            sender.sendMessage(PMessage.VOTE_PARTY_ERROR_NO_CHESTS.toString())
         }
     }
 

@@ -4,8 +4,8 @@ import me.sd_master92.core.inventory.ConfirmGUI
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Voter
 import me.sd_master92.customvoting.constants.enumerations.Message
+import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.SoundType
-import me.sd_master92.customvoting.constants.enumerations.Strings
 import me.sd_master92.customvoting.tasks.ResetChecker
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
@@ -15,7 +15,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 class ConfirmVotesReset(private val plugin: CV, private val monthly: Boolean) :
     ConfirmGUI(
         plugin,
-        if (monthly) Strings.RESET_VOTES_INVENTORY_NAME_MONTHLY.toString() else Strings.RESET_VOTES_INVENTORY_NAME_ALL.toString()
+        if (monthly) PMessage.RESET_VOTES_INVENTORY_NAME_MONTHLY.toString() else PMessage.RESET_VOTES_INVENTORY_NAME_ALL.toString()
     )
 {
     override fun onConfirm(event: InventoryClickEvent, player: Player)
@@ -40,7 +40,7 @@ class ConfirmVotesReset(private val plugin: CV, private val monthly: Boolean) :
     {
         SoundType.CLICK.play(plugin, player)
         ResetChecker.FIRST_OF_MONTH = false
-        player.sendMessage(Strings.RESET_VOTES_MESSAGE_CANCEL.toString())
+        player.sendMessage(PMessage.RESET_VOTES_MESSAGE_CANCEL.toString())
         player.openInventory(VoteSettings(plugin).inventory)
     }
 

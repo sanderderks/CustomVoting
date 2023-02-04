@@ -4,7 +4,7 @@ import me.sd_master92.core.command.SimpleCommand
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Voter
 import me.sd_master92.customvoting.constants.enumerations.Message
-import me.sd_master92.customvoting.constants.enumerations.Strings
+import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.sendText
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -18,10 +18,10 @@ class ClearMonthlyVotesCommand(private val plugin: CV) : SimpleCommand(plugin, "
             if (sender is Player)
             {
                 Voter.get(plugin, sender).clearMonthlyVotes()
-                sender.sendMessage(Strings.MONTHLY_VOTES_MESSAGE_RESET_SUCCESS_SELF.toString())
+                sender.sendMessage(PMessage.MONTHLY_VOTES_MESSAGE_RESET_SUCCESS_SELF.toString())
             } else
             {
-                sender.sendMessage(Strings.MONTHLY_VOTES_MESSAGE_RESET_COMMAND_USAGE.toString())
+                sender.sendMessage(PMessage.MONTHLY_VOTES_MESSAGE_RESET_COMMAND_USAGE.toString())
             }
         } else
         {
@@ -30,7 +30,7 @@ class ClearMonthlyVotesCommand(private val plugin: CV) : SimpleCommand(plugin, "
             if (voter != null)
             {
                 voter.clearMonthlyVotes()
-                sender.sendMessage(Strings.MONTHLY_VOTES_MESSAGE_RESET_SUCCESS_OTHER_X.with(voter.name))
+                sender.sendMessage(PMessage.MONTHLY_VOTES_MESSAGE_RESET_SUCCESS_OTHER_X.with(voter.name))
             } else
             {
                 sender.sendText(plugin, Message.INVALID_PLAYER)

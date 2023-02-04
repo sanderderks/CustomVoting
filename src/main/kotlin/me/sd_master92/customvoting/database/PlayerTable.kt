@@ -3,8 +3,8 @@ package me.sd_master92.customvoting.database
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.TopVoter
 import me.sd_master92.customvoting.constants.Voter
+import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.Setting
-import me.sd_master92.customvoting.constants.enumerations.Strings
 import org.bukkit.entity.Player
 
 class PlayerTable(private val plugin: CV, override val uuid: String) : Voter
@@ -12,7 +12,7 @@ class PlayerTable(private val plugin: CV, override val uuid: String) : Voter
     private val players: PlayerDatabase? = plugin.playerDatabase
 
     override val name: String
-        get() = players?.getName(uuid) ?: Strings.PLAYER_NAME_UNKNOWN.toString()
+        get() = players?.getName(uuid) ?: PMessage.PLAYER_NAME_UNKNOWN.toString()
     override val votes: Int
         get() = players?.getVotes(uuid) ?: 0
     override val monthlyVotes: Int

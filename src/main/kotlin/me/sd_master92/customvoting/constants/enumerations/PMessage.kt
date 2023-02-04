@@ -16,11 +16,11 @@ import org.bukkit.ChatColor
  * - ITEM_LORE
  * - INVENTORY_NAME
  */
-enum class Strings(
+enum class PMessage(
     private val value: String,
-    private val color: Strings? = null,
-    private val colorX: Strings? = null,
-    private val colorY: Strings? = null
+    private val color: PMessage? = null,
+    private val colorX: PMessage? = null,
+    private val colorY: PMessage? = null
 )
 {
     X("%X%"),

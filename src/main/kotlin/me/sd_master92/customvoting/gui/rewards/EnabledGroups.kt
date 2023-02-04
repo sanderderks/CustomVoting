@@ -3,9 +3,9 @@ package me.sd_master92.customvoting.gui.rewards
 import me.sd_master92.core.inventory.BaseItem
 import me.sd_master92.core.inventory.GUI
 import me.sd_master92.customvoting.CV
+import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.Setting
 import me.sd_master92.customvoting.constants.enumerations.SoundType
-import me.sd_master92.customvoting.constants.enumerations.Strings
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -14,7 +14,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 
 class EnabledGroups(private val plugin: CV) :
-    GUI(plugin, Strings.ENABLED_GROUP_OVERVIEW_INVENTORY_NAME.toString(), 36)
+    GUI(plugin, PMessage.ENABLED_GROUP_OVERVIEW_INVENTORY_NAME.toString(), 36)
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
     {
@@ -73,12 +73,12 @@ class EnabledGroups(private val plugin: CV) :
 }
 
 class EnabledGroup(private val plugin: CV, private val name: String) : BaseItem(
-    Material.GREEN_WOOL, Strings.ENABLED_GROUP_ITEM_NAME_X.with(name.lowercase()),
-    Strings.GENERAL_ITEM_LORE_ENABLED_X.with(
+    Material.GREEN_WOOL, PMessage.ENABLED_GROUP_ITEM_NAME_X.with(name.lowercase()),
+    PMessage.GENERAL_ITEM_LORE_ENABLED_X.with(
         if (plugin.config.getStringList(Setting.ENABLED_OP_GROUPS.path)
                 .contains(name.lowercase())
         )
-            Strings.GENERAL_VALUE_YES.toString() else Strings.GENERAL_VALUE_NO.toString()
+            PMessage.GENERAL_VALUE_YES.toString() else PMessage.GENERAL_VALUE_NO.toString()
     )
 )
 {

@@ -26,7 +26,7 @@ class CustomVote(
         val player = Bukkit.getPlayer(username)
         if (player == null)
         {
-            plugin.infoLog(Strings.QUEUE_MESSAGE_ADD.toString())
+            plugin.infoLog(PMessage.QUEUE_MESSAGE_ADD.toString())
             queue()
         } else if (plugin.config.getStringList(Setting.DISABLED_WORLDS.path).contains(player.world.name))
         {
@@ -56,7 +56,7 @@ class CustomVote(
             voter.addQueue(serviceName)
         } else
         {
-            plugin.errorLog(Strings.PLAYER_ERROR_NOT_EXIST_X.with(username))
+            plugin.errorLog(PMessage.PLAYER_ERROR_NOT_EXIST_X.with(username))
         }
     }
 

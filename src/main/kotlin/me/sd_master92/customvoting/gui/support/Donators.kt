@@ -2,8 +2,8 @@ package me.sd_master92.customvoting.gui.support
 
 import me.sd_master92.core.inventory.GUI
 import me.sd_master92.customvoting.CV
+import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.SoundType
-import me.sd_master92.customvoting.constants.enumerations.Strings
 import me.sd_master92.customvoting.getSkull
 import org.bukkit.Bukkit
 import org.bukkit.Material
@@ -12,7 +12,7 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 
-class Donators(private val plugin: CV) : GUI(plugin, Strings.DONATORS_INVENTORY_NAME.toString(), 9)
+class Donators(private val plugin: CV) : GUI(plugin, PMessage.DONATORS_INVENTORY_NAME.toString(), 9)
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
     {

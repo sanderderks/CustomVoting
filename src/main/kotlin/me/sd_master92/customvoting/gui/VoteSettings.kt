@@ -4,9 +4,9 @@ import me.sd_master92.core.inventory.BaseItem
 import me.sd_master92.core.inventory.GUI
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.Materials
+import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.Setting
 import me.sd_master92.customvoting.constants.enumerations.SoundType
-import me.sd_master92.customvoting.constants.enumerations.Strings
 import me.sd_master92.customvoting.gui.general.GeneralSettings
 import me.sd_master92.customvoting.gui.messages.MessageSettings
 import me.sd_master92.customvoting.gui.rewards.RewardSettings
@@ -19,7 +19,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.event.inventory.InventoryOpenEvent
 import org.bukkit.inventory.ItemStack
 
-class VoteSettings(private val plugin: CV) : GUI(plugin, Strings.SETTINGS_INVENTORY_NAME.toString(), 9)
+class VoteSettings(private val plugin: CV) : GUI(plugin, PMessage.SETTINGS_INVENTORY_NAME.toString(), 9)
 {
     override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
     {
@@ -70,26 +70,26 @@ class VoteSettings(private val plugin: CV) : GUI(plugin, Strings.SETTINGS_INVENT
         if (isThisInventory(event) && !plugin.config.getBoolean(Setting.SETTINGS_ENABLED.path))
         {
             event.isCancelled = true
-            event.player.sendMessage(Strings.SETTINGS_ERROR_DISABLED.toString())
+            event.player.sendMessage(PMessage.SETTINGS_ERROR_DISABLED.toString())
         }
     }
 
     companion object
     {
         val GENERAL_SETTINGS = BaseItem(
-            Material.COMMAND_BLOCK, Strings.SETTINGS_ITEM_NAME_GENERAL.toString(),
+            Material.COMMAND_BLOCK, PMessage.SETTINGS_ITEM_NAME_GENERAL.toString(),
             null, true
         )
         val REWARD_SETTINGS = BaseItem(
-            Material.DIAMOND, Strings.SETTINGS_ITEM_NAME_REWARDS.toString(),
+            Material.DIAMOND, PMessage.SETTINGS_ITEM_NAME_REWARDS.toString(),
             null, true
         )
         val MESSAGES = BaseItem(
-            Material.WRITABLE_BOOK, Strings.SETTINGS_ITEM_NAME_MESSAGES.toString(),
+            Material.WRITABLE_BOOK, PMessage.SETTINGS_ITEM_NAME_MESSAGES.toString(),
             null, true
         )
         val SUPPORT = BaseItem(
-            Materials.SPYGLASS.get(), Strings.SETTINGS_ITEM_NAME_SUPPORT.toString(),
+            Materials.SPYGLASS.get(), PMessage.SETTINGS_ITEM_NAME_SUPPORT.toString(),
             null, true
         )
     }

@@ -6,7 +6,7 @@ import me.sd_master92.core.file.PlayerFile
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Voter
 import me.sd_master92.customvoting.constants.enumerations.Message
-import me.sd_master92.customvoting.constants.enumerations.Strings
+import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.subjects.VoteTopSign
 import me.sd_master92.customvoting.subjects.VoteTopStand
 import org.bukkit.command.CommandSender
@@ -17,13 +17,13 @@ class ReloadCommand(private val plugin: CV) : SimpleCommand(plugin, "votereload"
     override fun onCommand(sender: CommandSender, args: Array<String>)
     {
         val cache = args.isNotEmpty() && args[0] == "cache"
-        sender.sendMessage(Strings.RELOAD_MESSAGE_START_X.with("".appendWhenTrue(cache, " and cache")))
+        sender.sendMessage(PMessage.RELOAD_MESSAGE_START_X.with("".appendWhenTrue(cache, " and cache")))
         if (reload(plugin, cache))
         {
-            sender.sendMessage(Strings.RELOAD_MESSAGE_FINISH_X.with("".appendWhenTrue(cache, " and cache")))
+            sender.sendMessage(PMessage.RELOAD_MESSAGE_FINISH_X.with("".appendWhenTrue(cache, " and cache")))
         } else
         {
-            sender.sendMessage(Strings.RELOAD_ERROR_FAIL.toString())
+            sender.sendMessage(PMessage.RELOAD_ERROR_FAIL.toString())
         }
     }
 

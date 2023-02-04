@@ -2,7 +2,7 @@ package me.sd_master92.customvoting.listeners
 
 import me.sd_master92.core.input.PlayerStringInput
 import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.constants.enumerations.Strings
+import me.sd_master92.customvoting.constants.enumerations.PMessage
 import org.bukkit.ChatColor
 import org.bukkit.entity.Player
 
@@ -28,18 +28,18 @@ abstract class PlayerPermissionInput(
         {
             permissions.remove(permission)
             player.sendMessage(
-                Strings.GENERAL_MESSAGE_LIST_REMOVED_XY.with(
+                PMessage.GENERAL_MESSAGE_LIST_REMOVED_XY.with(
                     permission,
-                    Strings.PERMISSION_REWARDS_UNIT_MULTIPLE.toString()
+                    PMessage.PERMISSION_REWARDS_UNIT_MULTIPLE.toString()
                 )
             )
         } else
         {
             permissions.add(permission)
             player.sendMessage(
-                Strings.GENERAL_MESSAGE_LIST_ADDED_XY.with(
+                PMessage.GENERAL_MESSAGE_LIST_ADDED_XY.with(
                     permission,
-                    Strings.PERMISSION_REWARDS_UNIT_MULTIPLE.toString()
+                    PMessage.PERMISSION_REWARDS_UNIT_MULTIPLE.toString()
                 )
             )
         }
@@ -51,12 +51,12 @@ abstract class PlayerPermissionInput(
 
     init
     {
-        player.sendMessage(Strings.GENERAL_MESSAGE_LIST_ALTER_X.with(Strings.PERMISSION_REWARDS_UNIT.toString()))
-        player.sendMessage(Strings.GENERAL_MESSAGE_CANCEL_BACK.toString())
+        player.sendMessage(PMessage.GENERAL_MESSAGE_LIST_ALTER_X.with(PMessage.PERMISSION_REWARDS_UNIT.toString()))
+        player.sendMessage(PMessage.GENERAL_MESSAGE_CANCEL_BACK.toString())
         player.sendMessage("")
         if (permissions.isEmpty())
         {
-            player.sendMessage(Strings.GENERAL_MESSAGE_LIST_EMPTY_X.with(Strings.PERMISSION_REWARDS_UNIT_MULTIPLE.toString()))
+            player.sendMessage(PMessage.GENERAL_MESSAGE_LIST_EMPTY_X.with(PMessage.PERMISSION_REWARDS_UNIT_MULTIPLE.toString()))
         } else
         {
             player.sendMessage(ChatColor.GRAY.toString() + "Permissions:")

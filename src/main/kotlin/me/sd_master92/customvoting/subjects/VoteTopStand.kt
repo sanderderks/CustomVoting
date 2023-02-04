@@ -6,7 +6,7 @@ import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Voter
 import me.sd_master92.customvoting.constants.enumerations.Data
 import me.sd_master92.customvoting.constants.enumerations.Message
-import me.sd_master92.customvoting.constants.enumerations.Strings
+import me.sd_master92.customvoting.constants.enumerations.PMessage
 import net.citizensnpcs.api.CitizensAPI
 import net.citizensnpcs.api.npc.NPC
 import org.bukkit.Bukkit
@@ -117,13 +117,13 @@ class VoteTopStand @JvmOverloads constructor(private val plugin: CV, private val
             }
         }
         plugin.data.setLocation(path, player.location)
-        player.sendMessage(Strings.VOTE_TOP_MESSAGE_STAND_CREATED_X.with("$top"))
+        player.sendMessage(PMessage.VOTE_TOP_MESSAGE_STAND_CREATED_X.with("$top"))
     }
 
     private fun createCitizen(loc: Location, name: String? = null): NPC
     {
         val citizen =
-            CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, name ?: Strings.PLAYER_NAME_UNKNOWN.toString())
+            CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, name ?: PMessage.PLAYER_NAME_UNKNOWN.toString())
         plugin.data["$path.citizen"] = citizen.uniqueId.toString()
         citizen.isProtected = true
         citizen.data().setPersistent(NPC.Metadata.NAMEPLATE_VISIBLE, false)
@@ -196,12 +196,12 @@ class VoteTopStand @JvmOverloads constructor(private val plugin: CV, private val
             }
         } else
         {
-            placeholders["%PLAYER%"] = Strings.PLAYER_NAME_UNKNOWN_COLORED.toString()
+            placeholders["%PLAYER%"] = PMessage.PLAYER_NAME_UNKNOWN_COLORED.toString()
             placeholders["%VOTES%"] = "0"
             placeholders["%MONTHLY_VOTES%"] = "0"
-            if (CV.CITIZENS && citizen != null && citizen!!.name != Strings.PLAYER_NAME_UNKNOWN.toString())
+            if (CV.CITIZENS && citizen != null && citizen!!.name != PMessage.PLAYER_NAME_UNKNOWN.toString())
             {
-                citizen!!.name = Strings.PLAYER_NAME_UNKNOWN.toString()
+                citizen!!.name = PMessage.PLAYER_NAME_UNKNOWN.toString()
                 citizen!!.despawn()
                 citizen!!.data()?.setPersistent(NPC.Metadata.NAMEPLATE_VISIBLE, false)
                 citizen!!.spawn(plugin.data.getLocation(path))
@@ -267,7 +267,7 @@ class VoteTopStand @JvmOverloads constructor(private val plugin: CV, private val
         plugin.data[path] = null
         plugin.data.saveConfig()
         voteTops.remove(top)
-        player?.sendMessage(Strings.VOTE_TOP_MESSAGE_STAND_DELETED_X.with("$top"))
+        player?.sendMessage(PMessage.VOTE_TOP_MESSAGE_STAND_DELETED_X.with("$top"))
     }
 
     companion object
@@ -332,7 +332,7 @@ class VoteTopStand @JvmOverloads constructor(private val plugin: CV, private val
         {
             if (player != null)
             {
-                player.sendMessage(Strings.GENERAL_ERROR_ALREADY_EXIST_X.with(Strings.VOTE_TOP_UNIT_STAND.toString()))
+                player.sendMessage(PMessage.GENERAL_ERROR_ALREADY_EXIST_X.with(PMessage.VOTE_TOP_UNIT_STAND.toString()))
             } else
             {
                 registerArmorStands()
