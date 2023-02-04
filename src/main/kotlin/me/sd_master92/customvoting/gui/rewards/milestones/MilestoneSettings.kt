@@ -14,84 +14,19 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
-import org.bukkit.inventory.ItemStack
 
 class MilestoneSettings(private val plugin: CV, private val number: Int) :
     GUI(plugin, PMessage.MILESTONE_INVENTORY_NAME_X.with("$number"), 9)
 {
-    override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
+    override fun onBack(event: InventoryClickEvent, player: Player)
     {
-        when (item.type)
-        {
-            Material.BARRIER       ->
-            {
-                SoundType.CLICK.play(plugin, player)
-                cancelCloseEvent = true
-                player.openInventory(Milestones(plugin).inventory)
-            }
+        SoundType.CLICK.play(plugin, player)
+        cancelCloseEvent = true
+        Milestones(plugin).open(player)
+    }
 
-            Material.RED_WOOL      ->
-            {
-                SoundType.FAILURE.play(plugin, player)
-                plugin.data.delete(Data.MILESTONES.path + ".$number")
-                player.sendMessage(PMessage.MILESTONE_MESSAGE_DELETED_X.with(PMessage.MILESTONE_NAME_X.with("$number")))
-                cancelCloseEvent = true
-                player.openInventory(Milestones(plugin).inventory)
-            }
-
-            Material.DIAMOND_SWORD ->
-            {
-                SoundType.CHANGE.play(plugin, player)
-                cancelCloseEvent = true
-                player.closeInventory()
-                object : PlayerPermissionInput(plugin, player, Data.MILESTONES.path + ".$number.permissions")
-                {
-                    override fun onPermissionReceived()
-                    {
-                        SoundType.SUCCESS.play(plugin, player)
-                        player.openInventory(MilestoneSettings(plugin, number).inventory)
-                    }
-
-                    override fun onCancel()
-                    {
-                        SoundType.FAILURE.play(plugin, player)
-                        player.openInventory(MilestoneSettings(plugin, number).inventory)
-                    }
-                }
-            }
-
-            Material.SHIELD        ->
-            {
-                SoundType.CHANGE.play(plugin, player)
-                cancelCloseEvent = true
-                player.closeInventory()
-                object : PlayerCommandInput(plugin, player, Data.MILESTONES.path + ".$number.commands")
-                {
-                    override fun onCommandReceived()
-                    {
-                        SoundType.SUCCESS.play(plugin, player)
-                        player.openInventory(MilestoneSettings(plugin, number).inventory)
-                    }
-
-                    override fun onCancel()
-                    {
-                        SoundType.FAILURE.play(plugin, player)
-                        player.openInventory(MilestoneSettings(plugin, number).inventory)
-                    }
-                }
-            }
-
-            Material.CHEST         ->
-            {
-                SoundType.CLICK.play(plugin, player)
-                cancelCloseEvent = true
-                player.openInventory(MilestoneItemRewards(plugin, number).inventory)
-            }
-
-            else                   ->
-            {
-            }
-        }
+    override fun onClick(event: InventoryClickEvent, player: Player)
+    {
     }
 
     override fun onClose(event: InventoryCloseEvent, player: Player)
@@ -99,22 +34,83 @@ class MilestoneSettings(private val plugin: CV, private val number: Int) :
         SoundType.CLOSE.play(plugin, player)
     }
 
-    companion object
+    override fun onSave(event: InventoryClickEvent, player: Player)
     {
-        val DELETE_ITEM = BaseItem(Material.RED_WOOL, PMessage.GENERAL_ITEM_NAME_DELETE.toString())
     }
 
     init
     {
-        inventory.addItem(ItemsRewardItem(plugin, "${Data.MILESTONES}.$number.${Data.ITEM_REWARDS}"))
-        inventory.addItem(CommandsRewardItem(plugin, "${Data.MILESTONES}.$number.commands", Material.SHIELD))
-        inventory.addItem(PermissionsRewardItem(plugin, "${Data.MILESTONES}.$number.permissions"))
-        inventory.setItem(7, DELETE_ITEM)
-        inventory.setItem(8, BACK_ITEM)
+        addItem(object : ItemsRewardItem(plugin, "${Data.MILESTONES}.$number.${Data.ITEM_REWARDS}")
+        {
+            override fun onClick(event: InventoryClickEvent, player: Player)
+            {
+                SoundType.CLICK.play(plugin, player)
+                cancelCloseEvent = true
+                MilestoneItemRewards(plugin, number).open(player)
+            }
+        })
+        addItem(object : CommandsRewardItem(plugin, "${Data.MILESTONES}.$number.commands", Material.SHIELD)
+        {
+            override fun onClick(event: InventoryClickEvent, player: Player)
+            {
+                SoundType.CHANGE.play(plugin, player)
+                cancelCloseEvent = true
+                player.closeInventory()
+                object : PlayerCommandInput(plugin, player, "${Data.MILESTONES}.$number.commands")
+                {
+                    override fun onCommandReceived()
+                    {
+                        SoundType.SUCCESS.play(plugin, player)
+                        MilestoneSettings(plugin, number).open(player)
+                    }
+
+                    override fun onCancel()
+                    {
+                        SoundType.FAILURE.play(plugin, player)
+                        MilestoneSettings(plugin, number).open(player)
+                    }
+                }
+            }
+        })
+        addItem(object : BaseItem(
+            Material.DIAMOND_SWORD, PMessage.PERMISSION_REWARDS_ITEM_NAME.toString(),
+            PMessage.GENERAL_ITEM_LORE_CURRENT_XY.with(
+                "" + plugin.data.getStringList("${Data.MILESTONES}.$number.permissions").size,
+                "permissions"
+            )
+        )
+        {
+            override fun onClick(event: InventoryClickEvent, player: Player)
+            {
+                SoundType.CHANGE.play(plugin, player)
+                cancelCloseEvent = true
+                player.closeInventory()
+                object : PlayerPermissionInput(plugin, player, "${Data.MILESTONES}.$number.permissions")
+                {
+                    override fun onPermissionReceived()
+                    {
+                        SoundType.SUCCESS.play(plugin, player)
+                        MilestoneSettings(plugin, number).open(player)
+                    }
+
+                    override fun onCancel()
+                    {
+                        SoundType.FAILURE.play(plugin, player)
+                        MilestoneSettings(plugin, number).open(player)
+                    }
+                }
+            }
+        })
+        setItem(7, object : BaseItem(Material.RED_WOOL, PMessage.GENERAL_ITEM_NAME_DELETE.toString())
+        {
+            override fun onClick(event: InventoryClickEvent, player: Player)
+            {
+                SoundType.FAILURE.play(plugin, player)
+                plugin.data.delete(Data.MILESTONES.path + ".$number")
+                player.sendMessage(PMessage.MILESTONE_MESSAGE_DELETED_X.with(PMessage.MILESTONE_NAME_X.with("$number")))
+                cancelCloseEvent = true
+                Milestones(plugin).open(player)
+            }
+        })
     }
 }
-
-class PermissionsRewardItem(plugin: CV, path: String) : BaseItem(
-    Material.DIAMOND_SWORD, PMessage.PERMISSION_REWARDS_ITEM_NAME.toString(),
-    PMessage.GENERAL_ITEM_LORE_CURRENT_XY.with("" + plugin.data.getStringList(path).size, "permissions")
-)

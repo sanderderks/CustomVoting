@@ -1,6 +1,5 @@
 package me.sd_master92.customvoting.gui.rewards.crate
 
-import me.sd_master92.core.inventory.BaseItem
 import me.sd_master92.core.inventory.GUI
 import me.sd_master92.core.tasks.TaskTimer
 import me.sd_master92.customvoting.CV
@@ -8,6 +7,7 @@ import me.sd_master92.customvoting.addToInventoryOrDrop
 import me.sd_master92.customvoting.constants.enumerations.Data
 import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.SoundType
+import me.sd_master92.customvoting.gui.items.SimpleItem
 import me.sd_master92.customvoting.helpers.ParticleHelper
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -17,13 +17,17 @@ import org.bukkit.inventory.ItemStack
 import java.util.*
 
 class Crate(private val plugin: CV, private val player: Player, path: String) :
-    GUI(plugin, (plugin.data.getString("$path.name") ?: PMessage.CRATE_INVENTORY_NAME.toString()), 45)
+    GUI(plugin, (plugin.data.getString("$path.name") ?: PMessage.CRATE_INVENTORY_NAME.toString()), 45, back = false)
 {
     private var searching = true
     private var rewards = mutableMapOf<Int, Array<ItemStack>>()
     private var allRewards = mutableListOf<ItemStack>()
 
-    override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
+    override fun onBack(event: InventoryClickEvent, player: Player)
+    {
+    }
+
+    override fun onClick(event: InventoryClickEvent, player: Player)
     {
     }
 
@@ -33,7 +37,7 @@ class Crate(private val plugin: CV, private val player: Player, path: String) :
         {
             TaskTimer.delay(plugin)
             {
-                player.openInventory(inventory)
+                open(player)
             }.run()
         } else
         {
@@ -41,18 +45,21 @@ class Crate(private val plugin: CV, private val player: Player, path: String) :
         }
     }
 
+    override fun onSave(event: InventoryClickEvent, player: Player)
+    {
+    }
+
     private fun giveReward(number: Int? = null)
     {
         val rewards = if (number != null && this.rewards.isNotEmpty()) this.rewards[number] else null
         val reward = if (rewards?.isNotEmpty() == true) rewards.random() else null
-
-        inventory.clear()
-        inventory.setItem(
-            22, reward ?: BaseItem(
-                Material.BARRIER,
-                PMessage.CRATE_ITEM_NAME_NO_PRICE.toString()
-            )
+        val none = SimpleItem(
+            Material.BARRIER,
+            PMessage.CRATE_ITEM_NAME_NO_PRICE.toString()
         )
+
+        clear()
+        setItem(22, reward ?: none)
 
         if (number != null && reward != null)
         {
@@ -76,11 +83,11 @@ class Crate(private val plugin: CV, private val player: Player, path: String) :
             wait += shuffle
             TaskTimer.delay(plugin, wait)
             {
-                for (i in 0 until inventory.size)
+                for (i in 0 until size)
                 {
                     if (i != 22)
                     {
-                        inventory.setItem(i, allRewards.random())
+                        setItem(i, allRewards.random())
                     }
                 }
                 SoundType.SUCCESS.play(plugin, player)

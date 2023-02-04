@@ -18,7 +18,7 @@ class ResetVotesCommand(private val plugin: CV) : SimpleCommand(plugin, "voteres
     override fun onCommand(player: Player, args: Array<String>)
     {
         SoundType.OPEN.play(plugin, player)
-        player.openInventory(ConfirmVotesReset(plugin, plugin.config.getBoolean(Setting.MONTHLY_VOTES.path)).inventory)
+        ConfirmVotesReset(plugin, plugin.config.getBoolean(Setting.MONTHLY_VOTES.path)).open(player)
     }
 
     init

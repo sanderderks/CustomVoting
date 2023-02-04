@@ -19,7 +19,7 @@ class VoteCommand(private val plugin: CV) : SimpleCommand(plugin, "vote")
     {
         if (plugin.config.getBoolean(Setting.VOTE_LINK_INVENTORY.path))
         {
-            player.openInventory(VoteLinks(plugin, true).inventory)
+            VoteLinks(plugin, true).open(player)
         } else
         {
             player.sendTexts(plugin, Message.VOTE_COMMAND)

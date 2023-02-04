@@ -22,15 +22,14 @@ class SettingsCommand(private val plugin: CV) : SimpleCommand(plugin, "votesetti
         SoundType.OPEN.play(plugin, player)
         if (ResetChecker.FIRST_OF_MONTH && plugin.config.getBoolean(Setting.MONTHLY_RESET.path))
         {
-            player.openInventory(
-                ConfirmVotesReset(
-                    plugin,
-                    plugin.config.getBoolean(Setting.MONTHLY_VOTES.path)
-                ).inventory
-            )
+
+            ConfirmVotesReset(
+                plugin,
+                plugin.config.getBoolean(Setting.MONTHLY_VOTES.path)
+            ).open(player)
         } else
         {
-            player.openInventory(VoteSettings(plugin).inventory)
+            VoteSettings(plugin).open(player)
         }
     }
 

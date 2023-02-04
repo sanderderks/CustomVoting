@@ -3,7 +3,6 @@ package me.sd_master92.customvoting.listeners
 import me.sd_master92.core.input.PlayerStringInput
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.PMessage
-import org.bukkit.ChatColor
 import org.bukkit.entity.Player
 
 abstract class PlayerPermissionInput(
@@ -59,10 +58,10 @@ abstract class PlayerPermissionInput(
             player.sendMessage(PMessage.GENERAL_MESSAGE_LIST_EMPTY_X.with(PMessage.PERMISSION_REWARDS_UNIT_MULTIPLE.toString()))
         } else
         {
-            player.sendMessage(ChatColor.GRAY.toString() + "Permissions:")
+            player.sendMessage(PMessage.PERMISSION_REWARDS_MESSAGE_TITLE.toString())
             for (permission in permissions)
             {
-                player.sendMessage(ChatColor.GREEN.toString() + permission)
+                player.sendMessage(PMessage.GREEN.toString() + permission)
             }
         }
     }

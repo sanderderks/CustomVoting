@@ -9,7 +9,6 @@ import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.Inventory
-import org.bukkit.inventory.ItemStack
 
 class CrateItemRewards(private val plugin: CV, private val number: Int, private val percentage: Int) : GUI(
     plugin,
@@ -18,29 +17,33 @@ class CrateItemRewards(private val plugin: CV, private val number: Int, private 
         plugin.data.getString(Data.VOTE_CRATES.path + ".$number.name")
     ),
     27,
-    false
+    false,
+    save = true
 )
 {
-    override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
+    override fun onBack(event: InventoryClickEvent, player: Player)
     {
-        if (event.slot >= 25)
-        {
-            event.isCancelled = true
-            if (event.slot == 26)
-            {
-                save(plugin, player, event.inventory, number, percentage)
-            } else
-            {
-                SoundType.CLICK.play(plugin, player)
-            }
-            cancelCloseEvent = true
-            player.openInventory(CrateSettings(plugin, number).inventory)
-        }
+        event.isCancelled = true
+        SoundType.CLICK.play(plugin, player)
+        cancelCloseEvent = true
+        CrateSettings(plugin, number).open(player)
+    }
+
+    override fun onClick(event: InventoryClickEvent, player: Player)
+    {
     }
 
     override fun onClose(event: InventoryCloseEvent, player: Player)
     {
         save(plugin, player, event.inventory, number, percentage)
+    }
+
+    override fun onSave(event: InventoryClickEvent, player: Player)
+    {
+        event.isCancelled = true
+        save(plugin, player, event.inventory, number, percentage)
+        cancelCloseEvent = true
+        CrateSettings(plugin, number).open(player)
     }
 
     companion object
@@ -74,9 +77,7 @@ class CrateItemRewards(private val plugin: CV, private val number: Int, private 
     {
         for (reward in plugin.data.getItems("${Data.VOTE_CRATES}.$number.${Data.ITEM_REWARDS}.$percentage"))
         {
-            inventory.addItem(reward)
+            addItem(reward)
         }
-        inventory.setItem(25, BACK_ITEM)
-        inventory.setItem(26, SAVE_ITEM)
     }
 }

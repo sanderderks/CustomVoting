@@ -8,7 +8,7 @@ import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.getOfflinePlayer
 import me.sd_master92.customvoting.getSkull
-import org.bukkit.ChatColor
+import me.sd_master92.customvoting.stripColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
@@ -18,52 +18,31 @@ import org.bukkit.inventory.ItemStack
 class EnabledUsers(private val plugin: CV, private var page: Int = 0) :
     GUI(plugin, PMessage.ENABLED_USER_OVERVIEW_INVENTORY_NAME_X.with("" + (page + 1)), 54)
 {
-    override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
+    override fun onBack(event: InventoryClickEvent, player: Player)
     {
-        when (item.type)
+        SoundType.CLICK.play(plugin, player)
+        cancelCloseEvent = true
+        RewardSettings(plugin, true).open(player)
+    }
+
+    override fun onClick(event: InventoryClickEvent, player: Player)
+    {
+        if (event.currentItem!!.type == Material.PLAYER_HEAD)
         {
-            Material.BARRIER     ->
+            SoundType.CHANGE.play(plugin, player)
+            var name = event.currentItem!!.itemMeta?.displayName?.stripColor()
+            if (name == null)
             {
-                SoundType.CLICK.play(plugin, player)
-                cancelCloseEvent = true
-                player.openInventory(RewardSettings(plugin, true).inventory)
+                name = ""
             }
-
-            Material.PLAYER_HEAD ->
+            val voter = Voter.getByName(plugin, name)
+            if (voter != null)
             {
-                SoundType.CHANGE.play(plugin, player)
-                var name = ChatColor.stripColor(item.itemMeta?.displayName)
-                if (name == null)
-                {
-                    name = ""
-                }
-                val voter = Voter.getByName(plugin, name)
-                if (voter != null)
-                {
-                    voter.setIsOpUser(!voter.isOpUser)
-                    event.currentItem = EnabledUser(voter).getSkull()
-                } else
-                {
-                    event.currentItem = null
-                }
-            }
-
-            else                 ->
+                voter.setIsOpUser(!voter.isOpUser)
+                event.currentItem = EnabledUser(voter).getSkull()
+            } else
             {
-                if (item.itemMeta?.displayName?.contains(PMessage.GENERAL_ITEM_NAME_PREVIOUS.toString()) == true && page > 0)
-                {
-                    SoundType.CLICK.play(plugin, player)
-                    cancelCloseEvent = true
-                    player.openInventory(EnabledUsers(plugin, page - 1).inventory)
-                } else if (item.itemMeta?.displayName?.contains(PMessage.GENERAL_ITEM_NAME_NEXT.toString()) == true && Voter.getTopVoters(
-                        plugin
-                    ).size > (page + 1) * 51
-                )
-                {
-                    SoundType.CLICK.play(plugin, player)
-                    cancelCloseEvent = true
-                    player.openInventory(EnabledUsers(plugin, page + 1).inventory)
-                }
+                event.currentItem = null
             }
         }
     }
@@ -71,6 +50,10 @@ class EnabledUsers(private val plugin: CV, private var page: Int = 0) :
     override fun onClose(event: InventoryCloseEvent, player: Player)
     {
         SoundType.CLOSE.play(plugin, player)
+    }
+
+    override fun onSave(event: InventoryClickEvent, player: Player)
+    {
     }
 
     init
@@ -82,11 +65,32 @@ class EnabledUsers(private val plugin: CV, private var page: Int = 0) :
         }
         for (voter in voters.asSequence().filterIndexed { i, _ -> i >= 51 * page }.take(51))
         {
-            inventory.addItem(EnabledUser(voter).getSkull())
+            addItem(EnabledUser(voter).getSkull())
         }
-        inventory.setItem(51, BaseItem(Material.FEATHER, PMessage.GENERAL_ITEM_NAME_PREVIOUS.toString()))
-        inventory.setItem(52, BaseItem(Material.FEATHER, PMessage.GENERAL_ITEM_NAME_NEXT.toString()))
-        inventory.setItem(53, BACK_ITEM)
+        setItem(51, object : BaseItem(Material.FEATHER, PMessage.GENERAL_ITEM_NAME_PREVIOUS.toString())
+        {
+            override fun onClick(event: InventoryClickEvent, player: Player)
+            {
+                if (page > 0)
+                {
+                    SoundType.CLICK.play(plugin, player)
+                    cancelCloseEvent = true
+                    EnabledUsers(plugin, page - 1).open(player)
+                }
+            }
+        })
+        setItem(52, object : BaseItem(Material.FEATHER, PMessage.GENERAL_ITEM_NAME_NEXT.toString())
+        {
+            override fun onClick(event: InventoryClickEvent, player: Player)
+            {
+                if (Voter.getTopVoters(plugin).size > (page + 1) * 51)
+                {
+                    SoundType.CLICK.play(plugin, player)
+                    cancelCloseEvent = true
+                    EnabledUsers(plugin, page + 1).open(player)
+                }
+            }
+        })
     }
 }
 

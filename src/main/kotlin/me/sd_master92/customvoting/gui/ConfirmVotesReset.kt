@@ -11,7 +11,6 @@ import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 
-
 class ConfirmVotesReset(private val plugin: CV, private val monthly: Boolean) :
     ConfirmGUI(
         plugin,
@@ -33,7 +32,7 @@ class ConfirmVotesReset(private val plugin: CV, private val monthly: Boolean) :
         }
         ResetChecker.FIRST_OF_MONTH = false
         plugin.broadcastText(Message.MONTHLY_RESET)
-        player.openInventory(VoteSettings(plugin).inventory)
+        VoteSettings(plugin).open(player)
     }
 
     override fun onCancel(event: InventoryClickEvent, player: Player)
@@ -41,7 +40,7 @@ class ConfirmVotesReset(private val plugin: CV, private val monthly: Boolean) :
         SoundType.CLICK.play(plugin, player)
         ResetChecker.FIRST_OF_MONTH = false
         player.sendMessage(PMessage.RESET_VOTES_MESSAGE_CANCEL.toString())
-        player.openInventory(VoteSettings(plugin).inventory)
+        VoteSettings(plugin).open(player)
     }
 
     override fun onClose(event: InventoryCloseEvent, player: Player)

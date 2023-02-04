@@ -4,7 +4,6 @@ import me.sd_master92.core.input.PlayerStringInput
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.Setting
-import org.bukkit.ChatColor
 import org.bukkit.entity.Player
 
 abstract class PlayerCommandInput(
@@ -72,7 +71,7 @@ abstract class PlayerCommandInput(
             player.sendMessage(PMessage.COMMAND_REWARDS_MESSAGE_TITLE.toString())
             for (command in commands)
             {
-                player.sendMessage(ChatColor.GRAY.toString() + "/" + ChatColor.GREEN + command)
+                player.sendMessage(PMessage.GRAY.toString() + "/" + PMessage.GREEN + command)
             }
         }
     }

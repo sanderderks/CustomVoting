@@ -1,10 +1,10 @@
 package me.sd_master92.customvoting.subjects.voteparty
 
-import me.sd_master92.core.inventory.BaseItem
 import me.sd_master92.core.tasks.TaskTimer
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.addToInventoryOrDrop
 import me.sd_master92.customvoting.constants.enumerations.*
+import me.sd_master92.customvoting.gui.items.SimpleItem
 import me.sd_master92.customvoting.withPlaceholders
 import org.bukkit.Bukkit
 import org.bukkit.Material
@@ -242,7 +242,7 @@ class VoteParty(private val plugin: CV)
 
     companion object
     {
-        val VOTE_PARTY_ITEM = BaseItem(
+        val VOTE_PARTY_ITEM = SimpleItem(
             Material.ENDER_CHEST,
             PMessage.VOTE_PARTY_ITEM_NAME_CHEST.toString(),
             PMessage.VOTE_PARTY_ITEM_LORE_CHEST.toString()

@@ -1,12 +1,12 @@
 package me.sd_master92.customvoting.subjects
 
-import me.sd_master92.core.inventory.BaseItem
 import me.sd_master92.core.tasks.TaskTimer
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Voter
 import me.sd_master92.customvoting.constants.enumerations.Data
 import me.sd_master92.customvoting.constants.enumerations.Message
 import me.sd_master92.customvoting.constants.enumerations.PMessage
+import me.sd_master92.customvoting.gui.items.SimpleItem
 import net.citizensnpcs.api.CitizensAPI
 import net.citizensnpcs.api.npc.NPC
 import org.bukkit.Bukkit
@@ -145,34 +145,34 @@ class VoteTopStand @JvmOverloads constructor(private val plugin: CV, private val
         {
             1    ->
             {
-                equipment.chestplate = BaseItem(Material.DIAMOND_CHESTPLATE, true)
-                equipment.leggings = BaseItem(Material.DIAMOND_LEGGINGS, true)
-                equipment.boots = BaseItem(Material.DIAMOND_BOOTS, true)
-                equipment.setItemInMainHand(BaseItem(Material.DIAMOND_SWORD, true))
+                equipment.chestplate = SimpleItem(Material.DIAMOND_CHESTPLATE, true)
+                equipment.leggings = SimpleItem(Material.DIAMOND_LEGGINGS, true)
+                equipment.boots = SimpleItem(Material.DIAMOND_BOOTS, true)
+                equipment.setItemInMainHand(SimpleItem(Material.DIAMOND_SWORD, true))
             }
 
             2    ->
             {
-                equipment.chestplate = BaseItem(Material.GOLDEN_CHESTPLATE, true)
-                equipment.leggings = BaseItem(Material.GOLDEN_LEGGINGS, true)
-                equipment.boots = BaseItem(Material.GOLDEN_BOOTS, true)
-                equipment.setItemInMainHand(BaseItem(Material.GOLDEN_SWORD, true))
+                equipment.chestplate = SimpleItem(Material.GOLDEN_CHESTPLATE, true)
+                equipment.leggings = SimpleItem(Material.GOLDEN_LEGGINGS, true)
+                equipment.boots = SimpleItem(Material.GOLDEN_BOOTS, true)
+                equipment.setItemInMainHand(SimpleItem(Material.GOLDEN_SWORD, true))
             }
 
             3    ->
             {
-                equipment.chestplate = BaseItem(Material.IRON_CHESTPLATE, true)
-                equipment.leggings = BaseItem(Material.IRON_LEGGINGS, true)
-                equipment.boots = BaseItem(Material.IRON_BOOTS, true)
-                equipment.setItemInMainHand(BaseItem(Material.IRON_SWORD, true))
+                equipment.chestplate = SimpleItem(Material.IRON_CHESTPLATE, true)
+                equipment.leggings = SimpleItem(Material.IRON_LEGGINGS, true)
+                equipment.boots = SimpleItem(Material.IRON_BOOTS, true)
+                equipment.setItemInMainHand(SimpleItem(Material.IRON_SWORD, true))
             }
 
             else ->
             {
-                equipment.chestplate = BaseItem(Material.CHAINMAIL_CHESTPLATE, true)
-                equipment.leggings = BaseItem(Material.CHAINMAIL_LEGGINGS, true)
-                equipment.boots = BaseItem(Material.CHAINMAIL_BOOTS, true)
-                equipment.setItemInMainHand(BaseItem(Material.STONE_SWORD, true))
+                equipment.chestplate = SimpleItem(Material.CHAINMAIL_CHESTPLATE, true)
+                equipment.leggings = SimpleItem(Material.CHAINMAIL_LEGGINGS, true)
+                equipment.boots = SimpleItem(Material.CHAINMAIL_BOOTS, true)
+                equipment.setItemInMainHand(SimpleItem(Material.STONE_SWORD, true))
             }
         }
     }

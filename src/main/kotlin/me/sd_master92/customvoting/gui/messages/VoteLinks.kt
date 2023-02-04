@@ -15,15 +15,15 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 
 class VoteLinks @JvmOverloads constructor(private val plugin: CV, private val isPublic: Boolean = false) :
-    GUI(plugin, PMessage.VOTE_LINKS_INVENTORY_NAME.toString(), 27, false)
+    GUI(plugin, PMessage.VOTE_LINKS_INVENTORY_NAME.toString(), 27, false, false)
 {
-    override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
+    override fun onClick(event: InventoryClickEvent, player: Player)
     {
         if (!isPublic)
         {
             if (event.click == ClickType.RIGHT)
             {
-                save(player, inventory.contents, false)
+                save(player, contents, false)
                 cancelCloseEvent = true
                 player.closeInventory()
                 enterTitle(player, event.slot)
@@ -41,15 +41,23 @@ class VoteLinks @JvmOverloads constructor(private val plugin: CV, private val is
         }
     }
 
+    override fun onBack(event: InventoryClickEvent, player: Player)
+    {
+    }
+
     override fun onClose(event: InventoryCloseEvent, player: Player)
     {
         if (!isPublic)
         {
-            save(player, inventory.contents, true)
+            save(player, contents, true)
         } else
         {
             SoundType.CLOSE.play(plugin, player)
         }
+    }
+
+    override fun onSave(event: InventoryClickEvent, player: Player)
+    {
     }
 
     private fun enterTitle(player: Player, slot: Int)
@@ -156,14 +164,14 @@ class VoteLinks @JvmOverloads constructor(private val plugin: CV, private val is
                 plugin.data.saveConfig()
 
                 SoundType.SUCCESS.play(plugin, player)
-                player.openInventory(VoteLinks(plugin).inventory)
+                VoteLinks(plugin).open(player)
                 cancel()
             }
 
             override fun onCancel()
             {
                 SoundType.SUCCESS.play(plugin, player)
-                player.openInventory(VoteLinks(plugin).inventory)
+                VoteLinks(plugin).open(player)
             }
         }
     }
@@ -174,8 +182,11 @@ class VoteLinks @JvmOverloads constructor(private val plugin: CV, private val is
                 item ?: ItemStack(Material.AIR)
             }.toTypedArray()))
         {
-            SoundType.SUCCESS.play(plugin, player)
-            player.sendMessage(PMessage.GENERAL_MESSAGE_UPDATE_NOTHING_CHANGED.toString())
+            if (notify)
+            {
+                SoundType.SUCCESS.play(plugin, player)
+                player.sendMessage(PMessage.GENERAL_MESSAGE_UPDATE_NOTHING_CHANGED.toString())
+            }
         } else if (plugin.data.setItemsWithNull(Data.VOTE_LINK_ITEMS.path, items))
         {
             if (notify)
@@ -195,7 +206,7 @@ class VoteLinks @JvmOverloads constructor(private val plugin: CV, private val is
         val items = plugin.data.getItems(Data.VOTE_LINK_ITEMS.path)
         for (i in items.indices)
         {
-            inventory.setItem(i, items[i])
+            setItem(i, items[i])
         }
     }
 }

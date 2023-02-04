@@ -8,44 +8,54 @@ import me.sd_master92.customvoting.constants.enumerations.Data
 import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.gui.rewards.RewardSettings
-import me.sd_master92.customvoting.stripColor
-import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
-import org.bukkit.inventory.ItemStack
 
 class Milestones(private val plugin: CV) :
     GUI(plugin, PMessage.MILESTONE_INVENTORY_NAME_OVERVIEW.toString(), getInventorySize(plugin))
 {
-    override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
+    override fun onBack(event: InventoryClickEvent, player: Player)
     {
-        when (item.type)
+        SoundType.CLICK.play(plugin, player)
+        cancelCloseEvent = true
+        RewardSettings(plugin).open(player)
+    }
+
+    override fun onClick(event: InventoryClickEvent, player: Player)
+    {
+    }
+
+    override fun onClose(event: InventoryCloseEvent, player: Player)
+    {
+        SoundType.CLOSE.play(plugin, player)
+    }
+
+    override fun onSave(event: InventoryClickEvent, player: Player)
+    {
+    }
+
+    companion object
+    {
+        private fun getInventorySize(plugin: CV): Int
         {
-            Material.BARRIER        ->
+            val milestones = (plugin.data.getConfigurationSection(Data.MILESTONES.path)?.getKeys(false)?.size ?: 0) + 2
+            return if (milestones % 9 == 0)
             {
-                SoundType.CLICK.play(plugin, player)
-                cancelCloseEvent = true
-                player.openInventory(RewardSettings(plugin).inventory)
-            }
-
-            Material.ENDER_PEARL    ->
+                milestones
+            } else
             {
-                val key = item.itemMeta?.displayName?.split("#")?.get(1)?.stripColor()
-                try
-                {
-                    val number: Int = key!!.toInt()
-                    SoundType.CLICK.play(plugin, player)
-                    cancelCloseEvent = true
-                    player.openInventory(MilestoneSettings(plugin, number).inventory)
-                } catch (e: Exception)
-                {
-                    SoundType.FAILURE.play(plugin, player)
-                }
+                milestones + (9 - (milestones % 9))
             }
+        }
+    }
 
-            Material.CRAFTING_TABLE ->
+    init
+    {
+        setItem(7, object : BaseItem(Material.CRAFTING_TABLE, PMessage.MILESTONE_ITEM_NAME_ADD.toString())
+        {
+            override fun onClick(event: InventoryClickEvent, player: Player)
             {
                 SoundType.CHANGE.play(plugin, player)
                 cancelCloseEvent = true
@@ -66,7 +76,7 @@ class Milestones(private val plugin: CV) :
                             plugin.data.set(Data.MILESTONES.path + ".$input.permissions", ArrayList<String>())
                             plugin.data.saveConfig()
                             player.sendMessage(PMessage.GENERAL_MESSAGE_CREATE_SUCCESS_X.with(name))
-                            player.openInventory(Milestones(plugin).inventory)
+                            Milestones(plugin).open(player)
                             cancel()
                         }
                     }
@@ -74,51 +84,28 @@ class Milestones(private val plugin: CV) :
                     override fun onCancel()
                     {
                         SoundType.FAILURE.play(plugin, player)
-                        player.openInventory(Milestones(plugin).inventory)
+                        Milestones(plugin).open(player)
                     }
                 }
             }
-
-            else                    ->
-            {
-            }
-        }
-    }
-
-    override fun onClose(event: InventoryCloseEvent, player: Player)
-    {
-        SoundType.CLOSE.play(plugin, player)
-    }
-
-    companion object
-    {
-        private fun getInventorySize(plugin: CV): Int
-        {
-            val milestones = (plugin.data.getConfigurationSection(Data.MILESTONES.path)?.getKeys(false)?.size ?: 0) + 2
-            return if (milestones % 9 == 0)
-            {
-                milestones
-            } else
-            {
-                milestones + (9 - (milestones % 9))
-            }
-        }
-    }
-
-    init
-    {
-        inventory.setItem(7, BaseItem(Material.CRAFTING_TABLE, PMessage.MILESTONE_ITEM_NAME_ADD.toString()))
-        inventory.setItem(8, BACK_ITEM)
-
+        })
         for (key in plugin.data.getConfigurationSection(Data.MILESTONES.path)?.getKeys(false)?.mapNotNull { key ->
             key.toIntOrNull()
         }?.sorted() ?: ArrayList())
         {
-            inventory.addItem(
-                BaseItem(
+            addItem(
+                object : BaseItem(
                     Material.ENDER_PEARL,
-                    ChatColor.LIGHT_PURPLE.toString() + PMessage.MILESTONE_NAME_X.with("$key")
+                    PMessage.PURPLE.toString() + PMessage.MILESTONE_NAME_X.with("$key")
                 )
+                {
+                    override fun onClick(event: InventoryClickEvent, player: Player)
+                    {
+                        SoundType.CLICK.play(plugin, player)
+                        cancelCloseEvent = true
+                        MilestoneSettings(plugin, key).open(player)
+                    }
+                }
             )
         }
     }

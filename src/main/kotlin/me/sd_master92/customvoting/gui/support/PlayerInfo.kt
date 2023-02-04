@@ -8,7 +8,6 @@ import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.getOfflinePlayer
 import me.sd_master92.customvoting.getSkull
-import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
@@ -19,35 +18,15 @@ import java.util.*
 class PlayerInfo(private val plugin: CV, private var page: Int = 0) :
     GUI(plugin, PMessage.PLAYER_INFO_INVENTORY_NAME_X.with("" + (page + 1)), 54)
 {
-    override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
+    override fun onBack(event: InventoryClickEvent, player: Player)
     {
-        when (item.type)
-        {
-            Material.BARRIER ->
-            {
-                SoundType.CLICK.play(plugin, player)
-                cancelCloseEvent = true
-                player.openInventory(Support(plugin).inventory)
-            }
+        SoundType.CLICK.play(plugin, player)
+        cancelCloseEvent = true
+        Support(plugin).open(player)
+    }
 
-            else             ->
-            {
-                if (item.itemMeta?.displayName?.contains(PMessage.GENERAL_ITEM_NAME_PREVIOUS.toString()) == true && page > 0)
-                {
-                    SoundType.CLICK.play(plugin, player)
-                    cancelCloseEvent = true
-                    player.openInventory(PlayerInfo(plugin, page - 1).inventory)
-                } else if (item.itemMeta?.displayName?.contains(PMessage.GENERAL_ITEM_NAME_NEXT.toString()) == true && Voter.getTopVoters(
-                        plugin
-                    ).size > (page + 1) * 51
-                )
-                {
-                    SoundType.CLICK.play(plugin, player)
-                    cancelCloseEvent = true
-                    player.openInventory(PlayerInfo(plugin, page + 1).inventory)
-                }
-            }
-        }
+    override fun onClick(event: InventoryClickEvent, player: Player)
+    {
     }
 
     override fun onClose(event: InventoryCloseEvent, player: Player)
@@ -55,15 +34,40 @@ class PlayerInfo(private val plugin: CV, private var page: Int = 0) :
         SoundType.CLOSE.play(plugin, player)
     }
 
+    override fun onSave(event: InventoryClickEvent, player: Player)
+    {
+    }
+
     init
     {
         for (voter in Voter.getTopVoters(plugin).filterIndexed { i, _ -> i >= page * 51 }.take(51))
         {
-            inventory.addItem(InfoPlayer(voter).getSkull())
+            addItem(InfoPlayer(voter).getSkull())
         }
-        inventory.setItem(51, BaseItem(Material.FEATHER, PMessage.GENERAL_ITEM_NAME_PREVIOUS.toString()))
-        inventory.setItem(52, BaseItem(Material.FEATHER, PMessage.GENERAL_ITEM_NAME_NEXT.toString()))
-        inventory.setItem(53, BACK_ITEM)
+        setItem(51, object : BaseItem(Material.FEATHER, PMessage.GENERAL_ITEM_NAME_PREVIOUS.toString())
+        {
+            override fun onClick(event: InventoryClickEvent, player: Player)
+            {
+                if (page > 0)
+                {
+                    SoundType.CLICK.play(plugin, player)
+                    cancelCloseEvent = true
+                    PlayerInfo(plugin, page - 1).open(player)
+                }
+            }
+        })
+        setItem(52, object : BaseItem(Material.FEATHER, PMessage.GENERAL_ITEM_NAME_NEXT.toString())
+        {
+            override fun onClick(event: InventoryClickEvent, player: Player)
+            {
+                if (Voter.getTopVoters(plugin).size > (page + 1) * 51)
+                {
+                    SoundType.CLICK.play(plugin, player)
+                    cancelCloseEvent = true
+                    PlayerInfo(plugin, page + 1).open(player)
+                }
+            }
+        })
     }
 }
 
@@ -74,16 +78,19 @@ class InfoPlayer(private val voter: Voter)
         val skull = voter.name.getOfflinePlayer().getSkull()
         val meta = skull.itemMeta
         val lastVote = if (voter.votes > 0) java.text.SimpleDateFormat(PMessage.GENERAL_FORMAT_DATE.toString())
-            .format(Date(voter.last)) else PMessage.GENERAL_VALUE_NEVER.toString()
+            .format(Date(voter.last)) else PMessage.PLAYER_INFO_VALUE_NEVER.toString()
         meta!!.lore = listOf(
             PMessage.PLAYER_INFO_ITEM_LORE_VOTES_X.with("" + voter.votes),
             PMessage.PLAYER_INFO_ITEM_LORE_MONTHLY_VOTES_X.with("" + voter.monthlyVotes),
             PMessage.PLAYER_INFO_ITEM_LORE_LAST_X.with(lastVote),
-            PMessage.PLAYER_INFO_ITEM_LORE_PERMISSION_X.with("" + voter.isOpUser),
+            PMessage.PLAYER_INFO_ITEM_LORE_PERMISSION_X.with(
+                if (voter.isOpUser) PMessage.RED.toString() + voter.isOpUser else
+                    PMessage.PURPLE.toString() + voter.isOpUser
+            ),
         )
         if (meta.displayName != voter.name)
         {
-            meta.setDisplayName(ChatColor.AQUA.toString() + voter.name)
+            meta.setDisplayName(PMessage.AQUA.toString() + voter.name)
         }
         skull.itemMeta = meta
         return skull

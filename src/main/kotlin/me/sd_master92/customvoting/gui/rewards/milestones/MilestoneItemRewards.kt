@@ -9,33 +9,35 @@ import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.Inventory
-import org.bukkit.inventory.ItemStack
 
 class MilestoneItemRewards(private val plugin: CV, private val number: Int) : GUI(
     plugin,
-    PMessage.MILESTONE_ITEM_NAME_REWARDS_X.with("$number"), 27, false
+    PMessage.MILESTONE_ITEM_NAME_REWARDS_X.with("$number"), 27, false, save = true
 )
 {
-    override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
+    override fun onBack(event: InventoryClickEvent, player: Player)
     {
-        if (event.slot >= 25)
-        {
-            event.isCancelled = true
-            if (event.slot == 26)
-            {
-                save(plugin, player, event.inventory, number)
-            } else
-            {
-                SoundType.CLICK.play(plugin, player)
-            }
-            cancelCloseEvent = true
-            player.openInventory(MilestoneSettings(plugin, number).inventory)
-        }
+        event.isCancelled = true
+        SoundType.CLICK.play(plugin, player)
+        cancelCloseEvent = true
+        MilestoneSettings(plugin, number).open(player)
+    }
+
+    override fun onClick(event: InventoryClickEvent, player: Player)
+    {
     }
 
     override fun onClose(event: InventoryCloseEvent, player: Player)
     {
         save(plugin, player, event.inventory, number)
+    }
+
+    override fun onSave(event: InventoryClickEvent, player: Player)
+    {
+        event.isCancelled = true
+        save(plugin, player, event.inventory, number)
+        cancelCloseEvent = true
+        MilestoneSettings(plugin, number).open(player)
     }
 
     companion object
@@ -66,9 +68,7 @@ class MilestoneItemRewards(private val plugin: CV, private val number: Int) : GU
     {
         for (reward in plugin.data.getItems("${Data.MILESTONES}.$number.${Data.ITEM_REWARDS}"))
         {
-            inventory.addItem(reward)
+            addItem(reward)
         }
-        inventory.setItem(25, BACK_ITEM)
-        inventory.setItem(26, SAVE_ITEM)
     }
 }

@@ -9,13 +9,13 @@ import me.sd_master92.customvoting.constants.enumerations.Data
 import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.gui.items.ItemsRewardItem
+import me.sd_master92.customvoting.gui.items.SimpleItem
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
-import org.bukkit.inventory.ItemStack
 import java.util.*
 
 class CrateSettings(private val plugin: CV, private val number: Int) : GUI(
@@ -25,60 +25,31 @@ class CrateSettings(private val plugin: CV, private val number: Int) : GUI(
     9
 )
 {
-    override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
+    override fun onBack(event: InventoryClickEvent, player: Player)
     {
-        when (item.type)
+        SoundType.CLICK.play(plugin, player)
+        cancelCloseEvent = true
+        Crates(plugin).open(player)
+    }
+
+    override fun onClick(event: InventoryClickEvent, player: Player)
+    {
+    }
+
+    override fun onClose(event: InventoryCloseEvent, player: Player)
+    {
+        SoundType.CLOSE.play(plugin, player)
+    }
+
+    override fun onSave(event: InventoryClickEvent, player: Player)
+    {
+    }
+
+    init
+    {
+        addItem(object : BaseItem(Material.OAK_SIGN, PMessage.CRATE_ITEM_NAME_RENAME.toString())
         {
-            Material.BARRIER  ->
-            {
-                SoundType.CLICK.play(plugin, player)
-                cancelCloseEvent = true
-                player.openInventory(Crates(plugin).inventory)
-            }
-
-            Material.RED_WOOL ->
-            {
-                SoundType.FAILURE.play(plugin, player)
-                plugin.data.delete(Data.VOTE_CRATES.path + ".$number")
-                player.sendMessage(PMessage.CRATE_MESSAGE_DELETED_X.with(PMessage.CRATE_NAME_X.with(name)))
-                cancelCloseEvent = true
-                player.openInventory(Crates(plugin).inventory)
-            }
-
-            Material.CHEST    ->
-            {
-                SoundType.CLICK.play(plugin, player)
-                cancelCloseEvent = true
-                try
-                {
-                    player.openInventory(
-                        CrateItemRewards(
-                            plugin,
-                            number,
-                            item.itemMeta?.displayName?.filter { it.isDigit() }?.toInt() ?: Data.CRATE_REWARD_CHANCES[0]
-                        ).inventory
-                    )
-                } catch (_: Exception)
-                {
-                }
-            }
-
-            Material.DIAMOND  ->
-            {
-                SoundType.SUCCESS.play(plugin, player)
-                player.addToInventoryOrDrop(
-                    BaseItem(
-                        Material.TRIPWIRE_HOOK,
-                        PMessage.CRATE_ITEM_NAME_KEY_X.with(
-                            plugin.data.getString(Data.VOTE_CRATES.path + ".$number.name") ?: ""
-                        ),
-                        PMessage.CRATE_ITEM_LORE_KEY_X.with("$number"),
-                        true
-                    )
-                )
-            }
-
-            Material.OAK_SIGN ->
+            override fun onClick(event: InventoryClickEvent, player: Player)
             {
                 SoundType.CHANGE.play(plugin, player)
                 cancelCloseEvent = true
@@ -93,7 +64,7 @@ class CrateSettings(private val plugin: CV, private val number: Int) : GUI(
                         plugin.data.set(Data.VOTE_CRATES.path + ".$number.name", input)
                         plugin.data.saveConfig()
                         player.sendMessage(PMessage.CRATE_MESSAGE_NAME_CHANGED_X.with(input))
-                        player.openInventory(CrateSettings(plugin, number).inventory)
+                        CrateSettings(plugin, number).open(player)
                         val uuid = plugin.data.getString(Data.VOTE_CRATES.path + ".$number.stand")
                         if (uuid != null)
                         {
@@ -109,42 +80,67 @@ class CrateSettings(private val plugin: CV, private val number: Int) : GUI(
                     override fun onCancel()
                     {
                         SoundType.FAILURE.play(plugin, player)
-                        player.openInventory(CrateSettings(plugin, number).inventory)
+                        CrateSettings(plugin, number).open(player)
                     }
                 }
             }
-
-            else              ->
+        })
+        addItem(object : BaseItem(Material.DIAMOND, PMessage.CRATE_ITEM_NAME_KEY_GET.toString(), null, true)
+        {
+            override fun onClick(event: InventoryClickEvent, player: Player)
             {
+                SoundType.SUCCESS.play(plugin, player)
+                player.addToInventoryOrDrop(
+                    SimpleItem(
+                        Material.TRIPWIRE_HOOK,
+                        PMessage.CRATE_ITEM_NAME_KEY_X.with(
+                            plugin.data.getString(Data.VOTE_CRATES.path + ".$number.name") ?: ""
+                        ),
+                        PMessage.CRATE_ITEM_LORE_KEY_X.with("$number"),
+                        true
+                    )
+                )
             }
-        }
-    }
-
-    override fun onClose(event: InventoryCloseEvent, player: Player)
-    {
-        SoundType.CLOSE.play(plugin, player)
-    }
-
-    companion object
-    {
-        val DELETE_ITEM = BaseItem(Material.RED_WOOL, PMessage.GENERAL_ITEM_NAME_DELETE.toString())
-    }
-
-    init
-    {
-        inventory.addItem(BaseItem(Material.OAK_SIGN, PMessage.CRATE_ITEM_NAME_RENAME.toString()))
-        inventory.addItem(BaseItem(Material.DIAMOND, PMessage.CRATE_ITEM_NAME_KEY_GET.toString(), null, true))
+        })
         for (chance in Data.CRATE_REWARD_CHANCES)
         {
-            inventory.addItem(
-                ItemsRewardItem(
+            addItem(
+                object : ItemsRewardItem(
                     plugin,
                     "${Data.VOTE_CRATES}.$number.${Data.ITEM_REWARDS}.$chance",
                     PMessage.CRATE_ITEM_NAME_REWARDS_PERCENTAGE_X.with("$chance")
                 )
+                {
+                    override fun onClick(event: InventoryClickEvent, player: Player)
+                    {
+                        SoundType.CLICK.play(plugin, player)
+                        cancelCloseEvent = true
+                        try
+                        {
+
+                            CrateItemRewards(
+                                plugin,
+                                number,
+                                itemMeta?.displayName?.filter { it.isDigit() }?.toInt()
+                                    ?: Data.CRATE_REWARD_CHANCES[0]
+                            ).open(player)
+                        } catch (_: Exception)
+                        {
+                        }
+                    }
+                }
             )
         }
-        inventory.setItem(7, DELETE_ITEM)
-        inventory.setItem(8, BACK_ITEM)
+        setItem(7, object : BaseItem(Material.RED_WOOL, PMessage.GENERAL_ITEM_NAME_DELETE.toString())
+        {
+            override fun onClick(event: InventoryClickEvent, player: Player)
+            {
+                SoundType.FAILURE.play(plugin, player)
+                plugin.data.delete(Data.VOTE_CRATES.path + ".$number")
+                player.sendMessage(PMessage.CRATE_MESSAGE_DELETED_X.with(PMessage.CRATE_NAME_X.with(name)))
+                cancelCloseEvent = true
+                Crates(plugin).open(player)
+            }
+        })
     }
 }

@@ -6,22 +6,21 @@ import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.getSkull
 import org.bukkit.Bukkit
-import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
-import org.bukkit.inventory.ItemStack
 
 class Donators(private val plugin: CV) : GUI(plugin, PMessage.DONATORS_INVENTORY_NAME.toString(), 9)
 {
-    override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
+    override fun onBack(event: InventoryClickEvent, player: Player)
     {
-        if (item.type == Material.BARRIER)
-        {
-            SoundType.CLICK.play(plugin, player)
-            cancelCloseEvent = true
-            player.openInventory(Support(plugin).inventory)
-        }
+        SoundType.CLICK.play(plugin, player)
+        cancelCloseEvent = true
+        Support(plugin).open(player)
+    }
+
+    override fun onClick(event: InventoryClickEvent, player: Player)
+    {
     }
 
     override fun onClose(event: InventoryCloseEvent, player: Player)
@@ -29,13 +28,16 @@ class Donators(private val plugin: CV) : GUI(plugin, PMessage.DONATORS_INVENTORY
         SoundType.CLOSE.play(plugin, player)
     }
 
+    override fun onSave(event: InventoryClickEvent, player: Player)
+    {
+    }
+
     init
     {
         for (donator in listOf("sd_master92", "Dutchbeard", "Smirren"))
         {
             @Suppress("DEPRECATION")
-            inventory.addItem(Bukkit.getOfflinePlayer(donator).getSkull())
+            addItem(Bukkit.getOfflinePlayer(donator).getSkull())
         }
-        inventory.setItem(8, BACK_ITEM)
     }
 }

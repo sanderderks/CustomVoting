@@ -235,7 +235,7 @@ class PlayerListener(private val plugin: CV) : Listener
                         if (player.hasPermission("customvoting.voteparty"))
                         {
                             SoundType.OPEN.play(plugin, player)
-                            player.openInventory(VotePartyRewards(plugin, key).inventory)
+                            VotePartyRewards(plugin, key).open(player)
                         } else
                         {
                             player.sendMessage(PMessage.ACTION_ERROR_OPEN_CHEST_NO_PERMISSION.toString())
@@ -328,7 +328,7 @@ class PlayerListener(private val plugin: CV) : Listener
                                             }
                                         }
                                     SoundType.CLICK.play(plugin, player)
-                                    player.openInventory(confirm.inventory)
+                                    confirm.open(player)
                                 } else
                                 {
                                     SoundType.FAILURE.play(plugin, player)
@@ -348,7 +348,7 @@ class PlayerListener(private val plugin: CV) : Listener
 
                                 val crate = Crate(plugin, player, path)
                                 SoundType.OPEN.play(plugin, player)
-                                player.openInventory(crate.inventory)
+                                crate.open(player)
                                 crate.run()
                             } else
                             {

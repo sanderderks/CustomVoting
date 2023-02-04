@@ -13,131 +13,18 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
-import org.bukkit.inventory.ItemStack
 
 class MessageSettings(private val plugin: CV) : GUI(plugin, PMessage.MESSAGE_SETTINGS_INVENTORY_NAME.toString(), 18)
 {
-    override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
+    override fun onBack(event: InventoryClickEvent, player: Player)
     {
-        when (item.type)
-        {
-            VMaterial.SOUL_TORCH.get() ->
-            {
-                SoundType.CLICK.play(plugin, player)
-                cancelCloseEvent = true
-                player.openInventory(VoteLinks(plugin).inventory)
-            }
+        SoundType.CLICK.play(plugin, player)
+        cancelCloseEvent = true
+        VoteSettings(plugin).open(player)
+    }
 
-            Material.CHEST             ->
-            {
-                SoundType.CHANGE.play(plugin, player)
-                plugin.config.set(
-                    Setting.VOTE_LINK_INVENTORY.path,
-                    !plugin.config.getBoolean(Setting.VOTE_LINK_INVENTORY.path)
-                )
-                plugin.config.saveConfig()
-                event.currentItem = UseVoteLinkItem(plugin)
-            }
-
-            Material.DIAMOND           ->
-            {
-                SoundType.CHANGE.play(plugin, player)
-                plugin.config.set(
-                    Setting.DISABLED_BROADCAST_VOTE.path,
-                    !plugin.config.getBoolean(Setting.DISABLED_BROADCAST_VOTE.path)
-                )
-                plugin.config.saveConfig()
-                event.currentItem = VoteBroadcast(plugin)
-            }
-
-            Material.ENDER_PEARL       ->
-            {
-                SoundType.CHANGE.play(plugin, player)
-                plugin.config.set(
-                    Setting.DISABLED_BROADCAST_MILESTONE.path,
-                    !plugin.config.getBoolean(Setting.DISABLED_BROADCAST_MILESTONE.path)
-                )
-                plugin.config.saveConfig()
-                event.currentItem = MilestoneBroadcast(plugin)
-            }
-
-            Material.BOOKSHELF         ->
-            {
-                SoundType.CHANGE.play(plugin, player)
-                plugin.config.set(
-                    Setting.DISABLED_BROADCAST_VOTE_PARTY_UNTIL.path,
-                    !plugin.config.getBoolean(Setting.DISABLED_BROADCAST_VOTE_PARTY_UNTIL.path)
-                )
-                plugin.config.saveConfig()
-                event.currentItem = VotePartyUntilBroadcast(plugin)
-            }
-
-            Material.NOTE_BLOCK        ->
-            {
-                SoundType.CHANGE.play(plugin, player)
-                plugin.config.set(
-                    Setting.DISABLED_BROADCAST_VOTE_PARTY_COUNTDOWN.path,
-                    !plugin.config.getBoolean(Setting.DISABLED_BROADCAST_VOTE_PARTY_COUNTDOWN.path)
-                )
-                plugin.config.saveConfig()
-                event.currentItem = VotePartyCountBroadcast(plugin)
-            }
-
-            Material.FIREWORK_ROCKET   ->
-            {
-                SoundType.CHANGE.play(plugin, player)
-                plugin.config.set(
-                    Setting.DISABLED_BROADCAST_VOTE_PARTY_COUNTDOWN_ENDING.path,
-                    !plugin.config.getBoolean(Setting.DISABLED_BROADCAST_VOTE_PARTY_COUNTDOWN_ENDING.path)
-                )
-                plugin.config.saveConfig()
-                event.currentItem = VotePartyCountEndBroadcast(plugin)
-            }
-
-            Material.ARMOR_STAND       ->
-            {
-                SoundType.CHANGE.play(plugin, player)
-                plugin.config.set(
-                    Setting.DISABLED_MESSAGE_ARMOR_STAND.path,
-                    !plugin.config.getBoolean(Setting.DISABLED_MESSAGE_ARMOR_STAND.path)
-                )
-                plugin.config.saveConfig()
-                event.currentItem = ArmorStandBreakMessage(plugin)
-            }
-
-            Material.GRASS_BLOCK       ->
-            {
-                SoundType.CHANGE.play(plugin, player)
-                plugin.config.set(
-                    Setting.DISABLED_MESSAGE_DISABLED_WORLD.path,
-                    !plugin.config.getBoolean(Setting.DISABLED_MESSAGE_DISABLED_WORLD.path)
-                )
-                plugin.config.saveConfig()
-                event.currentItem = DisabledWorldMessage(plugin)
-            }
-
-            Material.OAK_SIGN          ->
-            {
-                SoundType.CHANGE.play(plugin, player)
-                plugin.config.set(
-                    Setting.DISABLED_MESSAGE_VOTE_REMINDER.path,
-                    !plugin.config.getBoolean(Setting.DISABLED_MESSAGE_VOTE_REMINDER.path)
-                )
-                plugin.config.saveConfig()
-                event.currentItem = VoteRemindMessage(plugin)
-            }
-
-            Material.BARRIER           ->
-            {
-                SoundType.CLICK.play(plugin, player)
-                cancelCloseEvent = true
-                player.openInventory(VoteSettings(plugin).inventory)
-            }
-
-            else                       ->
-            {
-            }
-        }
+    override fun onClick(event: InventoryClickEvent, player: Player)
+    {
     }
 
     override fun onClose(event: InventoryCloseEvent, player: Player)
@@ -145,80 +32,194 @@ class MessageSettings(private val plugin: CV) : GUI(plugin, PMessage.MESSAGE_SET
         SoundType.CLOSE.play(plugin, player)
     }
 
-    companion object
+    override fun onSave(event: InventoryClickEvent, player: Player)
     {
-        val VOTE_LINKS = BaseItem(
-            VMaterial.SOUL_TORCH.get(),
-            PMessage.VOTE_LINKS_ITEM_NAME.toString(),
-            PMessage.VOTE_LINKS_ITEM_LORE.toString()
-        )
     }
 
     init
     {
-        inventory.addItem(VOTE_LINKS)
-        inventory.addItem(UseVoteLinkItem(plugin))
-        inventory.addItem(VoteBroadcast(plugin))
-        inventory.addItem(MilestoneBroadcast(plugin))
-        inventory.addItem(VotePartyUntilBroadcast(plugin))
-        inventory.addItem(VotePartyCountBroadcast(plugin))
-        inventory.addItem(VotePartyCountEndBroadcast(plugin))
-        inventory.addItem(ArmorStandBreakMessage(plugin))
-        inventory.addItem(DisabledWorldMessage(plugin))
-        inventory.addItem(VoteRemindMessage(plugin))
-        inventory.setItem(17, BACK_ITEM)
+        addItem(object : BaseItem(
+            VMaterial.SOUL_TORCH.get(),
+            PMessage.VOTE_LINKS_ITEM_NAME.toString(),
+            PMessage.VOTE_LINKS_ITEM_LORE.toString()
+        )
+        {
+            override fun onClick(event: InventoryClickEvent, player: Player)
+            {
+                SoundType.CLICK.play(plugin, player)
+                cancelCloseEvent = true
+                VoteLinks(plugin).open(player)
+            }
+        })
+        addItem(UseVoteLinkItem(plugin))
+        addItem(VoteBroadcast(plugin))
+        addItem(MilestoneBroadcast(plugin))
+        addItem(VotePartyUntilBroadcast(plugin))
+        addItem(VotePartyCountBroadcast(plugin))
+        addItem(VotePartyCountEndBroadcast(plugin))
+        addItem(ArmorStandBreakMessage(plugin))
+        addItem(DisabledWorldMessage(plugin))
+        addItem(VoteRemindMessage(plugin))
     }
 }
 
-class UseVoteLinkItem(plugin: CV) : StatusItem(
+class UseVoteLinkItem(private val plugin: CV) : StatusItem(
     Material.CHEST, PMessage.VOTE_LINKS_ITEM_NAME_GUI.toString(),
     plugin.config, Setting.VOTE_LINK_INVENTORY.path
 )
+{
+    override fun onClick(event: InventoryClickEvent, player: Player)
+    {
+        SoundType.CHANGE.play(plugin, player)
+        plugin.config.set(
+            Setting.VOTE_LINK_INVENTORY.path,
+            !plugin.config.getBoolean(Setting.VOTE_LINK_INVENTORY.path)
+        )
+        plugin.config.saveConfig()
+        event.currentItem = UseVoteLinkItem(plugin)
+    }
+}
 
-class VoteBroadcast(plugin: CV) : StatusItem(
+class VoteBroadcast(private val plugin: CV) : StatusItem(
     Material.DIAMOND, PMessage.VOTE_ITEM_NAME_BROADCAST.toString(),
     plugin.config, Setting.DISABLED_BROADCAST_VOTE.path,
     true
 )
+{
+    override fun onClick(event: InventoryClickEvent, player: Player)
+    {
+        SoundType.CHANGE.play(plugin, player)
+        plugin.config.set(
+            Setting.DISABLED_BROADCAST_VOTE.path,
+            !plugin.config.getBoolean(Setting.DISABLED_BROADCAST_VOTE.path)
+        )
+        plugin.config.saveConfig()
+        event.currentItem = VoteBroadcast(plugin)
+    }
+}
 
-class MilestoneBroadcast(plugin: CV) : StatusItem(
+class MilestoneBroadcast(private val plugin: CV) : StatusItem(
     Material.ENDER_PEARL, PMessage.MILESTONE_ITEM_NAME_BROADCAST.toString(),
     plugin.config, Setting.DISABLED_BROADCAST_MILESTONE.path,
     true
 )
+{
+    override fun onClick(event: InventoryClickEvent, player: Player)
+    {
+        SoundType.CHANGE.play(plugin, player)
+        plugin.config.set(
+            Setting.DISABLED_BROADCAST_MILESTONE.path,
+            !plugin.config.getBoolean(Setting.DISABLED_BROADCAST_MILESTONE.path)
+        )
+        plugin.config.saveConfig()
+        event.currentItem = MilestoneBroadcast(plugin)
+    }
+}
 
-class VotePartyUntilBroadcast(plugin: CV) : StatusItem(
+class VotePartyUntilBroadcast(private val plugin: CV) : StatusItem(
     Material.BOOKSHELF, PMessage.VOTE_PARTY_ITEM_NAME_BROADCAST_UNTIL.toString(),
     plugin.config, Setting.DISABLED_BROADCAST_VOTE_PARTY_UNTIL.path,
     true
 )
+{
+    override fun onClick(event: InventoryClickEvent, player: Player)
+    {
+        SoundType.CHANGE.play(plugin, player)
+        plugin.config.set(
+            Setting.DISABLED_BROADCAST_VOTE_PARTY_UNTIL.path,
+            !plugin.config.getBoolean(Setting.DISABLED_BROADCAST_VOTE_PARTY_UNTIL.path)
+        )
+        plugin.config.saveConfig()
+        event.currentItem = VotePartyUntilBroadcast(plugin)
+    }
+}
 
-class VotePartyCountBroadcast(plugin: CV) : StatusItem(
+class VotePartyCountBroadcast(private val plugin: CV) : StatusItem(
     Material.NOTE_BLOCK, PMessage.VOTE_PARTY_ITEM_NAME_BROADCAST_COUNT.toString(),
     plugin.config, Setting.DISABLED_BROADCAST_VOTE_PARTY_COUNTDOWN.path,
     true
 )
+{
+    override fun onClick(event: InventoryClickEvent, player: Player)
+    {
+        SoundType.CHANGE.play(plugin, player)
+        plugin.config.set(
+            Setting.DISABLED_BROADCAST_VOTE_PARTY_COUNTDOWN.path,
+            !plugin.config.getBoolean(Setting.DISABLED_BROADCAST_VOTE_PARTY_COUNTDOWN.path)
+        )
+        plugin.config.saveConfig()
+        event.currentItem = VotePartyCountBroadcast(plugin)
+    }
+}
 
-class VotePartyCountEndBroadcast(plugin: CV) : StatusItem(
+class VotePartyCountEndBroadcast(private val plugin: CV) : StatusItem(
     Material.FIREWORK_ROCKET, PMessage.VOTE_PARTY_ITEM_NAME_BROADCAST_COUNTDOWN_END.toString(),
     plugin.config, Setting.DISABLED_BROADCAST_VOTE_PARTY_COUNTDOWN_ENDING.path,
     true
 )
+{
+    override fun onClick(event: InventoryClickEvent, player: Player)
+    {
+        SoundType.CHANGE.play(plugin, player)
+        plugin.config.set(
+            Setting.DISABLED_BROADCAST_VOTE_PARTY_COUNTDOWN_ENDING.path,
+            !plugin.config.getBoolean(Setting.DISABLED_BROADCAST_VOTE_PARTY_COUNTDOWN_ENDING.path)
+        )
+        plugin.config.saveConfig()
+        event.currentItem = VotePartyCountEndBroadcast(plugin)
+    }
+}
 
-class ArmorStandBreakMessage(plugin: CV) : StatusItem(
+class ArmorStandBreakMessage(private val plugin: CV) : StatusItem(
     Material.ARMOR_STAND, PMessage.VOTE_TOP_ITEM_NAME_STAND_BREAK_MESSAGE.toString(),
     plugin.config, Setting.DISABLED_MESSAGE_ARMOR_STAND.path,
     true
 )
+{
+    override fun onClick(event: InventoryClickEvent, player: Player)
+    {
+        SoundType.CHANGE.play(plugin, player)
+        plugin.config.set(
+            Setting.DISABLED_MESSAGE_ARMOR_STAND.path,
+            !plugin.config.getBoolean(Setting.DISABLED_MESSAGE_ARMOR_STAND.path)
+        )
+        plugin.config.saveConfig()
+        event.currentItem = ArmorStandBreakMessage(plugin)
+    }
+}
 
-class DisabledWorldMessage(plugin: CV) : StatusItem(
+class DisabledWorldMessage(private val plugin: CV) : StatusItem(
     Material.GRASS_BLOCK, PMessage.DISABLED_WORLD_ITEM_NAME_MESSAGE.toString(),
     plugin.config, Setting.DISABLED_MESSAGE_DISABLED_WORLD.path,
     true
 )
+{
+    override fun onClick(event: InventoryClickEvent, player: Player)
+    {
+        SoundType.CHANGE.play(plugin, player)
+        plugin.config.set(
+            Setting.DISABLED_MESSAGE_DISABLED_WORLD.path,
+            !plugin.config.getBoolean(Setting.DISABLED_MESSAGE_DISABLED_WORLD.path)
+        )
+        plugin.config.saveConfig()
+        event.currentItem = DisabledWorldMessage(plugin)
+    }
+}
 
-class VoteRemindMessage(plugin: CV) : StatusItem(
+class VoteRemindMessage(private val plugin: CV) : StatusItem(
     Material.OAK_SIGN, PMessage.VOTE_REMINDER_ITEM_NAME.toString(),
     plugin.config, Setting.DISABLED_MESSAGE_VOTE_REMINDER.path,
     true
 )
+{
+    override fun onClick(event: InventoryClickEvent, player: Player)
+    {
+        SoundType.CHANGE.play(plugin, player)
+        plugin.config.set(
+            Setting.DISABLED_MESSAGE_VOTE_REMINDER.path,
+            !plugin.config.getBoolean(Setting.DISABLED_MESSAGE_VOTE_REMINDER.path)
+        )
+        plugin.config.saveConfig()
+        event.currentItem = VoteRemindMessage(plugin)
+    }
+}

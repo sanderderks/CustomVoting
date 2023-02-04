@@ -118,7 +118,6 @@ enum class PMessage(
     GENERAL_SETTINGS_INVENTORY_NAME("General Settings"),
     GENERAL_VALUE_CONNECTED("Connected", GREEN),
     GENERAL_VALUE_DISABLED("Disabled", RED),
-    GENERAL_VALUE_NEVER("never", RED),
     GENERAL_VALUE_NO("No", RED),
     GENERAL_VALUE_YES("Yes", GREEN),
     GENERAL_FORMAT_DATE("dd-MM-yyyy"),
@@ -161,14 +160,16 @@ enum class PMessage(
     PERMISSION_BASED_REWARDS_ITEM_NAME("Permission Rewards", PURPLE),
 
     PERMISSION_REWARDS_ITEM_NAME("Permission Rewards", PURPLE),
+    PERMISSION_REWARDS_MESSAGE_TITLE("Permissions:", GRAY),
     PERMISSION_REWARDS_UNIT("permission"),
     PERMISSION_REWARDS_UNIT_MULTIPLE("permissions"),
 
     PLAYER_INFO_INVENTORY_NAME_X("Player Info #$X"),
     PLAYER_INFO_ITEM_LORE_LAST_X("Last vote: $X", GRAY, PURPLE),
     PLAYER_INFO_ITEM_LORE_MONTHLY_VOTES_X("Monthly votes: $X", GRAY, PURPLE),
-    PLAYER_INFO_ITEM_LORE_PERMISSION_X("Permission rewards: $X", GRAY, PURPLE),
+    PLAYER_INFO_ITEM_LORE_PERMISSION_X("Permission rewards: $X", GRAY),
     PLAYER_INFO_ITEM_LORE_VOTES_X("Votes: $X", GRAY, PURPLE),
+    PLAYER_INFO_VALUE_NEVER("never", PURPLE),
 
     PLAYER_ERROR_NOT_EXIST_X("A player with name $X does not exist"),
     PLAYER_ITEM_NAME_SKULL_X("$X", AQUA),

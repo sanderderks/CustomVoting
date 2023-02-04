@@ -9,91 +9,23 @@ import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.Setting
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.gui.VoteSettings
-import org.bukkit.ChatColor
+import me.sd_master92.customvoting.gui.items.SimpleItem
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
-import org.bukkit.inventory.ItemStack
 
 class Support(private val plugin: CV) : GUI(plugin, PMessage.SUPPORT_INVENTORY_NAME.toString(), 9)
 {
-    override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
+    override fun onBack(event: InventoryClickEvent, player: Player)
     {
-        when (item.type)
-        {
-            Material.BARRIER        ->
-            {
-                SoundType.CLICK.play(plugin, player)
-                cancelCloseEvent = true
-                player.openInventory(VoteSettings(plugin).inventory)
-            }
+        SoundType.CLICK.play(plugin, player)
+        cancelCloseEvent = true
+        VoteSettings(plugin).open(player)
+    }
 
-            Material.CLOCK          -> if (!plugin.isUpToDate())
-            {
-                SoundType.CLICK.play(plugin, player)
-                cancelCloseEvent = true
-                player.closeInventory()
-                plugin.sendDownloadUrl(player)
-            }
-
-            Material.FILLED_MAP     ->
-            {
-                SoundType.CHANGE.play(plugin, player)
-                plugin.config.set(
-                    Setting.INGAME_UPDATES.path,
-                    !plugin.config.getBoolean(Setting.INGAME_UPDATES.path)
-                )
-                plugin.config.saveConfig()
-                event.currentItem = IngameUpdateItem(plugin)
-            }
-
-            Material.ENCHANTED_BOOK ->
-            {
-                SoundType.CLICK.play(plugin, player)
-                cancelCloseEvent = true
-                player.closeInventory()
-                player.sendMessage(PMessage.SUPPORT_MESSAGE_DISCORD.toString())
-                player.sendMessage(PMessage.SUPPORT_MESSAGE_DISCORD_URL.toString())
-            }
-
-            Material.CREEPER_HEAD   ->
-            {
-                SoundType.CLICK.play(plugin, player)
-                cancelCloseEvent = true
-                player.openInventory(Donators(plugin).inventory)
-            }
-
-            Material.PLAYER_HEAD    ->
-            {
-                SoundType.CLICK.play(plugin, player)
-                cancelCloseEvent = true
-                player.openInventory(PlayerInfo(plugin).inventory)
-            }
-
-            Material.HOPPER         ->
-            {
-                SoundType.CHANGE.play(plugin, player)
-                val deleted = VoteFile.mergeDuplicates(plugin)
-                player.sendMessage(PMessage.MERGE_DUPLICATES_MESSAGE_DELETED_X.with("$deleted"))
-                if (deleted > 0)
-                {
-                    SoundType.SUCCESS
-                    event.currentItem = MergeItem(plugin)
-                }
-            }
-
-            Material.CARVED_PUMPKIN ->
-            {
-                SoundType.CLICK.play(plugin, player)
-                cancelCloseEvent = true
-                player.openInventory(Statistics(plugin).inventory)
-            }
-
-            else                    ->
-            {
-            }
-        }
+    override fun onClick(event: InventoryClickEvent, player: Player)
+    {
     }
 
     override fun onClose(event: InventoryCloseEvent, player: Player)
@@ -101,61 +33,135 @@ class Support(private val plugin: CV) : GUI(plugin, PMessage.SUPPORT_INVENTORY_N
         SoundType.CLOSE.play(plugin, player)
     }
 
+    override fun onSave(event: InventoryClickEvent, player: Player)
+    {
+    }
+
     init
     {
-        inventory.addItem(UpdateItem(plugin))
-        inventory.addItem(IngameUpdateItem(plugin))
-        inventory.addItem(
-            BaseItem(
+        addItem(UpdateItem(plugin, this))
+        addItem(IngameUpdateItem(plugin))
+        addItem(
+            object : BaseItem(
                 Material.ENCHANTED_BOOK,
                 PMessage.SUPPORT_ITEM_NAME_DISCORD.toString(),
                 PMessage.SUPPORT_ITEM_LORE_DISCORD.toString()
             )
+            {
+                override fun onClick(event: InventoryClickEvent, player: Player)
+                {
+                    SoundType.CLICK.play(plugin, player)
+                    cancelCloseEvent = true
+                    player.closeInventory()
+                    player.sendMessage(PMessage.SUPPORT_MESSAGE_DISCORD.toString())
+                    player.sendMessage(PMessage.SUPPORT_MESSAGE_DISCORD_URL.toString())
+                }
+            }
         )
-        inventory.addItem(
-            BaseItem(
+        addItem(
+            SimpleItem(
                 Material.ENCHANTING_TABLE, PMessage.SUPPORT_ITEM_NAME_DATABASE.toString(),
                 PMessage.GENERAL_ITEM_LORE_STATUS_X.with(if (plugin.hasDatabaseConnection()) PMessage.GENERAL_VALUE_CONNECTED.toString() else PMessage.GENERAL_VALUE_DISABLED.toString())
             )
         )
-        inventory.addItem(
-            BaseItem(
+        addItem(
+            object : BaseItem(
                 Material.CREEPER_HEAD, PMessage.SUPPORT_ITEM_NAME_DONATORS.toString(),
                 PMessage.SUPPORT_ITEM_LORE_DONATORS.toString()
             )
+            {
+                override fun onClick(event: InventoryClickEvent, player: Player)
+                {
+                    SoundType.CLICK.play(plugin, player)
+                    cancelCloseEvent = true
+                    Donators(plugin).open(player)
+                }
+            }
         )
-        inventory.addItem(
-            BaseItem(
+        addItem(
+            object : BaseItem(
                 Material.PLAYER_HEAD, PMessage.SUPPORT_ITEM_NAME_PLAYER_INFO.toString(),
                 PMessage.SUPPORT_ITEM_LORE_PLAYER_INFO.toString()
             )
+            {
+                override fun onClick(event: InventoryClickEvent, player: Player)
+                {
+                    SoundType.CLICK.play(plugin, player)
+                    cancelCloseEvent = true
+                    PlayerInfo(plugin).open(player)
+                }
+            }
         )
-        inventory.addItem(MergeItem(plugin))
-        inventory.addItem(
-            BaseItem(
+        addItem(MergeItem(plugin))
+        addItem(
+            object : BaseItem(
                 Material.CARVED_PUMPKIN, PMessage.SUPPORT_ITEM_NAME_STATISTICS.toString(),
                 PMessage.SUPPORT_ITEM_LORE_STATISTICS.toString()
             )
+            {
+                override fun onClick(event: InventoryClickEvent, player: Player)
+                {
+                    SoundType.CLICK.play(plugin, player)
+                    cancelCloseEvent = true
+                    Statistics(plugin).open(player)
+                }
+            }
         )
-        inventory.setItem(8, BACK_ITEM)
     }
 }
 
-class UpdateItem(plugin: CV) : BaseItem(
+class UpdateItem(private val plugin: CV, private val support: Support) : BaseItem(
     Material.CLOCK, PMessage.SUPPORT_ITEM_NAME_VERSION.toString(),
     if (plugin.isUpToDate()) PMessage.GENERAL_VALUE_YES.toString() + ";" + PMessage.GENERAL_ITEM_LORE_CURRENT_X.with(
-        ChatColor.GREEN.toString() + plugin.version
+        PMessage.GREEN.toString() + plugin.version
     ) else PMessage.GENERAL_ITEM_LORE_CURRENT_X.with(
-        ChatColor.RED.toString() + plugin.version
+        PMessage.RED.toString() + plugin.version
     ) + ";" + PMessage.SUPPORT_ITEM_LORE_VERSION_LATEST_X.with(plugin.latestVersion)
 )
+{
+    override fun onClick(event: InventoryClickEvent, player: Player)
+    {
+        if (!plugin.isUpToDate())
+        {
+            SoundType.CLICK.play(plugin, player)
+            support.cancelCloseEvent = true
+            player.closeInventory()
+            plugin.sendDownloadUrl(player)
+        }
+    }
+}
 
-class IngameUpdateItem(plugin: CV) : StatusItem(
+class IngameUpdateItem(private val plugin: CV) : StatusItem(
     Material.FILLED_MAP, PMessage.SUPPORT_ITEM_NAME_INGAME_UPDATE.toString(),
     plugin.config, Setting.INGAME_UPDATES.path
 )
+{
+    override fun onClick(event: InventoryClickEvent, player: Player)
+    {
+        SoundType.CHANGE.play(plugin, player)
+        plugin.config.set(
+            Setting.INGAME_UPDATES.path,
+            !plugin.config.getBoolean(Setting.INGAME_UPDATES.path)
+        )
+        plugin.config.saveConfig()
+        event.currentItem = IngameUpdateItem(plugin)
+    }
+}
 
-class MergeItem(plugin: CV) : BaseItem(
+class MergeItem(private val plugin: CV) : BaseItem(
     Material.HOPPER, PMessage.MERGE_DUPLICATES_ITEM_NAME.toString(),
     PMessage.MERGE_DUPLICATES_ITEM_LORE.with("" + VoteFile.getAll(plugin).size)
 )
+{
+    override fun onClick(event: InventoryClickEvent, player: Player)
+    {
+        SoundType.CHANGE.play(plugin, player)
+        val deleted = VoteFile.mergeDuplicates(plugin)
+        player.sendMessage(PMessage.MERGE_DUPLICATES_MESSAGE_DELETED_X.with("$deleted"))
+        if (deleted > 0)
+        {
+            SoundType.SUCCESS
+            event.currentItem = MergeItem(plugin)
+        }
+    }
+}

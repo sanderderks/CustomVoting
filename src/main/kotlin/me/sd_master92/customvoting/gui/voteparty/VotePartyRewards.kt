@@ -8,19 +8,22 @@ import me.sd_master92.customvoting.constants.enumerations.SoundType
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
-import org.bukkit.inventory.ItemStack
 
 class VotePartyRewards(private val plugin: CV, private val key: String) : GUI(
     plugin, PMessage.VOTE_PARTY_INVENTORY_NAME_CHEST_X.with(key), 54, false
 )
 {
-    override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
+    override fun onBack(event: InventoryClickEvent, player: Player)
+    {
+    }
+
+    override fun onClick(event: InventoryClickEvent, player: Player)
     {
     }
 
     override fun onClose(event: InventoryCloseEvent, player: Player)
     {
-        val path = Data.VOTE_PARTY.path + "." + key
+        val path = Data.VOTE_PARTY.path + ".$key"
         if (plugin.data.getItems(path).contentEquals(event.inventory.contents.filterNotNull().toTypedArray()))
         {
             SoundType.SUCCESS.play(plugin, player)
@@ -36,8 +39,12 @@ class VotePartyRewards(private val plugin: CV, private val key: String) : GUI(
         }
     }
 
+    override fun onSave(event: InventoryClickEvent, player: Player)
+    {
+    }
+
     init
     {
-        inventory.contents = plugin.data.getItems(Data.VOTE_PARTY.path + "." + key)
+        setAll(plugin.data.getItems(Data.VOTE_PARTY.path + "." + key))
     }
 }

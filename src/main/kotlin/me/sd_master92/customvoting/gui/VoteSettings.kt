@@ -17,51 +17,24 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.event.inventory.InventoryOpenEvent
-import org.bukkit.inventory.ItemStack
 
-class VoteSettings(private val plugin: CV) : GUI(plugin, PMessage.SETTINGS_INVENTORY_NAME.toString(), 9)
+class VoteSettings(private val plugin: CV) : GUI(plugin, PMessage.SETTINGS_INVENTORY_NAME.toString(), 9, back = false)
 {
-    override fun onClick(event: InventoryClickEvent, player: Player, item: ItemStack)
+    override fun onBack(event: InventoryClickEvent, player: Player)
     {
-        when (item.type)
-        {
-            Material.COMMAND_BLOCK   ->
-            {
-                SoundType.CLICK.play(plugin, player)
-                cancelCloseEvent = true
-                player.openInventory(GeneralSettings(plugin).inventory)
-            }
+    }
 
-            Material.DIAMOND         ->
-            {
-                SoundType.CLICK.play(plugin, player)
-                cancelCloseEvent = true
-                player.openInventory(RewardSettings(plugin).inventory)
-            }
-
-            Material.WRITABLE_BOOK   ->
-            {
-                SoundType.CLICK.play(plugin, player)
-                cancelCloseEvent = true
-                player.openInventory(MessageSettings(plugin).inventory)
-            }
-
-            VMaterial.SPYGLASS.get() ->
-            {
-                SoundType.CLICK.play(plugin, player)
-                cancelCloseEvent = true
-                player.openInventory(Support(plugin).inventory)
-            }
-
-            else                     ->
-            {
-            }
-        }
+    override fun onClick(event: InventoryClickEvent, player: Player)
+    {
     }
 
     override fun onClose(event: InventoryCloseEvent, player: Player)
     {
         SoundType.CLOSE.play(plugin, player)
+    }
+
+    override fun onSave(event: InventoryClickEvent, player: Player)
+    {
     }
 
     @EventHandler
@@ -74,31 +47,55 @@ class VoteSettings(private val plugin: CV) : GUI(plugin, PMessage.SETTINGS_INVEN
         }
     }
 
-    companion object
+    init
     {
-        val GENERAL_SETTINGS = BaseItem(
+        setItem(1, object : BaseItem(
             Material.COMMAND_BLOCK, PMessage.SETTINGS_ITEM_NAME_GENERAL.toString(),
             null, true
         )
-        val REWARD_SETTINGS = BaseItem(
+        {
+            override fun onClick(event: InventoryClickEvent, player: Player)
+            {
+                SoundType.CLICK.play(plugin, player)
+                cancelCloseEvent = true
+                GeneralSettings(plugin).open(player)
+            }
+        })
+        setItem(3, object : BaseItem(
             Material.DIAMOND, PMessage.SETTINGS_ITEM_NAME_REWARDS.toString(),
             null, true
         )
-        val MESSAGES = BaseItem(
+        {
+            override fun onClick(event: InventoryClickEvent, player: Player)
+            {
+                SoundType.CLICK.play(plugin, player)
+                cancelCloseEvent = true
+                RewardSettings(plugin).open(player)
+            }
+        })
+        setItem(5, object : BaseItem(
             Material.WRITABLE_BOOK, PMessage.SETTINGS_ITEM_NAME_MESSAGES.toString(),
             null, true
         )
-        val SUPPORT = BaseItem(
+        {
+            override fun onClick(event: InventoryClickEvent, player: Player)
+            {
+                SoundType.CLICK.play(plugin, player)
+                cancelCloseEvent = true
+                MessageSettings(plugin).open(player)
+            }
+        })
+        setItem(7, object : BaseItem(
             VMaterial.SPYGLASS.get(), PMessage.SETTINGS_ITEM_NAME_SUPPORT.toString(),
             null, true
         )
-    }
-
-    init
-    {
-        inventory.setItem(1, GENERAL_SETTINGS)
-        inventory.setItem(3, REWARD_SETTINGS)
-        inventory.setItem(5, MESSAGES)
-        inventory.setItem(7, SUPPORT)
+        {
+            override fun onClick(event: InventoryClickEvent, player: Player)
+            {
+                SoundType.CLICK.play(plugin, player)
+                cancelCloseEvent = true
+                Support(plugin).open(player)
+            }
+        })
     }
 }
