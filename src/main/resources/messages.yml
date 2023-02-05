@@ -112,3 +112,5 @@ vote_party:
 # %MILESTONE% milestone reached
 milestone:
   milestone_reached: '&b%PLAYER% &dreached milestone #&b%MILESTONE%&d!'
+
+vote_links_title: 'Vote for us!'
