@@ -5,8 +5,8 @@ import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.Message
 import me.sd_master92.customvoting.constants.enumerations.Setting
 import me.sd_master92.customvoting.constants.enumerations.SoundType
-import me.sd_master92.customvoting.gui.ConfirmVotesReset
-import me.sd_master92.customvoting.gui.VoteSettings
+import me.sd_master92.customvoting.gui.pages.dialogs.ResetVotesDialog
+import me.sd_master92.customvoting.gui.pages.settings.VoteSettingsPage
 import me.sd_master92.customvoting.tasks.ResetChecker
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -23,13 +23,13 @@ class SettingsCommand(private val plugin: CV) : SimpleCommand(plugin, "votesetti
         if (ResetChecker.FIRST_OF_MONTH && plugin.config.getBoolean(Setting.MONTHLY_RESET.path))
         {
 
-            ConfirmVotesReset(
+            ResetVotesDialog(
                 plugin,
                 plugin.config.getBoolean(Setting.MONTHLY_VOTES.path)
             ).open(player)
         } else
         {
-            VoteSettings(plugin).open(player)
+            VoteSettingsPage(plugin).open(player)
         }
     }
 

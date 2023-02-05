@@ -22,7 +22,7 @@ import org.bukkit.inventory.meta.SkullMeta
 import java.util.*
 
 
-class VoteTopStand @JvmOverloads constructor(private val plugin: CV, private val top: Int, player: Player? = null)
+class VoteTopStand constructor(private val plugin: CV, private val top: Int, player: Player? = null)
 {
     private var topStand: ArmorStand? = null
     private var nameStand: ArmorStand? = null

@@ -17,7 +17,7 @@ import org.bukkit.block.data.type.WallSign
 import org.bukkit.entity.Player
 import java.util.*
 
-class VoteTopSign @JvmOverloads constructor(
+class VoteTopSign constructor(
     private val plugin: CV,
     private val top: Int,
     val location: Location?,

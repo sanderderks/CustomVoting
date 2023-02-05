@@ -121,7 +121,7 @@ fun Player.hasPermissionRewardsByGroup(plugin: CV): Boolean
         {
             for (group in CV.PERMISSION!!.getPlayerGroups(this))
             {
-                if (plugin.config.getStringList(Setting.ENABLED_OP_GROUPS.path).contains(group.lowercase()))
+                if (plugin.config.getStringList(Setting.ENABLED_PERM_GROUPS.path).contains(group.lowercase()))
                 {
                     return true
                 }

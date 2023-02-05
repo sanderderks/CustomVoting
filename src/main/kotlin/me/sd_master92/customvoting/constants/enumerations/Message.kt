@@ -35,6 +35,8 @@ enum class Message(private val path: String, private val defaultValue: Any?)
     VOTES_COMMAND_OTHERS("$VOTES_COMMAND.others", "&b%PLAYER% &acurrently has &b%VOTES% &avote%s%!"),
     VOTES_COMMAND_NOT_FOUND("$VOTES_COMMAND.not_found", "&cThat player does not exist."),
 
+    VOTE_LINKS_TITLE("vote_links_title", "Vote for us!"),
+
     VOTE_TOP_COMMAND("vote_top_command", null),
     VOTE_TOP_COMMAND_FORMAT(
         "$VOTE_TOP_COMMAND.format",

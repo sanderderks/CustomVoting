@@ -5,7 +5,7 @@ import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.Message
 import me.sd_master92.customvoting.constants.enumerations.Setting
 import me.sd_master92.customvoting.constants.enumerations.SoundType
-import me.sd_master92.customvoting.gui.ConfirmVotesReset
+import me.sd_master92.customvoting.gui.pages.dialogs.ResetVotesDialog
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
@@ -18,7 +18,7 @@ class ResetVotesCommand(private val plugin: CV) : SimpleCommand(plugin, "voteres
     override fun onCommand(player: Player, args: Array<String>)
     {
         SoundType.OPEN.play(plugin, player)
-        ConfirmVotesReset(plugin, plugin.config.getBoolean(Setting.MONTHLY_VOTES.path)).open(player)
+        ResetVotesDialog(plugin, plugin.config.getBoolean(Setting.MONTHLY_VOTES.path)).open(player)
     }
 
     init

@@ -5,7 +5,7 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 
-class SimpleItem(mat: Material, name: String? = null, lore: String? = null, enchanted: Boolean = false) :
+open class SimpleItem(mat: Material, name: String? = null, lore: String? = null, enchanted: Boolean = false) :
     BaseItem(mat, name, lore, enchanted)
 {
     constructor(mat: Material, enchanted: Boolean) : this(mat, null, null, enchanted)

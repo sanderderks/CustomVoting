@@ -7,8 +7,8 @@ import me.sd_master92.core.tasks.TaskTimer
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.Voter
 import me.sd_master92.customvoting.constants.enumerations.*
-import me.sd_master92.customvoting.gui.rewards.crate.Crate
-import me.sd_master92.customvoting.gui.voteparty.VotePartyRewards
+import me.sd_master92.customvoting.gui.pages.editors.VotePartyItemRewardsEditor
+import me.sd_master92.customvoting.gui.pages.menus.CrateMenu
 import me.sd_master92.customvoting.sendText
 import me.sd_master92.customvoting.stripColor
 import me.sd_master92.customvoting.subjects.CustomVote
@@ -148,8 +148,8 @@ class PlayerListener(private val plugin: CV) : Listener
                                 stand?.remove()
                             }
                             event.player.sendMessage(
-                                PMessage.CRATE_MESSAGE_DELETED_X.with(
-                                    plugin.data.getString("$path.name") ?: ""
+                                PMessage.GENERAL_MESSAGE_DELETE_SUCCESS_X.with(
+                                    plugin.data.getString("$path.name") ?: PMessage.CRATE_NAME_DEFAULT_X.with(key)
                                 )
                             )
                             plugin.data.delete(path)
@@ -235,7 +235,7 @@ class PlayerListener(private val plugin: CV) : Listener
                         if (player.hasPermission("customvoting.voteparty"))
                         {
                             SoundType.OPEN.play(plugin, player)
-                            VotePartyRewards(plugin, key).open(player)
+                            VotePartyItemRewardsEditor(plugin, key).open(player)
                         } else
                         {
                             player.sendMessage(PMessage.ACTION_ERROR_OPEN_CHEST_NO_PERMISSION.toString())
@@ -346,7 +346,7 @@ class PlayerListener(private val plugin: CV) : Listener
                                 item.amount--
                                 player.inventory.setItemInMainHand(item)
 
-                                val crate = Crate(plugin, player, path)
+                                val crate = CrateMenu(plugin, player, path)
                                 SoundType.OPEN.play(plugin, player)
                                 crate.open(player)
                                 crate.run()
