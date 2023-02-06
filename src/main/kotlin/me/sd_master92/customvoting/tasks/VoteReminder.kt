@@ -2,10 +2,10 @@ package me.sd_master92.customvoting.tasks
 
 import me.sd_master92.core.tasks.TaskTimer
 import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.constants.Voter
 import me.sd_master92.customvoting.constants.enumerations.Message
 import me.sd_master92.customvoting.constants.enumerations.Setting
 import me.sd_master92.customvoting.constants.enumerations.SoundType
+import me.sd_master92.customvoting.constants.interfaces.Voter
 import me.sd_master92.customvoting.sendTexts
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player

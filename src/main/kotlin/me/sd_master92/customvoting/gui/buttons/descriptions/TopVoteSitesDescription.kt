@@ -1,9 +1,9 @@
 package me.sd_master92.customvoting.gui.buttons.descriptions
 
 import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.constants.BStatsData
 import me.sd_master92.customvoting.constants.enumerations.Data
 import me.sd_master92.customvoting.constants.enumerations.PMessage
+import me.sd_master92.customvoting.constants.models.BStatsData
 import me.sd_master92.customvoting.gui.items.SimpleItem
 import org.bukkit.Material
 import kotlin.math.roundToInt

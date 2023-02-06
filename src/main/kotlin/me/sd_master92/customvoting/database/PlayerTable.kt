@@ -1,10 +1,10 @@
 package me.sd_master92.customvoting.database
 
 import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.constants.TopVoter
-import me.sd_master92.customvoting.constants.Voter
 import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.Setting
+import me.sd_master92.customvoting.constants.interfaces.TopVoter
+import me.sd_master92.customvoting.constants.interfaces.Voter
 import org.bukkit.entity.Player
 
 class PlayerTable(private val plugin: CV, override val uuid: String) : Voter

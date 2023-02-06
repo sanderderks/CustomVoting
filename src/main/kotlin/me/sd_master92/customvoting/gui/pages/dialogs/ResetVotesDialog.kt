@@ -2,10 +2,10 @@ package me.sd_master92.customvoting.gui.pages.dialogs
 
 import me.sd_master92.core.inventory.ConfirmGUI
 import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.constants.Voter
 import me.sd_master92.customvoting.constants.enumerations.Message
 import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.SoundType
+import me.sd_master92.customvoting.constants.interfaces.Voter
 import me.sd_master92.customvoting.gui.pages.settings.VoteSettingsPage
 import me.sd_master92.customvoting.tasks.ResetChecker
 import org.bukkit.entity.Player

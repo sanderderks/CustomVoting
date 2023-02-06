@@ -2,11 +2,11 @@ package me.sd_master92.customvoting.subjects
 
 import me.sd_master92.core.tasks.TaskTimer
 import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.constants.Voter
 import me.sd_master92.customvoting.constants.enumerations.Data
 import me.sd_master92.customvoting.constants.enumerations.Message
 import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.Setting
+import me.sd_master92.customvoting.constants.interfaces.Voter
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Material

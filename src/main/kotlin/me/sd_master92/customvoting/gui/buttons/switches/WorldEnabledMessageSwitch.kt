@@ -1,28 +1,19 @@
 package me.sd_master92.customvoting.gui.buttons.switches
 
-import me.sd_master92.core.inventory.StatusItem
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.Setting
-import me.sd_master92.customvoting.constants.enumerations.SoundType
+import me.sd_master92.customvoting.gui.buttons.abstracts.AbstractStatusSwitch
 import org.bukkit.Material
-import org.bukkit.entity.Player
-import org.bukkit.event.inventory.InventoryClickEvent
 
-class WorldEnabledMessageSwitch(private val plugin: CV) : StatusItem(
-    Material.GRASS_BLOCK, PMessage.DISABLED_WORLD_ITEM_NAME_MESSAGE.toString(),
-    plugin.config, Setting.DISABLED_MESSAGE_DISABLED_WORLD.path,
-    true
+class WorldEnabledMessageSwitch(plugin: CV) : AbstractStatusSwitch(
+    plugin,
+    Material.GRASS_BLOCK, Setting.DISABLED_MESSAGE_DISABLED_WORLD,
+    PMessage.DISABLED_WORLD_ITEM_NAME_MESSAGE
 )
 {
-    override fun onClick(event: InventoryClickEvent, player: Player)
+    override fun newInstance(plugin: CV): AbstractStatusSwitch
     {
-        SoundType.CHANGE.play(plugin, player)
-        plugin.config.set(
-            Setting.DISABLED_MESSAGE_DISABLED_WORLD.path,
-            !plugin.config.getBoolean(Setting.DISABLED_MESSAGE_DISABLED_WORLD.path)
-        )
-        plugin.config.saveConfig()
-        event.currentItem = WorldEnabledMessageSwitch(plugin)
+        return WorldEnabledMessageSwitch(plugin)
     }
 }

@@ -6,8 +6,8 @@ import me.sd_master92.core.errorLog
 import me.sd_master92.core.infoLog
 import me.sd_master92.core.tasks.TaskTimer
 import me.sd_master92.customvoting.*
-import me.sd_master92.customvoting.constants.Voter
 import me.sd_master92.customvoting.constants.enumerations.*
+import me.sd_master92.customvoting.constants.interfaces.Voter
 import me.sd_master92.customvoting.helpers.ParticleHelper
 import me.sd_master92.customvoting.subjects.voteparty.VoteParty
 import org.bukkit.Bukkit

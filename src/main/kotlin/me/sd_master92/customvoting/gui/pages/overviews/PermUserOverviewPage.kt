@@ -2,9 +2,9 @@ package me.sd_master92.customvoting.gui.pages.overviews
 
 import me.sd_master92.core.inventory.GUI
 import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.constants.Voter
 import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.SoundType
+import me.sd_master92.customvoting.constants.interfaces.Voter
 import me.sd_master92.customvoting.getOfflinePlayer
 import me.sd_master92.customvoting.getSkull
 import me.sd_master92.customvoting.gui.buttons.actions.PaginationNextAction

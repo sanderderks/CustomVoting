@@ -5,8 +5,8 @@ import me.sd_master92.core.infoLog
 import me.sd_master92.core.inventory.ConfirmGUI
 import me.sd_master92.core.tasks.TaskTimer
 import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.constants.Voter
 import me.sd_master92.customvoting.constants.enumerations.*
+import me.sd_master92.customvoting.constants.interfaces.Voter
 import me.sd_master92.customvoting.gui.pages.editors.VotePartyItemRewardsEditor
 import me.sd_master92.customvoting.gui.pages.menus.CrateMenu
 import me.sd_master92.customvoting.sendText

@@ -4,9 +4,9 @@ import me.sd_master92.core.appendWhenTrue
 import me.sd_master92.core.command.SimpleCommand
 import me.sd_master92.core.file.PlayerFile
 import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.constants.Voter
 import me.sd_master92.customvoting.constants.enumerations.Message
 import me.sd_master92.customvoting.constants.enumerations.PMessage
+import me.sd_master92.customvoting.constants.interfaces.Voter
 import me.sd_master92.customvoting.subjects.VoteTopSign
 import me.sd_master92.customvoting.subjects.VoteTopStand
 import org.bukkit.command.CommandSender

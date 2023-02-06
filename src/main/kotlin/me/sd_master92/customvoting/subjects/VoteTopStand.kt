@@ -2,10 +2,10 @@ package me.sd_master92.customvoting.subjects
 
 import me.sd_master92.core.tasks.TaskTimer
 import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.constants.Voter
 import me.sd_master92.customvoting.constants.enumerations.Data
 import me.sd_master92.customvoting.constants.enumerations.Message
 import me.sd_master92.customvoting.constants.enumerations.PMessage
+import me.sd_master92.customvoting.constants.interfaces.Voter
 import me.sd_master92.customvoting.gui.items.SimpleItem
 import net.citizensnpcs.api.CitizensAPI
 import net.citizensnpcs.api.npc.NPC

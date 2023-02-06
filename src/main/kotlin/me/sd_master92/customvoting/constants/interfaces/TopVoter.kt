@@ -1,4 +1,4 @@
-package me.sd_master92.customvoting.constants
+package me.sd_master92.customvoting.constants.interfaces
 
 import me.sd_master92.customvoting.CV
 

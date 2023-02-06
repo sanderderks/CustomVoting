@@ -2,9 +2,9 @@ package me.sd_master92.customvoting.commands
 
 import me.sd_master92.core.command.SimpleCommand
 import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.constants.Voter
 import me.sd_master92.customvoting.constants.enumerations.Message
 import me.sd_master92.customvoting.constants.enumerations.PMessage
+import me.sd_master92.customvoting.constants.interfaces.Voter
 import me.sd_master92.customvoting.sendText
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player

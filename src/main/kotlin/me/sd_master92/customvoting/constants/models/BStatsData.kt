@@ -1,4 +1,4 @@
-package me.sd_master92.customvoting.constants
+package me.sd_master92.customvoting.constants.models
 
 import com.google.gson.Gson
 import java.io.BufferedReader

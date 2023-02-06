@@ -1,27 +1,19 @@
 package me.sd_master92.customvoting.gui.buttons.switches
 
-import me.sd_master92.core.inventory.StatusItem
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.Setting
-import me.sd_master92.customvoting.constants.enumerations.SoundType
+import me.sd_master92.customvoting.gui.buttons.abstracts.AbstractStatusSwitch
 import org.bukkit.Material
-import org.bukkit.entity.Player
-import org.bukkit.event.inventory.InventoryClickEvent
 
-class IngameUpdateSwitch(private val plugin: CV) : StatusItem(
-    Material.FILLED_MAP, PMessage.SUPPORT_ITEM_NAME_INGAME_UPDATE.toString(),
-    plugin.config, Setting.INGAME_UPDATES.path
+class IngameUpdateSwitch(plugin: CV) : AbstractStatusSwitch(
+    plugin,
+    Material.FILLED_MAP, Setting.INGAME_UPDATES,
+    PMessage.SUPPORT_ITEM_NAME_INGAME_UPDATE
 )
 {
-    override fun onClick(event: InventoryClickEvent, player: Player)
+    override fun newInstance(plugin: CV): AbstractStatusSwitch
     {
-        SoundType.CHANGE.play(plugin, player)
-        plugin.config.set(
-            Setting.INGAME_UPDATES.path,
-            !plugin.config.getBoolean(Setting.INGAME_UPDATES.path)
-        )
-        plugin.config.saveConfig()
-        event.currentItem = IngameUpdateSwitch(plugin)
+        return IngameUpdateSwitch(plugin)
     }
 }

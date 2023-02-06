@@ -7,11 +7,11 @@ import me.sd_master92.core.infoLog
 import me.sd_master92.core.plugin.CustomPlugin
 import me.sd_master92.customvoting.commands.*
 import me.sd_master92.customvoting.commands.voteparty.VotePartyCommand
-import me.sd_master92.customvoting.constants.Voter
 import me.sd_master92.customvoting.constants.enumerations.Data
 import me.sd_master92.customvoting.constants.enumerations.Message
 import me.sd_master92.customvoting.constants.enumerations.Setting
 import me.sd_master92.customvoting.constants.enumerations.VotePartyType
+import me.sd_master92.customvoting.constants.interfaces.Voter
 import me.sd_master92.customvoting.database.PlayerDatabase
 import me.sd_master92.customvoting.database.PlayerTable
 import me.sd_master92.customvoting.extensions.CustomPlaceholders

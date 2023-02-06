@@ -1,24 +1,19 @@
 package me.sd_master92.customvoting.gui.buttons.switches
 
-import me.sd_master92.core.inventory.StatusItem
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.Setting
-import me.sd_master92.customvoting.constants.enumerations.SoundType
+import me.sd_master92.customvoting.gui.buttons.abstracts.AbstractStatusSwitch
 import org.bukkit.Material
-import org.bukkit.entity.Player
-import org.bukkit.event.inventory.InventoryClickEvent
 
-class MonthlyResetSwitch(private val plugin: CV) : StatusItem(
-    Material.CLOCK, PMessage.RESET_VOTES_ITEM_NAME_MONTHLY.toString(),
-    plugin.config, Setting.MONTHLY_RESET.path
+class MonthlyResetSwitch(plugin: CV) : AbstractStatusSwitch(
+    plugin,
+    Material.CLOCK, Setting.MONTHLY_RESET,
+    PMessage.RESET_VOTES_ITEM_NAME_MONTHLY
 )
 {
-    override fun onClick(event: InventoryClickEvent, player: Player)
+    override fun newInstance(plugin: CV): AbstractStatusSwitch
     {
-        SoundType.CHANGE.play(plugin, player)
-        plugin.config[Setting.MONTHLY_RESET.path] = !plugin.config.getBoolean(Setting.MONTHLY_RESET.path)
-        plugin.config.saveConfig()
-        event.currentItem = MonthlyResetSwitch(plugin)
+        return MonthlyResetSwitch(plugin)
     }
 }
