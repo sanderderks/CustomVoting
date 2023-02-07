@@ -152,7 +152,6 @@ class PlayerListener(private val plugin: CV) : Listener
                                     plugin.data.getString("$path.name") ?: PMessage.CRATE_NAME_DEFAULT_X.with(key)
                                 )
                             )
-                            plugin.data.delete(path)
                         }
                     } else
                     {
