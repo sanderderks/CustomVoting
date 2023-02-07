@@ -5,14 +5,15 @@ import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.Setting
 import me.sd_master92.customvoting.gui.buttons.abstracts.AbstractStatusSwitch
 import org.bukkit.Material
+import org.bukkit.inventory.ItemStack
 
-class MilestoneBroadcastSwitch(plugin: CV) : AbstractStatusSwitch(
+class MilestoneBroadcastSwitch(private val plugin: CV) : AbstractStatusSwitch(
     plugin,
     Material.ENDER_PEARL, Setting.DISABLED_BROADCAST_MILESTONE,
     PMessage.MILESTONE_ITEM_NAME_BROADCAST
 )
 {
-    override fun newInstance(plugin: CV): AbstractStatusSwitch
+    override fun newInstance(): ItemStack
     {
         return MilestoneBroadcastSwitch(plugin)
     }

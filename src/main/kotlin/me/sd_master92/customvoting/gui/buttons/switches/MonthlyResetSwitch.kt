@@ -5,14 +5,15 @@ import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.Setting
 import me.sd_master92.customvoting.gui.buttons.abstracts.AbstractStatusSwitch
 import org.bukkit.Material
+import org.bukkit.inventory.ItemStack
 
-class MonthlyResetSwitch(plugin: CV) : AbstractStatusSwitch(
+class MonthlyResetSwitch(private val plugin: CV) : AbstractStatusSwitch(
     plugin,
     Material.CLOCK, Setting.MONTHLY_RESET,
     PMessage.RESET_VOTES_ITEM_NAME_MONTHLY
 )
 {
-    override fun newInstance(plugin: CV): AbstractStatusSwitch
+    override fun newInstance(): ItemStack
     {
         return MonthlyResetSwitch(plugin)
     }

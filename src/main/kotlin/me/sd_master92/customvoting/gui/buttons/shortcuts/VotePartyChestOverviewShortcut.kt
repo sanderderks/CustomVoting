@@ -5,22 +5,20 @@ import me.sd_master92.core.inventory.GUI
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.SoundType
-import me.sd_master92.customvoting.gui.pages.overviews.CrateOverviewPage
+import me.sd_master92.customvoting.gui.pages.overviews.VotePartyChestOverview
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 
-class CrateOverviewShortcut(private val plugin: CV, private val gui: GUI) : BaseItem(
-    Material.TRIPWIRE_HOOK,
-    PMessage.CRATE_ITEM_NAME_OVERVIEW.toString(),
-    null,
-    true
+class VotePartyChestOverviewShortcut(private val plugin: CV, private val gui: GUI) : BaseItem(
+    Material.ENDER_CHEST, PMessage.VOTE_PARTY_ITEM_NAME_OVERVIEW.toString(),
+    null, true
 )
 {
     override fun onClick(event: InventoryClickEvent, player: Player)
     {
         SoundType.CLICK.play(plugin, player)
         gui.cancelCloseEvent = true
-        CrateOverviewPage(plugin).open(player)
+        VotePartyChestOverview(plugin).open(player)
     }
 }

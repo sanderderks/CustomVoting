@@ -93,7 +93,7 @@ class CustomVote(
 
     private fun subtractVotesUntilVoteParty()
     {
-        if (plugin.data.getLocations(Data.VOTE_PARTY.path).isNotEmpty())
+        if (plugin.data.getLocations(Data.VOTE_PARTY_CHESTS.path).isNotEmpty())
         {
             val votesRequired = plugin.config.getNumber(Setting.VOTES_REQUIRED_FOR_VOTE_PARTY.path)
             val votesUntil = votesRequired - plugin.data.getNumber(Data.CURRENT_VOTES.path)

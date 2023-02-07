@@ -6,7 +6,7 @@ import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.constants.models.BStatsData
-import me.sd_master92.customvoting.gui.pages.overviews.StatisticOverviewPage
+import me.sd_master92.customvoting.gui.pages.settings.StatisticSettingsPage
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
@@ -19,6 +19,6 @@ class BStatsRefreshAction(private val plugin: CV, private val gui: GUI) :
         SoundType.CLICK.play(plugin, player)
         gui.cancelCloseEvent = true
         BStatsData.refresh()
-        StatisticOverviewPage(plugin).open(player)
+        StatisticSettingsPage(plugin).open(player)
     }
 }

@@ -1,4 +1,4 @@
-package me.sd_master92.customvoting.gui.pages.overviews
+package me.sd_master92.customvoting.gui.pages.settings
 
 import me.sd_master92.core.inventory.GUI
 import me.sd_master92.customvoting.CV
@@ -8,12 +8,11 @@ import me.sd_master92.customvoting.gui.buttons.actions.BStatsRefreshAction
 import me.sd_master92.customvoting.gui.buttons.descriptions.CountryDescription
 import me.sd_master92.customvoting.gui.buttons.descriptions.MCVersionDescription
 import me.sd_master92.customvoting.gui.buttons.descriptions.TopVoteSitesDescription
-import me.sd_master92.customvoting.gui.pages.settings.SupportPage
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 
-class StatisticOverviewPage(private val plugin: CV) : GUI(plugin, PMessage.STATISTICS_INVENTORY_NAME.toString(), 9)
+class StatisticSettingsPage(private val plugin: CV) : GUI(plugin, PMessage.STATISTICS_INVENTORY_NAME.toString(), 9)
 {
     override fun onBack(event: InventoryClickEvent, player: Player)
     {

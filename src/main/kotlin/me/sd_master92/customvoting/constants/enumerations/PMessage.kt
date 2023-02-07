@@ -48,8 +48,8 @@ enum class PMessage(
     COMMAND_REWARDS_UNIT("command"),
     COMMAND_REWARDS_UNIT_MULTIPLE("commands"),
 
-    CRATE_OVERVIEW_INVENTORY_NAME("Crates"),
-    CRATE_OVERVIEW_ITEM_NAME("Crates", PURPLE),
+    CRATE_INVENTORY_NAME_OVERVIEW("Crates"),
+    CRATE_ITEM_NAME_OVERVIEW("Crates", PURPLE),
     CRATE_INVENTORY_NAME("Crate"),
     CRATE_INVENTORY_NAME_PLACE_CONFIRM_X("Place '$X' here?"),
     CRATE_INVENTORY_NAME_PERC_REWARDS_XY("$X% Rewards '$Y'"),
@@ -252,6 +252,7 @@ enum class PMessage(
     VOTE_LINKS_MESSAGE_URL("Add a link to this item", GREEN),
 
     VOTE_PARTY_ERROR_NO_CHESTS("There are no registered Vote Party Chests.", RED),
+    VOTE_PARTY_INVENTORY_NAME_CHEST_OVERVIEW("Vote Party Chests"),
     VOTE_PARTY_INVENTORY_NAME_CHEST_X("Vote Party Chest #$X"),
     VOTE_PARTY_ITEM_LORE_CHEST(
         "Place this chest somewhere in the sky.;${GRAY}The contents of this chest will;${GRAY}start dropping when the voteparty starts.",
@@ -262,7 +263,9 @@ enum class PMessage(
     VOTE_PARTY_ITEM_NAME_BROADCAST_COUNTDOWN_END("VoteParty Count Ending Broadcast", PURPLE),
     VOTE_PARTY_ITEM_NAME_BROADCAST_UNTIL("VoteParty Votes Broadcast", PURPLE),
     VOTE_PARTY_ITEM_NAME("Vote Party", PURPLE),
+    VOTE_PARTY_ITEM_NAME_OVERVIEW("Vote Party Chests", PURPLE),
     VOTE_PARTY_ITEM_NAME_CHEST("Vote Party Chest", PURPLE),
+    VOTE_PARTY_ITEM_NAME_CHEST_X("Vote Party Chest #$X", PURPLE),
     VOTE_PARTY_ITEM_NAME_COUNTDOWN("Vote Party Countdown", PURPLE),
     VOTE_PARTY_ITEM_NAME_TYPE("Vote Party Type", PURPLE),
     VOTE_PARTY_ITEM_NAME_VOTES_UNTIL("Votes until Vote Party", PURPLE),

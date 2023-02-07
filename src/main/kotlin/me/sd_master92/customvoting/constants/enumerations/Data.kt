@@ -4,7 +4,7 @@ import me.sd_master92.customvoting.CV
 
 enum class Data(val path: String)
 {
-    VOTE_PARTY("vote_party"),
+    VOTE_PARTY_CHESTS("vote_party"),
     ITEM_REWARDS("rewards"),
     LUCKY_REWARDS("lucky_rewards"),
     CURRENT_VOTES("current_votes"),

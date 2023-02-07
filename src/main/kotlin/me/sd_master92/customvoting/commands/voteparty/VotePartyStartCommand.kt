@@ -12,7 +12,7 @@ class VotePartyStartCommand(private val plugin: CV) : SimpleSubCommand("start")
 {
     override fun onCommand(sender: CommandSender, args: Array<String>)
     {
-        if (plugin.data.getLocations(Data.VOTE_PARTY.path).isNotEmpty())
+        if (plugin.data.getLocations(Data.VOTE_PARTY_CHESTS.path).isNotEmpty())
         {
             VoteParty(plugin).start()
         } else

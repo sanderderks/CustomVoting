@@ -8,8 +8,9 @@ import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.Setting
 import me.sd_master92.customvoting.gui.buttons.abstracts.AbstractEnumCarousel
 import org.bukkit.Material
+import org.bukkit.inventory.ItemStack
 
-class VoteRewardItemsTypeCarousel(plugin: CV, private val op: Boolean) : AbstractEnumCarousel(
+class VoteRewardItemsTypeCarousel(private val plugin: CV, private val op: Boolean) : AbstractEnumCarousel(
     plugin,
     Material.REPEATER,
     ItemRewardType,
@@ -17,7 +18,7 @@ class VoteRewardItemsTypeCarousel(plugin: CV, private val op: Boolean) : Abstrac
     PMessage.ITEM_REWARDS_ITEM_NAME_TYPE
 )
 {
-    override fun newInstance(plugin: CV): VoteRewardItemsTypeCarousel
+    override fun newInstance(): ItemStack
     {
         return VoteRewardItemsTypeCarousel(plugin, op)
     }

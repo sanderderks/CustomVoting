@@ -5,15 +5,14 @@ import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.Data
 import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.SoundType
-import me.sd_master92.customvoting.gui.buttons.actions.CrateCreateAction
-import me.sd_master92.customvoting.gui.buttons.shortcuts.CrateSettingsShortcut
+import me.sd_master92.customvoting.gui.buttons.shortcuts.VotePartyRewardItemsShortcut
 import me.sd_master92.customvoting.gui.pages.settings.RewardSettingsPage
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 
-class CrateOverviewPage(private val plugin: CV) :
-    GUI(plugin, PMessage.CRATE_INVENTORY_NAME_OVERVIEW.toString(), calculateInventorySize(plugin))
+class VotePartyChestOverview(private val plugin: CV) :
+    GUI(plugin, PMessage.VOTE_PARTY_INVENTORY_NAME_CHEST_OVERVIEW.toString(), calculateInventorySize(plugin))
 {
     override fun onBack(event: InventoryClickEvent, player: Player)
     {
@@ -39,7 +38,7 @@ class CrateOverviewPage(private val plugin: CV) :
     {
         private fun calculateInventorySize(plugin: CV): Int
         {
-            val crates = (plugin.data.getConfigurationSection(Data.VOTE_CRATES.path)?.getKeys(false)?.size ?: 0) + 2
+            val crates = (plugin.data.getConfigurationSection(Data.VOTE_CRATES.path)?.getKeys(false)?.size ?: 0) + 1
             return if (crates % 9 == 0)
             {
                 crates
@@ -52,12 +51,9 @@ class CrateOverviewPage(private val plugin: CV) :
 
     init
     {
-        setItem(calculateInventorySize(plugin) - 2, CrateCreateAction(plugin, this))
-        for (key in plugin.data.getConfigurationSection(Data.VOTE_CRATES.path)?.getKeys(false)?.mapNotNull { key ->
-            key.toIntOrNull()
-        }?.sorted() ?: listOf())
+        for (key in plugin.data.getLocations(Data.VOTE_PARTY_CHESTS.path).keys.map { key -> key.toInt() }.sorted())
         {
-            addItem(CrateSettingsShortcut(plugin, this, key))
+            addItem(VotePartyRewardItemsShortcut(plugin, this, key))
         }
     }
 }

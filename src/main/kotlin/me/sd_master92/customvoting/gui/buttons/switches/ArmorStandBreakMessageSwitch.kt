@@ -5,14 +5,15 @@ import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.Setting
 import me.sd_master92.customvoting.gui.buttons.abstracts.AbstractStatusSwitch
 import org.bukkit.Material
+import org.bukkit.inventory.ItemStack
 
-class ArmorStandBreakMessageSwitch(plugin: CV) : AbstractStatusSwitch(
+class ArmorStandBreakMessageSwitch(private val plugin: CV) : AbstractStatusSwitch(
     plugin,
     Material.ARMOR_STAND, Setting.DISABLED_MESSAGE_ARMOR_STAND,
     PMessage.VOTE_TOP_ITEM_NAME_STAND_BREAK_MESSAGE
 )
 {
-    override fun newInstance(plugin: CV): AbstractStatusSwitch
+    override fun newInstance(): ItemStack
     {
         return ArmorStandBreakMessageSwitch(plugin)
     }

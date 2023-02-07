@@ -113,16 +113,16 @@ class PlayerListener(private val plugin: CV) : Listener
         val block = event.block
         if (block.type == Material.ENDER_CHEST)
         {
-            var chests = plugin.data.getLocations(Data.VOTE_PARTY.path)
+            var chests = plugin.data.getLocations(Data.VOTE_PARTY_CHESTS.path)
             for (key in chests.keys)
             {
                 if (chests[key] == event.block.location)
                 {
                     if (player.hasPermission("çustomvoting.voteparty"))
                     {
-                        if (plugin.data.deleteLocation(Data.VOTE_PARTY.path + ".$key"))
+                        if (plugin.data.deleteLocation(Data.VOTE_PARTY_CHESTS.path + ".$key"))
                         {
-                            plugin.data.deleteItems(Data.VOTE_PARTY.path + ".$key")
+                            plugin.data.deleteItems(Data.VOTE_PARTY_CHESTS.path + ".$key")
                             event.isDropItems = false
                             event.player.sendMessage(PMessage.VOTE_PARTY_MESSAGE_CHEST_DELETED_X.with(key))
                         }
@@ -198,13 +198,13 @@ class PlayerListener(private val plugin: CV) : Listener
             val player = event.player
             if (player.hasPermission("customvoting.voteparty"))
             {
-                val chests: Set<String> = plugin.data.getLocations(Data.VOTE_PARTY.path).keys
+                val chests: Set<String> = plugin.data.getLocations(Data.VOTE_PARTY_CHESTS.path).keys
                 var i = 1
                 while (chests.contains("$i"))
                 {
                     i++
                 }
-                plugin.data.setLocation(Data.VOTE_PARTY.path + ".$i", event.block.location)
+                plugin.data.setLocation(Data.VOTE_PARTY_CHESTS.path + ".$i", event.block.location)
                 SoundType.SUCCESS.play(plugin, player)
                 player.sendMessage(PMessage.VOTE_PARTY_MESSAGE_CHEST_CREATED_X.with("$i"))
                 player.inventory.setItemInMainHand(VoteParty.VOTE_PARTY_ITEM)
@@ -225,7 +225,7 @@ class PlayerListener(private val plugin: CV) : Listener
             if (event.clickedBlock!!.type == Material.ENDER_CHEST)
             {
                 val loc = event.clickedBlock!!.location
-                var chests = plugin.data.getLocations(Data.VOTE_PARTY.path)
+                var chests = plugin.data.getLocations(Data.VOTE_PARTY_CHESTS.path)
                 for (key in chests.keys)
                 {
                     if (chests[key] == loc)

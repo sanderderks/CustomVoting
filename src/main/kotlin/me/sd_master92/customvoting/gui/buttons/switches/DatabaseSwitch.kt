@@ -5,11 +5,12 @@ import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.Setting
 import me.sd_master92.customvoting.gui.buttons.abstracts.AbstractStatusSwitch
 import org.bukkit.Material
+import org.bukkit.inventory.ItemStack
 
-class DatabaseSwitch(plugin: CV) :
+class DatabaseSwitch(private val plugin: CV) :
     AbstractStatusSwitch(plugin, Material.ENCHANTING_TABLE, Setting.USE_DATABASE, PMessage.DATABASE_ITEM_NAME)
 {
-    override fun newInstance(plugin: CV): DatabaseSwitch
+    override fun newInstance(): ItemStack
     {
         return DatabaseSwitch(plugin)
     }

@@ -5,8 +5,9 @@ import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.Setting
 import me.sd_master92.customvoting.gui.buttons.abstracts.AbstractNumberCarousel
 import org.bukkit.Material
+import org.bukkit.inventory.ItemStack
 
-class LuckyVoteChanceCarousel(plugin: CV) : AbstractNumberCarousel(
+class LuckyVoteChanceCarousel(private val plugin: CV) : AbstractNumberCarousel(
     plugin,
     Material.ENDER_EYE,
     Setting.LUCKY_VOTE_CHANCE,
@@ -15,7 +16,7 @@ class LuckyVoteChanceCarousel(plugin: CV) : AbstractNumberCarousel(
     stepRules = mapOf(Pair(10, 1), Pair(100, 5))
 )
 {
-    override fun newInstance(plugin: CV): LuckyVoteChanceCarousel
+    override fun newInstance(): ItemStack
     {
         return LuckyVoteChanceCarousel(plugin)
     }

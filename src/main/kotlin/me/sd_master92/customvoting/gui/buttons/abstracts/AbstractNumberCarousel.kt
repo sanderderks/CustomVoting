@@ -5,10 +5,10 @@ import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.Setting
 import me.sd_master92.customvoting.constants.enumerations.SoundType
-import me.sd_master92.customvoting.constants.interfaces.CarouselButton
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
+import org.bukkit.inventory.ItemStack
 
 abstract class AbstractNumberCarousel(
     private val plugin: CV,
@@ -18,8 +18,10 @@ abstract class AbstractNumberCarousel(
     private val range: IntRange,
     private val step: Int? = null,
     private val stepRules: Map<Int, Int>? = null
-) : BaseItem(mat, name.toString()), CarouselButton
+) : BaseItem(mat, name.toString())
 {
+    abstract fun newInstance(): ItemStack
+
     override fun onClick(event: InventoryClickEvent, player: Player)
     {
         SoundType.CHANGE.play(plugin, player)
@@ -32,6 +34,6 @@ abstract class AbstractNumberCarousel(
         {
             plugin.config.setNumber(setting.path, range.first)
         }
-        event.currentItem = newInstance(plugin)
+        event.currentItem = newInstance()
     }
 }

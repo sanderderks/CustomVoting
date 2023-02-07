@@ -6,8 +6,9 @@ import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.Setting
 import me.sd_master92.customvoting.gui.buttons.abstracts.AbstractNumberCarousel
 import org.bukkit.Material
+import org.bukkit.inventory.ItemStack
 
-class VotePartyVotesCarousel(plugin: CV) : AbstractNumberCarousel(
+class VotePartyVotesCarousel(private val plugin: CV) : AbstractNumberCarousel(
     plugin,
     Material.ENCHANTED_BOOK,
     Setting.VOTES_REQUIRED_FOR_VOTE_PARTY,
@@ -16,7 +17,7 @@ class VotePartyVotesCarousel(plugin: CV) : AbstractNumberCarousel(
     10
 )
 {
-    override fun newInstance(plugin: CV): VotePartyVotesCarousel
+    override fun newInstance(): ItemStack
     {
         return VotePartyVotesCarousel(plugin)
     }
