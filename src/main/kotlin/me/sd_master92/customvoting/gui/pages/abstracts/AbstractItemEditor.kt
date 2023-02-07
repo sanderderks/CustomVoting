@@ -32,8 +32,7 @@ abstract class AbstractItemEditor(
     override fun onBack(event: InventoryClickEvent, player: Player)
     {
         event.isCancelled = true
-        SoundType.CLICK.play(plugin, player)
-        back(player)
+        back(player, true)
     }
 
     override fun onClose(event: InventoryCloseEvent, player: Player)
@@ -45,7 +44,7 @@ abstract class AbstractItemEditor(
     {
         event.isCancelled = true
         save(player, event.inventory.contents)
-        back(player)
+        back(player, false)
     }
 
     fun save(player: Player, items: Array<ItemStack?>, notify: Boolean = true)
@@ -79,14 +78,18 @@ abstract class AbstractItemEditor(
         }
     }
 
-    private fun back(player: Player)
+    private fun back(player: Player, sound: Boolean)
     {
+        cancelCloseEvent = true
+        if (sound)
+        {
+            SoundType.CLICK.play(plugin, player)
+        }
         if (previousPage == null)
         {
             player.closeInventory()
         } else
         {
-            cancelCloseEvent = true
             previousPage!!.open(player)
         }
     }
