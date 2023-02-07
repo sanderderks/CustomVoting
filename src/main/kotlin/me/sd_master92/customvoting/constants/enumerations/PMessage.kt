@@ -54,6 +54,7 @@ enum class PMessage(
     CRATE_INVENTORY_NAME_PLACE_CONFIRM_X("Place '$X' here?"),
     CRATE_INVENTORY_NAME_PERC_REWARDS_XY("$X% Rewards '$Y'"),
     CRATE_ITEM_LORE_KEY_X("#$X", GRAY),
+    CRATE_ITEM_LORE_PLACE("Right-click on a block;${GRAY}to place crate.", GRAY),
     CRATE_ITEM_NAME_ADD("Add Crate", GREEN),
     CRATE_ITEM_NAME_KEY_X("$X", AQUA),
     CRATE_ITEM_NAME_KEY_GET("Get Key", AQUA),

@@ -11,7 +11,12 @@ import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 
 class CrateGetKeyAction(private val plugin: CV, private val number: Int) :
-    BaseItem(Material.DIAMOND, PMessage.CRATE_ITEM_NAME_KEY_GET.toString(), enchanted = true)
+    BaseItem(
+        Material.TRIPWIRE_HOOK,
+        PMessage.CRATE_ITEM_NAME_KEY_GET.toString(),
+        ";" + PMessage.CRATE_ITEM_LORE_PLACE,
+        true
+    )
 {
     override fun onClick(event: InventoryClickEvent, player: Player)
     {

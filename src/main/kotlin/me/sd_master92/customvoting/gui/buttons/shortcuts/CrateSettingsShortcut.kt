@@ -12,7 +12,7 @@ import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 
 class CrateSettingsShortcut(private val plugin: CV, private val gui: GUI, private val key: Int) : BaseItem(
-    Material.TRIPWIRE_HOOK,
+    Material.SHULKER_BOX,
     null,
     PMessage.CRATE_ITEM_LORE_KEY_X.with("$key"), true
 )
