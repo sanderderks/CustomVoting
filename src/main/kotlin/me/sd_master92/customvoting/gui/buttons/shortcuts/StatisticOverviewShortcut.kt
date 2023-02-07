@@ -11,8 +11,8 @@ import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 
 class StatisticOverviewShortcut(private val plugin: CV, private val gui: GUI) : BaseItem(
-    Material.CARVED_PUMPKIN, PMessage.SUPPORT_ITEM_NAME_STATISTICS.toString(),
-    PMessage.SUPPORT_ITEM_LORE_STATISTICS.toString()
+    Material.CARVED_PUMPKIN, PMessage.STATISTICS_ITEM_NAME.toString(),
+    PMessage.STATISTICS_ITEM_LORE.toString()
 )
 {
     override fun onClick(event: InventoryClickEvent, player: Player)

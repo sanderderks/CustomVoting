@@ -69,12 +69,24 @@ enum class PMessage(
     CRATE_NAME_X("$X", PURPLE),
     CRATE_NAME_STAND_X("$X", AQUA),
 
+    DATABASE_VALUE_CONNECTED("Connected!", GREEN),
+    DATABASE_VALUE_NOT_FUNCTIONING("Not functioning!", RED),
+    DATABASE_ITEM_NAME("Database", RED),
+    DATABASE_ITEM_LORE("Restart or reload the server;${GRAY}after changing.", GRAY),
+
     DISABLED_WORLD_OVERVIEW_INVENTORY_NAME("Disabled Worlds"),
     DISABLED_WORLD_OVERVIEW_ITEM_NAME("Disabled Worlds", PURPLE),
     DISABLED_WORLD_ITEM_NAME_X("$X", PURPLE),
     DISABLED_WORLD_ITEM_NAME_MESSAGE("Disabled World Message", PURPLE),
 
+    DISCORD_ITEM_LORE("Join the Discord server", GRAY),
+    DISCORD_ITEM_NAME("Discord", PURPLE),
+    DISCORD_MESSAGE("Join the Discord server:", AQUA),
+    DISCORD_MESSAGE_URL("https://discord.gg/v3qmJu7jWD", GREEN),
+
     DONATORS_INVENTORY_NAME("Donators"),
+    DONATORS_ITEM_LORE("CustomVoting supporters!", GRAY),
+    DONATORS_ITEM_NAME("Donators", PURPLE),
 
     PERM_GROUP_OVERVIEW_INVENTORY_NAME("Enabled Groups"),
     PERM_GROUP_OVERVIEW_ITEM_NAME("Enabled Groups", PURPLE),
@@ -115,7 +127,6 @@ enum class PMessage(
     GENERAL_MESSAGE_UPDATE_FAIL_X("Failed to update the $X!", RED),
     GENERAL_MESSAGE_UPDATE_NOTHING_CHANGED("Nothing changed!", GRAY),
     GENERAL_MESSAGE_UPDATE_SUCCESS_X("Successfully updated the $X!", GREEN),
-    GENERAL_VALUE_CONNECTED("Connected", GREEN),
     GENERAL_VALUE_DISABLED("Disabled", RED),
     GENERAL_VALUE_NO("No", RED),
     GENERAL_VALUE_YES("Yes", GREEN),
@@ -170,13 +181,19 @@ enum class PMessage(
     PLAYER_INFO_ITEM_LORE_PERMISSION_X("Permission rewards: $X", GRAY),
     PLAYER_INFO_ITEM_LORE_VOTES_X("Votes: $X", GRAY, PURPLE),
     PLAYER_INFO_VALUE_NEVER("never", PURPLE),
+    PLAYER_INFO_ITEM_NAME("Player Info", PURPLE),
+    PLAYER_INFO_ITEM_LORE("Player vote information", GRAY),
 
     PLAYER_ERROR_NOT_EXIST_X("A player with name $X does not exist"),
     PLAYER_ITEM_NAME_SKULL_X("$X", AQUA),
     PLAYER_NAME_UNKNOWN("Unknown"),
     PLAYER_NAME_UNKNOWN_COLORED("Unknown", RED),
 
+    PLUGIN_UPDATE_ITEM_NAME_INGAME("Ingame Updates", PURPLE),
     PLUGIN_UPDATE_MESSAGE_DISABLE("Updates can be turned off in the /votesettings", GRAY),
+
+    PLUGIN_VERSION_ITEM_LORE_LATEST_X("Latest: $X;;${GRAY}Click to download", GRAY, GREEN),
+    PLUGIN_VERSION_ITEM_NAME("Up to date?", PURPLE),
 
     QUEUE_ERROR_DELETE_XY("Failed to delete queue of $X|$Y"),
     QUEUE_MESSAGE_ADD("The player is not online, adding vote to queue"),
@@ -206,25 +223,13 @@ enum class PMessage(
     STATISTICS_ITEM_LORE_MC_VERSION_X("Most popular version: $X", GRAY, GREEN),
     STATISTICS_ITEM_LORE_VOTE_TOP_SITES("Top vote sites by;${GRAY}CustomVoting users:;", GRAY),
     STATISTICS_ITEM_LORE_VOTE_TOP_SITES_END(";;${GRAY}RED = not setup yet"),
+    STATISTICS_ITEM_LORE("CustomVoting BStats", GRAY),
+    STATISTICS_ITEM_NAME("Statistics", PURPLE),
     STATISTICS_ITEM_NAME_COUNTRY("Country", PURPLE),
     STATISTICS_ITEM_NAME_MC_VERSION("Minecraft Version", PURPLE),
     STATISTICS_ITEM_NAME_VOTE_TOP_SITES("Top vote sites", PURPLE),
 
     SUPPORT_INVENTORY_NAME("Support"),
-    SUPPORT_ITEM_LORE_DISCORD("Join the Discord server", GRAY),
-    SUPPORT_ITEM_LORE_DONATORS("CustomVoting supporters!", GRAY),
-    SUPPORT_ITEM_LORE_PLAYER_INFO("Player vote information", GRAY),
-    SUPPORT_ITEM_LORE_STATISTICS("CustomVoting BStats", GRAY),
-    SUPPORT_ITEM_LORE_VERSION_LATEST_X("Latest: $X;;${GRAY}Click to download", GRAY, GREEN),
-    SUPPORT_ITEM_NAME_DATABASE("Database", PURPLE),
-    SUPPORT_ITEM_NAME_DISCORD("Discord", PURPLE),
-    SUPPORT_ITEM_NAME_DONATORS("Donators", PURPLE),
-    SUPPORT_ITEM_NAME_INGAME_UPDATE("Ingame Updates", PURPLE),
-    SUPPORT_ITEM_NAME_PLAYER_INFO("Player Info", PURPLE),
-    SUPPORT_ITEM_NAME_STATISTICS("Statistics", PURPLE),
-    SUPPORT_ITEM_NAME_VERSION("Up to date?", PURPLE),
-    SUPPORT_MESSAGE_DISCORD("Join the Discord server:", AQUA),
-    SUPPORT_MESSAGE_DISCORD_URL("https://discord.gg/v3qmJu7jWD", GREEN),
 
     TIME_UNIT_SECONDS_MULTIPLE("seconds"),
 

@@ -11,8 +11,8 @@ import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 
 class PlayerInfoOverviewShortcut(private val plugin: CV, private val gui: GUI) : BaseItem(
-    Material.PLAYER_HEAD, PMessage.SUPPORT_ITEM_NAME_PLAYER_INFO.toString(),
-    PMessage.SUPPORT_ITEM_LORE_PLAYER_INFO.toString()
+    Material.PLAYER_HEAD, PMessage.PLAYER_INFO_ITEM_NAME.toString(),
+    PMessage.PLAYER_INFO_ITEM_LORE.toString()
 )
 {
     override fun onClick(event: InventoryClickEvent, player: Player)

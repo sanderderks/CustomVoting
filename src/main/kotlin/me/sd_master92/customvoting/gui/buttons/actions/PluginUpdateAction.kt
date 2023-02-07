@@ -10,7 +10,7 @@ import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 
 class PluginUpdateAction(private val plugin: CV, private val gui: GUI) : BaseItem(
-    Material.CLOCK, PMessage.SUPPORT_ITEM_NAME_VERSION.toString()
+    Material.CLOCK, PMessage.PLUGIN_VERSION_ITEM_NAME.toString()
 )
 {
     override fun onClick(event: InventoryClickEvent, player: Player)
@@ -31,7 +31,7 @@ class PluginUpdateAction(private val plugin: CV, private val gui: GUI) : BaseIte
             PMessage.GENERAL_VALUE_YES.toString() + ";" + PMessage.GENERAL_ITEM_LORE_CURRENT_X.with(PMessage.GREEN.toString() + plugin.version)
         } else
         {
-            PMessage.GENERAL_ITEM_LORE_CURRENT_X.with(PMessage.RED.toString() + plugin.version) + ";" + PMessage.SUPPORT_ITEM_LORE_VERSION_LATEST_X.with(
+            PMessage.GENERAL_ITEM_LORE_CURRENT_X.with(PMessage.RED.toString() + plugin.version) + ";" + PMessage.PLUGIN_VERSION_ITEM_LORE_LATEST_X.with(
                 plugin.latestVersion
             )
         }

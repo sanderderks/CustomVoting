@@ -9,7 +9,7 @@ import org.bukkit.Material
 class IngameUpdateSwitch(plugin: CV) : AbstractStatusSwitch(
     plugin,
     Material.FILLED_MAP, Setting.INGAME_UPDATES,
-    PMessage.SUPPORT_ITEM_NAME_INGAME_UPDATE
+    PMessage.PLUGIN_UPDATE_ITEM_NAME_INGAME
 )
 {
     override fun newInstance(plugin: CV): AbstractStatusSwitch

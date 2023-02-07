@@ -11,8 +11,8 @@ import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 
 class DonatorOverviewShortcut(private val plugin: CV, private val gui: GUI) : BaseItem(
-    Material.CREEPER_HEAD, PMessage.SUPPORT_ITEM_NAME_DONATORS.toString(),
-    PMessage.SUPPORT_ITEM_LORE_DONATORS.toString()
+    Material.CREEPER_HEAD, PMessage.DONATORS_ITEM_NAME.toString(),
+    PMessage.DONATORS_ITEM_LORE.toString()
 )
 {
     override fun onClick(event: InventoryClickEvent, player: Player)
