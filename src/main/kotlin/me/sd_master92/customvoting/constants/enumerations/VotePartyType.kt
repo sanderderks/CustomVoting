@@ -1,44 +1,44 @@
 package me.sd_master92.customvoting.constants.enumerations
 
-import me.sd_master92.customvoting.CV
+import me.sd_master92.customvoting.constants.interfaces.CarouselEnum
+import me.sd_master92.customvoting.constants.interfaces.EnumCompanion
 import java.util.*
 
-enum class VotePartyType(val value: Int, val label: String)
+enum class VotePartyType(val label: String) : CarouselEnum
 {
-    RANDOMLY(0, "Randomly"),
-    RANDOM_CHEST_AT_A_TIME(1, "Random Chest at a Time"),
-    ALL_CHESTS_AT_ONCE(2, "All Chests at Once"),
-    ONE_CHEST_AT_A_TIME(3, "One Chest at a Time"),
-    ADD_TO_INVENTORY(4, "Add To Inventory"),
-    EXPLODE_CHESTS(5, "Explode Chests"),
-    SCARY(6, "Scary"),
-    PIG_HUNT(7, "Pig Hunt");
+    RANDOMLY("Randomly"),
+    RANDOM_CHEST_AT_A_TIME("Random Chest at a Time"),
+    ALL_CHESTS_AT_ONCE("All Chests at Once"),
+    ONE_CHEST_AT_A_TIME("One Chest at a Time"),
+    ADD_TO_INVENTORY("Add To Inventory"),
+    EXPLODE_CHESTS("Explode Chests"),
+    SCARY("Scary"),
+    PIG_HUNT("Pig Hunt");
 
-    companion object
+    override fun next(): VotePartyType
+    {
+        return if (ordinal < values().size - 1)
+        {
+            valueOf(ordinal + 1)
+        } else
+        {
+            valueOf(0)
+        }
+    }
+
+    companion object : EnumCompanion
     {
         fun random(): VotePartyType
         {
             return valueOf(Random().nextInt(1, values().size))
         }
 
-        fun next(plugin: CV): VotePartyType
-        {
-            val currentValue = valueOf(plugin.config.getNumber(Setting.VOTE_PARTY_TYPE.path)).value
-            return if (currentValue < values().size - 1)
-            {
-                valueOf(currentValue + 1)
-            } else
-            {
-                valueOf(0)
-            }
-        }
-
-        fun valueOf(value: Int): VotePartyType
+        override fun valueOf(value: Int): VotePartyType
         {
             val votePartyType = Arrays.stream(values())
-                .filter { type: VotePartyType -> type.value == value }
+                .filter { type: VotePartyType -> type.ordinal == value }
                 .findFirst()
-            return votePartyType.orElse(RANDOM_CHEST_AT_A_TIME)
+            return votePartyType.orElse(RANDOMLY)
         }
     }
 }

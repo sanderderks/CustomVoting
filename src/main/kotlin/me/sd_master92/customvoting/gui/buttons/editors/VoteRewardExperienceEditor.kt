@@ -3,7 +3,6 @@ package me.sd_master92.customvoting.gui.buttons.editors
 import me.sd_master92.core.appendWhenTrue
 import me.sd_master92.core.inventory.BaseItem
 import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.constants.enumerations.Data
 import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.Setting
 import me.sd_master92.customvoting.constants.enumerations.SoundType
@@ -18,7 +17,7 @@ class VoteRewardExperienceEditor(private val plugin: CV, private val op: Boolean
     override fun onClick(event: InventoryClickEvent, player: Player)
     {
         SoundType.CHANGE.play(plugin, player)
-        val path = Setting.VOTE_REWARD_EXPERIENCE.path.appendWhenTrue(op, Data.OP_REWARDS)
+        val path = Setting.VOTE_REWARD_EXPERIENCE.path.appendWhenTrue(op, Setting.OP_REWARDS)
         if (plugin.config.getNumber(path) < 10)
         {
             plugin.config.addNumber(path, 1)
@@ -31,7 +30,7 @@ class VoteRewardExperienceEditor(private val plugin: CV, private val op: Boolean
 
     init
     {
-        val number = plugin.config.getNumber(Setting.VOTE_REWARD_EXPERIENCE.path.appendWhenTrue(op, Data.OP_REWARDS))
+        val number = plugin.config.getNumber(Setting.VOTE_REWARD_EXPERIENCE.path.appendWhenTrue(op, Setting.OP_REWARDS))
         setLore(PMessage.GENERAL_ITEM_LORE_CURRENT_XY.with("$number", PMessage.XP_UNIT_LEVELS_MULTIPLE.toString()))
     }
 }

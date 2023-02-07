@@ -161,8 +161,8 @@ class CustomVote(
     private fun giveItems(player: Player, op: Boolean)
     {
         val path = Data.ITEM_REWARDS.path.appendWhenTrue(op, Data.OP_REWARDS)
-        val typePath = Setting.ITEM_REWARD_TYPE.path.appendWhenTrue(op, Data.OP_REWARDS)
-        val random = plugin.config.getNumber(typePath) != ItemRewardType.ALL_ITEMS.value
+        val typePath = Setting.ITEM_REWARD_TYPE.path.appendWhenTrue(op, Setting.OP_REWARDS)
+        val random = plugin.config.getNumber(typePath) != ItemRewardType.ALL_ITEMS.ordinal
         val items = plugin.data.getItems(path)
         player.addToInventoryOrDrop(items, random)
     }
@@ -172,7 +172,7 @@ class CustomVote(
         val economy = CV.ECONOMY
         if (economy != null && economy.hasAccount(player))
         {
-            val path = Setting.VOTE_REWARD_MONEY.path.appendWhenTrue(op, Data.OP_REWARDS)
+            val path = Setting.VOTE_REWARD_MONEY.path.appendWhenTrue(op, Setting.OP_REWARDS)
             val amount = plugin.config.getDouble(path)
             economy.depositPlayer(player, amount)
             return amount
@@ -182,7 +182,7 @@ class CustomVote(
 
     private fun giveExperience(player: Player, op: Boolean): Int
     {
-        val path = Setting.VOTE_REWARD_EXPERIENCE.path.appendWhenTrue(op, Data.OP_REWARDS)
+        val path = Setting.VOTE_REWARD_EXPERIENCE.path.appendWhenTrue(op, Setting.OP_REWARDS)
         val amount = plugin.config.getNumber(path)
         player.level = player.level + amount
         return amount

@@ -1,27 +1,19 @@
 package me.sd_master92.customvoting.gui.buttons.carousel
 
-import me.sd_master92.core.inventory.BaseItem
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.Setting
-import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.constants.enumerations.VotePartyType
+import me.sd_master92.customvoting.gui.buttons.abstracts.AbstractEnumCarousel
 import org.bukkit.Material
-import org.bukkit.entity.Player
-import org.bukkit.event.inventory.InventoryClickEvent
 
-class VotePartyTypeCarousel(private val plugin: CV) : BaseItem(
-    Material.SPLASH_POTION, PMessage.VOTE_PARTY_ITEM_NAME_TYPE.toString()
+class VotePartyTypeCarousel(plugin: CV) : AbstractEnumCarousel(
+    plugin, Material.SPLASH_POTION, VotePartyType, Setting.VOTE_PARTY_TYPE.path, PMessage.VOTE_PARTY_ITEM_NAME_TYPE
 )
 {
-    override fun onClick(event: InventoryClickEvent, player: Player)
+    override fun newInstance(plugin: CV): VotePartyTypeCarousel
     {
-        SoundType.CHANGE.play(plugin, player)
-        plugin.config.setNumber(
-            Setting.VOTE_PARTY_TYPE.path,
-            VotePartyType.next(plugin).value
-        )
-        event.currentItem = VotePartyTypeCarousel(plugin)
+        return VotePartyTypeCarousel(plugin)
     }
 
     init
