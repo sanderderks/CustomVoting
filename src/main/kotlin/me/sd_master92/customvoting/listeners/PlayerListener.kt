@@ -234,7 +234,7 @@ class PlayerListener(private val plugin: CV) : Listener
                         if (player.hasPermission("customvoting.voteparty"))
                         {
                             SoundType.OPEN.play(plugin, player)
-                            VotePartyItemRewardsEditor(plugin, key).open(player)
+                            VotePartyItemRewardsEditor(plugin, key, true).open(player)
                         } else
                         {
                             player.sendMessage(PMessage.ACTION_ERROR_OPEN_CHEST_NO_PERMISSION.toString())
