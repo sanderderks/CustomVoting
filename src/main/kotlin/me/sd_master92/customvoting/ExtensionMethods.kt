@@ -142,11 +142,10 @@ fun Player.hasPermissionRewardsByUser(plugin: CV): Boolean
 
 fun Player.getPlayerFile(plugin: CV): PlayerFile
 {
-    val player = if (plugin.config.getBoolean(Setting.UUID_STORAGE.path)) PlayerFile.getByUuid(
+    return if (plugin.config.getBoolean(Setting.UUID_STORAGE.path)) PlayerFile.getByUuid(
         plugin,
         this
-    ) else PlayerFile.getByName(this.name)
-    return player ?: PlayerFile.getByUuid(plugin, this)
+    ) else PlayerFile.getByName(plugin, this.name) ?: PlayerFile.getByUuid(plugin, this)
 }
 
 fun OfflinePlayer?.getSkull(): ItemStack

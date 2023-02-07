@@ -27,7 +27,7 @@ class FakeVoteCommand(private val plugin: CV) : SimpleCommand(plugin, "fakevote"
         {
             val name = args[0]
             val service = if (args.size >= 2) args[1] else PMessage.FAKE_VOTE_VALUE_WEBSITE.toString()
-            if (PlayerFile.getByName(name) != null)
+            if (PlayerFile.getByName(plugin, name) != null)
             {
                 fakeVote(name, service)
             } else
