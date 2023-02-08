@@ -20,4 +20,9 @@ class LuckyRewardItemsShortcut(
     {
         LuckyRewardItemsEditor(plugin, currentPage).open(player)
     }
+
+    init
+    {
+        addLore(";" + PMessage.LUCKY_ITEM_LORE)
+    }
 }

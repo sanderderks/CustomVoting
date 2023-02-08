@@ -10,8 +10,8 @@ import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 
-class DonatorOverviewPage(private val plugin: CV, backPage: GUI?) :
-    GUI(plugin, backPage, PMessage.DONATORS_INVENTORY_NAME.toString(), 9)
+class SupporterOverviewPage(private val plugin: CV, backPage: GUI?) :
+    GUI(plugin, backPage, PMessage.SUPPORTER_INVENTORY_NAME.toString(), 9)
 {
     override fun onBack(event: InventoryClickEvent, player: Player)
     {
@@ -33,10 +33,10 @@ class DonatorOverviewPage(private val plugin: CV, backPage: GUI?) :
 
     init
     {
-        for (donator in listOf("sd_master92", "Dutchbeard", "Smirren"))
+        for (supporter in listOf("sd_master92", "Dutchbeard", "Smirren"))
         {
             @Suppress("DEPRECATION")
-            addItem(Bukkit.getOfflinePlayer(donator).getSkull())
+            addItem(Bukkit.getOfflinePlayer(supporter).getSkull())
         }
     }
 }

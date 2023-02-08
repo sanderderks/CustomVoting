@@ -9,8 +9,8 @@ import org.bukkit.inventory.ItemStack
 
 class VotePartyCountCarousel(private val plugin: CV) : AbstractNumberCarousel(
     plugin,
-    Material.ENDER_CHEST,
-    Setting.VOTE_PARTY_COUNTDOWN,
+    Material.CLOCK,
+    Setting.VOTE_PARTY_COUNTDOWN.toString(),
     PMessage.VOTE_PARTY_ITEM_NAME_COUNTDOWN,
     IntRange(0, 60),
     10

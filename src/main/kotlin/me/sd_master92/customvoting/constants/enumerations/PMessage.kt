@@ -70,6 +70,9 @@ enum class PMessage(
     CRATE_NAME_X("$X", PURPLE),
     CRATE_NAME_STAND_X("$X", AQUA),
 
+    DANGER_ZONE_INVENTORY_NAME("Danger Zone"),
+    DANGER_ZONE_ITEM_NAME("Danger Zone", RED),
+
     DATABASE_VALUE_CONNECTED("Connected!", GREEN),
     DATABASE_VALUE_NOT_FUNCTIONING("Not functioning!", RED),
     DATABASE_ITEM_NAME("Database", RED),
@@ -77,6 +80,7 @@ enum class PMessage(
 
     DISABLED_WORLD_OVERVIEW_INVENTORY_NAME("Disabled Worlds"),
     DISABLED_WORLD_OVERVIEW_ITEM_NAME("Disabled Worlds", PURPLE),
+    DISABLED_WORLD_OVERVIEW_ITEM_LORE("For receiving rewards.", GRAY),
     DISABLED_WORLD_ITEM_NAME_X("$X", PURPLE),
     DISABLED_WORLD_ITEM_NAME_MESSAGE("Disabled World Message", PURPLE),
 
@@ -85,12 +89,13 @@ enum class PMessage(
     DISCORD_MESSAGE("Join the Discord server:", AQUA),
     DISCORD_MESSAGE_URL("https://discord.gg/v3qmJu7jWD", GREEN),
 
-    DONATORS_INVENTORY_NAME("Donators"),
-    DONATORS_ITEM_LORE("CustomVoting supporters!", GRAY),
-    DONATORS_ITEM_NAME("Donators", PURPLE),
+    SUPPORTER_INVENTORY_NAME("Supporters"),
+    SUPPORTER_ITEM_LORE("CustomVoting supporters!", GRAY),
+    SUPPORTER_ITEM_NAME("Supporters", PURPLE),
 
     PERM_GROUP_OVERVIEW_INVENTORY_NAME("Enabled Groups"),
     PERM_GROUP_OVERVIEW_ITEM_NAME("Enabled Groups", PURPLE),
+    PERM_GROUP_OVERVIEW_ITEM_LORE_X("Plugin: $X", GRAY, GREEN),
     PERM_GROUP_ITEM_NAME_X("$X", PURPLE),
 
     PERM_USER_OVERVIEW_INVENTORY_NAME_X("Enabled Users #$X"),
@@ -143,11 +148,12 @@ enum class PMessage(
     LUCKY_INVENTORY_NAME_SETTINGS("Lucky Vote Settings"),
     LUCKY_INVENTORY_NAME_REWARDS("Lucky Rewards"),
     LUCKY_ITEM_NAME("Lucky Vote", PURPLE),
-    LUCKY_ITEM_NAME_SETTINGS("Lucky Vote Settings", PURPLE),
+    LUCKY_ITEM_NAME_SETTINGS("Lucky Rewards", PURPLE),
     LUCKY_ITEM_NAME_CHANCE("Lucky Vote Chance", PURPLE),
     LUCKY_ITEM_NAME_REWARDS("Lucky Rewards", PURPLE),
+    LUCKY_ITEM_LORE("One item from this inventory;${GRAY}is given when a player is lucky!", GRAY),
 
-    MERGE_DUPLICATES_ITEM_LORE("Find and merge duplicate;${GRAY}playerfiles;${GRAY}Currently: $X files", GRAY, GREEN),
+    MERGE_DUPLICATES_ITEM_LORE("Find and merge duplicate;${GRAY}playerfiles;${GRAY}Currently: $X files", GRAY, AQUA),
     MERGE_DUPLICATES_ITEM_NAME("Merge Duplicates", RED),
     MERGE_DUPLICATES_MESSAGE_DELETED_X("Deleted $X votefiles!", RED),
 
@@ -155,7 +161,7 @@ enum class PMessage(
 
     MILESTONE_INVENTORY_NAME_OVERVIEW("Vote Milestones"),
     MILESTONE_INVENTORY_NAME_X("Vote Milestone Settings #$X"),
-    MILESTONE_ITEM_NAME_OVERVIEW("Milestones", PURPLE),
+    MILESTONE_ITEM_NAME_OVERVIEW("Vote Milestones", PURPLE),
     MILESTONE_ITEM_NAME_X("Milestone #$X", PURPLE),
     MILESTONE_ITEM_NAME_ADD("Add Milestone", GREEN),
     MILESTONE_ITEM_NAME_REWARDS_X("Milestone Item Rewards #$X"),
@@ -165,7 +171,7 @@ enum class PMessage(
     MONEY_REWARD_ITEM_NAME("Money Reward", PURPLE),
     MONEY_REWARD_UNIT("money reward"),
 
-    MONTHLY_VOTES_ITEM_NAME("Monthly Votes", PURPLE),
+    MONTHLY_VOTES_ITEM_NAME("Monthly Votes", RED),
     MONTHLY_VOTES_MESSAGE_RESET_COMMAND_USAGE("- /clearmonthlyvotes <name>", RED),
     MONTHLY_VOTES_MESSAGE_RESET_SUCCESS_OTHER_X("$X\'s monthly votes have been reset.", GREEN, AQUA),
     MONTHLY_VOTES_MESSAGE_RESET_SUCCESS_SELF("Your monthly votes have been reset.", GREEN),
@@ -181,7 +187,7 @@ enum class PMessage(
     PLAYER_INFO_INVENTORY_NAME_X("Player Info #$X"),
     PLAYER_INFO_ITEM_LORE_LAST_X("Last vote: $X", GRAY, PURPLE),
     PLAYER_INFO_ITEM_LORE_MONTHLY_VOTES_X("Monthly votes: $X", GRAY, PURPLE),
-    PLAYER_INFO_ITEM_LORE_PERMISSION_X("Permission rewards: $X", GRAY),
+    PLAYER_INFO_ITEM_LORE_PERMISSION_X("Power rewards: $X", GRAY),
     PLAYER_INFO_ITEM_LORE_VOTES_X("Votes: $X", GRAY, PURPLE),
     PLAYER_INFO_VALUE_NEVER("never", PURPLE),
     PLAYER_INFO_ITEM_NAME("Player Info", PURPLE),
@@ -210,15 +216,15 @@ enum class PMessage(
     RESET_VOTES_INVENTORY_NAME_MONTHLY("Reset monthly votes?"),
     RESET_VOTES_MESSAGE_CANCEL("Votes are not reset.", RED),
     RESET_VOTES_MESSAGE_CONFIRM("A new month has started and votes can be reset in the /votesettings.", GREEN),
-    RESET_VOTES_ITEM_NAME_MONTHLY("Monthly Reset", PURPLE),
+    RESET_VOTES_ITEM_NAME_MONTHLY("Monthly Reset", RED),
 
-    REWARD_SETTINGS_INVENTORY_NAME_OVERVIEW("Reward Overview"),
+    REWARD_SETTINGS_INVENTORY_NAME_OVERVIEW("Reward Settings"),
+    REWARD_SETTINGS_ITEM_NAME_OVERVIEW("Rewards", PURPLE),
 
     SETTINGS_ERROR_DISABLED("The /votesettings GUI has been disabled. You can change this in the settings.yml.", RED),
     SETTINGS_INVENTORY_NAME("Vote Settings"),
     SETTINGS_ITEM_NAME_GENERAL("General", AQUA),
     SETTINGS_ITEM_NAME_MESSAGES("Messages", YELLOW),
-    SETTINGS_ITEM_NAME_REWARDS("Rewards", PURPLE),
     SETTINGS_ITEM_NAME_SUPPORT("Support", GREEN),
 
     SOUND_EFFECTS_ITEM_NAME("Sound Effects", PURPLE),
@@ -239,6 +245,7 @@ enum class PMessage(
     TIME_UNIT_SECONDS_MULTIPLE("seconds"),
 
     UUID_STORAGE_ITEM_NAME("UUID Storage", RED),
+    UUID_STORAGE_ITEM_LORE("Turn off if your server;${GRAY}is in offline-mode.", GRAY),
 
     VOTES_SET_MESSAGE_COMMAND_USAGE("- /setvotes <amount> [name]", RED),
     VOTES_SET_MESSAGE_OTHER_XY("$X's votes have been set to $Y.", GREEN, AQUA, AQUA),
@@ -256,6 +263,7 @@ enum class PMessage(
     VOTE_LINKS_MESSAGE_URL("Add a link to this item", GREEN),
 
     VOTE_PARTY_ERROR_NO_CHESTS("There are no registered Vote Party Chests.", RED),
+    VOTE_PARTY_INVENTORY_NAME_SETTINGS("Vote Party Settings"),
     VOTE_PARTY_INVENTORY_NAME_CHEST_OVERVIEW("Vote Party Chests"),
     VOTE_PARTY_INVENTORY_NAME_CHEST_X("Vote Party Chest #$X"),
     VOTE_PARTY_ITEM_LORE_CHEST(
@@ -267,6 +275,7 @@ enum class PMessage(
     VOTE_PARTY_ITEM_NAME_BROADCAST_COUNTDOWN_END("VoteParty Count Ending Broadcast", PURPLE),
     VOTE_PARTY_ITEM_NAME_BROADCAST_UNTIL("VoteParty Votes Broadcast", PURPLE),
     VOTE_PARTY_ITEM_NAME("Vote Party", PURPLE),
+    VOTE_PARTY_ITEM_NAME_SETTINGS("Vote Party", PURPLE),
     VOTE_PARTY_ITEM_NAME_OVERVIEW("Vote Party Chests", PURPLE),
     VOTE_PARTY_ITEM_NAME_CHEST("Vote Party Chest", PURPLE),
     VOTE_PARTY_ITEM_NAME_CHEST_X("Vote Party Chest #$X", PURPLE),
@@ -282,6 +291,7 @@ enum class PMessage(
     VOTE_REMINDER_ITEM_NAME("Hourly Vote Reminder", PURPLE),
 
     VOTE_REWARDS_INVENTORY_NAME("Vote Rewards"),
+    VOTE_REWARDS_ITEM_NAME("Vote Rewards", PURPLE),
 
     VOTE_TOP_ERROR_CREATE("Error while creating vote top"),
     VOTE_TOP_ERROR_DELETE("Error while deleting vote top"),

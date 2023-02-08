@@ -11,7 +11,7 @@ import org.bukkit.inventory.ItemStack
 class VotePartyVotesCarousel(private val plugin: CV) : AbstractNumberCarousel(
     plugin,
     Material.ENCHANTED_BOOK,
-    Setting.VOTES_REQUIRED_FOR_VOTE_PARTY,
+    Setting.VOTES_REQUIRED_FOR_VOTE_PARTY.toString(),
     PMessage.VOTE_PARTY_ITEM_NAME_VOTES_UNTIL,
     IntRange(10, 100),
     10

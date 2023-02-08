@@ -4,12 +4,13 @@ import me.sd_master92.core.inventory.GUI
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.SoundType
-import me.sd_master92.customvoting.gui.buttons.carousel.LuckyChanceCarousel
+import me.sd_master92.customvoting.gui.buttons.carousel.VoteRewardExperienceCarousel
 import me.sd_master92.customvoting.gui.buttons.carousel.VoteRewardItemsTypeCarousel
 import me.sd_master92.customvoting.gui.buttons.inputfields.VoteRewardCommandsInput
-import me.sd_master92.customvoting.gui.buttons.inputfields.VoteRewardExperienceInput
 import me.sd_master92.customvoting.gui.buttons.inputfields.VoteRewardMoneyInput
-import me.sd_master92.customvoting.gui.buttons.shortcuts.*
+import me.sd_master92.customvoting.gui.buttons.shortcuts.PermGroupOverviewShortcut
+import me.sd_master92.customvoting.gui.buttons.shortcuts.PermUserOverviewShortcut
+import me.sd_master92.customvoting.gui.buttons.shortcuts.VoteRewardItemsShortcut
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
@@ -19,7 +20,7 @@ class RewardSettingsPage(private val plugin: CV, backPage: GUI?, power: Boolean 
         plugin,
         backPage,
         if (!power) PMessage.VOTE_REWARDS_INVENTORY_NAME.toString() else PMessage.POWER_REWARDS_INVENTORY_NAME.toString(),
-        if (power) 9 else 18
+        9
     )
 {
     override fun onBack(event: InventoryClickEvent, player: Player)
@@ -45,23 +46,15 @@ class RewardSettingsPage(private val plugin: CV, backPage: GUI?, power: Boolean 
         addItem(VoteRewardItemsShortcut(plugin, this, power))
         addItem(VoteRewardItemsTypeCarousel(plugin, power))
         addItem(VoteRewardMoneyInput(plugin, this, power))
-        addItem(VoteRewardExperienceInput(plugin, power))
+        addItem(VoteRewardExperienceCarousel(plugin, power))
         addItem(VoteRewardCommandsInput(plugin, this, power))
-        if (!power)
-        {
-            addItem(LuckyRewardItemsShortcut(plugin, this))
-            addItem(LuckyChanceCarousel(plugin))
-            addItem(MilestoneOverviewShortcut(plugin, this))
-            addItem(PermissionBasedRewardSettingsShortcut(plugin, this))
-            addItem(VotePartyRewardCommandsShortcut(plugin, this))
-        } else
+        if (power)
         {
             if (CV.PERMISSION != null)
             {
-                addItem(PermGroupOverviewShortcut(plugin, this))
+                setItem(6, PermGroupOverviewShortcut(plugin, this, CV.PERMISSION!!.name))
             }
-            addItem(PermUserOverviewShortcut(plugin, this))
+            setItem(7, PermUserOverviewShortcut(plugin, this))
         }
-        addItem(CrateOverviewShortcut(plugin, this))
     }
 }

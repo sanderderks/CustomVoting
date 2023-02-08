@@ -1,22 +1,21 @@
-package me.sd_master92.customvoting.gui.pages.settings
+package me.sd_master92.customvoting.gui.pages.overviews
 
 import me.sd_master92.core.inventory.GUI
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.SoundType
-import me.sd_master92.customvoting.gui.buttons.carousel.LuckyChanceCarousel
-import me.sd_master92.customvoting.gui.buttons.shortcuts.LuckyRewardItemsShortcut
-import me.sd_master92.customvoting.gui.buttons.switches.LuckyVoteEnabledSwitch
+import me.sd_master92.customvoting.gui.buttons.shortcuts.*
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 
-class LuckySettingsPage(private val plugin: CV, backPage: GUI?) :
-    GUI(plugin, backPage, PMessage.LUCKY_INVENTORY_NAME_SETTINGS.toString(), 9)
+class RewardOverviewPage(private val plugin: CV, backPage: GUI?) :
+    GUI(plugin, backPage, PMessage.REWARD_SETTINGS_INVENTORY_NAME_OVERVIEW.toString(), 9)
 {
     override fun onBack(event: InventoryClickEvent, player: Player)
     {
         SoundType.CLICK.play(plugin, player)
+        cancelCloseEvent = true
     }
 
     override fun onClick(event: InventoryClickEvent, player: Player)
@@ -34,8 +33,11 @@ class LuckySettingsPage(private val plugin: CV, backPage: GUI?) :
 
     init
     {
-        addItem(LuckyVoteEnabledSwitch(plugin))
-        addItem(LuckyRewardItemsShortcut(plugin, this))
-        addItem(LuckyChanceCarousel(plugin))
+        addItem(VoteRewardSettingsShortcut(plugin, this))
+        addItem(PowerRewardSettingsShortcut(plugin, this))
+        addItem(LuckySettingsShortcut(plugin, this))
+        addItem(MilestoneOverviewShortcut(plugin, this))
+        addItem(VotePartySettingsShortcut(plugin, this))
+        addItem(CrateOverviewShortcut(plugin, this))
     }
 }

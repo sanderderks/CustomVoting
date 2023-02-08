@@ -8,14 +8,15 @@ import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.Setting
 import me.sd_master92.customvoting.constants.enumerations.SoundType
-import me.sd_master92.customvoting.gui.pages.settings.RewardSettingsPage
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 
-class VoteRewardMoneyInput(private val plugin: CV, private val currentPage: GUI, private val power: Boolean) : BaseItem(
-    Material.GOLD_INGOT, PMessage.MONEY_REWARD_ITEM_NAME.toString()
-)
+class VoteRewardMoneyInput(
+    private val plugin: CV,
+    private val currentPage: GUI,
+    private val power: Boolean
+) : BaseItem(Material.GOLD_INGOT, PMessage.MONEY_REWARD_ITEM_NAME.toString())
 {
     override fun onClick(event: InventoryClickEvent, player: Player)
     {
@@ -35,14 +36,15 @@ class VoteRewardMoneyInput(private val plugin: CV, private val currentPage: GUI,
                     plugin.config[path] = input
                     plugin.config.saveConfig()
                     player.sendMessage(PMessage.GENERAL_MESSAGE_UPDATE_SUCCESS_X.with(PMessage.MONEY_REWARD_UNIT.toString()))
-                    RewardSettingsPage(plugin, currentPage, power).open(player)
+                    event.currentItem = VoteRewardMoneyInput(plugin, currentPage, power)
+                    currentPage.open(player)
                     cancel()
                 }
 
                 override fun onCancel()
                 {
                     SoundType.FAILURE.play(plugin, player)
-                    RewardSettingsPage(plugin, currentPage, power).open(player)
+                    currentPage.open(player)
                 }
             }
         } else

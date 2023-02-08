@@ -14,7 +14,7 @@ class LuckySettingsShortcut(
     private val plugin: CV,
     private val currentPage: GUI
 ) : BaseItem(
-    Material.ENDER_CHEST, PMessage.LUCKY_ITEM_NAME_SETTINGS.toString(),
+    Material.TOTEM_OF_UNDYING, PMessage.LUCKY_ITEM_NAME_SETTINGS.toString(),
     null, true
 )
 {

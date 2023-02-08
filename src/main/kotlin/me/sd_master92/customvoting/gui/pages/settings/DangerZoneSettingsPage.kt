@@ -4,15 +4,17 @@ import me.sd_master92.core.inventory.GUI
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.SoundType
-import me.sd_master92.customvoting.gui.buttons.carousel.LuckyChanceCarousel
-import me.sd_master92.customvoting.gui.buttons.shortcuts.LuckyRewardItemsShortcut
-import me.sd_master92.customvoting.gui.buttons.switches.LuckyVoteEnabledSwitch
+import me.sd_master92.customvoting.gui.buttons.actions.MergeDuplicatesAction
+import me.sd_master92.customvoting.gui.buttons.switches.DatabaseSwitch
+import me.sd_master92.customvoting.gui.buttons.switches.MonthlyResetSwitch
+import me.sd_master92.customvoting.gui.buttons.switches.MonthlyVotesSwitch
+import me.sd_master92.customvoting.gui.buttons.switches.UuidSupportSwitch
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 
-class LuckySettingsPage(private val plugin: CV, backPage: GUI?) :
-    GUI(plugin, backPage, PMessage.LUCKY_INVENTORY_NAME_SETTINGS.toString(), 9)
+class DangerZoneSettingsPage(private val plugin: CV, backPage: GUI?) :
+    GUI(plugin, backPage, PMessage.DANGER_ZONE_INVENTORY_NAME.toString(), 9)
 {
     override fun onBack(event: InventoryClickEvent, player: Player)
     {
@@ -34,8 +36,11 @@ class LuckySettingsPage(private val plugin: CV, backPage: GUI?) :
 
     init
     {
-        addItem(LuckyVoteEnabledSwitch(plugin))
-        addItem(LuckyRewardItemsShortcut(plugin, this))
-        addItem(LuckyChanceCarousel(plugin))
+        addItem(MonthlyResetSwitch(plugin))
+        addItem(MonthlyVotesSwitch(plugin))
+        addItem(UuidSupportSwitch(plugin))
+        addItem(DatabaseSwitch(plugin))
+        addItem(MergeDuplicatesAction(plugin))
     }
 }
+

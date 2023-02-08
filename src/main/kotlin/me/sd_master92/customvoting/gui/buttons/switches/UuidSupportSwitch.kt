@@ -17,4 +17,9 @@ class UuidSupportSwitch(private val plugin: CV) : AbstractStatusSwitch(
     {
         return UuidSupportSwitch(plugin)
     }
+
+    init
+    {
+        addLore(";" + PMessage.UUID_STORAGE_ITEM_LORE)
+    }
 }

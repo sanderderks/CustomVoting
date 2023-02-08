@@ -10,7 +10,7 @@ import org.bukkit.inventory.ItemStack
 class LuckyChanceCarousel(private val plugin: CV) : AbstractNumberCarousel(
     plugin,
     Material.ENDER_EYE,
-    Setting.LUCKY_VOTE_CHANCE,
+    Setting.LUCKY_VOTE_CHANCE.toString(),
     PMessage.LUCKY_ITEM_NAME_CHANCE,
     IntRange(1, 100),
     stepRules = mapOf(Pair(10, 1), Pair(100, 5))

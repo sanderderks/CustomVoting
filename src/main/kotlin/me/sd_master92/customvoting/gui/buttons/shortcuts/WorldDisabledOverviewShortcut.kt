@@ -14,7 +14,11 @@ class WorldDisabledOverviewShortcut(
     private val plugin: CV,
     private val currentPage: GUI
 ) :
-    BaseItem(Material.GRASS_BLOCK, PMessage.DISABLED_WORLD_OVERVIEW_ITEM_NAME.toString())
+    BaseItem(
+        Material.GRASS_BLOCK,
+        PMessage.DISABLED_WORLD_OVERVIEW_ITEM_NAME.toString(),
+        PMessage.DISABLED_WORLD_OVERVIEW_ITEM_LORE.toString()
+    )
 {
     override fun onClick(event: InventoryClickEvent, player: Player)
     {

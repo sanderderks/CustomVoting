@@ -4,15 +4,17 @@ import me.sd_master92.core.inventory.GUI
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.SoundType
-import me.sd_master92.customvoting.gui.buttons.carousel.LuckyChanceCarousel
-import me.sd_master92.customvoting.gui.buttons.shortcuts.LuckyRewardItemsShortcut
-import me.sd_master92.customvoting.gui.buttons.switches.LuckyVoteEnabledSwitch
+import me.sd_master92.customvoting.gui.buttons.carousel.VotePartyCountCarousel
+import me.sd_master92.customvoting.gui.buttons.carousel.VotePartyTypeCarousel
+import me.sd_master92.customvoting.gui.buttons.carousel.VotePartyVotesCarousel
+import me.sd_master92.customvoting.gui.buttons.shortcuts.VotePartyChestOverviewShortcut
+import me.sd_master92.customvoting.gui.buttons.switches.VotePartyEnabledSwitch
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 
-class LuckySettingsPage(private val plugin: CV, backPage: GUI?) :
-    GUI(plugin, backPage, PMessage.LUCKY_INVENTORY_NAME_SETTINGS.toString(), 9)
+class VotePartySettingsPage(private val plugin: CV, backPage: GUI?) :
+    GUI(plugin, backPage, PMessage.VOTE_PARTY_INVENTORY_NAME_SETTINGS.toString(), 9)
 {
     override fun onBack(event: InventoryClickEvent, player: Player)
     {
@@ -34,8 +36,11 @@ class LuckySettingsPage(private val plugin: CV, backPage: GUI?) :
 
     init
     {
-        addItem(LuckyVoteEnabledSwitch(plugin))
-        addItem(LuckyRewardItemsShortcut(plugin, this))
-        addItem(LuckyChanceCarousel(plugin))
+        addItem(VotePartyEnabledSwitch(plugin))
+        addItem(VotePartyTypeCarousel(plugin))
+        addItem(VotePartyVotesCarousel(plugin))
+        addItem(VotePartyCountCarousel(plugin))
+        addItem(VotePartyChestOverviewShortcut(plugin, this))
     }
 }
+

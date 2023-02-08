@@ -5,12 +5,10 @@ import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.gui.buttons.actions.DiscordGetLinkAction
-import me.sd_master92.customvoting.gui.buttons.actions.MergeDuplicatesAction
 import me.sd_master92.customvoting.gui.buttons.actions.PluginUpdateAction
 import me.sd_master92.customvoting.gui.buttons.shortcuts.DonatorOverviewShortcut
 import me.sd_master92.customvoting.gui.buttons.shortcuts.PlayerInfoOverviewShortcut
 import me.sd_master92.customvoting.gui.buttons.shortcuts.StatisticOverviewShortcut
-import me.sd_master92.customvoting.gui.buttons.switches.DatabaseSwitch
 import me.sd_master92.customvoting.gui.buttons.switches.IngameUpdateSwitch
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
@@ -42,10 +40,8 @@ class SupportSettingsPage(private val plugin: CV, backPage: GUI?) :
         addItem(PluginUpdateAction(plugin, this))
         addItem(IngameUpdateSwitch(plugin))
         addItem(DiscordGetLinkAction(plugin, this))
-        addItem(DatabaseSwitch(plugin))
         addItem(DonatorOverviewShortcut(plugin, this))
         addItem(PlayerInfoOverviewShortcut(plugin, this))
-        addItem(MergeDuplicatesAction(plugin))
         addItem(StatisticOverviewShortcut(plugin, this))
     }
 }

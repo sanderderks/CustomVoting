@@ -5,10 +5,10 @@ import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.Setting
 import me.sd_master92.customvoting.constants.enumerations.SoundType
+import me.sd_master92.customvoting.gui.buttons.shortcuts.GeneralSettingsShortcut
 import me.sd_master92.customvoting.gui.buttons.shortcuts.MessageSettingsShortcut
+import me.sd_master92.customvoting.gui.buttons.shortcuts.RewardOverviewShortcut
 import me.sd_master92.customvoting.gui.buttons.shortcuts.SupportSettingsShortcut
-import me.sd_master92.customvoting.gui.buttons.shortcuts.VoteRewardSettingsShortcut
-import me.sd_master92.customvoting.gui.buttons.shortcuts.VoteSettingsShortcut
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.inventory.InventoryClickEvent
@@ -47,8 +47,8 @@ class VoteSettingsPage(private val plugin: CV, backPage: GUI?) :
 
     init
     {
-        setItem(1, VoteSettingsShortcut(plugin, this))
-        setItem(3, VoteRewardSettingsShortcut(plugin, this))
+        setItem(1, GeneralSettingsShortcut(plugin, this))
+        setItem(3, RewardOverviewShortcut(plugin, this))
         setItem(5, MessageSettingsShortcut(plugin, this))
         setItem(7, SupportSettingsShortcut(plugin, this))
     }
