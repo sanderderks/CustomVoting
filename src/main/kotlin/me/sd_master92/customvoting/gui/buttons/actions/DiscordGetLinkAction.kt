@@ -9,7 +9,7 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 
-class DiscordGetLinkAction(private val plugin: CV, private val gui: GUI) : BaseItem(
+class DiscordGetLinkAction(private val plugin: CV, private val backPage: GUI) : BaseItem(
     Material.ENCHANTED_BOOK,
     PMessage.DISCORD_ITEM_NAME.toString(),
     PMessage.DISCORD_ITEM_LORE.toString()
@@ -18,7 +18,7 @@ class DiscordGetLinkAction(private val plugin: CV, private val gui: GUI) : BaseI
     override fun onClick(event: InventoryClickEvent, player: Player)
     {
         SoundType.CLICK.play(plugin, player)
-        gui.cancelCloseEvent = true
+        backPage.cancelCloseEvent = true
         player.closeInventory()
         player.sendMessage(PMessage.DISCORD_MESSAGE.toString())
         player.sendMessage(PMessage.DISCORD_MESSAGE_URL.toString())

@@ -10,22 +10,22 @@ import me.sd_master92.customvoting.gui.buttons.abstracts.AbstractEnumCarousel
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 
-class VoteRewardItemsTypeCarousel(private val plugin: CV, private val op: Boolean) : AbstractEnumCarousel(
+class VoteRewardItemsTypeCarousel(private val plugin: CV, private val power: Boolean) : AbstractEnumCarousel(
     plugin,
     Material.REPEATER,
     ItemRewardType,
-    Setting.ITEM_REWARD_TYPE.path.appendWhenTrue(op, Data.OP_REWARDS),
+    Setting.ITEM_REWARD_TYPE.path.appendWhenTrue(power, Data.POWER_REWARDS),
     PMessage.ITEM_REWARDS_ITEM_NAME_TYPE
 )
 {
     override fun newInstance(): ItemStack
     {
-        return VoteRewardItemsTypeCarousel(plugin, op)
+        return VoteRewardItemsTypeCarousel(plugin, power)
     }
 
     init
     {
-        val value = plugin.config.getNumber(Setting.ITEM_REWARD_TYPE.path.appendWhenTrue(op, Setting.OP_REWARDS))
+        val value = plugin.config.getNumber(Setting.ITEM_REWARD_TYPE.path.appendWhenTrue(power, Setting.POWER_REWARDS))
         val type = ItemRewardType.valueOf(value).label
         setLore(PMessage.GENERAL_ITEM_LORE_STATUS_X.with(type))
     }

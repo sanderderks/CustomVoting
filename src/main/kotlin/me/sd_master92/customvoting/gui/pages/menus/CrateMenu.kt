@@ -17,7 +17,12 @@ import org.bukkit.inventory.ItemStack
 import java.util.*
 
 class CrateMenu(private val plugin: CV, private val player: Player, path: String) :
-    GUI(plugin, (plugin.data.getString("$path.name") ?: PMessage.CRATE_INVENTORY_NAME.toString()), 45, back = false)
+    GUI(
+        plugin,
+        null,
+        (plugin.data.getString("$path.name") ?: PMessage.CRATE_INVENTORY_NAME.toString()),
+        45
+    )
 {
     private var searching = true
     private var rewards = mutableMapOf<Int, Array<ItemStack>>()

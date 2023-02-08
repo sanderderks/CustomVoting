@@ -5,21 +5,19 @@ import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.gui.buttons.switches.WorldEnabledSwitch
-import me.sd_master92.customvoting.gui.pages.settings.GeneralSettingsPage
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 
-class WorldOverviewPage(private val plugin: CV) :
-    GUI(plugin, PMessage.DISABLED_WORLD_OVERVIEW_INVENTORY_NAME.toString(), 27)
+class WorldOverviewPage(private val plugin: CV, backPage: GUI?) :
+    GUI(plugin, backPage, PMessage.DISABLED_WORLD_OVERVIEW_INVENTORY_NAME.toString(), 27)
 {
 
     override fun onBack(event: InventoryClickEvent, player: Player)
     {
         SoundType.CLICK.play(plugin, player)
         cancelCloseEvent = true
-        GeneralSettingsPage(plugin).open(player)
     }
 
     override fun onClick(event: InventoryClickEvent, player: Player)

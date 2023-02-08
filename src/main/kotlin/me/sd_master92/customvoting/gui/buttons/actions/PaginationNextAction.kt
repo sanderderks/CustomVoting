@@ -11,7 +11,7 @@ import org.bukkit.event.inventory.InventoryClickEvent
 
 abstract class PaginationNextAction(
     private val plugin: CV,
-    private val gui: GUI,
+    private val backPage: GUI,
     private val page: Int,
     private val itemSize: Int
 ) : BaseItem(Material.FEATHER, PMessage.GENERAL_ITEM_NAME_NEXT.toString())
@@ -23,7 +23,7 @@ abstract class PaginationNextAction(
         if (itemSize > (page + 1) * 51)
         {
             SoundType.CLICK.play(plugin, player)
-            gui.cancelCloseEvent = true
+            backPage.cancelCloseEvent = true
             onNext(player, page + 1)
         }
     }

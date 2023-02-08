@@ -14,7 +14,7 @@ import org.bukkit.event.inventory.InventoryClickEvent
 
 class CrateDeleteAction(
     private val plugin: CV,
-    private val gui: GUI,
+    private val backPage: GUI,
     private val number: Int,
     private val name: String
 ) : BaseItem(Material.RED_WOOL, PMessage.GENERAL_ITEM_NAME_DELETE.toString())
@@ -28,7 +28,7 @@ class CrateDeleteAction(
                 PMessage.CRATE_NAME_X.with(name).stripColor()
             )
         )
-        gui.cancelCloseEvent = true
-        CrateOverviewPage(plugin).open(player)
+        backPage.cancelCloseEvent = true
+        CrateOverviewPage(plugin, backPage).open(player)
     }
 }

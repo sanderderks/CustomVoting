@@ -10,14 +10,17 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 
-class WorldDisabledOverviewShortcut(private val plugin: CV, private val gui: GUI) :
+class WorldDisabledOverviewShortcut(
+    private val plugin: CV,
+    private val backPage: GUI
+) :
     BaseItem(Material.GRASS_BLOCK, PMessage.DISABLED_WORLD_OVERVIEW_ITEM_NAME.toString())
 {
     override fun onClick(event: InventoryClickEvent, player: Player)
     {
         SoundType.CLICK.play(plugin, player)
-        gui.cancelCloseEvent = true
-        WorldOverviewPage(plugin).open(player)
+        backPage.cancelCloseEvent = true
+        WorldOverviewPage(plugin, backPage).open(player)
     }
 
 }

@@ -1,4 +1,4 @@
-package me.sd_master92.customvoting.gui.buttons.editors
+package me.sd_master92.customvoting.gui.buttons.inputfields
 
 import me.sd_master92.core.inventory.BaseItem
 import me.sd_master92.core.inventory.GUI
@@ -12,7 +12,7 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 
-class MilestoneRewardPermissionsEditor(private val plugin: CV, private val gui: GUI, private val number: Int) :
+class MilestoneRewardPermissionsInput(private val plugin: CV, private val backPage: GUI, private val number: Int) :
     BaseItem(
         Material.DIAMOND_SWORD, PMessage.PERMISSION_REWARDS_ITEM_NAME.toString()
     )
@@ -20,20 +20,20 @@ class MilestoneRewardPermissionsEditor(private val plugin: CV, private val gui: 
     override fun onClick(event: InventoryClickEvent, player: Player)
     {
         SoundType.CHANGE.play(plugin, player)
-        gui.cancelCloseEvent = true
+        backPage.cancelCloseEvent = true
         player.closeInventory()
         object : PlayerPermissionInput(plugin, player, "${Data.MILESTONES}.$number.permissions")
         {
             override fun onPermissionReceived()
             {
                 SoundType.SUCCESS.play(plugin, player)
-                MilestoneSettingsPage(plugin, number).open(player)
+                MilestoneSettingsPage(plugin, backPage, number).open(player)
             }
 
             override fun onCancel()
             {
                 SoundType.FAILURE.play(plugin, player)
-                MilestoneSettingsPage(plugin, number).open(player)
+                MilestoneSettingsPage(plugin, backPage, number).open(player)
             }
         }
     }

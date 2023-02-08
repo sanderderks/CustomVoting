@@ -9,13 +9,13 @@ import me.sd_master92.customvoting.gui.buttons.actions.CrateDeleteAction
 import me.sd_master92.customvoting.gui.buttons.actions.CrateGetKeyAction
 import me.sd_master92.customvoting.gui.buttons.actions.CrateRenameAction
 import me.sd_master92.customvoting.gui.buttons.shortcuts.CrateRewardItemsShortcut
-import me.sd_master92.customvoting.gui.pages.overviews.CrateOverviewPage
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 
-class CrateSettingsPage(private val plugin: CV, number: Int) : GUI(
+class CrateSettingsPage(private val plugin: CV, backPage: GUI?, number: Int) : GUI(
     plugin,
+    backPage,
     (plugin.data.getString(Data.VOTE_CRATES.path + ".$number.name")
         ?: PMessage.CRATE_NAME_DEFAULT_X.with("$number")),
     9
@@ -25,7 +25,6 @@ class CrateSettingsPage(private val plugin: CV, number: Int) : GUI(
     {
         SoundType.CLICK.play(plugin, player)
         cancelCloseEvent = true
-        CrateOverviewPage(plugin).open(player)
     }
 
     override fun onClick(event: InventoryClickEvent, player: Player)

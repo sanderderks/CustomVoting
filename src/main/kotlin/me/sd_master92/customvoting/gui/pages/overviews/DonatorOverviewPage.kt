@@ -5,19 +5,18 @@ import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.getSkull
-import me.sd_master92.customvoting.gui.pages.settings.SupportPage
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 
-class DonatorOverviewPage(private val plugin: CV) : GUI(plugin, PMessage.DONATORS_INVENTORY_NAME.toString(), 9)
+class DonatorOverviewPage(private val plugin: CV, backPage: GUI?) :
+    GUI(plugin, backPage, PMessage.DONATORS_INVENTORY_NAME.toString(), 9)
 {
     override fun onBack(event: InventoryClickEvent, player: Player)
     {
         SoundType.CLICK.play(plugin, player)
         cancelCloseEvent = true
-        SupportPage(plugin).open(player)
     }
 
     override fun onClick(event: InventoryClickEvent, player: Player)

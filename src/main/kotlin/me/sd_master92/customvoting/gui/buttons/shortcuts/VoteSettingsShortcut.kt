@@ -10,7 +10,10 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 
-class VoteSettingsShortcut(private val plugin: CV, private val gui: GUI) : BaseItem(
+class VoteSettingsShortcut(
+    private val plugin: CV,
+    private val backPage: GUI
+) : BaseItem(
     Material.COMMAND_BLOCK, PMessage.SETTINGS_ITEM_NAME_GENERAL.toString(),
     null, true
 )
@@ -18,7 +21,7 @@ class VoteSettingsShortcut(private val plugin: CV, private val gui: GUI) : BaseI
     override fun onClick(event: InventoryClickEvent, player: Player)
     {
         SoundType.CLICK.play(plugin, player)
-        gui.cancelCloseEvent = true
-        GeneralSettingsPage(plugin).open(player)
+        backPage.cancelCloseEvent = true
+        GeneralSettingsPage(plugin, backPage).open(player)
     }
 }

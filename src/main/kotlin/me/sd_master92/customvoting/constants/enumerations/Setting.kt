@@ -54,8 +54,8 @@ enum class Setting(val path: String, private val defaultValue: Any? = null)
 
     companion object
     {
-        const val OP_REWARDS = "_op"
-        
+        const val POWER_REWARDS = "_op"
+
         fun initialize(plugin: CV)
         {
             migrate(plugin)

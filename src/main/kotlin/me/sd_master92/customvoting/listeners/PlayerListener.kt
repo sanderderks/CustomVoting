@@ -7,7 +7,7 @@ import me.sd_master92.core.tasks.TaskTimer
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.*
 import me.sd_master92.customvoting.constants.interfaces.Voter
-import me.sd_master92.customvoting.gui.pages.editors.VotePartyItemRewardsEditor
+import me.sd_master92.customvoting.gui.pages.editors.VotePartyRewardItemsEditor
 import me.sd_master92.customvoting.gui.pages.menus.CrateMenu
 import me.sd_master92.customvoting.sendText
 import me.sd_master92.customvoting.stripColor
@@ -234,7 +234,7 @@ class PlayerListener(private val plugin: CV) : Listener
                         if (player.hasPermission("customvoting.voteparty"))
                         {
                             SoundType.OPEN.play(plugin, player)
-                            VotePartyItemRewardsEditor(plugin, key, true).open(player)
+                            VotePartyRewardItemsEditor(plugin, null, key).open(player)
                         } else
                         {
                             player.sendMessage(PMessage.ACTION_ERROR_OPEN_CHEST_NO_PERMISSION.toString())

@@ -9,7 +9,7 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 
-abstract class PaginationPreviousAction(private val plugin: CV, private val gui: GUI, private val page: Int) :
+abstract class PaginationPreviousAction(private val plugin: CV, private val backPage: GUI, private val page: Int) :
     BaseItem(Material.FEATHER, PMessage.GENERAL_ITEM_NAME_PREVIOUS.toString())
 {
     abstract fun onPrevious(player: Player, newPage: Int)
@@ -19,7 +19,7 @@ abstract class PaginationPreviousAction(private val plugin: CV, private val gui:
         if (page > 0)
         {
             SoundType.CLICK.play(plugin, player)
-            gui.cancelCloseEvent = true
+            backPage.cancelCloseEvent = true
             onPrevious(player, page - 1)
         }
     }

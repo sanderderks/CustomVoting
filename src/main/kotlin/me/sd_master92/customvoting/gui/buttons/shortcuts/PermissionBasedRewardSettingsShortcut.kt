@@ -10,9 +10,12 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 
-class PermissionBasedRewardSettingsShortcut(private val plugin: CV, private val gui: GUI) : BaseItem(
+class PermissionBasedRewardSettingsShortcut(
+    private val plugin: CV,
+    private val backPage: GUI
+) : BaseItem(
     Material.DIAMOND_BLOCK,
-    PMessage.PERMISSION_BASED_REWARDS_ITEM_NAME.toString(),
+    PMessage.POWER_REWARDS_ITEM_NAME.toString(),
     null,
     true
 )
@@ -20,7 +23,7 @@ class PermissionBasedRewardSettingsShortcut(private val plugin: CV, private val 
     override fun onClick(event: InventoryClickEvent, player: Player)
     {
         SoundType.CLICK.play(plugin, player)
-        gui.cancelCloseEvent = true
-        RewardSettingsPage(plugin, true).open(player)
+        backPage.cancelCloseEvent = true
+        RewardSettingsPage(plugin, backPage, true).open(player)
     }
 }

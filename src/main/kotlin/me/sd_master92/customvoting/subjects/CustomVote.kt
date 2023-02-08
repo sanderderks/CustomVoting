@@ -124,19 +124,19 @@ class CustomVote(
         }
     }
 
-    private fun giveRewards(player: Player, op: Boolean)
+    private fun giveRewards(player: Player, power: Boolean)
     {
-        giveItems(player, op)
-        executeCommands(player, op)
+        giveItems(player, power)
+        executeCommands(player, power)
         var rewardMessage = ""
-        val money = giveMoney(player, op)
+        val money = giveMoney(player, power)
         if (CV.ECONOMY != null && money > 0)
         {
             val placeholders = HashMap<String, String>()
             placeholders["%MONEY%"] = DecimalFormat("#.##").format(money)
             rewardMessage += Message.VOTE_REWARD_MONEY.getMessage(plugin, placeholders)
         }
-        val xp = giveExperience(player, op)
+        val xp = giveExperience(player, power)
         if (xp > 0)
         {
             val placeholders = HashMap<String, String>()
@@ -158,21 +158,21 @@ class CustomVote(
         }
     }
 
-    private fun giveItems(player: Player, op: Boolean)
+    private fun giveItems(player: Player, power: Boolean)
     {
-        val path = Data.ITEM_REWARDS.path.appendWhenTrue(op, Data.OP_REWARDS)
-        val typePath = Setting.ITEM_REWARD_TYPE.path.appendWhenTrue(op, Setting.OP_REWARDS)
+        val path = Data.ITEM_REWARDS.path.appendWhenTrue(power, Data.POWER_REWARDS)
+        val typePath = Setting.ITEM_REWARD_TYPE.path.appendWhenTrue(power, Setting.POWER_REWARDS)
         val random = plugin.config.getNumber(typePath) != ItemRewardType.ALL_ITEMS.ordinal
         val items = plugin.data.getItems(path)
         player.addToInventoryOrDrop(items, random)
     }
 
-    private fun giveMoney(player: Player, op: Boolean): Double
+    private fun giveMoney(player: Player, power: Boolean): Double
     {
         val economy = CV.ECONOMY
         if (economy != null && economy.hasAccount(player))
         {
-            val path = Setting.VOTE_REWARD_MONEY.path.appendWhenTrue(op, Setting.OP_REWARDS)
+            val path = Setting.VOTE_REWARD_MONEY.path.appendWhenTrue(power, Setting.POWER_REWARDS)
             val amount = plugin.config.getDouble(path)
             economy.depositPlayer(player, amount)
             return amount
@@ -180,9 +180,9 @@ class CustomVote(
         return 0.0
     }
 
-    private fun giveExperience(player: Player, op: Boolean): Int
+    private fun giveExperience(player: Player, power: Boolean): Int
     {
-        val path = Setting.VOTE_REWARD_EXPERIENCE.path.appendWhenTrue(op, Setting.OP_REWARDS)
+        val path = Setting.VOTE_REWARD_EXPERIENCE.path.appendWhenTrue(power, Setting.POWER_REWARDS)
         val amount = plugin.config.getNumber(path)
         player.level = player.level + amount
         return amount
@@ -201,9 +201,9 @@ class CustomVote(
         }
     }
 
-    private fun executeCommands(player: Player, op: Boolean)
+    private fun executeCommands(player: Player, power: Boolean)
     {
-        val path = Data.VOTE_COMMANDS.path.appendWhenTrue(op, Data.OP_REWARDS)
+        val path = Data.VOTE_COMMANDS.path.appendWhenTrue(power, Data.POWER_REWARDS)
         val commands = plugin.data.getStringList(path)
         for (command in commands)
         {

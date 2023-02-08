@@ -10,7 +10,10 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 
-class MessageSettingsShortcut(private val plugin: CV, private val gui: GUI) : BaseItem(
+class MessageSettingsShortcut(
+    private val plugin: CV,
+    private val backPage: GUI
+) : BaseItem(
     Material.WRITABLE_BOOK, PMessage.SETTINGS_ITEM_NAME_MESSAGES.toString(),
     null, true
 )
@@ -18,7 +21,7 @@ class MessageSettingsShortcut(private val plugin: CV, private val gui: GUI) : Ba
     override fun onClick(event: InventoryClickEvent, player: Player)
     {
         SoundType.CLICK.play(plugin, player)
-        gui.cancelCloseEvent = true
-        MessageSettingsPage(plugin).open(player)
+        backPage.cancelCloseEvent = true
+        MessageSettingsPage(plugin, backPage).open(player)
     }
 }

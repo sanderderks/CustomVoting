@@ -10,7 +10,11 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 
-class MilestoneSettingsShortcut(private val plugin: CV, private val gui: GUI, private val key: Int) : BaseItem(
+class MilestoneSettingsShortcut(
+    private val plugin: CV,
+    private val backPage: GUI,
+    private val key: Int
+) : BaseItem(
     Material.ENDER_PEARL,
     PMessage.MILESTONE_ITEM_NAME_X.with("$key")
 )
@@ -18,7 +22,7 @@ class MilestoneSettingsShortcut(private val plugin: CV, private val gui: GUI, pr
     override fun onClick(event: InventoryClickEvent, player: Player)
     {
         SoundType.CLICK.play(plugin, player)
-        gui.cancelCloseEvent = true
-        MilestoneSettingsPage(plugin, key).open(player)
+        backPage.cancelCloseEvent = true
+        MilestoneSettingsPage(plugin, backPage, key).open(player)
     }
 }

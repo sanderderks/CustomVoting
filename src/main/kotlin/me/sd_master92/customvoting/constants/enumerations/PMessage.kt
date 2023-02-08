@@ -140,10 +140,12 @@ enum class PMessage(
     ITEM_REWARDS_ITEM_NAME_TYPE("Item Reward Type", PURPLE),
     ITEM_REWARDS_UNIT_STACKS_MULTIPLE("item stacks"),
 
-    LUCKY_REWARDS_INVENTORY_NAME("Lucky Rewards"),
-    LUCKY_VOTE_ITEM_NAME("Lucky Vote", PURPLE),
-    LUCKY_VOTE_ITEM_NAME_CHANCE("Lucky Vote Chance", PURPLE),
-    LUCKY_VOTE_ITEM_NAME_REWARDS("Lucky Rewards", PURPLE),
+    LUCKY_INVENTORY_NAME_SETTINGS("Lucky Vote Settings"),
+    LUCKY_INVENTORY_NAME_REWARDS("Lucky Rewards"),
+    LUCKY_ITEM_NAME("Lucky Vote", PURPLE),
+    LUCKY_ITEM_NAME_SETTINGS("Lucky Vote Settings", PURPLE),
+    LUCKY_ITEM_NAME_CHANCE("Lucky Vote Chance", PURPLE),
+    LUCKY_ITEM_NAME_REWARDS("Lucky Rewards", PURPLE),
 
     MERGE_DUPLICATES_ITEM_LORE("Find and merge duplicate;${GRAY}playerfiles;${GRAY}Currently: $X files", GRAY, GREEN),
     MERGE_DUPLICATES_ITEM_NAME("Merge Duplicates", RED),
@@ -168,8 +170,8 @@ enum class PMessage(
     MONTHLY_VOTES_MESSAGE_RESET_SUCCESS_OTHER_X("$X\'s monthly votes have been reset.", GREEN, AQUA),
     MONTHLY_VOTES_MESSAGE_RESET_SUCCESS_SELF("Your monthly votes have been reset.", GREEN),
 
-    PERMISSION_BASED_REWARDS_INVENTORY_NAME("Vote Rewards (permission based)"),
-    PERMISSION_BASED_REWARDS_ITEM_NAME("Permission Rewards", PURPLE),
+    POWER_REWARDS_INVENTORY_NAME("Power Rewards"),
+    POWER_REWARDS_ITEM_NAME("Power Rewards", PURPLE),
 
     PERMISSION_REWARDS_ITEM_NAME("Permission Rewards", PURPLE),
     PERMISSION_REWARDS_MESSAGE_TITLE("Permissions:", GRAY),
@@ -209,6 +211,8 @@ enum class PMessage(
     RESET_VOTES_MESSAGE_CANCEL("Votes are not reset.", RED),
     RESET_VOTES_MESSAGE_CONFIRM("A new month has started and votes can be reset in the /votesettings.", GREEN),
     RESET_VOTES_ITEM_NAME_MONTHLY("Monthly Reset", PURPLE),
+
+    REWARD_SETTINGS_INVENTORY_NAME("Reward Overview"),
 
     SETTINGS_ERROR_DISABLED("The /votesettings GUI has been disabled. You can change this in the settings.yml.", RED),
     SETTINGS_INVENTORY_NAME("Vote Settings"),

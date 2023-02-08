@@ -16,6 +16,7 @@ import org.bukkit.inventory.ItemStack
 class VoteLinksEditor constructor(private val plugin: CV) :
     AbstractItemEditor(
         plugin,
+        null,
         Data.VOTE_LINK_ITEMS.path,
         PMessage.VOTE_LINKS_INVENTORY_NAME.toString(),
         27,
@@ -24,8 +25,6 @@ class VoteLinksEditor constructor(private val plugin: CV) :
         false
     )
 {
-    override val previousPage = null
-
     override fun onClick(event: InventoryClickEvent, player: Player)
     {
         if (event.click == ClickType.RIGHT)

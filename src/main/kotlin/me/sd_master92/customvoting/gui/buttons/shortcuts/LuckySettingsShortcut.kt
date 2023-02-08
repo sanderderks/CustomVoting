@@ -5,25 +5,23 @@ import me.sd_master92.core.inventory.GUI
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.SoundType
-import me.sd_master92.customvoting.gui.pages.settings.RewardSettingsPage
+import me.sd_master92.customvoting.gui.pages.settings.LuckySettingsPage
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 
-class VoteRewardSettingsShortcut(
+class LuckySettingsShortcut(
     private val plugin: CV,
-    private val backPage: GUI,
-    private val power: Boolean = false
-) :
-    BaseItem(
-        Material.DIAMOND, PMessage.SETTINGS_ITEM_NAME_REWARDS.toString(),
-        null, true
-    )
+    private val backPage: GUI
+) : BaseItem(
+    Material.ENDER_CHEST, PMessage.LUCKY_ITEM_NAME_SETTINGS.toString(),
+    null, true
+)
 {
     override fun onClick(event: InventoryClickEvent, player: Player)
     {
         SoundType.CLICK.play(plugin, player)
         backPage.cancelCloseEvent = true
-        RewardSettingsPage(plugin, backPage, power).open(player)
+        LuckySettingsPage(plugin, backPage).open(player)
     }
 }

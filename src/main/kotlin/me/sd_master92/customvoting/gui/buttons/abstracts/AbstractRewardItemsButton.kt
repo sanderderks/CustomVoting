@@ -9,9 +9,9 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 
-abstract class ItemRewardsAbstractButton(
+abstract class AbstractRewardItemsButton(
     private val plugin: CV,
-    private val gui: GUI,
+    private val backPage: GUI,
     path: String,
     name: String,
     mat: Material = Material.CHEST
@@ -22,7 +22,7 @@ abstract class ItemRewardsAbstractButton(
     override fun onClick(event: InventoryClickEvent, player: Player)
     {
         SoundType.CLICK.play(plugin, player)
-        gui.cancelCloseEvent = true
+        backPage.cancelCloseEvent = true
         onOpen(player)
     }
 

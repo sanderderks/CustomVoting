@@ -29,7 +29,7 @@ class SettingsCommand(private val plugin: CV) : SimpleCommand(plugin, "votesetti
             ).open(player)
         } else
         {
-            VoteSettingsPage(plugin).open(player)
+            VoteSettingsPage(plugin, null).open(player)
         }
     }
 

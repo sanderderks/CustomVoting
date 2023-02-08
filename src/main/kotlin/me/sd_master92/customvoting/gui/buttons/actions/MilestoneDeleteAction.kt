@@ -12,7 +12,7 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 
-class MilestoneDeleteAction(private val plugin: CV, private val gui: GUI, private val number: Int) :
+class MilestoneDeleteAction(private val plugin: CV, private val backPage: GUI, private val number: Int) :
     BaseItem(Material.RED_WOOL, PMessage.GENERAL_ITEM_NAME_DELETE.toString())
 {
     override fun onClick(event: InventoryClickEvent, player: Player)
@@ -24,7 +24,7 @@ class MilestoneDeleteAction(private val plugin: CV, private val gui: GUI, privat
                 PMessage.MILESTONE_ITEM_NAME_X.with("$number").stripColor()
             )
         )
-        gui.cancelCloseEvent = true
-        MilestoneOverviewPage(plugin).open(player)
+        backPage.cancelCloseEvent = true
+        MilestoneOverviewPage(plugin, backPage).open(player)
     }
 }

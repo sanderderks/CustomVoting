@@ -5,7 +5,7 @@ import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.PMessage
 import org.bukkit.Material
 
-abstract class CommandRewardsAbstractButton(plugin: CV, val path: String, mat: Material, name: String? = null) :
+abstract class AbstractRewardCommandsButton(plugin: CV, val path: String, mat: Material, name: String? = null) :
     BaseItem(
         mat,
         name ?: PMessage.COMMAND_REWARDS_ITEM_NAME.toString(),

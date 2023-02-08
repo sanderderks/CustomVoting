@@ -33,7 +33,7 @@ class ResetVotesDialog(private val plugin: CV, private val monthly: Boolean) :
         }
         ResetChecker.FIRST_OF_MONTH = false
         plugin.broadcastText(Message.MONTHLY_RESET)
-        VoteSettingsPage(plugin).open(player)
+        VoteSettingsPage(plugin, null).open(player)
     }
 
     override fun onCancel(event: InventoryClickEvent, player: Player)
@@ -41,7 +41,7 @@ class ResetVotesDialog(private val plugin: CV, private val monthly: Boolean) :
         SoundType.CLICK.play(plugin, player)
         ResetChecker.FIRST_OF_MONTH = false
         player.sendMessage(PMessage.RESET_VOTES_MESSAGE_CANCEL.toString())
-        VoteSettingsPage(plugin).open(player)
+        VoteSettingsPage(plugin, null).open(player)
     }
 
     override fun onClose(event: InventoryCloseEvent, player: Player)

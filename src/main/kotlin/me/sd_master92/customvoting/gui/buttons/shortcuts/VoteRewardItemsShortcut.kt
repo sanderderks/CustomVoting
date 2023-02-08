@@ -5,19 +5,23 @@ import me.sd_master92.core.inventory.GUI
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.Data
 import me.sd_master92.customvoting.constants.enumerations.PMessage
-import me.sd_master92.customvoting.gui.buttons.abstracts.ItemRewardsAbstractButton
-import me.sd_master92.customvoting.gui.pages.editors.ItemRewardsEditor
+import me.sd_master92.customvoting.gui.buttons.abstracts.AbstractRewardItemsButton
+import me.sd_master92.customvoting.gui.pages.editors.RewardItemsEditor
 import org.bukkit.entity.Player
 
-class VoteRewardItemsShortcut(private val plugin: CV, gui: GUI, private val op: Boolean) : ItemRewardsAbstractButton(
+class VoteRewardItemsShortcut(
+    private val plugin: CV,
+    private val backPage: GUI,
+    private val power: Boolean
+) : AbstractRewardItemsButton(
     plugin,
-    gui,
-    Data.ITEM_REWARDS.path.appendWhenTrue(op, Data.OP_REWARDS),
+    backPage,
+    Data.ITEM_REWARDS.path.appendWhenTrue(power, Data.POWER_REWARDS),
     PMessage.ITEM_REWARDS_ITEM_NAME.toString()
 )
 {
     override fun onOpen(player: Player)
     {
-        ItemRewardsEditor(plugin, op).open(player)
+        RewardItemsEditor(plugin, backPage, power).open(player)
     }
 }

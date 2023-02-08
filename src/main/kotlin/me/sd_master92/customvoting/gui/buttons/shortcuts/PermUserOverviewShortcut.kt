@@ -10,7 +10,10 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 
-class PermUserOverviewShortcut(private val plugin: CV, private val gui: GUI) : BaseItem(
+class PermUserOverviewShortcut(
+    private val plugin: CV,
+    private val backPage: GUI
+) : BaseItem(
     Material.PLAYER_HEAD,
     PMessage.PERM_USER_OVERVIEW_ITEM_NAME.toString()
 )
@@ -18,7 +21,7 @@ class PermUserOverviewShortcut(private val plugin: CV, private val gui: GUI) : B
     override fun onClick(event: InventoryClickEvent, player: Player)
     {
         SoundType.CLICK.play(plugin, player)
-        gui.cancelCloseEvent = true
-        PermUserOverviewPage(plugin).open(player)
+        backPage.cancelCloseEvent = true
+        PermUserOverviewPage(plugin, backPage).open(player)
     }
 }

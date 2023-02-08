@@ -9,21 +9,19 @@ import me.sd_master92.customvoting.getOfflinePlayer
 import me.sd_master92.customvoting.getSkull
 import me.sd_master92.customvoting.gui.buttons.actions.PaginationNextAction
 import me.sd_master92.customvoting.gui.buttons.actions.PaginationPreviousAction
-import me.sd_master92.customvoting.gui.pages.settings.SupportPage
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 import java.util.*
 
-class PlayerInfoOverviewPage(private val plugin: CV, private var page: Int = 0) :
-    GUI(plugin, PMessage.PLAYER_INFO_INVENTORY_NAME_X.with("" + (page + 1)), 54)
+class PlayerInfoOverviewPage(private val plugin: CV, backPage: GUI?, private var page: Int = 0) :
+    GUI(plugin, backPage, PMessage.PLAYER_INFO_INVENTORY_NAME_X.with("" + (page + 1)), 54)
 {
     override fun onBack(event: InventoryClickEvent, player: Player)
     {
         SoundType.CLICK.play(plugin, player)
         cancelCloseEvent = true
-        SupportPage(plugin).open(player)
     }
 
     override fun onClick(event: InventoryClickEvent, player: Player)
@@ -72,14 +70,14 @@ class PlayerInfoOverviewPage(private val plugin: CV, private var page: Int = 0) 
         {
             override fun onPrevious(player: Player, newPage: Int)
             {
-                PlayerInfoOverviewPage(plugin, newPage).open(player)
+                PlayerInfoOverviewPage(plugin, backPage, newPage).open(player)
             }
         })
         setItem(52, object : PaginationNextAction(plugin, this, page, Voter.getTopVoters(plugin).size)
         {
             override fun onNext(player: Player, newPage: Int)
             {
-                PlayerInfoOverviewPage(plugin, newPage).open(player)
+                PlayerInfoOverviewPage(plugin, backPage, newPage).open(player)
             }
         })
     }

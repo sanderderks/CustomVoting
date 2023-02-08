@@ -6,19 +6,22 @@ import me.sd_master92.customvoting.constants.enumerations.Data
 import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.gui.buttons.shortcuts.VotePartyRewardItemsShortcut
-import me.sd_master92.customvoting.gui.pages.settings.RewardSettingsPage
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 
-class VotePartyChestOverview(private val plugin: CV) :
-    GUI(plugin, PMessage.VOTE_PARTY_INVENTORY_NAME_CHEST_OVERVIEW.toString(), calculateInventorySize(plugin))
+class VotePartyChestOverview(private val plugin: CV, backPage: GUI?) :
+    GUI(
+        plugin,
+        backPage,
+        PMessage.VOTE_PARTY_INVENTORY_NAME_CHEST_OVERVIEW.toString(),
+        calculateInventorySize(plugin)
+    )
 {
     override fun onBack(event: InventoryClickEvent, player: Player)
     {
         SoundType.CLICK.play(plugin, player)
         cancelCloseEvent = true
-        RewardSettingsPage(plugin).open(player)
     }
 
     override fun onClick(event: InventoryClickEvent, player: Player)

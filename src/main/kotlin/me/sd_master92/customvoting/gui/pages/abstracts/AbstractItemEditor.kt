@@ -13,18 +13,16 @@ import org.bukkit.inventory.ItemStack
 
 abstract class AbstractItemEditor(
     private val plugin: CV,
+    backPage: GUI?,
     private val path: String,
     name: String,
     size: Int,
     private val withNull: Boolean = false,
-    back: Boolean = true,
     save: Boolean = true,
     stack: Boolean = true
 ) :
-    GUI(plugin, name, size, false, back, save)
+    GUI(plugin, backPage, name, size, false, save)
 {
-    abstract val previousPage: GUI?
-
     override fun onClick(event: InventoryClickEvent, player: Player)
     {
     }
@@ -32,7 +30,14 @@ abstract class AbstractItemEditor(
     override fun onBack(event: InventoryClickEvent, player: Player)
     {
         event.isCancelled = true
-        back(player, true)
+        cancelCloseEvent = true
+        if (backPage != null)
+        {
+            SoundType.CLICK.play(plugin, player)
+        } else
+        {
+            SoundType.CLOSE.play(plugin, player)
+        }
     }
 
     override fun onClose(event: InventoryCloseEvent, player: Player)
@@ -43,19 +48,14 @@ abstract class AbstractItemEditor(
     override fun onSave(event: InventoryClickEvent, player: Player)
     {
         event.isCancelled = true
-        save(player, event.inventory.contents)
-        back(player, false)
+        player.closeInventory()
     }
 
     fun save(player: Player, items: Array<ItemStack?>, notify: Boolean = true)
     {
-        if (save && back)
+        for (i in clickableItems.keys)
         {
-            items[size - 2] = null
-            items[size - 1] = null
-        } else if (save || back)
-        {
-            items[size - 1] = null
+            items[i] = null
         }
         if (contentEquals(plugin.data.getItems(path), items))
         {
@@ -75,22 +75,6 @@ abstract class AbstractItemEditor(
         {
             SoundType.FAILURE.play(plugin, player)
             player.sendMessage(PMessage.GENERAL_MESSAGE_UPDATE_FAIL_X.with(name))
-        }
-    }
-
-    private fun back(player: Player, sound: Boolean)
-    {
-        cancelCloseEvent = true
-        if (sound)
-        {
-            SoundType.CLICK.play(plugin, player)
-        }
-        if (previousPage == null)
-        {
-            player.closeInventory()
-        } else
-        {
-            previousPage!!.open(player)
         }
     }
 

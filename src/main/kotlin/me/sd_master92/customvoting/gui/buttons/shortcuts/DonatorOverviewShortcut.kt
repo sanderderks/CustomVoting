@@ -10,7 +10,10 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 
-class DonatorOverviewShortcut(private val plugin: CV, private val gui: GUI) : BaseItem(
+class DonatorOverviewShortcut(
+    private val plugin: CV,
+    private val backPage: GUI
+) : BaseItem(
     Material.CREEPER_HEAD, PMessage.DONATORS_ITEM_NAME.toString(),
     PMessage.DONATORS_ITEM_LORE.toString()
 )
@@ -18,7 +21,7 @@ class DonatorOverviewShortcut(private val plugin: CV, private val gui: GUI) : Ba
     override fun onClick(event: InventoryClickEvent, player: Player)
     {
         SoundType.CLICK.play(plugin, player)
-        gui.cancelCloseEvent = true
-        DonatorOverviewPage(plugin).open(player)
+        backPage.cancelCloseEvent = true
+        DonatorOverviewPage(plugin, backPage).open(player)
     }
 }

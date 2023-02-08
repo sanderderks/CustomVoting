@@ -10,7 +10,7 @@ import org.bukkit.inventory.ItemStack
 class LuckyVoteEnabledSwitch(private val plugin: CV) : AbstractStatusSwitch(
     plugin,
     Material.TOTEM_OF_UNDYING, Setting.LUCKY_VOTE,
-    PMessage.LUCKY_VOTE_ITEM_NAME
+    PMessage.LUCKY_ITEM_NAME
 )
 {
     override fun newInstance(): ItemStack

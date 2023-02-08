@@ -5,11 +5,16 @@ import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.Data
 import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.gui.pages.abstracts.AbstractItemEditor
-import me.sd_master92.customvoting.gui.pages.settings.CrateSettingsPage
 
-class CrateItemRewardsEditor(private val plugin: CV, private val number: Int, percentage: Int) :
+class CrateRewardItemsEditor(
+    plugin: CV,
+    backPage: GUI?,
+    number: Int,
+    percentage: Int
+) :
     AbstractItemEditor(
         plugin,
+        backPage,
         "${Data.VOTE_CRATES}.$number.${Data.ITEM_REWARDS}.$percentage",
         PMessage.CRATE_INVENTORY_NAME_PERC_REWARDS_XY.with(
             "$percentage",
@@ -17,7 +22,3 @@ class CrateItemRewardsEditor(private val plugin: CV, private val number: Int, pe
         ),
         27
     )
-{
-    override val previousPage: GUI
-        get() = CrateSettingsPage(plugin, number)
-}

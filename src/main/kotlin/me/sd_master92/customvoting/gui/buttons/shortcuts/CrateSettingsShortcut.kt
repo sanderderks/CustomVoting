@@ -11,7 +11,11 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 
-class CrateSettingsShortcut(private val plugin: CV, private val gui: GUI, private val key: Int) : BaseItem(
+class CrateSettingsShortcut(
+    private val plugin: CV,
+    private val backPage: GUI,
+    private val key: Int
+) : BaseItem(
     Material.SHULKER_BOX,
     null,
     PMessage.CRATE_ITEM_LORE_KEY_X.with("$key"), true
@@ -20,8 +24,8 @@ class CrateSettingsShortcut(private val plugin: CV, private val gui: GUI, privat
     override fun onClick(event: InventoryClickEvent, player: Player)
     {
         SoundType.CLICK.play(plugin, player)
-        gui.cancelCloseEvent = true
-        CrateSettingsPage(plugin, key).open(player)
+        backPage.cancelCloseEvent = true
+        CrateSettingsPage(plugin, backPage, key).open(player)
     }
 
     init

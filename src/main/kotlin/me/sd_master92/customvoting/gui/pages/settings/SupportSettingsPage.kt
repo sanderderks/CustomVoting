@@ -16,13 +16,13 @@ import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 
-class SupportPage(private val plugin: CV) : GUI(plugin, PMessage.SUPPORT_INVENTORY_NAME.toString(), 9)
+class SupportSettingsPage(private val plugin: CV, backPage: GUI?) :
+    GUI(plugin, backPage, PMessage.SUPPORT_INVENTORY_NAME.toString(), 9)
 {
     override fun onBack(event: InventoryClickEvent, player: Player)
     {
         SoundType.CLICK.play(plugin, player)
         cancelCloseEvent = true
-        VoteSettingsPage(plugin).open(player)
     }
 
     override fun onClick(event: InventoryClickEvent, player: Player)

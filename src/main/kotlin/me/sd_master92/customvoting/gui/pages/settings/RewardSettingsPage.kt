@@ -4,34 +4,28 @@ import me.sd_master92.core.inventory.GUI
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.SoundType
-import me.sd_master92.customvoting.gui.buttons.carousel.LuckyVoteChanceCarousel
+import me.sd_master92.customvoting.gui.buttons.carousel.LuckyChanceCarousel
 import me.sd_master92.customvoting.gui.buttons.carousel.VoteRewardItemsTypeCarousel
-import me.sd_master92.customvoting.gui.buttons.editors.VoteRewardCommandsEditor
-import me.sd_master92.customvoting.gui.buttons.editors.VoteRewardExperienceEditor
-import me.sd_master92.customvoting.gui.buttons.editors.VoteRewardMoneyEditor
+import me.sd_master92.customvoting.gui.buttons.inputfields.VoteRewardCommandsInput
+import me.sd_master92.customvoting.gui.buttons.inputfields.VoteRewardExperienceInput
+import me.sd_master92.customvoting.gui.buttons.inputfields.VoteRewardMoneyInput
 import me.sd_master92.customvoting.gui.buttons.shortcuts.*
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 
-class RewardSettingsPage(private val plugin: CV, private val op: Boolean = false) :
+class RewardSettingsPage(private val plugin: CV, backPage: GUI?, power: Boolean = false) :
     GUI(
         plugin,
-        if (!op) PMessage.VOTE_REWARDS_INVENTORY_NAME.toString() else PMessage.PERMISSION_BASED_REWARDS_INVENTORY_NAME.toString(),
-        if (op) 9 else 18
+        backPage,
+        if (!power) PMessage.VOTE_REWARDS_INVENTORY_NAME.toString() else PMessage.POWER_REWARDS_INVENTORY_NAME.toString(),
+        if (power) 9 else 18
     )
 {
     override fun onBack(event: InventoryClickEvent, player: Player)
     {
         SoundType.CLICK.play(plugin, player)
         cancelCloseEvent = true
-        if (op)
-        {
-            RewardSettingsPage(plugin).open(player)
-        } else
-        {
-            VoteSettingsPage(plugin).open(player)
-        }
     }
 
     override fun onClick(event: InventoryClickEvent, player: Player)
@@ -49,20 +43,19 @@ class RewardSettingsPage(private val plugin: CV, private val op: Boolean = false
 
     init
     {
-        addItem(VoteRewardItemsShortcut(plugin, this, op))
-        addItem(VoteRewardItemsTypeCarousel(plugin, op))
-        addItem(VoteRewardMoneyEditor(plugin, this, op))
-        addItem(VoteRewardExperienceEditor(plugin, op))
-        addItem(VoteRewardCommandsEditor(plugin, this, op))
-        if (!op)
+        addItem(VoteRewardItemsShortcut(plugin, this, power))
+        addItem(VoteRewardItemsTypeCarousel(plugin, power))
+        addItem(VoteRewardMoneyInput(plugin, this, power))
+        addItem(VoteRewardExperienceInput(plugin, power))
+        addItem(VoteRewardCommandsInput(plugin, this, power))
+        if (!power)
         {
             addItem(LuckyRewardItemsShortcut(plugin, this))
-            addItem(LuckyVoteChanceCarousel(plugin))
+            addItem(LuckyChanceCarousel(plugin))
             addItem(MilestoneOverviewShortcut(plugin, this))
             addItem(PermissionBasedRewardSettingsShortcut(plugin, this))
             addItem(VotePartyRewardCommandsShortcut(plugin, this))
-        }
-        if (op)
+        } else
         {
             if (CV.PERMISSION != null)
             {

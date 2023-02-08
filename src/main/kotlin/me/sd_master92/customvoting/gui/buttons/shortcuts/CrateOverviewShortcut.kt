@@ -10,7 +10,7 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 
-class CrateOverviewShortcut(private val plugin: CV, private val gui: GUI) : BaseItem(
+class CrateOverviewShortcut(private val plugin: CV, private val backPage: GUI) : BaseItem(
     Material.TRIPWIRE_HOOK,
     PMessage.CRATE_ITEM_NAME_OVERVIEW.toString(),
     null,
@@ -20,7 +20,7 @@ class CrateOverviewShortcut(private val plugin: CV, private val gui: GUI) : Base
     override fun onClick(event: InventoryClickEvent, player: Player)
     {
         SoundType.CLICK.play(plugin, player)
-        gui.cancelCloseEvent = true
-        CrateOverviewPage(plugin).open(player)
+        backPage.cancelCloseEvent = true
+        CrateOverviewPage(plugin, backPage).open(player)
     }
 }

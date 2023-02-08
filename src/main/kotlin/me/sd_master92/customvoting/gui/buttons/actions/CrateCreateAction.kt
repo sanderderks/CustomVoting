@@ -12,7 +12,7 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 
-class CrateCreateAction(private val plugin: CV, private val gui: GUI) :
+class CrateCreateAction(private val plugin: CV, private val backPage: GUI) :
     BaseItem(Material.CRAFTING_TABLE, PMessage.CRATE_ITEM_NAME_ADD.toString())
 {
     override fun onClick(event: InventoryClickEvent, player: Player)
@@ -36,7 +36,7 @@ class CrateCreateAction(private val plugin: CV, private val gui: GUI) :
         plugin.data.set(Data.VOTE_CRATES.path + ".$i.name", name)
         plugin.data.saveConfig()
         player.sendMessage(PMessage.GENERAL_MESSAGE_CREATE_SUCCESS_X.with(name))
-        gui.cancelCloseEvent = true
-        CrateOverviewPage(plugin).open(player)
+        backPage.cancelCloseEvent = true
+        CrateOverviewPage(plugin, backPage).open(player)
     }
 }

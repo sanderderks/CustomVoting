@@ -4,16 +4,14 @@ import me.sd_master92.core.inventory.GUI
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.SoundType
-import me.sd_master92.customvoting.gui.buttons.actions.MilestoneDeleteAction
-import me.sd_master92.customvoting.gui.buttons.inputfields.MilestoneRewardCommandsInput
-import me.sd_master92.customvoting.gui.buttons.inputfields.MilestoneRewardPermissionsInput
-import me.sd_master92.customvoting.gui.buttons.shortcuts.MilestoneRewardItemsShortcut
+import me.sd_master92.customvoting.gui.buttons.carousel.LuckyChanceCarousel
+import me.sd_master92.customvoting.gui.buttons.shortcuts.LuckyRewardItemsShortcut
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 
-class MilestoneSettingsPage(private val plugin: CV, backPage: GUI?, number: Int) :
-    GUI(plugin, backPage, PMessage.MILESTONE_INVENTORY_NAME_X.with("$number"), 9)
+class LuckySettingsPage(private val plugin: CV, backPage: GUI?) :
+    GUI(plugin, backPage, PMessage.LUCKY_INVENTORY_NAME_SETTINGS.toString(), 9)
 {
     override fun onBack(event: InventoryClickEvent, player: Player)
     {
@@ -36,9 +34,7 @@ class MilestoneSettingsPage(private val plugin: CV, backPage: GUI?, number: Int)
 
     init
     {
-        addItem(MilestoneRewardItemsShortcut(plugin, this, number))
-        addItem(MilestoneRewardCommandsInput(plugin, this, number))
-        addItem(MilestoneRewardPermissionsInput(plugin, this, number))
-        setItem(7, MilestoneDeleteAction(plugin, this, number))
+        addItem(LuckyRewardItemsShortcut(plugin, this))
+        addItem(LuckyChanceCarousel(plugin))
     }
 }

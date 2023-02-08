@@ -7,19 +7,22 @@ import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.gui.buttons.actions.MilestoneCreateAction
 import me.sd_master92.customvoting.gui.buttons.shortcuts.MilestoneSettingsShortcut
-import me.sd_master92.customvoting.gui.pages.settings.RewardSettingsPage
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 
-class MilestoneOverviewPage(private val plugin: CV) :
-    GUI(plugin, PMessage.MILESTONE_INVENTORY_NAME_OVERVIEW.toString(), calculateInventorySize(plugin))
+class MilestoneOverviewPage(private val plugin: CV, backPage: GUI?) :
+    GUI(
+        plugin,
+        backPage,
+        PMessage.MILESTONE_INVENTORY_NAME_OVERVIEW.toString(),
+        calculateInventorySize(plugin)
+    )
 {
     override fun onBack(event: InventoryClickEvent, player: Player)
     {
         SoundType.CLICK.play(plugin, player)
         cancelCloseEvent = true
-        RewardSettingsPage(plugin).open(player)
     }
 
     override fun onClick(event: InventoryClickEvent, player: Player)

@@ -10,7 +10,7 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 
 class VoteLinksMenu constructor(private val plugin: CV) :
-    GUI(plugin, Message.VOTE_LINKS_TITLE.getMessage(plugin), 27, true, false)
+    GUI(plugin, null, Message.VOTE_LINKS_TITLE.getMessage(plugin), 27, true, false)
 {
     override fun onClick(event: InventoryClickEvent, player: Player)
     {

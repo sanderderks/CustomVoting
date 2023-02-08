@@ -15,8 +15,8 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.event.inventory.InventoryOpenEvent
 
-class VoteSettingsPage(private val plugin: CV) :
-    GUI(plugin, PMessage.SETTINGS_INVENTORY_NAME.toString(), 9, back = false)
+class VoteSettingsPage(private val plugin: CV, backPage: GUI?) :
+    GUI(plugin, backPage, PMessage.SETTINGS_INVENTORY_NAME.toString(), 9)
 {
     override fun onBack(event: InventoryClickEvent, player: Player)
     {

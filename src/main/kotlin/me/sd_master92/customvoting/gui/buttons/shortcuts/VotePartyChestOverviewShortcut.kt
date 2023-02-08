@@ -10,7 +10,10 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 
-class VotePartyChestOverviewShortcut(private val plugin: CV, private val gui: GUI) : BaseItem(
+class VotePartyChestOverviewShortcut(
+    private val plugin: CV,
+    private val backPage: GUI
+) : BaseItem(
     Material.ENDER_CHEST, PMessage.VOTE_PARTY_ITEM_NAME_OVERVIEW.toString(),
     null, true
 )
@@ -18,7 +21,7 @@ class VotePartyChestOverviewShortcut(private val plugin: CV, private val gui: GU
     override fun onClick(event: InventoryClickEvent, player: Player)
     {
         SoundType.CLICK.play(plugin, player)
-        gui.cancelCloseEvent = true
-        VotePartyChestOverview(plugin).open(player)
+        backPage.cancelCloseEvent = true
+        VotePartyChestOverview(plugin, backPage).open(player)
     }
 }

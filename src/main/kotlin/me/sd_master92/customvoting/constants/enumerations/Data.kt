@@ -26,7 +26,7 @@ enum class Data(val path: String)
 
     companion object
     {
-        const val OP_REWARDS = "_op"
+        const val POWER_REWARDS = "_op"
         val CRATE_REWARD_CHANCES = listOf(50, 25, 10, 5, 1)
 
         fun initialize(plugin: CV)
