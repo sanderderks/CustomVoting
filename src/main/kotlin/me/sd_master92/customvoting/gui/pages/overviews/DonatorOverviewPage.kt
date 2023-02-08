@@ -16,7 +16,6 @@ class DonatorOverviewPage(private val plugin: CV, backPage: GUI?) :
     override fun onBack(event: InventoryClickEvent, player: Player)
     {
         SoundType.CLICK.play(plugin, player)
-        cancelCloseEvent = true
     }
 
     override fun onClick(event: InventoryClickEvent, player: Player)
