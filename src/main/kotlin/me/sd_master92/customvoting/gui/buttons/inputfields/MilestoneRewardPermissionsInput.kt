@@ -12,7 +12,7 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 
-class MilestoneRewardPermissionsInput(private val plugin: CV, private val backPage: GUI, private val number: Int) :
+class MilestoneRewardPermissionsInput(private val plugin: CV, private val currentPage: GUI, private val number: Int) :
     BaseItem(
         Material.DIAMOND_SWORD, PMessage.PERMISSION_REWARDS_ITEM_NAME.toString()
     )
@@ -20,20 +20,20 @@ class MilestoneRewardPermissionsInput(private val plugin: CV, private val backPa
     override fun onClick(event: InventoryClickEvent, player: Player)
     {
         SoundType.CHANGE.play(plugin, player)
-        backPage.cancelCloseEvent = true
+        currentPage.cancelCloseEvent = true
         player.closeInventory()
         object : PlayerPermissionInput(plugin, player, "${Data.MILESTONES}.$number.permissions")
         {
             override fun onPermissionReceived()
             {
                 SoundType.SUCCESS.play(plugin, player)
-                MilestoneSettingsPage(plugin, backPage, number).open(player)
+                MilestoneSettingsPage(plugin, currentPage, number).open(player)
             }
 
             override fun onCancel()
             {
                 SoundType.FAILURE.play(plugin, player)
-                MilestoneSettingsPage(plugin, backPage, number).open(player)
+                MilestoneSettingsPage(plugin, currentPage, number).open(player)
             }
         }
     }

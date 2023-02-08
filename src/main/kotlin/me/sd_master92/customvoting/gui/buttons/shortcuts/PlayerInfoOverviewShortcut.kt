@@ -12,7 +12,7 @@ import org.bukkit.event.inventory.InventoryClickEvent
 
 class PlayerInfoOverviewShortcut(
     private val plugin: CV,
-    private val backPage: GUI
+    private val currentPage: GUI
 ) : BaseItem(
     Material.PLAYER_HEAD, PMessage.PLAYER_INFO_ITEM_NAME.toString(),
     PMessage.PLAYER_INFO_ITEM_LORE.toString()
@@ -21,7 +21,7 @@ class PlayerInfoOverviewShortcut(
     override fun onClick(event: InventoryClickEvent, player: Player)
     {
         SoundType.CLICK.play(plugin, player)
-        backPage.cancelCloseEvent = true
-        PlayerInfoOverviewPage(plugin, backPage).open(player)
+        currentPage.cancelCloseEvent = true
+        PlayerInfoOverviewPage(plugin, currentPage).open(player)
     }
 }

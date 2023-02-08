@@ -12,7 +12,7 @@ import org.bukkit.event.inventory.InventoryClickEvent
 
 class DonatorOverviewShortcut(
     private val plugin: CV,
-    private val backPage: GUI
+    private val currentPage: GUI
 ) : BaseItem(
     Material.CREEPER_HEAD, PMessage.DONATORS_ITEM_NAME.toString(),
     PMessage.DONATORS_ITEM_LORE.toString()
@@ -21,7 +21,7 @@ class DonatorOverviewShortcut(
     override fun onClick(event: InventoryClickEvent, player: Player)
     {
         SoundType.CLICK.play(plugin, player)
-        backPage.cancelCloseEvent = true
-        DonatorOverviewPage(plugin, backPage).open(player)
+        currentPage.cancelCloseEvent = true
+        DonatorOverviewPage(plugin, currentPage).open(player)
     }
 }

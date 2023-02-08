@@ -12,7 +12,7 @@ import org.bukkit.event.inventory.InventoryClickEvent
 
 class SupportSettingsShortcut(
     private val plugin: CV,
-    private val backPage: GUI
+    private val currentPage: GUI
 ) : BaseItem(
     VMaterial.SPYGLASS.get(), PMessage.SETTINGS_ITEM_NAME_SUPPORT.toString(),
     null, true
@@ -21,7 +21,7 @@ class SupportSettingsShortcut(
     override fun onClick(event: InventoryClickEvent, player: Player)
     {
         SoundType.CLICK.play(plugin, player)
-        backPage.cancelCloseEvent = true
-        SupportSettingsPage(plugin, backPage).open(player)
+        currentPage.cancelCloseEvent = true
+        SupportSettingsPage(plugin, currentPage).open(player)
     }
 }

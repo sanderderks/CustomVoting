@@ -12,7 +12,7 @@ import org.bukkit.event.inventory.InventoryClickEvent
 
 class LuckySettingsShortcut(
     private val plugin: CV,
-    private val backPage: GUI
+    private val currentPage: GUI
 ) : BaseItem(
     Material.ENDER_CHEST, PMessage.LUCKY_ITEM_NAME_SETTINGS.toString(),
     null, true
@@ -21,7 +21,7 @@ class LuckySettingsShortcut(
     override fun onClick(event: InventoryClickEvent, player: Player)
     {
         SoundType.CLICK.play(plugin, player)
-        backPage.cancelCloseEvent = true
-        LuckySettingsPage(plugin, backPage).open(player)
+        currentPage.cancelCloseEvent = true
+        LuckySettingsPage(plugin, currentPage).open(player)
     }
 }

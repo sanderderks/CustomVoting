@@ -9,7 +9,7 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 
-class PluginUpdateAction(private val plugin: CV, private val backPage: GUI) : BaseItem(
+class PluginUpdateAction(private val plugin: CV, private val currentPage: GUI) : BaseItem(
     Material.CLOCK, PMessage.PLUGIN_VERSION_ITEM_NAME.toString()
 )
 {
@@ -18,7 +18,7 @@ class PluginUpdateAction(private val plugin: CV, private val backPage: GUI) : Ba
         if (!plugin.isUpToDate())
         {
             SoundType.CLICK.play(plugin, player)
-            backPage.cancelCloseEvent = true
+            currentPage.cancelCloseEvent = true
             player.closeInventory()
             plugin.sendDownloadUrl(player)
         }

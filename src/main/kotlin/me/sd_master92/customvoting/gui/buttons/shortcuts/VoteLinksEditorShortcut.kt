@@ -10,7 +10,7 @@ import me.sd_master92.customvoting.gui.pages.editors.VoteLinksEditor
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 
-class VoteLinksEditorShortcut(private val plugin: CV, private val backPage: GUI) : BaseItem(
+class VoteLinksEditorShortcut(private val plugin: CV, private val currentPage: GUI) : BaseItem(
     VMaterial.SOUL_TORCH.get(),
     PMessage.VOTE_LINKS_ITEM_NAME.toString(),
     PMessage.VOTE_LINKS_ITEM_LORE.toString()
@@ -19,7 +19,7 @@ class VoteLinksEditorShortcut(private val plugin: CV, private val backPage: GUI)
     override fun onClick(event: InventoryClickEvent, player: Player)
     {
         SoundType.CLICK.play(plugin, player)
-        backPage.cancelCloseEvent = true
+        currentPage.cancelCloseEvent = true
         VoteLinksEditor(plugin).open(player)
     }
 }

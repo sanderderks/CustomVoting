@@ -10,18 +10,18 @@ import org.bukkit.entity.Player
 
 class MilestoneRewardItemsShortcut(
     private val plugin: CV,
-    private val backPage: GUI,
+    private val currentPage: GUI,
     private val number: Int
 ) :
     AbstractRewardItemsButton(
         plugin,
-        backPage,
+        currentPage,
         "${Data.MILESTONES}.$number.${Data.ITEM_REWARDS}",
         PMessage.ITEM_REWARDS_ITEM_NAME.toString()
     )
 {
     override fun onOpen(player: Player)
     {
-        MilestoneRewardItemsEditor(plugin, backPage, number).open(player)
+        MilestoneRewardItemsEditor(plugin, currentPage, number).open(player)
     }
 }

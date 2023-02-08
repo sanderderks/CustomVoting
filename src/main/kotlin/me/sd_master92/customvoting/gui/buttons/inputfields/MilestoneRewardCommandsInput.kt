@@ -11,26 +11,26 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 
-class MilestoneRewardCommandsInput(private val plugin: CV, private val backPage: GUI, private val number: Int) :
+class MilestoneRewardCommandsInput(private val plugin: CV, private val currentPage: GUI, private val number: Int) :
     AbstractRewardCommandsButton(plugin, "${Data.MILESTONES}.$number.commands", Material.SHIELD)
 {
     override fun onClick(event: InventoryClickEvent, player: Player)
     {
         SoundType.CHANGE.play(plugin, player)
-        backPage.cancelCloseEvent = true
+        currentPage.cancelCloseEvent = true
         player.closeInventory()
         object : PlayerCommandInput(plugin, player, "${Data.MILESTONES}.$number.commands")
         {
             override fun onCommandReceived()
             {
                 SoundType.SUCCESS.play(plugin, player)
-                MilestoneSettingsPage(plugin, backPage, number).open(player)
+                MilestoneSettingsPage(plugin, currentPage, number).open(player)
             }
 
             override fun onCancel()
             {
                 SoundType.FAILURE.play(plugin, player)
-                MilestoneSettingsPage(plugin, backPage, number).open(player)
+                MilestoneSettingsPage(plugin, currentPage, number).open(player)
             }
         }
     }

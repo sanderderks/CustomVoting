@@ -12,7 +12,7 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 
-class VoteRewardCommandsInput(private val plugin: CV, private val backPage: GUI, private val power: Boolean) :
+class VoteRewardCommandsInput(private val plugin: CV, private val currentPage: GUI, private val power: Boolean) :
     AbstractRewardCommandsButton(
         plugin,
         Data.VOTE_COMMANDS.path.appendWhenTrue(power, Data.POWER_REWARDS),
@@ -22,7 +22,7 @@ class VoteRewardCommandsInput(private val plugin: CV, private val backPage: GUI,
     override fun onClick(event: InventoryClickEvent, player: Player)
     {
         SoundType.CHANGE.play(plugin, player)
-        backPage.cancelCloseEvent = true
+        currentPage.cancelCloseEvent = true
         player.closeInventory()
         object :
             PlayerCommandInput(plugin, player, path)
@@ -30,13 +30,13 @@ class VoteRewardCommandsInput(private val plugin: CV, private val backPage: GUI,
             override fun onCommandReceived()
             {
                 SoundType.SUCCESS.play(plugin, player)
-                RewardSettingsPage(plugin, backPage, power).open(player)
+                RewardSettingsPage(plugin, currentPage, power).open(player)
             }
 
             override fun onCancel()
             {
                 SoundType.FAILURE.play(plugin, player)
-                RewardSettingsPage(plugin, backPage, power).open(player)
+                RewardSettingsPage(plugin, currentPage, power).open(player)
             }
         }
     }

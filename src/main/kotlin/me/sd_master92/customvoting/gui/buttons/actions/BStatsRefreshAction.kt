@@ -13,15 +13,15 @@ import org.bukkit.event.inventory.InventoryClickEvent
 
 class BStatsRefreshAction(
     private val plugin: CV,
-    private val backPage: GUI
+    private val currentPage: GUI
 ) :
     BaseItem(Material.CLOCK, PMessage.GENERAL_ITEM_NAME_REFRESH.toString())
 {
     override fun onClick(event: InventoryClickEvent, player: Player)
     {
         SoundType.CLICK.play(plugin, player)
-        backPage.cancelCloseEvent = true
+        currentPage.cancelCloseEvent = true
         BStatsData.refresh()
-        StatisticSettingsPage(plugin, backPage).open(player)
+        StatisticSettingsPage(plugin, currentPage).open(player)
     }
 }

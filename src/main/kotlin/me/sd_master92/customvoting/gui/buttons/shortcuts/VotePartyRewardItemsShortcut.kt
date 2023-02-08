@@ -11,11 +11,11 @@ import org.bukkit.entity.Player
 
 class VotePartyRewardItemsShortcut(
     private val plugin: CV,
-    private val backPage: GUI,
+    private val currentPage: GUI,
     private val key: Int
 ) : AbstractRewardItemsButton(
     plugin,
-    backPage,
+    currentPage,
     Data.VOTE_PARTY_CHESTS.path + ".$key",
     PMessage.VOTE_PARTY_ITEM_NAME_CHEST_X.with("$key"),
     Material.ENDER_CHEST
@@ -23,6 +23,6 @@ class VotePartyRewardItemsShortcut(
 {
     override fun onOpen(player: Player)
     {
-        VotePartyRewardItemsEditor(plugin, backPage, "$key").open(player)
+        VotePartyRewardItemsEditor(plugin, currentPage, "$key").open(player)
     }
 }

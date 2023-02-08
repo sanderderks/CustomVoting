@@ -12,7 +12,7 @@ import org.bukkit.event.inventory.InventoryClickEvent
 
 class VoteRewardSettingsShortcut(
     private val plugin: CV,
-    private val backPage: GUI,
+    private val currentPage: GUI,
     private val power: Boolean = false
 ) :
     BaseItem(
@@ -23,7 +23,7 @@ class VoteRewardSettingsShortcut(
     override fun onClick(event: InventoryClickEvent, player: Player)
     {
         SoundType.CLICK.play(plugin, player)
-        backPage.cancelCloseEvent = true
-        RewardSettingsPage(plugin, backPage, power).open(player)
+        currentPage.cancelCloseEvent = true
+        RewardSettingsPage(plugin, currentPage, power).open(player)
     }
 }

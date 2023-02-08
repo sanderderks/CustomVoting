@@ -11,17 +11,17 @@ import org.bukkit.entity.Player
 
 class VoteRewardItemsShortcut(
     private val plugin: CV,
-    private val backPage: GUI,
+    private val currentPage: GUI,
     private val power: Boolean
 ) : AbstractRewardItemsButton(
     plugin,
-    backPage,
+    currentPage,
     Data.ITEM_REWARDS.path.appendWhenTrue(power, Data.POWER_REWARDS),
     PMessage.ITEM_REWARDS_ITEM_NAME.toString()
 )
 {
     override fun onOpen(player: Player)
     {
-        RewardItemsEditor(plugin, backPage, power).open(player)
+        RewardItemsEditor(plugin, currentPage, power).open(player)
     }
 }

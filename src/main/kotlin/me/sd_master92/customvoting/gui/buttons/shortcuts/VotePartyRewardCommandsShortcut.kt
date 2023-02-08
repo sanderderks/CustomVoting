@@ -11,7 +11,7 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 
-class VotePartyRewardCommandsShortcut(private val plugin: CV, private val backPage: RewardSettingsPage) :
+class VotePartyRewardCommandsShortcut(private val plugin: CV, private val currentPage: RewardSettingsPage) :
     AbstractRewardCommandsButton(
         plugin,
         Data.VOTE_PARTY_COMMANDS.path,
@@ -22,20 +22,20 @@ class VotePartyRewardCommandsShortcut(private val plugin: CV, private val backPa
     override fun onClick(event: InventoryClickEvent, player: Player)
     {
         SoundType.CHANGE.play(plugin, player)
-        backPage.cancelCloseEvent = true
+        currentPage.cancelCloseEvent = true
         player.closeInventory()
         object : PlayerCommandInput(plugin, player, Data.VOTE_PARTY_COMMANDS.path)
         {
             override fun onCommandReceived()
             {
                 SoundType.SUCCESS.play(plugin, player)
-                backPage.open(player)
+                currentPage.open(player)
             }
 
             override fun onCancel()
             {
                 SoundType.FAILURE.play(plugin, player)
-                backPage.open(player)
+                currentPage.open(player)
             }
         }
     }

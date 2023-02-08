@@ -12,7 +12,7 @@ import org.bukkit.event.inventory.InventoryClickEvent
 
 class StatisticOverviewShortcut(
     private val plugin: CV,
-    private val backPage: GUI
+    private val currentPage: GUI
 ) : BaseItem(
     Material.CARVED_PUMPKIN, PMessage.STATISTICS_ITEM_NAME.toString(),
     PMessage.STATISTICS_ITEM_LORE.toString()
@@ -21,7 +21,7 @@ class StatisticOverviewShortcut(
     override fun onClick(event: InventoryClickEvent, player: Player)
     {
         SoundType.CLICK.play(plugin, player)
-        backPage.cancelCloseEvent = true
-        StatisticSettingsPage(plugin, backPage).open(player)
+        currentPage.cancelCloseEvent = true
+        StatisticSettingsPage(plugin, currentPage).open(player)
     }
 }

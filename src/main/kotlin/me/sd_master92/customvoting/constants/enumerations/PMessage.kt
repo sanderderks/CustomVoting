@@ -212,7 +212,7 @@ enum class PMessage(
     RESET_VOTES_MESSAGE_CONFIRM("A new month has started and votes can be reset in the /votesettings.", GREEN),
     RESET_VOTES_ITEM_NAME_MONTHLY("Monthly Reset", PURPLE),
 
-    REWARD_SETTINGS_INVENTORY_NAME("Reward Overview"),
+    REWARD_SETTINGS_INVENTORY_NAME_OVERVIEW("Reward Overview"),
 
     SETTINGS_ERROR_DISABLED("The /votesettings GUI has been disabled. You can change this in the settings.yml.", RED),
     SETTINGS_INVENTORY_NAME("Vote Settings"),

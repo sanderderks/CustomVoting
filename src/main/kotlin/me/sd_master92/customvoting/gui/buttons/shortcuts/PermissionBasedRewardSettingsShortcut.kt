@@ -12,7 +12,7 @@ import org.bukkit.event.inventory.InventoryClickEvent
 
 class PermissionBasedRewardSettingsShortcut(
     private val plugin: CV,
-    private val backPage: GUI
+    private val currentPage: GUI
 ) : BaseItem(
     Material.DIAMOND_BLOCK,
     PMessage.POWER_REWARDS_ITEM_NAME.toString(),
@@ -23,7 +23,7 @@ class PermissionBasedRewardSettingsShortcut(
     override fun onClick(event: InventoryClickEvent, player: Player)
     {
         SoundType.CLICK.play(plugin, player)
-        backPage.cancelCloseEvent = true
-        RewardSettingsPage(plugin, backPage, true).open(player)
+        currentPage.cancelCloseEvent = true
+        RewardSettingsPage(plugin, currentPage, true).open(player)
     }
 }

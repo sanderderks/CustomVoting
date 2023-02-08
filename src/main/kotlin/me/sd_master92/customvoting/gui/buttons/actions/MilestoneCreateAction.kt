@@ -13,13 +13,13 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 
-class MilestoneCreateAction(private val plugin: CV, private val backPage: GUI) :
+class MilestoneCreateAction(private val plugin: CV, private val currentPage: GUI) :
     BaseItem(Material.CRAFTING_TABLE, PMessage.MILESTONE_ITEM_NAME_ADD.toString())
 {
     override fun onClick(event: InventoryClickEvent, player: Player)
     {
         SoundType.CHANGE.play(plugin, player)
-        backPage.cancelCloseEvent = true
+        currentPage.cancelCloseEvent = true
         player.closeInventory()
         player.sendMessage(PMessage.MILESTONE_MESSAGE_NUMBER_ENTER.toString())
         player.sendMessage(PMessage.GENERAL_MESSAGE_CANCEL_BACK.toString())
@@ -37,7 +37,7 @@ class MilestoneCreateAction(private val plugin: CV, private val backPage: GUI) :
                     plugin.data.set(Data.MILESTONES.path + ".$input.permissions", ArrayList<String>())
                     plugin.data.saveConfig()
                     player.sendMessage(PMessage.GENERAL_MESSAGE_CREATE_SUCCESS_X.with(name))
-                    MilestoneOverviewPage(plugin, backPage).open(player)
+                    MilestoneOverviewPage(plugin, currentPage).open(player)
                     cancel()
                 }
             }
@@ -45,7 +45,7 @@ class MilestoneCreateAction(private val plugin: CV, private val backPage: GUI) :
             override fun onCancel()
             {
                 SoundType.FAILURE.play(plugin, player)
-                MilestoneOverviewPage(plugin, backPage).open(player)
+                MilestoneOverviewPage(plugin, currentPage).open(player)
             }
         }
     }

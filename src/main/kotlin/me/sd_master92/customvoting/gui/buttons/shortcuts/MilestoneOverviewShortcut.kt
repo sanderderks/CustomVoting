@@ -12,14 +12,14 @@ import org.bukkit.event.inventory.InventoryClickEvent
 
 class MilestoneOverviewShortcut(
     private val plugin: CV,
-    private val backPage: GUI
+    private val currentPage: GUI
 ) :
     BaseItem(Material.NETHER_STAR, PMessage.MILESTONE_ITEM_NAME_OVERVIEW.toString())
 {
     override fun onClick(event: InventoryClickEvent, player: Player)
     {
         SoundType.CLICK.play(plugin, player)
-        backPage.cancelCloseEvent = true
-        MilestoneOverviewPage(plugin, backPage).open(player)
+        currentPage.cancelCloseEvent = true
+        MilestoneOverviewPage(plugin, currentPage).open(player)
     }
 }

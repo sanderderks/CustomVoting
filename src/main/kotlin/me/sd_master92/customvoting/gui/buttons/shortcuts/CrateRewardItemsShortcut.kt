@@ -10,12 +10,12 @@ import org.bukkit.entity.Player
 
 class CrateRewardItemsShortcut(
     private val plugin: CV,
-    private val backPage: GUI,
+    private val currentPage: GUI,
     private val number: Int,
     chance: Int
 ) : AbstractRewardItemsButton(
     plugin,
-    backPage,
+    currentPage,
     "${Data.VOTE_CRATES}.$number.${Data.ITEM_REWARDS}.$chance",
     PMessage.CRATE_ITEM_NAME_REWARDS_PERCENTAGE_X.with("$chance")
 )
@@ -27,7 +27,7 @@ class CrateRewardItemsShortcut(
             val chance = itemMeta?.displayName?.filter { it.isDigit() }?.toInt()
             CrateRewardItemsEditor(
                 plugin,
-                backPage,
+                currentPage,
                 number,
                 chance ?: Data.CRATE_REWARD_CHANCES[0]
             ).open(player)

@@ -13,7 +13,7 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 
-class VoteRewardMoneyInput(private val plugin: CV, private val backPage: GUI, private val power: Boolean) : BaseItem(
+class VoteRewardMoneyInput(private val plugin: CV, private val currentPage: GUI, private val power: Boolean) : BaseItem(
     Material.GOLD_INGOT, PMessage.MONEY_REWARD_ITEM_NAME.toString()
 )
 {
@@ -22,7 +22,7 @@ class VoteRewardMoneyInput(private val plugin: CV, private val backPage: GUI, pr
         if (CV.ECONOMY != null)
         {
             SoundType.CHANGE.play(plugin, player)
-            backPage.cancelCloseEvent = true
+            currentPage.cancelCloseEvent = true
             player.closeInventory()
             player.sendMessage(PMessage.GENERAL_MESSAGE_NUMBER_ENTER.toString())
             player.sendMessage(PMessage.GENERAL_MESSAGE_CANCEL_BACK.toString())
@@ -35,14 +35,14 @@ class VoteRewardMoneyInput(private val plugin: CV, private val backPage: GUI, pr
                     plugin.config[path] = input
                     plugin.config.saveConfig()
                     player.sendMessage(PMessage.GENERAL_MESSAGE_UPDATE_SUCCESS_X.with(PMessage.MONEY_REWARD_UNIT.toString()))
-                    RewardSettingsPage(plugin, backPage, power).open(player)
+                    RewardSettingsPage(plugin, currentPage, power).open(player)
                     cancel()
                 }
 
                 override fun onCancel()
                 {
                     SoundType.FAILURE.play(plugin, player)
-                    RewardSettingsPage(plugin, backPage, power).open(player)
+                    RewardSettingsPage(plugin, currentPage, power).open(player)
                 }
             }
         } else

@@ -11,13 +11,13 @@ import org.bukkit.entity.Player
 
 class LuckyRewardItemsShortcut(
     private val plugin: CV,
-    private val backPage: GUI
+    private val currentPage: GUI
 ) : AbstractRewardItemsButton(
-    plugin, backPage, Data.LUCKY_REWARDS.path, PMessage.LUCKY_ITEM_NAME_REWARDS.toString(), Material.ENDER_CHEST
+    plugin, currentPage, Data.LUCKY_REWARDS.path, PMessage.LUCKY_ITEM_NAME_REWARDS.toString(), Material.ENDER_CHEST
 )
 {
     override fun onOpen(player: Player)
     {
-        LuckyRewardItemsEditor(plugin, backPage).open(player)
+        LuckyRewardItemsEditor(plugin, currentPage).open(player)
     }
 }

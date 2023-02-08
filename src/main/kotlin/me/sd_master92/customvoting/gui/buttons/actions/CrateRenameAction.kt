@@ -15,13 +15,13 @@ import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import java.util.*
 
-class CrateRenameAction(private val plugin: CV, private val backPage: GUI, private val number: Int) :
+class CrateRenameAction(private val plugin: CV, private val currentPage: GUI, private val number: Int) :
     BaseItem(Material.OAK_SIGN, PMessage.CRATE_ITEM_NAME_RENAME.toString())
 {
     override fun onClick(event: InventoryClickEvent, player: Player)
     {
         SoundType.CHANGE.play(plugin, player)
-        backPage.cancelCloseEvent = true
+        currentPage.cancelCloseEvent = true
         player.closeInventory()
         player.sendMessage(PMessage.CRATE_MESSAGE_NAME_ENTER.toString())
         player.sendMessage(PMessage.GENERAL_MESSAGE_CANCEL_BACK.toString())
@@ -33,7 +33,7 @@ class CrateRenameAction(private val plugin: CV, private val backPage: GUI, priva
                 plugin.data.set(Data.VOTE_CRATES.path + ".$number.name", input)
                 plugin.data.saveConfig()
                 player.sendMessage(PMessage.CRATE_MESSAGE_NAME_CHANGED_X.with(input))
-                CrateSettingsPage(plugin, backPage, number).open(player)
+                CrateSettingsPage(plugin, currentPage, number).open(player)
                 val uuid = plugin.data.getString(Data.VOTE_CRATES.path + ".$number.stand")
                 if (uuid != null)
                 {
@@ -49,7 +49,7 @@ class CrateRenameAction(private val plugin: CV, private val backPage: GUI, priva
             override fun onCancel()
             {
                 SoundType.FAILURE.play(plugin, player)
-                CrateSettingsPage(plugin, backPage, number).open(player)
+                CrateSettingsPage(plugin, currentPage, number).open(player)
             }
         }
     }

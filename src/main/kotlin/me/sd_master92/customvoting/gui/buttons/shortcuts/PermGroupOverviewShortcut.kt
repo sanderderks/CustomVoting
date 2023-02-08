@@ -12,7 +12,7 @@ import org.bukkit.event.inventory.InventoryClickEvent
 
 class PermGroupOverviewShortcut(
     private val plugin: CV,
-    private val backPage: GUI
+    private val currentPage: GUI
 ) : BaseItem(
     Material.BELL,
     PMessage.PERM_GROUP_OVERVIEW_ITEM_NAME.toString()
@@ -21,7 +21,7 @@ class PermGroupOverviewShortcut(
     override fun onClick(event: InventoryClickEvent, player: Player)
     {
         SoundType.CLICK.play(plugin, player)
-        backPage.cancelCloseEvent = true
-        PermGroupOverviewPage(plugin, backPage).open(player)
+        currentPage.cancelCloseEvent = true
+        PermGroupOverviewPage(plugin, currentPage).open(player)
     }
 }
