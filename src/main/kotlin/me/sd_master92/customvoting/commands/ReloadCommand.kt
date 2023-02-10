@@ -4,11 +4,11 @@ import me.sd_master92.core.appendWhenTrue
 import me.sd_master92.core.command.SimpleCommand
 import me.sd_master92.core.file.PlayerFile
 import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.constants.Voter
-import me.sd_master92.customvoting.constants.enumerations.Messages
+import me.sd_master92.customvoting.constants.enumerations.Message
+import me.sd_master92.customvoting.constants.enumerations.PMessage
+import me.sd_master92.customvoting.constants.interfaces.Voter
 import me.sd_master92.customvoting.subjects.VoteTopSign
 import me.sd_master92.customvoting.subjects.VoteTopStand
-import org.bukkit.ChatColor
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
@@ -17,17 +17,13 @@ class ReloadCommand(private val plugin: CV) : SimpleCommand(plugin, "votereload"
     override fun onCommand(sender: CommandSender, args: Array<String>)
     {
         val cache = args.isNotEmpty() && args[0] == "cache"
-        sender.sendMessage(
-            ChatColor.GRAY.toString() + "Reloading configuration".appendWhenTrue(cache, " and cache") + "..."
-        )
+        sender.sendMessage(PMessage.RELOAD_MESSAGE_START_X.with("".appendWhenTrue(cache, " and cache")))
         if (reload(plugin, cache))
         {
-            sender.sendMessage(
-                ChatColor.GREEN.toString() + "Configuration".appendWhenTrue(cache, " and cache") + " reloaded!"
-            )
+            sender.sendMessage(PMessage.RELOAD_MESSAGE_FINISH_X.with("".appendWhenTrue(cache, " and cache")))
         } else
         {
-            sender.sendMessage(ChatColor.RED.toString() + "Could not reload configuration!")
+            sender.sendMessage(PMessage.RELOAD_ERROR_FAIL.toString())
         }
     }
 
@@ -58,6 +54,6 @@ class ReloadCommand(private val plugin: CV) : SimpleCommand(plugin, "votereload"
 
     init
     {
-        withNoPermMessage(Messages.NO_PERMISSION.getMessage(plugin))
+        withNoPermMessage(Message.NO_PERMISSION.getMessage(plugin))
     }
 }

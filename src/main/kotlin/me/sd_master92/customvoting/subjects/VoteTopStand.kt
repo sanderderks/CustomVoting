@@ -1,15 +1,15 @@
 package me.sd_master92.customvoting.subjects
 
-import me.sd_master92.core.inventory.BaseItem
 import me.sd_master92.core.tasks.TaskTimer
 import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.constants.Data
-import me.sd_master92.customvoting.constants.Voter
-import me.sd_master92.customvoting.constants.enumerations.Messages
+import me.sd_master92.customvoting.constants.enumerations.Data
+import me.sd_master92.customvoting.constants.enumerations.Message
+import me.sd_master92.customvoting.constants.enumerations.PMessage
+import me.sd_master92.customvoting.constants.interfaces.Voter
+import me.sd_master92.customvoting.gui.items.SimpleItem
 import net.citizensnpcs.api.CitizensAPI
 import net.citizensnpcs.api.npc.NPC
 import org.bukkit.Bukkit
-import org.bukkit.ChatColor
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.entity.ArmorStand
@@ -22,13 +22,13 @@ import org.bukkit.inventory.meta.SkullMeta
 import java.util.*
 
 
-class VoteTopStand @JvmOverloads constructor(private val plugin: CV, private val top: Int, player: Player? = null)
+class VoteTopStand constructor(private val plugin: CV, private val top: Int, player: Player? = null)
 {
     private var topStand: ArmorStand? = null
     private var nameStand: ArmorStand? = null
     private var votesStand: ArmorStand? = null
     private var citizen: NPC? = null
-    private val path = Data.VOTE_TOP_STANDS + "." + top
+    private val path = Data.VOTE_TOP_STANDS.path + ".$top"
 
     private fun registerArmorStands()
     {
@@ -76,7 +76,7 @@ class VoteTopStand @JvmOverloads constructor(private val plugin: CV, private val
     {
         if (uuid != null)
         {
-            val entity = plugin.server.getEntity(UUID.fromString(uuid))
+            val entity = Bukkit.getEntity(UUID.fromString(uuid))
             if (entity is ArmorStand)
             {
                 return entity
@@ -117,12 +117,13 @@ class VoteTopStand @JvmOverloads constructor(private val plugin: CV, private val
             }
         }
         plugin.data.setLocation(path, player.location)
-        player.sendMessage(ChatColor.GREEN.toString() + "Registered Vote Stand #" + top)
+        player.sendMessage(PMessage.VOTE_TOP_MESSAGE_STAND_CREATED_X.with("$top"))
     }
 
     private fun createCitizen(loc: Location, name: String? = null): NPC
     {
-        val citizen = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, name ?: "Unknown")
+        val citizen =
+            CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, name ?: PMessage.PLAYER_NAME_UNKNOWN.toString())
         plugin.data["$path.citizen"] = citizen.uniqueId.toString()
         citizen.isProtected = true
         citizen.data().setPersistent(NPC.Metadata.NAMEPLATE_VISIBLE, false)
@@ -144,34 +145,34 @@ class VoteTopStand @JvmOverloads constructor(private val plugin: CV, private val
         {
             1    ->
             {
-                equipment.chestplate = BaseItem(Material.DIAMOND_CHESTPLATE, true)
-                equipment.leggings = BaseItem(Material.DIAMOND_LEGGINGS, true)
-                equipment.boots = BaseItem(Material.DIAMOND_BOOTS, true)
-                equipment.setItemInMainHand(BaseItem(Material.DIAMOND_SWORD, true))
+                equipment.chestplate = SimpleItem(Material.DIAMOND_CHESTPLATE, true)
+                equipment.leggings = SimpleItem(Material.DIAMOND_LEGGINGS, true)
+                equipment.boots = SimpleItem(Material.DIAMOND_BOOTS, true)
+                equipment.setItemInMainHand(SimpleItem(Material.DIAMOND_SWORD, true))
             }
 
             2    ->
             {
-                equipment.chestplate = BaseItem(Material.GOLDEN_CHESTPLATE, true)
-                equipment.leggings = BaseItem(Material.GOLDEN_LEGGINGS, true)
-                equipment.boots = BaseItem(Material.GOLDEN_BOOTS, true)
-                equipment.setItemInMainHand(BaseItem(Material.GOLDEN_SWORD, true))
+                equipment.chestplate = SimpleItem(Material.GOLDEN_CHESTPLATE, true)
+                equipment.leggings = SimpleItem(Material.GOLDEN_LEGGINGS, true)
+                equipment.boots = SimpleItem(Material.GOLDEN_BOOTS, true)
+                equipment.setItemInMainHand(SimpleItem(Material.GOLDEN_SWORD, true))
             }
 
             3    ->
             {
-                equipment.chestplate = BaseItem(Material.IRON_CHESTPLATE, true)
-                equipment.leggings = BaseItem(Material.IRON_LEGGINGS, true)
-                equipment.boots = BaseItem(Material.IRON_BOOTS, true)
-                equipment.setItemInMainHand(BaseItem(Material.IRON_SWORD, true))
+                equipment.chestplate = SimpleItem(Material.IRON_CHESTPLATE, true)
+                equipment.leggings = SimpleItem(Material.IRON_LEGGINGS, true)
+                equipment.boots = SimpleItem(Material.IRON_BOOTS, true)
+                equipment.setItemInMainHand(SimpleItem(Material.IRON_SWORD, true))
             }
 
             else ->
             {
-                equipment.chestplate = BaseItem(Material.CHAINMAIL_CHESTPLATE, true)
-                equipment.leggings = BaseItem(Material.CHAINMAIL_LEGGINGS, true)
-                equipment.boots = BaseItem(Material.CHAINMAIL_BOOTS, true)
-                equipment.setItemInMainHand(BaseItem(Material.STONE_SWORD, true))
+                equipment.chestplate = SimpleItem(Material.CHAINMAIL_CHESTPLATE, true)
+                equipment.leggings = SimpleItem(Material.CHAINMAIL_LEGGINGS, true)
+                equipment.boots = SimpleItem(Material.CHAINMAIL_BOOTS, true)
+                equipment.setItemInMainHand(SimpleItem(Material.STONE_SWORD, true))
             }
         }
     }
@@ -185,7 +186,8 @@ class VoteTopStand @JvmOverloads constructor(private val plugin: CV, private val
         {
             placeholders["%PLAYER%"] = topVoter.name
             placeholders["%VOTES%"] = "${topVoter.votes}"
-            placeholders["%MONTHLY_VOTES%"] = "${topVoter.monthlyVotes}"
+            placeholders["%VOTES_MONTHLY%"] = "${topVoter.votesMonthly}"
+            placeholders["%VOTES_DAILY%"] = "${topVoter.votesDaily}"
             if (CV.CITIZENS && citizen != null && citizen!!.name != topVoter.name)
             {
                 citizen!!.name = topVoter.name
@@ -195,12 +197,13 @@ class VoteTopStand @JvmOverloads constructor(private val plugin: CV, private val
             }
         } else
         {
-            placeholders["%PLAYER%"] = ChatColor.RED.toString() + "Unknown"
+            placeholders["%PLAYER%"] = PMessage.PLAYER_NAME_UNKNOWN_COLORED.toString()
             placeholders["%VOTES%"] = "0"
-            placeholders["%MONTHLY_VOTES%"] = "0"
-            if (CV.CITIZENS && citizen != null && citizen!!.name != "Unknown")
+            placeholders["%VOTES_MONTHLY%"] = "0"
+            placeholders["%VOTES_DAILY%"] = "0"
+            if (CV.CITIZENS && citizen != null && citizen!!.name != PMessage.PLAYER_NAME_UNKNOWN.toString())
             {
-                citizen!!.name = "Unknown"
+                citizen!!.name = PMessage.PLAYER_NAME_UNKNOWN.toString()
                 citizen!!.despawn()
                 citizen!!.data()?.setPersistent(NPC.Metadata.NAMEPLATE_VISIBLE, false)
                 citizen!!.spawn(plugin.data.getLocation(path))
@@ -227,9 +230,9 @@ class VoteTopStand @JvmOverloads constructor(private val plugin: CV, private val
             }
             votesStand?.equipment?.helmet = skull
         }
-        topStand?.customName = Messages.VOTE_TOP_STANDS_TOP.getMessage(plugin, placeholders)
-        nameStand?.customName = Messages.VOTE_TOP_STANDS_CENTER.getMessage(plugin, placeholders)
-        votesStand?.customName = Messages.VOTE_TOP_STANDS_BOTTOM.getMessage(plugin, placeholders)
+        topStand?.customName = Message.VOTE_TOP_STANDS_TOP.getMessage(plugin, placeholders)
+        nameStand?.customName = Message.VOTE_TOP_STANDS_CENTER.getMessage(plugin, placeholders)
+        votesStand?.customName = Message.VOTE_TOP_STANDS_BOTTOM.getMessage(plugin, placeholders)
     }
 
     private fun doesNotExist(): Boolean
@@ -266,7 +269,7 @@ class VoteTopStand @JvmOverloads constructor(private val plugin: CV, private val
         plugin.data[path] = null
         plugin.data.saveConfig()
         voteTops.remove(top)
-        player?.sendMessage(ChatColor.GREEN.toString() + "Successfully deleted Vote Stand #" + top)
+        player?.sendMessage(PMessage.VOTE_TOP_MESSAGE_STAND_DELETED_X.with("$top"))
     }
 
     companion object
@@ -307,7 +310,7 @@ class VoteTopStand @JvmOverloads constructor(private val plugin: CV, private val
 
         private fun initialize(plugin: CV)
         {
-            val section = plugin.data.getConfigurationSection(Data.VOTE_TOP_STANDS)
+            val section = plugin.data.getConfigurationSection(Data.VOTE_TOP_STANDS.path)
             if (section != null)
             {
                 for (n in section.getKeys(false))
@@ -331,7 +334,7 @@ class VoteTopStand @JvmOverloads constructor(private val plugin: CV, private val
         {
             if (player != null)
             {
-                player.sendMessage(ChatColor.RED.toString() + "That Vote Stand already exists.")
+                player.sendMessage(PMessage.GENERAL_ERROR_ALREADY_EXIST_X.with(PMessage.VOTE_TOP_UNIT_STAND.toString()))
             } else
             {
                 registerArmorStands()

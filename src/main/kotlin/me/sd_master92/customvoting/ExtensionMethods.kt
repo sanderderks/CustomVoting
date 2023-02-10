@@ -2,8 +2,9 @@ package me.sd_master92.customvoting
 
 import me.clip.placeholderapi.PlaceholderAPI
 import me.sd_master92.core.file.PlayerFile
-import me.sd_master92.customvoting.constants.enumerations.Messages
-import me.sd_master92.customvoting.constants.enumerations.Settings
+import me.sd_master92.customvoting.constants.enumerations.Message
+import me.sd_master92.customvoting.constants.enumerations.PMessage
+import me.sd_master92.customvoting.constants.enumerations.Setting
 import me.sd_master92.customvoting.database.PlayerTable
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
@@ -28,6 +29,20 @@ fun String.withPlaceholders(player: Player): String
     }
 }
 
+fun String.replaceIfNotNull(oldValue: String, newValue: String?): String
+{
+    if (newValue != null)
+    {
+        return this.replace(oldValue, newValue)
+    }
+    return this
+}
+
+fun String.stripColor(): String
+{
+    return ChatColor.stripColor(this)!!
+}
+
 fun CommandSender?.sendText(message: String)
 {
     if (this is Player)
@@ -39,7 +54,7 @@ fun CommandSender?.sendText(message: String)
     }
 }
 
-fun CommandSender?.sendText(plugin: CV, message: Messages, placeholders: Map<String, String> = HashMap())
+fun CommandSender?.sendText(plugin: CV, message: Message, placeholders: Map<String, String> = HashMap())
 {
     this?.sendText(message.getMessage(plugin, placeholders))
 }
@@ -55,7 +70,7 @@ fun CommandSender?.sendTexts(messages: List<String>)
     }
 }
 
-fun CommandSender?.sendTexts(plugin: CV, message: Messages, placeholders: Map<String, String> = HashMap())
+fun CommandSender?.sendTexts(plugin: CV, message: Message, placeholders: Map<String, String> = HashMap())
 {
     if (this != null)
     {
@@ -72,11 +87,6 @@ fun Player?.sendActionBar(message: String)
         ChatMessageType.ACTION_BAR,
         TextComponent(message.withPlaceholders(this))
     )
-}
-
-fun Player?.sendActionBar(plugin: CV, message: Messages, placeholders: Map<String, String> = HashMap())
-{
-    this?.sendActionBar(message.getMessage(plugin, placeholders))
 }
 
 fun Player.addToInventoryOrDrop(items: Array<ItemStack>, random: Boolean = false)
@@ -98,12 +108,12 @@ fun Player.addToInventoryOrDrop(item: ItemStack)
     this.inventory.addItem(item).values.forEach { this.world.dropItemNaturally(this.location, it) }
 }
 
-fun Player.hasPermissionRewards(plugin: CV): Boolean
+fun Player.hasPowerRewards(plugin: CV): Boolean
 {
-    return this.hasPermissionRewardsByGroup(plugin) || this.hasPermissionRewardsByUser(plugin)
+    return this.hasPowerRewardsByGroup(plugin) || this.hasPowerRewardsByUser(plugin)
 }
 
-fun Player.hasPermissionRewardsByGroup(plugin: CV): Boolean
+fun Player.hasPowerRewardsByGroup(plugin: CV): Boolean
 {
     if (CV.PERMISSION != null)
     {
@@ -111,7 +121,7 @@ fun Player.hasPermissionRewardsByGroup(plugin: CV): Boolean
         {
             for (group in CV.PERMISSION!!.getPlayerGroups(this))
             {
-                if (plugin.config.getStringList(Settings.ENABLED_OP_GROUPS.path).contains(group.lowercase()))
+                if (plugin.config.getStringList(Setting.ENABLED_PERM_GROUPS.path).contains(group.lowercase()))
                 {
                     return true
                 }
@@ -124,19 +134,18 @@ fun Player.hasPermissionRewardsByGroup(plugin: CV): Boolean
     return false
 }
 
-fun Player.hasPermissionRewardsByUser(plugin: CV): Boolean
+fun Player.hasPowerRewardsByUser(plugin: CV): Boolean
 {
     val voter = if (plugin.hasDatabaseConnection()) PlayerTable.get(plugin, this) else VoteFile.get(plugin, this)
-    return voter.isOpUser
+    return voter.power
 }
 
 fun Player.getPlayerFile(plugin: CV): PlayerFile
 {
-    val player = if (plugin.config.getBoolean(Settings.UUID_STORAGE.path)) PlayerFile.getByUuid(
+    return if (plugin.config.getBoolean(Setting.UUID_STORAGE.path)) PlayerFile.getByUuid(
         plugin,
         this
-    ) else PlayerFile.getByName(this.name)
-    return player ?: PlayerFile.getByUuid(plugin, this)
+    ) else PlayerFile.getByName(plugin, this.name) ?: PlayerFile.getByUuid(plugin, this)
 }
 
 fun OfflinePlayer?.getSkull(): ItemStack
@@ -146,7 +155,11 @@ fun OfflinePlayer?.getSkull(): ItemStack
     skullMeta.owningPlayer = this
     if (this != null)
     {
-        skullMeta.setDisplayName(ChatColor.AQUA.toString() + name)
+        skullMeta.setDisplayName(
+            PMessage.PLAYER_ITEM_NAME_SKULL_X.with(
+                this.name ?: PMessage.PLAYER_NAME_UNKNOWN.toString()
+            )
+        )
     }
     skull.itemMeta = skullMeta
     return skull
@@ -155,4 +168,11 @@ fun OfflinePlayer?.getSkull(): ItemStack
 fun String.getOfflinePlayer(): OfflinePlayer?
 {
     return Bukkit.getOfflinePlayers().toList().firstOrNull { player -> player.name == this }
+}
+
+fun Long.dayDifferenceToday(): Int
+{
+    val calendar = Calendar.getInstance()
+    calendar.time = Date(this)
+    return Calendar.getInstance()[Calendar.DAY_OF_YEAR] - calendar[Calendar.DAY_OF_YEAR]
 }

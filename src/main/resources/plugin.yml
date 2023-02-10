@@ -19,9 +19,6 @@ commands:
   fakevote:
     description: fakevote
     permission: customvoting.fakevote
-  inspectvote:
-    description: inspectvote
-    permission: customvoting.inspectvote
   setvotes:
     description: set votes
     permission: customvoting.setvotes
@@ -59,7 +56,6 @@ permissions:
       customvoting.createtop: true
       customvoting.deletetop: true
       customvoting.fakevote: true
-      customvoting.inspectvote: true
       customvoting.voteparty: true
       customvoting.reload: true
       customvoting.settings: true
@@ -89,8 +85,6 @@ permissions:
   customvoting.votetop.signs:
     default: op
   customvoting.fakevote:
-    default: op
-  customvoting.inspectvote:
     default: op
   customvoting.voteparty:
     default: op

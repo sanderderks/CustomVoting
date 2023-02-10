@@ -1,10 +1,10 @@
 package me.sd_master92.customvoting
 
 import me.sd_master92.core.file.PlayerFile
-import me.sd_master92.customvoting.constants.Data
-import me.sd_master92.customvoting.constants.TopVoter
-import me.sd_master92.customvoting.constants.Voter
-import me.sd_master92.customvoting.constants.enumerations.Settings
+import me.sd_master92.customvoting.constants.enumerations.Data
+import me.sd_master92.customvoting.constants.enumerations.Setting
+import me.sd_master92.customvoting.constants.interfaces.TopVoter
+import me.sd_master92.customvoting.constants.interfaces.Voter
 import org.bukkit.entity.Player
 
 class VoteFile : Voter
@@ -17,15 +17,29 @@ class VoteFile : Voter
     override val name: String
         get() = playerFile.name
     override val votes: Int
-        get() = playerFile.getNumber("votes")
-    override val monthlyVotes: Int
-        get() = playerFile.getNumber("monthly_votes")
+        get() = playerFile.getNumber(VOTES)
+    override val votesMonthly: Int
+        get() = playerFile.getNumber(VOTES_MONTHLY)
+    override val votesDaily: Int
+        get()
+        {
+            return if (last.dayDifferenceToday() > 0)
+            {
+                clearDailyVotes()
+                0
+            } else
+            {
+                playerFile.getNumber(VOTES_DAILY)
+            }
+        }
     override val last: Long
-        get() = playerFile.getTimeStamp("last")
-    override val isOpUser: Boolean
-        get() = playerFile.getBoolean("opUser")
+        get() = playerFile.getTimeStamp(VOTE_LAST)
+    override val power: Boolean
+        get() = playerFile.getBoolean(POWER)
     override val queue: List<String>
-        get() = plugin.data.getStringList(Data.VOTE_QUEUE + "." + uuid)
+        get() = playerFile.getStringList(Data.VOTE_QUEUE.path)
+    override val streakDaily: Int
+        get() = playerFile.getNumber(STREAK_DAILY)
 
     private constructor(uuid: String, plugin: CV)
     {
@@ -62,9 +76,15 @@ class VoteFile : Voter
 
     override fun setVotes(n: Int, update: Boolean)
     {
-        playerFile.setTimeStamp("last")
-        playerFile.setNumber("votes", n)
-        playerFile.setNumber("monthly_votes", n)
+        playerFile.setTimeStamp(VOTE_LAST)
+        playerFile.setNumber(VOTES, n)
+        playerFile.setNumber(VOTES_MONTHLY, n)
+        playerFile.setNumber(VOTES_DAILY, n)
+
+        if (n == 0)
+        {
+            clearStreak()
+        }
 
         if (update)
         {
@@ -74,7 +94,9 @@ class VoteFile : Voter
 
     override fun clearMonthlyVotes()
     {
-        playerFile.setNumber("monthly_votes", 0)
+        playerFile.setNumber(VOTES_MONTHLY, 0)
+        playerFile.setNumber(VOTES_DAILY, 0)
+        clearStreak()
 
         Voter.getTopVoters(plugin, true)
     }
@@ -82,37 +104,74 @@ class VoteFile : Voter
     override fun addVote(): Boolean
     {
         val beforeVotes = votes
-        playerFile.setTimeStamp("last")
-        playerFile.addNumber("votes", 1)
-        playerFile.addNumber("monthly_votes", 1)
+        addStreak()
+        playerFile.setTimeStamp(VOTE_LAST)
+        playerFile.addNumber(VOTES)
+        playerFile.addNumber(VOTES_MONTHLY)
+        playerFile.addNumber(VOTES_DAILY)
 
         Voter.getTopVoters(plugin, true)
 
         return beforeVotes < votes
     }
 
-    override fun setIsOpUser(isOpUser: Boolean): Boolean
+    override fun setPower(power: Boolean): Boolean
     {
-        playerFile.set("opUser", isOpUser)
+        playerFile.set(POWER, power)
         return playerFile.saveConfig()
     }
 
     override fun clearQueue(): Boolean
     {
-        return plugin.data.delete(Data.VOTE_QUEUE + "." + uuid)
+        return playerFile.delete(Data.VOTE_QUEUE.path)
     }
 
     override fun addQueue(site: String): Boolean
     {
-        val path = Data.VOTE_QUEUE + "." + uuid
-        val queue = plugin.data.getStringList(path)
+        val path = Data.VOTE_QUEUE.path
+        val queue = playerFile.getStringList(path)
         queue.add(site)
-        plugin.data[path] = queue
+        playerFile[path] = queue
         return plugin.data.saveConfig()
+    }
+
+    override fun addStreak(): Boolean
+    {
+        val diff = last.dayDifferenceToday()
+        if (diff == 1 || votes == 0)
+        {
+            return playerFile.addNumber(STREAK_DAILY, 1)
+        } else if (diff > 1)
+        {
+            clearStreak()
+        }
+        return false
+    }
+
+    override fun clearStreak(): Boolean
+    {
+        return playerFile.setNumber(STREAK_DAILY, 0)
+    }
+
+    override fun addDailyVote(): Boolean
+    {
+        return playerFile.addNumber(VOTES_DAILY, 1)
+    }
+
+    override fun clearDailyVotes(): Boolean
+    {
+        return playerFile.setNumber(VOTES_DAILY, 0)
     }
 
     companion object : TopVoter
     {
+        private const val VOTES = "votes"
+        private const val VOTES_MONTHLY = "votes_monthly"
+        private const val VOTES_DAILY = "votes_daily"
+        private const val STREAK_DAILY = "streak_daily"
+        private const val VOTE_LAST = "last"
+        private const val POWER = "power"
+
         private var ALL: MutableMap<String, VoteFile> = HashMap()
 
         fun init(plugin: CV)
@@ -144,7 +203,7 @@ class VoteFile : Voter
 
         fun get(plugin: CV, player: Player): VoteFile
         {
-            return if (plugin.config.getBoolean(Settings.UUID_STORAGE.path)) getByUuid(plugin, player) else getByName(
+            return if (plugin.config.getBoolean(Setting.UUID_STORAGE.path)) getByUuid(plugin, player) else getByName(
                 plugin,
                 player
             )
@@ -162,13 +221,15 @@ class VoteFile : Voter
 
         private fun migrateAll()
         {
+            val keyMigrations = mapOf(
+                Pair("period", "monthly_votes"),
+                Pair("monthly_votes", VOTES_MONTHLY),
+                Pair("opUser", POWER)
+            )
+
             for (playerFile in PlayerFile.getAll().values)
             {
-                if (playerFile.contains("period"))
-                {
-                    playerFile.set("monthly_votes", playerFile.get("period"))
-                    playerFile.delete("period")
-                }
+                playerFile.keyMigrations(keyMigrations)
             }
         }
     }

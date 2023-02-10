@@ -27,7 +27,7 @@ enum class SoundType(
 
     fun play(plugin: CV, loc: Location)
     {
-        if (plugin.config.getBoolean(Settings.USE_SOUND_EFFECTS.path))
+        if (plugin.config.getBoolean(Setting.USE_SOUND_EFFECTS.path))
         {
             val world = loc.world
             try

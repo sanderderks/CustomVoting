@@ -7,11 +7,11 @@ import me.sd_master92.core.infoLog
 import me.sd_master92.core.plugin.CustomPlugin
 import me.sd_master92.customvoting.commands.*
 import me.sd_master92.customvoting.commands.voteparty.VotePartyCommand
-import me.sd_master92.customvoting.constants.Data
-import me.sd_master92.customvoting.constants.Voter
-import me.sd_master92.customvoting.constants.enumerations.Messages
-import me.sd_master92.customvoting.constants.enumerations.Settings
+import me.sd_master92.customvoting.constants.enumerations.Data
+import me.sd_master92.customvoting.constants.enumerations.Message
+import me.sd_master92.customvoting.constants.enumerations.Setting
 import me.sd_master92.customvoting.constants.enumerations.VotePartyType
+import me.sd_master92.customvoting.constants.interfaces.Voter
 import me.sd_master92.customvoting.database.PlayerDatabase
 import me.sd_master92.customvoting.database.PlayerTable
 import me.sd_master92.customvoting.extensions.CustomPlaceholders
@@ -195,8 +195,9 @@ class CV : CustomPlugin(
             Voter.init(this)
         } / 1000
         infoLog("|___finished caching in ${time}s")
-        Settings.initialize(this)
-        Messages.initialize(this)
+        Setting.initialize(this)
+        Message.initialize(this)
+        Data.initialize(this)
     }
 
     private fun setupDatabase()
@@ -206,7 +207,7 @@ class CV : CustomPlugin(
         infoLog("|")
         if (useDatabase())
         {
-            val database = CustomDatabase(config, Settings.DATABASE.path)
+            val database = CustomDatabase(config, Setting.DATABASE.path)
             if (!database.connect())
             {
                 errorLog("|___could not connect to database")
@@ -223,18 +224,18 @@ class CV : CustomPlugin(
     private fun setupBStatsMetrics()
     {
         val metrics = Metrics(this, 13544)
-        metrics.addCustomChart(SimplePie("ingame_updates_enabled") { if (config.getBoolean(Settings.INGAME_UPDATES.path)) "true" else "false" })
+        metrics.addCustomChart(SimplePie("ingame_updates_enabled") { if (config.getBoolean(Setting.INGAME_UPDATES.path)) "true" else "false" })
         metrics.addCustomChart(SimplePie("database_enabled") { if (useDatabase()) "true" else "false" })
-        metrics.addCustomChart(SimplePie("vote_party_enabled") { if (config.getBoolean(Settings.VOTE_PARTY.path)) "true" else "false" })
-        metrics.addCustomChart(SimplePie("lucky_vote_enabled") { if (config.getBoolean(Settings.LUCKY_VOTE.path)) "true" else "false" })
-        metrics.addCustomChart(SimplePie("uuid_support") { if (config.getBoolean(Settings.UUID_STORAGE.path)) "true" else "false" })
+        metrics.addCustomChart(SimplePie("vote_party_enabled") { if (config.getBoolean(Setting.VOTE_PARTY.path)) "true" else "false" })
+        metrics.addCustomChart(SimplePie("lucky_vote_enabled") { if (config.getBoolean(Setting.LUCKY_VOTE.path)) "true" else "false" })
+        metrics.addCustomChart(SimplePie("uuid_support") { if (config.getBoolean(Setting.UUID_STORAGE.path)) "true" else "false" })
         metrics.addCustomChart(SimplePie("vote_party_type") {
-            if (config.getBoolean(Settings.VOTE_PARTY.path)) VotePartyType.valueOf(
-                config.getNumber(Settings.VOTE_PARTY_TYPE.path)
+            if (config.getBoolean(Setting.VOTE_PARTY.path)) VotePartyType.valueOf(
+                config.getNumber(Setting.VOTE_PARTY_TYPE.path)
             ).label else "None"
         })
         metrics.addCustomChart(SimplePie("vote_crates") {
-            if (data.getLocations(Data.VOTE_CRATES).isNotEmpty()) "true" else "false"
+            if (data.getLocations(Data.VOTE_CRATES.path).isNotEmpty()) "true" else "false"
         })
         metrics.addCustomChart(SimplePie("number_of_playerfiles") {
             val number = VoteFile.getAll(this).size
@@ -256,7 +257,7 @@ class CV : CustomPlugin(
         })
         metrics.addCustomChart(AdvancedPie("vote_sites") {
             val valueMap: MutableMap<String, Int> = HashMap()
-            for (site in data.getStringList(Data.VOTE_SITES).filter { site -> !site.lowercase().contains("test") })
+            for (site in data.getStringList(Data.VOTE_SITES.path).filter { site -> !site.lowercase().contains("test") })
             {
                 valueMap[site] = 1
             }
@@ -266,7 +267,7 @@ class CV : CustomPlugin(
 
     private fun useDatabase(): Boolean
     {
-        return config.getBoolean(Settings.USE_DATABASE.path)
+        return config.getBoolean(Setting.USE_DATABASE.path)
     }
 
     fun hasDatabaseConnection(): Boolean
@@ -294,7 +295,6 @@ class CV : CustomPlugin(
         CreateTopCommand(this).register()
         DeleteTopCommand(this).register()
         FakeVoteCommand(this).register()
-        InspectVoteCommand(this).register()
         ReloadCommand(this).register()
         SettingsCommand(this).register()
         SetVotesCommand(this).register()
@@ -318,7 +318,7 @@ class CV : CustomPlugin(
         this.server.dispatchCommand(this.server.consoleSender, command)
     }
 
-    fun broadcastText(message: Messages, placeholders: Map<String, String> = HashMap())
+    fun broadcastText(message: Message, placeholders: Map<String, String> = HashMap())
     {
         server.broadcastMessage(message.getMessage(this, placeholders))
     }

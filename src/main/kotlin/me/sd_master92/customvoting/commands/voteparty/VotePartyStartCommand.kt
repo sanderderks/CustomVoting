@@ -2,9 +2,9 @@ package me.sd_master92.customvoting.commands.voteparty
 
 import me.sd_master92.core.command.SimpleSubCommand
 import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.constants.Data
+import me.sd_master92.customvoting.constants.enumerations.Data
+import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.subjects.voteparty.VoteParty
-import org.bukkit.ChatColor
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
@@ -12,12 +12,12 @@ class VotePartyStartCommand(private val plugin: CV) : SimpleSubCommand("start")
 {
     override fun onCommand(sender: CommandSender, args: Array<String>)
     {
-        if (plugin.data.getLocations(Data.VOTE_PARTY).isNotEmpty())
+        if (plugin.data.getLocations(Data.VOTE_PARTY_CHESTS.path).isNotEmpty())
         {
             VoteParty(plugin).start()
         } else
         {
-            sender.sendMessage(ChatColor.RED.toString() + "There are no registered Vote Party Chests.")
+            sender.sendMessage(PMessage.VOTE_PARTY_ERROR_NO_CHESTS.toString())
         }
     }
 

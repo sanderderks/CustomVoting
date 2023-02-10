@@ -6,6 +6,8 @@ invalid_player: '&cThat player does not exist.'
 
 monthly_reset: '&d&lAll votes have been reset, because a new month has started!'
 
+# %PLAYER% name of player who voted
+# %SERVICE% vote website
 vote_broadcast: '&d%PLAYER% &7just voted at &d%SERVICE%&7!'
 lucky_vote: '&aYou received a &dLucky Reward&a!'
 disabled_world: '&cPlease go to another world to receive your rewards.'
@@ -31,18 +33,20 @@ vote_rewards:
   # %MONEY% amount of money reward
   money: '&b$%MONEY%'
   # %XP% amount of xp levels reward
-  # %s% extra s for when the XP is higher than 1
+  # %s% extra s for when XP is higher than 1
   xp: '&b%XP% &aXP level%s%'
 
 votes_command:
   # %VOTES% votes of the player
-  # %MONTHLY_VOTES% monthly votes of the player
-  # %s% extra s for when the VOTES is higher than 1
+  # %VOTES_MONTHLY% monthly votes of the player
+  # %VOTES_DAILY% daily votes of the player
+  # %s% extra s for when VOTES is higher than 1
   self: '&aYou currently have &b%VOTES% &avote%s%!'
   # %PLAYER% name of the player
   # %VOTES% votes of the player
-  # %MONTHLY_VOTES% monthly votes of the player
-  # %s% extra s for when the VOTES is higher than 1
+  # %VOTES_MONTHLY% monthly votes of the player
+  # %VOTES_DAILY% daily votes of the player
+  # %s% extra s for when VOTES is higher than 1
   others: '&b%PLAYER% &acurrently has &b%VOTES% &avote%s%!'
   not_found: '&cThat player does not exist.'
 
@@ -55,8 +59,8 @@ vote_top_command:
     - '&b---------------'
   # %PLAYER% name of the player
   # %VOTES% votes of the player
-  # %MONTHLY_VOTES% monthly votes of the player
-  # %s% extra s for when the VOTES is higher than 1
+  # %VOTES_MONTHLY% monthly votes of the player
+  # %s% extra s for when VOTES is higher than 1
   players: '&d%PLAYER%&7: &b%VOTES%'
   not_found: '&cThere are no players to show.'
 
@@ -70,8 +74,8 @@ vote_top_signs:
     # %NUMBER% top x
     # %PLAYER% name of the player
     # %VOTES% votes of the player
-    # %MONTHLY_VOTES% monthly votes of the player
-    # %s% extra s for when the VOTES is higher than 1
+    # %VOTES_MONTHLY% monthly votes of the player
+    # %s% extra s for when VOTES is higher than 1
     format:
       - '&4&lTop %NUMBER%:'
       - '&b%PLAYER%'
@@ -83,7 +87,7 @@ vote_top_signs:
 # %TOP% top x
 # %PLAYER% name of the player
 # %VOTES% votes of the player
-# %MONTHLY_VOTES% monthly votes of the player
+# %VOTES_MONTHLY% monthly votes of the player
 vote_top_stands:
   top: '&a&lTop %TOP%:'
   center: '&b%PLAYER%'
@@ -92,12 +96,12 @@ vote_top_stands:
 
 vote_party:
   # %VOTES% votes until the vote party
-  # %s% extra s for when the VOTES is higher than 1
+  # %s% extra s for when VOTES is higher than 1
   until: '&b%VOTES% &avote%s% until the &bVote Party&a!'
   # %TIME% seconds until the vote party
   countdown: '&aVote Party starting in &b%TIME% &aseconds!'
   # %TIME% seconds until the vote party
-  # %s% extra s for when the TIME is higher than 1
+  # %s% extra s for when TIME is higher than 1
   countdown_ending: '&aVote Party starting in &b%TIME%'
   # %TYPE% vote party type
   start: '&aThe Vote Party &d%TYPE% &ahas begun!'
@@ -105,10 +109,17 @@ vote_party:
   # %COUNT% pigs killed
   # %TOGO% pigs to kill
   # %KILLER% killer
-  # %s% extra s for when the TOGO is higher than 1
+  # %s% extra s for when TOGO is higher than 1
   pig_killed: '&dPig killed by &b%KILLER%&d! Only &b%TOGO% &dpig%s% to go!'
 
 # %PLAYER% name of the player
+# %MILESTONE% milestone reached
+milestone:
+  milestone_reached: '&b%PLAYER% &dreached milestone #&b%MILESTONE%&d!'
+
+# %PLAYER% name of the player
 # %STREAK% streak reached
-vote_streak:
+streak:
   streak_reached: '&b%PLAYER% &dreached vote streak #&b%STREAK%&d!'
+
+vote_links_title: 'Vote for us!'

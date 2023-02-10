@@ -2,11 +2,10 @@ package me.sd_master92.customvoting.extensions
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion
 import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.VoteFile
-import me.sd_master92.customvoting.constants.Data
-import me.sd_master92.customvoting.constants.Voter
-import me.sd_master92.customvoting.constants.enumerations.Settings
-import me.sd_master92.customvoting.database.PlayerTable
+import me.sd_master92.customvoting.constants.enumerations.Data
+import me.sd_master92.customvoting.constants.enumerations.PMessage
+import me.sd_master92.customvoting.constants.enumerations.Setting
+import me.sd_master92.customvoting.constants.interfaces.Voter
 import org.bukkit.entity.Player
 
 class CustomPlaceholders(private val plugin: CV) : PlaceholderExpansion()
@@ -42,7 +41,7 @@ class CustomPlaceholders(private val plugin: CV) : PlaceholderExpansion()
         {
             when (params)
             {
-                SERVER_VOTES                        ->
+                SERVER_VOTES               ->
                 {
                     var total = 0
                     for (voter in Voter.getTopVoters(plugin))
@@ -52,77 +51,88 @@ class CustomPlaceholders(private val plugin: CV) : PlaceholderExpansion()
                     return "$total"
                 }
 
-                PLAYER_VOTES                        ->
+                PLAYER_VOTES               ->
                 {
                     if (player != null)
                     {
-                        val voter =
-                            if (plugin.hasDatabaseConnection()) PlayerTable.get(plugin, player) else VoteFile.get(
-                                plugin,
-                                player
-                            )
-                        return "${voter.votes}"
+                        return "" + Voter.get(plugin, player).votes
                     }
                     return "0"
                 }
 
-                PLAYER_PERIOD, PLAYER_MONTHLY_VOTES ->
+                PLAYER_VOTES + SUF_MONTHLY ->
                 {
                     if (player != null)
                     {
-                        val voter =
-                            if (plugin.hasDatabaseConnection()) PlayerTable.get(plugin, player) else VoteFile.get(
-                                plugin,
-                                player
-                            )
-                        return "${voter.monthlyVotes}"
+                        return "" + Voter.get(plugin, player).votesMonthly
                     }
                     return "0"
                 }
 
-                VOTE_PARTY_TOTAL                    ->
+                PLAYER_VOTES + SUF_DAILY   ->
                 {
-                    val total = plugin.config.getInt(Settings.VOTES_REQUIRED_FOR_VOTE_PARTY.path)
+                    if (player != null)
+                    {
+                        return "" + Voter.get(plugin, player).votesDaily
+                    }
+                    return "0"
+                }
+
+                PLAYER_STREAK + SUF_DAILY  ->
+                {
+                    if (player != null)
+                    {
+                        return "" + Voter.get(plugin, player).streakDaily
+                    }
+                    return "0"
+                }
+
+                VOTE_PARTY_TOTAL           ->
+                {
+                    val total = plugin.config.getInt(Setting.VOTES_REQUIRED_FOR_VOTE_PARTY.path)
                     return "$total"
                 }
 
-                VOTE_PARTY_CURRENT                  ->
+                VOTE_PARTY_CURRENT         ->
                 {
-                    val current = plugin.data.getInt(Data.CURRENT_VOTES)
+                    val current = plugin.data.getInt(Data.CURRENT_VOTES.path)
                     return "$current"
                 }
 
-                VOTE_PARTY_UNTIL                    ->
+                VOTE_PARTY_UNTIL           ->
                 {
-                    val total = plugin.config.getInt(Settings.VOTES_REQUIRED_FOR_VOTE_PARTY.path)
-                    val current = plugin.data.getInt(Data.CURRENT_VOTES)
+                    val total = plugin.config.getInt(Setting.VOTES_REQUIRED_FOR_VOTE_PARTY.path)
+                    val current = plugin.data.getInt(Data.CURRENT_VOTES.path)
                     val until = total - current
                     return "$until"
                 }
 
-                else                                ->
+                else                       ->
                 {
-                    if (params.contains(PLAYER_VOTES))
+                    when (true)
                     {
-                        val top = params.split("_").toTypedArray()[2].toInt()
-                        val topVoter = Voter.getTopVoter(plugin, top)
-                        return if (params.endsWith("NAME"))
+                        (params.contains(PLAYER_VOTES) && params.contains(SUF_NAME))    ->
                         {
-                            topVoter?.name ?: "Unknown"
-                        } else
-                        {
-                            if (topVoter == null) "0" else "${topVoter.votes}"
+                            return getTopVoter(params)?.name ?: PMessage.PLAYER_NAME_UNKNOWN.toString()
                         }
-                    } else if (params.contains(PLAYER_PERIOD) || params.contains(PLAYER_MONTHLY_VOTES))
-                    {
-                        val key = params.split("_").toTypedArray()[2].toInt()
-                        val topVoter = Voter.getTopVoter(plugin, key)
-                        return if (params.endsWith("NAME"))
+
+                        (params.contains(PLAYER_VOTES) && params.contains(SUF_MONTHLY)) ->
                         {
-                            topVoter?.name ?: "Unknown"
-                        } else
+                            return "" + (getTopVoter(params)?.votesMonthly ?: 0)
+                        }
+
+                        (params.contains(PLAYER_VOTES) && params.contains(SUF_DAILY))   ->
                         {
-                            if (topVoter == null) "0" else "${topVoter.monthlyVotes}"
+                            return "" + (getTopVoter(params)?.votesDaily ?: 0)
+                        }
+
+                        params.contains(PLAYER_VOTES)                                   ->
+                        {
+                            return "" + (getTopVoter(params)?.votes ?: 0)
+                        }
+
+                        else                                                            ->
+                        {
                         }
                     }
                 }
@@ -134,13 +144,23 @@ class CustomPlaceholders(private val plugin: CV) : PlaceholderExpansion()
         return null
     }
 
+    private fun getTopVoter(params: String): Voter?
+    {
+        val key = params.split("_").toTypedArray()[2].toInt()
+        return Voter.getTopVoter(plugin, key)
+    }
+
     companion object
     {
         const val IDENTIFIER = "CV"
         const val SERVER_VOTES = "SERVER_VOTES"
+
         const val PLAYER_VOTES = "PLAYER_VOTES"
-        const val PLAYER_PERIOD = "PLAYER_PERIOD"
-        const val PLAYER_MONTHLY_VOTES = "MONTHLY_VOTES"
+        const val PLAYER_STREAK = "PLAYER_STREAK"
+        const val SUF_MONTHLY = "_MONTHLY"
+        const val SUF_DAILY = "_DAILY"
+        const val SUF_NAME = "_NAME"
+
         const val VOTE_PARTY_TOTAL = "VOTE_PARTY_TOTAL"
         const val VOTE_PARTY_CURRENT = "VOTE_PARTY_CURRENT"
         const val VOTE_PARTY_UNTIL = "VOTE_PARTY_UNTIL"
