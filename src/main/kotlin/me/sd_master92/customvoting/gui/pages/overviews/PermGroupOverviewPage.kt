@@ -12,6 +12,11 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 class PermGroupOverviewPage(private val plugin: CV, backPage: GUI?) :
     GUI(plugin, backPage, PMessage.PERM_GROUP_OVERVIEW_INVENTORY_NAME.toString(), 36)
 {
+    override fun newInstance(): GUI
+    {
+        return PermGroupOverviewPage(plugin, backPage)
+    }
+
     override fun onBack(event: InventoryClickEvent, player: Player)
     {
         SoundType.CLICK.play(plugin, player)

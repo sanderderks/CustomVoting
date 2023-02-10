@@ -18,6 +18,11 @@ import org.bukkit.event.inventory.InventoryOpenEvent
 class VoteSettingsPage(private val plugin: CV, backPage: GUI?) :
     GUI(plugin, backPage, PMessage.SETTINGS_INVENTORY_NAME.toString(), 9)
 {
+    override fun newInstance(): GUI
+    {
+        return VoteSettingsPage(plugin, backPage)
+    }
+
     override fun onBack(event: InventoryClickEvent, player: Player)
     {
     }

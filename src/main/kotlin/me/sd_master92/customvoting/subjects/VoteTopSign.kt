@@ -84,10 +84,11 @@ class VoteTopSign constructor(
                 placeholders["%NUMBER%"] = "" + top
                 placeholders["%PLAYER%"] = topVoter.name
                 placeholders["%VOTES%"] = "${topVoter.votes}"
-                placeholders["%MONTHLY_VOTES%"] = "${topVoter.monthlyVotes}"
+                placeholders["%VOTES_MONTHLY%"] = "${topVoter.votesMonthly}"
+                placeholders["%VOTES_DAILY%"] = "${topVoter.votesDaily}"
                 if (plugin.config.getBoolean(Setting.MONTHLY_VOTES.path))
                 {
-                    placeholders["%s%"] = if (topVoter.monthlyVotes == 1) "" else "s"
+                    placeholders["%s%"] = if (topVoter.votesMonthly == 1) "" else "s"
                 } else
                 {
                     placeholders["%s%"] = if (topVoter.votes == 1) "" else "s"

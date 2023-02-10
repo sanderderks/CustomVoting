@@ -15,6 +15,11 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 class StatisticSettingsPage(private val plugin: CV, backPage: GUI?) :
     GUI(plugin, backPage, PMessage.STATISTICS_INVENTORY_NAME.toString(), 9)
 {
+    override fun newInstance(): GUI
+    {
+        return StatisticSettingsPage(plugin, backPage)
+    }
+
     override fun onBack(event: InventoryClickEvent, player: Player)
     {
         SoundType.CLICK.play(plugin, player)

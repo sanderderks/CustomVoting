@@ -14,7 +14,11 @@ class MilestoneOverviewShortcut(
     private val plugin: CV,
     private val currentPage: GUI
 ) :
-    BaseItem(Material.NETHER_STAR, PMessage.MILESTONE_ITEM_NAME_OVERVIEW.toString())
+    BaseItem(
+        Material.NETHER_STAR,
+        PMessage.MILESTONE_ITEM_NAME_OVERVIEW.toString(),
+        PMessage.MILESTONE_ITEM_LORE_OVERVIEW.toString()
+    )
 {
     override fun onClick(event: InventoryClickEvent, player: Player)
     {

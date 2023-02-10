@@ -11,16 +11,16 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 
-class MilestoneDeleteAction(private val plugin: CV, private val currentPage: GUI, private val number: Int) :
+class StreakDeleteAction(private val plugin: CV, private val currentPage: GUI, private val number: Int) :
     BaseItem(Material.RED_WOOL, PMessage.GENERAL_ITEM_NAME_DELETE.toString())
 {
     override fun onClick(event: InventoryClickEvent, player: Player)
     {
         SoundType.FAILURE.play(plugin, player)
-        plugin.data.delete(Data.MILESTONES.path + ".$number")
+        plugin.data.delete(Data.STREAKS.path + ".$number")
         player.sendMessage(
             PMessage.GENERAL_MESSAGE_DELETE_SUCCESS_X.with(
-                PMessage.MILESTONE_ITEM_NAME_X.with("$number").stripColor()
+                PMessage.STREAK_ITEM_NAME_X.with("$number").stripColor()
             )
         )
         currentPage.cancelCloseEvent = true

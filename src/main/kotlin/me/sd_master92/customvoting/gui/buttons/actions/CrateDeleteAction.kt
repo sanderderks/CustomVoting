@@ -6,7 +6,6 @@ import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.Data
 import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.SoundType
-import me.sd_master92.customvoting.gui.pages.overviews.CrateOverviewPage
 import me.sd_master92.customvoting.stripColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -29,6 +28,6 @@ class CrateDeleteAction(
             )
         )
         currentPage.cancelCloseEvent = true
-        CrateOverviewPage(plugin, currentPage).open(player)
+        currentPage.backPage?.newInstance()?.open(player)
     }
 }

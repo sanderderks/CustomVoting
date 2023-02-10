@@ -15,7 +15,7 @@ import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 
-class RewardSettingsPage(private val plugin: CV, backPage: GUI?, power: Boolean = false) :
+class RewardSettingsPage(private val plugin: CV, backPage: GUI?, private val power: Boolean = false) :
     GUI(
         plugin,
         backPage,
@@ -23,6 +23,11 @@ class RewardSettingsPage(private val plugin: CV, backPage: GUI?, power: Boolean 
         9
     )
 {
+    override fun newInstance(): GUI
+    {
+        return RewardSettingsPage(plugin, backPage, power)
+    }
+
     override fun onBack(event: InventoryClickEvent, player: Player)
     {
         SoundType.CLICK.play(plugin, player)

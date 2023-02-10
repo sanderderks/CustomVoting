@@ -15,7 +15,8 @@ class VotePartySettingsShortcut(
     private val currentPage: GUI
 ) : BaseItem(
     Material.ENDER_CHEST,
-    PMessage.VOTE_PARTY_ITEM_NAME_SETTINGS.toString()
+    PMessage.VOTE_PARTY_ITEM_NAME_SETTINGS.toString(),
+    PMessage.VOTE_PARTY_ITEM_LORE_SETTINGS.toString()
 )
 {
     override fun onClick(event: InventoryClickEvent, player: Player)

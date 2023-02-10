@@ -7,10 +7,10 @@ import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.gui.pages.abstracts.AbstractItemEditor
 
 class CrateRewardItemsEditor(
-    plugin: CV,
+    private val plugin: CV,
     backPage: GUI?,
-    number: Int,
-    percentage: Int
+    private val number: Int,
+    private val percentage: Int
 ) :
     AbstractItemEditor(
         plugin,
@@ -22,3 +22,9 @@ class CrateRewardItemsEditor(
         ),
         27
     )
+{
+    override fun newInstance(): GUI
+    {
+        return CrateRewardItemsEditor(plugin, backPage, number, percentage)
+    }
+}

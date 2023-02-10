@@ -5,24 +5,23 @@ import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.Data
 import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.gui.buttons.abstracts.AbstractRewardItemsButton
-import me.sd_master92.customvoting.gui.pages.editors.LuckyRewardItemsEditor
-import org.bukkit.Material
+import me.sd_master92.customvoting.gui.pages.editors.StreakRewardItemsEditor
 import org.bukkit.entity.Player
 
-class LuckyRewardItemsShortcut(
+class StreakRewardItemsShortcut(
     private val plugin: CV,
-    private val currentPage: GUI
-) : AbstractRewardItemsButton(
-    plugin, currentPage, Data.LUCKY_REWARDS.path, PMessage.LUCKY_ITEM_NAME_REWARDS.toString(), Material.ENDER_CHEST
-)
+    private val currentPage: GUI,
+    private val number: Int
+) :
+    AbstractRewardItemsButton(
+        plugin,
+        currentPage,
+        "${Data.STREAKS}.$number.${Data.ITEM_REWARDS}",
+        PMessage.ITEM_REWARDS_ITEM_NAME.toString()
+    )
 {
     override fun onOpen(player: Player)
     {
-        LuckyRewardItemsEditor(plugin, currentPage).open(player)
-    }
-
-    init
-    {
-        addLore(";" + PMessage.LUCKY_ITEM_LORE_SETTINGS)
+        StreakRewardItemsEditor(plugin, currentPage, number).open(player)
     }
 }

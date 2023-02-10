@@ -13,6 +13,11 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 class MessageSettingsPage(private val plugin: CV, backPage: GUI?) :
     GUI(plugin, backPage, PMessage.MESSAGE_SETTINGS_INVENTORY_NAME.toString(), 18)
 {
+    override fun newInstance(): GUI
+    {
+        return MessageSettingsPage(plugin, backPage)
+    }
+
     override fun onBack(event: InventoryClickEvent, player: Player)
     {
         SoundType.CLICK.play(plugin, player)
@@ -37,6 +42,7 @@ class MessageSettingsPage(private val plugin: CV, backPage: GUI?) :
         addItem(VoteLinksEnabledSwitch(plugin))
         addItem(VoteBroadcastSwitch(plugin))
         addItem(MilestoneBroadcastSwitch(plugin))
+        addItem(StreakBroadcastSwitch(plugin))
         addItem(VotePartyUntilBroadcastSwitch(plugin))
         addItem(VotePartyCountBroadcastSwitch(plugin))
         addItem(VotePartyCountEndBroadcastSwitch(plugin))

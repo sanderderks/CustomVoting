@@ -12,28 +12,28 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 
-class MilestoneCreateAction(private val plugin: CV, private val currentPage: GUI) :
-    BaseItem(Material.CRAFTING_TABLE, PMessage.MILESTONE_ITEM_NAME_ADD.toString())
+class StreakCreateAction(private val plugin: CV, private val currentPage: GUI) :
+    BaseItem(Material.CRAFTING_TABLE, PMessage.STREAK_ITEM_NAME_ADD.toString())
 {
     override fun onClick(event: InventoryClickEvent, player: Player)
     {
         SoundType.CHANGE.play(plugin, player)
         currentPage.cancelCloseEvent = true
         player.closeInventory()
-        player.sendMessage(PMessage.MILESTONE_MESSAGE_NUMBER_ENTER.toString())
+        player.sendMessage(PMessage.STREAK_MESSAGE_NUMBER_ENTER.toString())
         player.sendMessage(PMessage.GENERAL_MESSAGE_CANCEL_BACK.toString())
         object : PlayerNumberInput(plugin, player)
         {
             override fun onNumberReceived(input: Int)
             {
-                val name = PMessage.MILESTONE_ITEM_NAME_X.with("$input").stripColor()
-                if (plugin.data.contains(Data.MILESTONES.path + ".$input"))
+                val name = PMessage.STREAK_ITEM_NAME_X.with("$input").stripColor()
+                if (plugin.data.contains(Data.STREAKS.path + ".$input"))
                 {
                     player.sendMessage(PMessage.GENERAL_ERROR_ALREADY_EXIST_X.with(name))
                 } else
                 {
                     SoundType.SUCCESS.play(plugin, player)
-                    plugin.data.set(Data.MILESTONES.path + ".$input.permissions", ArrayList<String>())
+                    plugin.data.set(Data.STREAKS.path + ".$input.permissions", ArrayList<String>())
                     plugin.data.saveConfig()
                     player.sendMessage(PMessage.GENERAL_MESSAGE_CREATE_SUCCESS_X.with(name))
                     currentPage.newInstance().open(player)

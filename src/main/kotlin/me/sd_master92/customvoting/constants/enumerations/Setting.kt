@@ -24,6 +24,7 @@ enum class Setting(val path: String, private val defaultValue: Any? = null)
     DISABLED_BROADCASTS("disabled_broadcasts"),
     DISABLED_BROADCAST_VOTE("$DISABLED_BROADCASTS.vote", false),
     DISABLED_BROADCAST_MILESTONE("$DISABLED_BROADCASTS.milestone", false),
+    DISABLED_BROADCAST_STREAK("$DISABLED_BROADCASTS.streak", false),
     DISABLED_BROADCAST_OFFLINE("$DISABLED_BROADCASTS.offline", false),
     DISABLED_BROADCAST_VOTE_PARTY_UNTIL("$DISABLED_BROADCASTS.vote_party.until", false),
     DISABLED_BROADCAST_VOTE_PARTY_COUNTDOWN("$DISABLED_BROADCASTS.vote_party_countdown", false),
@@ -76,15 +77,7 @@ enum class Setting(val path: String, private val defaultValue: Any? = null)
                 Pair("monthly_period", MONTHLY_VOTES.path)
             )
 
-            for (migration in keyMigrations)
-            {
-                if (plugin.config.contains(migration.key))
-                {
-                    plugin.config.set(migration.value, plugin.config.get(migration.key))
-                    plugin.config.delete(migration.key)
-                }
-            }
-            plugin.config.saveConfig()
+            plugin.config.keyMigrations(keyMigrations)
         }
     }
 }

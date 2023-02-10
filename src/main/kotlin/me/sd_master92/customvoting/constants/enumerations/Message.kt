@@ -69,7 +69,11 @@ enum class Message(private val path: String, private val defaultValue: Any?)
     VOTE_PARTY_PIG_KILLED("$VOTE_PARTY.pig_killed", "&dPig killed by &b%KILLER%&d! Only &b%TOGO% &dpig%s% to go!"),
 
     MILESTONE("milestone", null),
-    MILESTONE_REACHED("$MILESTONE.milestone_reached", "&b%PLAYER% &dreached milestone #&b%MILESTONE%&d!"),
+    MILESTONE_REACHED("$MILESTONE.milestone_reached", "&b%PLAYER% &dreached vote milestone #&b%MILESTONE%&d!"),
+
+    STREAK("streak", null),
+    STREAK_REACHED("$STREAK.streak_reached", "&b%PLAYER% &dreached vote streak #&b%STREAK%&d!"),
+
     VOTE_REMINDER(
         "vote_reminder",
         listOf("&bYou haven't voted for our server yet today.", "&dUse /vote for nice rewards!")
@@ -112,34 +116,14 @@ enum class Message(private val path: String, private val defaultValue: Any?)
                 Pair("$MILESTONE.streak_reached", MILESTONE_REACHED.path),
             )
 
-            for (migration in keyMigrations)
-            {
-                if (plugin.messages.contains(migration.key))
-                {
-                    plugin.messages.set(migration.value, plugin.messages.get(migration.key))
-                    plugin.messages.delete(migration.key)
-                }
-            }
+            plugin.messages.keyMigrations(keyMigrations)
 
             val valueMigrations = mapOf(
-                Pair("%PERIOD%", "%MONTHLY_VOTES%")
+                Pair("%PERIOD%", "%MONTHLY_VOTES%"),
+                Pair("%MONTHLY_VOTES%", "%VOTES_MONTHLY%")
             )
 
-            for (key in plugin.messages.getKeys(true))
-            {
-                val value = plugin.messages.getString(key)
-                for (migration in valueMigrations)
-                {
-                    if (value?.contains(migration.key) == true)
-                    {
-                        plugin.messages.set(
-                            key,
-                            value.replace(migration.key, migration.value)
-                        )
-                    }
-                }
-            }
-            plugin.messages.saveConfig()
+            plugin.messages.valueMigrations(valueMigrations)
         }
     }
 }

@@ -7,7 +7,6 @@ import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.Data
 import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.SoundType
-import me.sd_master92.customvoting.gui.pages.settings.CrateSettingsPage
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.entity.ArmorStand
@@ -33,7 +32,7 @@ class CrateRenameAction(private val plugin: CV, private val currentPage: GUI, pr
                 plugin.data.set(Data.VOTE_CRATES.path + ".$number.name", input)
                 plugin.data.saveConfig()
                 player.sendMessage(PMessage.CRATE_MESSAGE_NAME_CHANGED_X.with(input))
-                CrateSettingsPage(plugin, currentPage, number).open(player)
+                currentPage.newInstance().open(player)
                 val uuid = plugin.data.getString(Data.VOTE_CRATES.path + ".$number.stand")
                 if (uuid != null)
                 {
@@ -49,7 +48,7 @@ class CrateRenameAction(private val plugin: CV, private val currentPage: GUI, pr
             override fun onCancel()
             {
                 SoundType.FAILURE.play(plugin, player)
-                CrateSettingsPage(plugin, currentPage, number).open(player)
+                currentPage.newInstance().open(player)
             }
         }
     }

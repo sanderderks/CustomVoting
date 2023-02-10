@@ -24,6 +24,11 @@ class VoteLinksMenu constructor(private val plugin: CV) :
         }
     }
 
+    override fun newInstance(): GUI
+    {
+        return this
+    }
+
     override fun onBack(event: InventoryClickEvent, player: Player)
     {
     }

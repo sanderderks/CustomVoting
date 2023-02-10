@@ -6,7 +6,6 @@ import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.constants.models.BStatsData
-import me.sd_master92.customvoting.gui.pages.settings.StatisticSettingsPage
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
@@ -22,6 +21,6 @@ class BStatsRefreshAction(
         SoundType.CLICK.play(plugin, player)
         currentPage.cancelCloseEvent = true
         BStatsData.refresh()
-        StatisticSettingsPage(plugin, currentPage).open(player)
+        currentPage.newInstance().open(player)
     }
 }

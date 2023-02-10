@@ -18,6 +18,11 @@ import java.util.*
 class PlayerInfoOverviewPage(private val plugin: CV, backPage: GUI?, private var page: Int = 0) :
     GUI(plugin, backPage, PMessage.PLAYER_INFO_INVENTORY_NAME_X.with("" + (page + 1)), 54)
 {
+    override fun newInstance(): GUI
+    {
+        return PlayerInfoOverviewPage(plugin, backPage, page)
+    }
+
     override fun onBack(event: InventoryClickEvent, player: Player)
     {
         SoundType.CLICK.play(plugin, player)
@@ -44,11 +49,13 @@ class PlayerInfoOverviewPage(private val plugin: CV, backPage: GUI?, private var
             .format(Date(voter.last)) else PMessage.PLAYER_INFO_VALUE_NEVER.toString()
         meta!!.lore = listOf(
             PMessage.PLAYER_INFO_ITEM_LORE_VOTES_X.with("" + voter.votes),
-            PMessage.PLAYER_INFO_ITEM_LORE_MONTHLY_VOTES_X.with("" + voter.monthlyVotes),
+            PMessage.PLAYER_INFO_ITEM_LORE_VOTES_MONTHLY_X.with("" + voter.votesMonthly),
+            PMessage.PLAYER_INFO_ITEM_LORE_VOTES_DAILY_X.with("" + voter.votesDaily),
+            PMessage.PLAYER_INFO_ITEM_LORE_STREAK_DAILY_X.with("" + voter.streakDaily),
             PMessage.PLAYER_INFO_ITEM_LORE_LAST_X.with(lastVote),
-            PMessage.PLAYER_INFO_ITEM_LORE_PERMISSION_X.with(
-                if (voter.isOpUser) PMessage.RED.toString() + voter.isOpUser else
-                    PMessage.PURPLE.toString() + voter.isOpUser
+            PMessage.PLAYER_INFO_ITEM_LORE_POWER_X.with(
+                if (voter.power) PMessage.RED.toString() + voter.power else
+                    PMessage.PURPLE.toString() + voter.power
             ),
         )
         if (meta.displayName != voter.name)

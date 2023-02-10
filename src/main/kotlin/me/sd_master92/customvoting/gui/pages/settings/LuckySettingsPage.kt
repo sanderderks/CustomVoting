@@ -14,6 +14,11 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 class LuckySettingsPage(private val plugin: CV, backPage: GUI?) :
     GUI(plugin, backPage, PMessage.LUCKY_INVENTORY_NAME_SETTINGS.toString(), 9)
 {
+    override fun newInstance(): GUI
+    {
+        return LuckySettingsPage(plugin, backPage)
+    }
+
     override fun onBack(event: InventoryClickEvent, player: Player)
     {
         SoundType.CLICK.play(plugin, player)

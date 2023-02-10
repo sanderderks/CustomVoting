@@ -186,7 +186,8 @@ class VoteTopStand constructor(private val plugin: CV, private val top: Int, pla
         {
             placeholders["%PLAYER%"] = topVoter.name
             placeholders["%VOTES%"] = "${topVoter.votes}"
-            placeholders["%MONTHLY_VOTES%"] = "${topVoter.monthlyVotes}"
+            placeholders["%VOTES_MONTHLY%"] = "${topVoter.votesMonthly}"
+            placeholders["%VOTES_DAILY%"] = "${topVoter.votesDaily}"
             if (CV.CITIZENS && citizen != null && citizen!!.name != topVoter.name)
             {
                 citizen!!.name = topVoter.name
@@ -198,7 +199,8 @@ class VoteTopStand constructor(private val plugin: CV, private val top: Int, pla
         {
             placeholders["%PLAYER%"] = PMessage.PLAYER_NAME_UNKNOWN_COLORED.toString()
             placeholders["%VOTES%"] = "0"
-            placeholders["%MONTHLY_VOTES%"] = "0"
+            placeholders["%VOTES_MONTHLY%"] = "0"
+            placeholders["%VOTES_DAILY%"] = "0"
             if (CV.CITIZENS && citizen != null && citizen!!.name != PMessage.PLAYER_NAME_UNKNOWN.toString())
             {
                 citizen!!.name = PMessage.PLAYER_NAME_UNKNOWN.toString()

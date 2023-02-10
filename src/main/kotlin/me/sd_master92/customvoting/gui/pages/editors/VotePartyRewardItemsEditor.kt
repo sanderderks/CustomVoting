@@ -7,7 +7,11 @@ import me.sd_master92.customvoting.constants.enumerations.Data
 import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.gui.pages.abstracts.AbstractItemEditor
 
-class VotePartyRewardItemsEditor(plugin: CV, backPage: GUI?, key: String) :
+class VotePartyRewardItemsEditor(
+    private val plugin: CV,
+    backPage: GUI?,
+    private val key: String
+) :
     AbstractItemEditor(
         plugin,
         backPage,
@@ -17,6 +21,11 @@ class VotePartyRewardItemsEditor(plugin: CV, backPage: GUI?, key: String) :
         stack = false
     )
 {
+    override fun newInstance(): GUI
+    {
+        return VotePartyRewardItemsEditor(plugin, backPage, key)
+    }
+
     init
     {
         if (backPage == null)

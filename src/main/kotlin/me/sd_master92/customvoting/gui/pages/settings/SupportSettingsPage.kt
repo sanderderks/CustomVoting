@@ -17,6 +17,11 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 class SupportSettingsPage(private val plugin: CV, backPage: GUI?) :
     GUI(plugin, backPage, PMessage.SUPPORT_INVENTORY_NAME.toString(), 9)
 {
+    override fun newInstance(): GUI
+    {
+        return SupportSettingsPage(plugin, backPage)
+    }
+
     override fun onBack(event: InventoryClickEvent, player: Player)
     {
         SoundType.CLICK.play(plugin, player)

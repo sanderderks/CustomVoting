@@ -13,7 +13,7 @@ import org.bukkit.event.inventory.InventoryClickEvent
 class CrateOverviewShortcut(private val plugin: CV, private val currentPage: GUI) : BaseItem(
     Material.TRIPWIRE_HOOK,
     PMessage.CRATE_ITEM_NAME_OVERVIEW.toString(),
-    null,
+    PMessage.CRATE_ITEM_LORE_OVERVIEW.toString(),
     true
 )
 {

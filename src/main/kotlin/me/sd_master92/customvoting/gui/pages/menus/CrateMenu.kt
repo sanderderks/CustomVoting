@@ -28,6 +28,11 @@ class CrateMenu(private val plugin: CV, private val player: Player, path: String
     private var rewards = mutableMapOf<Int, Array<ItemStack>>()
     private var allRewards = mutableListOf<ItemStack>()
 
+    override fun newInstance(): GUI
+    {
+        return this
+    }
+
     override fun onBack(event: InventoryClickEvent, player: Player)
     {
     }

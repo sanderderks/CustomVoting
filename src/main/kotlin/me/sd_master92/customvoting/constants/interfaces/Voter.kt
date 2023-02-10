@@ -13,17 +13,23 @@ interface Voter
     val uuid: String
     val name: String
     val votes: Int
-    val monthlyVotes: Int
+    val votesDaily: Int
+    val votesMonthly: Int
     val last: Long
-    val isOpUser: Boolean
+    val power: Boolean
     val queue: List<String>
+    val streakDaily: Int
 
     fun setVotes(n: Int, update: Boolean)
     fun addVote(): Boolean
     fun addQueue(site: String): Boolean
     fun clearMonthlyVotes()
     fun clearQueue(): Boolean
-    fun setIsOpUser(isOpUser: Boolean): Boolean
+    fun setPower(power: Boolean): Boolean
+    fun addStreak(): Boolean
+    fun clearStreak(): Boolean
+    fun addDailyVote(): Boolean
+    fun clearDailyVotes(): Boolean
 
     companion object
     {
@@ -46,7 +52,7 @@ interface Voter
                 topVoters.sortWith { x: Voter, y: Voter ->
                     var compare = if (useMonthly)
                     {
-                        y.monthlyVotes.compareTo(x.monthlyVotes)
+                        y.votesMonthly.compareTo(x.votesMonthly)
                     } else
                     {
                         y.votes.compareTo(x.votes)

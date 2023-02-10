@@ -13,7 +13,7 @@ import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 
-class CrateSettingsPage(private val plugin: CV, backPage: GUI?, number: Int) : GUI(
+class CrateSettingsPage(private val plugin: CV, backPage: GUI?, private val number: Int) : GUI(
     plugin,
     backPage,
     (plugin.data.getString(Data.VOTE_CRATES.path + ".$number.name")
@@ -21,6 +21,11 @@ class CrateSettingsPage(private val plugin: CV, backPage: GUI?, number: Int) : G
     9
 )
 {
+    override fun newInstance(): GUI
+    {
+        return CrateSettingsPage(plugin, backPage, number)
+    }
+
     override fun onBack(event: InventoryClickEvent, player: Player)
     {
         SoundType.CLICK.play(plugin, player)

@@ -6,7 +6,6 @@ import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.Data
 import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.SoundType
-import me.sd_master92.customvoting.gui.pages.overviews.CrateOverviewPage
 import me.sd_master92.customvoting.stripColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -37,6 +36,6 @@ class CrateCreateAction(private val plugin: CV, private val currentPage: GUI) :
         plugin.data.saveConfig()
         player.sendMessage(PMessage.GENERAL_MESSAGE_CREATE_SUCCESS_X.with(name))
         currentPage.cancelCloseEvent = true
-        CrateOverviewPage(plugin, currentPage).open(player)
+        currentPage.newInstance().open(player)
     }
 }

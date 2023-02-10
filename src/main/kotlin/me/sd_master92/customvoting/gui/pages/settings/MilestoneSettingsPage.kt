@@ -12,9 +12,14 @@ import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 
-class MilestoneSettingsPage(private val plugin: CV, backPage: GUI?, number: Int) :
+class MilestoneSettingsPage(private val plugin: CV, backPage: GUI?, private val number: Int) :
     GUI(plugin, backPage, PMessage.MILESTONE_INVENTORY_NAME_X.with("$number"), 9)
 {
+    override fun newInstance(): GUI
+    {
+        return MilestoneSettingsPage(plugin, backPage, number)
+    }
+
     override fun onBack(event: InventoryClickEvent, player: Player)
     {
         SoundType.CLICK.play(plugin, player)

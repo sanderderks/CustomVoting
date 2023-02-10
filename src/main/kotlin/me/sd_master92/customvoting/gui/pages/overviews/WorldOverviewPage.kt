@@ -13,6 +13,10 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 class WorldOverviewPage(private val plugin: CV, backPage: GUI?) :
     GUI(plugin, backPage, PMessage.DISABLED_WORLD_OVERVIEW_INVENTORY_NAME.toString(), 27)
 {
+    override fun newInstance(): GUI
+    {
+        return WorldOverviewPage(plugin, backPage)
+    }
 
     override fun onBack(event: InventoryClickEvent, player: Player)
     {

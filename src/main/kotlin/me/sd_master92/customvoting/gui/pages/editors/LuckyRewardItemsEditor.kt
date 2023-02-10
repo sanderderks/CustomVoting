@@ -6,7 +6,7 @@ import me.sd_master92.customvoting.constants.enumerations.Data
 import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.gui.pages.abstracts.AbstractItemEditor
 
-class LuckyRewardItemsEditor(plugin: CV, backPage: GUI?) :
+class LuckyRewardItemsEditor(private val plugin: CV, backPage: GUI?) :
     AbstractItemEditor(
         plugin,
         backPage,
@@ -14,3 +14,9 @@ class LuckyRewardItemsEditor(plugin: CV, backPage: GUI?) :
         PMessage.LUCKY_INVENTORY_NAME_REWARDS.toString(),
         27
     )
+{
+    override fun newInstance(): GUI
+    {
+        return LuckyRewardItemsEditor(plugin, backPage)
+    }
+}

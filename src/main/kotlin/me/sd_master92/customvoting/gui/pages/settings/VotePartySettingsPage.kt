@@ -16,6 +16,11 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 class VotePartySettingsPage(private val plugin: CV, backPage: GUI?) :
     GUI(plugin, backPage, PMessage.VOTE_PARTY_INVENTORY_NAME_SETTINGS.toString(), 9)
 {
+    override fun newInstance(): GUI
+    {
+        return VotePartySettingsPage(plugin, backPage)
+    }
+
     override fun onBack(event: InventoryClickEvent, player: Player)
     {
         SoundType.CLICK.play(plugin, player)

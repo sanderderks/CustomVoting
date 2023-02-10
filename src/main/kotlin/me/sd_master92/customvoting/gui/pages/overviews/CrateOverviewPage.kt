@@ -19,6 +19,11 @@ class CrateOverviewPage(private val plugin: CV, backPage: GUI?) :
         calculateInventorySize(plugin)
     )
 {
+    override fun newInstance(): GUI
+    {
+        return CrateOverviewPage(plugin, backPage)
+    }
+
     override fun onBack(event: InventoryClickEvent, player: Player)
     {
         SoundType.CLICK.play(plugin, player)

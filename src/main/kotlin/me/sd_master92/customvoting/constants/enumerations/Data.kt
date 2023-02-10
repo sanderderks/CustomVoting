@@ -16,6 +16,7 @@ enum class Data(val path: String)
     VOTE_LINK_ITEMS("vote_link_items"),
     VOTE_LINKS("vote_links"),
     MILESTONES("milestones"),
+    STREAKS("streaks"),
     VOTE_SITES("vote_sites"),
     VOTE_CRATES("vote_crates");
 
@@ -40,15 +41,7 @@ enum class Data(val path: String)
                 Pair("vote_streaks", MILESTONES.path)
             )
 
-            for (migration in keyMigrations)
-            {
-                if (plugin.data.contains(migration.key))
-                {
-                    plugin.data.set(migration.value, plugin.data.get(migration.key))
-                    plugin.data.delete(migration.key)
-                }
-            }
-            plugin.data.saveConfig()
+            plugin.data.keyMigrations(keyMigrations)
         }
     }
 }

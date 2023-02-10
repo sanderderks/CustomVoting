@@ -20,10 +20,11 @@ class VotesCommand(private val plugin: CV) : SimpleCommand(plugin, "votes")
                 val placeholders = HashMap<String, String>()
                 val voter = Voter.get(plugin, sender)
                 placeholders["%VOTES%"] = "${voter.votes}"
-                placeholders["%MONTHLY_VOTES%"] = "${voter.monthlyVotes}"
+                placeholders["%VOTES_MONTHLY%"] = "${voter.votesMonthly}"
+                placeholders["%VOTES_DAILY%"] = "${voter.votesDaily}"
                 if (plugin.config.getBoolean(Setting.MONTHLY_VOTES.path))
                 {
-                    placeholders["%s%"] = if (voter.monthlyVotes == 1) "" else "s"
+                    placeholders["%s%"] = if (voter.votesMonthly == 1) "" else "s"
                 } else
                 {
                     placeholders["%s%"] = if (voter.votes == 1) "" else "s"
@@ -39,10 +40,11 @@ class VotesCommand(private val plugin: CV) : SimpleCommand(plugin, "votes")
                 val placeholders = HashMap<String, String>()
                 placeholders["%PLAYER%"] = voter.name
                 placeholders["%VOTES%"] = "${voter.votes}"
-                placeholders["%MONTHLY_VOTES%"] = "${voter.monthlyVotes}"
+                placeholders["%VOTES_MONTHLY%"] = "${voter.votesMonthly}"
+                placeholders["%VOTES_DAILY%"] = "${voter.votesDaily}"
                 if (plugin.config.getBoolean(Setting.MONTHLY_VOTES.path))
                 {
-                    placeholders["%s%"] = if (voter.monthlyVotes == 1) "" else "s"
+                    placeholders["%s%"] = if (voter.votesMonthly == 1) "" else "s"
                 } else
                 {
                     placeholders["%s%"] = if (voter.votes == 1) "" else "s"

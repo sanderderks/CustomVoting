@@ -19,6 +19,11 @@ import org.bukkit.inventory.ItemStack
 class PermUserOverviewPage(private val plugin: CV, backPage: GUI?, private var page: Int = 0) :
     GUI(plugin, backPage, PMessage.PERM_USER_OVERVIEW_INVENTORY_NAME_X.with("" + (page + 1)), 54)
 {
+    override fun newInstance(): GUI
+    {
+        return PermUserOverviewPage(plugin, backPage, page)
+    }
+
     override fun onBack(event: InventoryClickEvent, player: Player)
     {
         SoundType.CLICK.play(plugin, player)
@@ -37,7 +42,7 @@ class PermUserOverviewPage(private val plugin: CV, backPage: GUI?, private var p
             val voter = Voter.getByName(plugin, name)
             if (voter != null)
             {
-                voter.setIsOpUser(!voter.isOpUser)
+                voter.setPower(!voter.power)
                 event.currentItem = getSkull(voter)
             } else
             {
@@ -61,11 +66,11 @@ class PermUserOverviewPage(private val plugin: CV, backPage: GUI?, private var p
         val meta = skull.itemMeta!!
         val lore = mutableListOf(
             PMessage.GENERAL_ITEM_LORE_ENABLED_X.with(
-                if (voter.isOpUser)
+                if (voter.power)
                     PMessage.GENERAL_VALUE_YES.toString() else PMessage.GENERAL_VALUE_NO.toString()
             )
         )
-        lore.addAll(PMessage.PERM_USER_OVERVIEW_ITEM_LORE.toString().split(";;"))
+        lore.addAll((";" + PMessage.PERM_USER_OVERVIEW_ITEM_LORE.toString()).split(";"))
         meta.lore = lore
         if (meta.displayName != voter.name)
         {

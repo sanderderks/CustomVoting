@@ -1,6 +1,7 @@
 package me.sd_master92.customvoting.gui.pages.editors
 
 import me.sd_master92.core.input.PlayerStringInput
+import me.sd_master92.core.inventory.GUI
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.Data
 import me.sd_master92.customvoting.constants.enumerations.PMessage
@@ -25,6 +26,11 @@ class VoteLinksEditor constructor(private val plugin: CV) :
         false
     )
 {
+    override fun newInstance(): GUI
+    {
+        return this
+    }
+
     override fun onClick(event: InventoryClickEvent, player: Player)
     {
         if (event.click == ClickType.RIGHT)

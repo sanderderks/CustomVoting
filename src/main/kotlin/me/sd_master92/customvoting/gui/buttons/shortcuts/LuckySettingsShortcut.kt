@@ -15,7 +15,7 @@ class LuckySettingsShortcut(
     private val currentPage: GUI
 ) : BaseItem(
     Material.TOTEM_OF_UNDYING, PMessage.LUCKY_ITEM_NAME_SETTINGS.toString(),
-    null, true
+    PMessage.LUCKY_ITEM_LORE_SETTINGS.toString(), true
 )
 {
     override fun onClick(event: InventoryClickEvent, player: Player)

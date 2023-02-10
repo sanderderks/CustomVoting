@@ -108,12 +108,12 @@ fun Player.addToInventoryOrDrop(item: ItemStack)
     this.inventory.addItem(item).values.forEach { this.world.dropItemNaturally(this.location, it) }
 }
 
-fun Player.hasPermissionRewards(plugin: CV): Boolean
+fun Player.hasPowerRewards(plugin: CV): Boolean
 {
-    return this.hasPermissionRewardsByGroup(plugin) || this.hasPermissionRewardsByUser(plugin)
+    return this.hasPowerRewardsByGroup(plugin) || this.hasPowerRewardsByUser(plugin)
 }
 
-fun Player.hasPermissionRewardsByGroup(plugin: CV): Boolean
+fun Player.hasPowerRewardsByGroup(plugin: CV): Boolean
 {
     if (CV.PERMISSION != null)
     {
@@ -134,10 +134,10 @@ fun Player.hasPermissionRewardsByGroup(plugin: CV): Boolean
     return false
 }
 
-fun Player.hasPermissionRewardsByUser(plugin: CV): Boolean
+fun Player.hasPowerRewardsByUser(plugin: CV): Boolean
 {
     val voter = if (plugin.hasDatabaseConnection()) PlayerTable.get(plugin, this) else VoteFile.get(plugin, this)
-    return voter.isOpUser
+    return voter.power
 }
 
 fun Player.getPlayerFile(plugin: CV): PlayerFile
@@ -168,4 +168,11 @@ fun OfflinePlayer?.getSkull(): ItemStack
 fun String.getOfflinePlayer(): OfflinePlayer?
 {
     return Bukkit.getOfflinePlayers().toList().firstOrNull { player -> player.name == this }
+}
+
+fun Long.dayDifferenceToday(): Int
+{
+    val calendar = Calendar.getInstance()
+    calendar.time = Date(this)
+    return Calendar.getInstance()[Calendar.DAY_OF_YEAR] - calendar[Calendar.DAY_OF_YEAR]
 }

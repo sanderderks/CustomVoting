@@ -21,6 +21,9 @@ class CustomVote(
     private val queued: Boolean = false
 ) : Vote(vote)
 {
+    private var previousLast: Long = 0
+    private var votes = 0
+
     private fun forwardVote()
     {
         val player = Bukkit.getPlayer(username)
@@ -38,9 +41,12 @@ class CustomVote(
         } else
         {
             broadcast(player)
-            Voter.get(plugin, player).addVote()
+            val voter = Voter.get(plugin, player)
+            previousLast = voter.last
+            votes = voter.votes
+            voter.addVote()
             ParticleHelper.shootFirework(plugin, player.location)
-            giveRewards(player, player.hasPermissionRewards(plugin))
+            giveRewards(player, player.hasPowerRewards(plugin))
             if (plugin.config.getBoolean(Setting.VOTE_PARTY.path))
             {
                 subtractVotesUntilVoteParty()
@@ -147,6 +153,7 @@ class CustomVote(
         }
         giveLuckyReward(player)
         giveMilestoneRewards(player)
+        giveStreakRewards(player)
 
         val message = rewardMessage
         if (message.isNotEmpty())
@@ -213,7 +220,7 @@ class CustomVote(
 
     private fun giveMilestoneRewards(player: Player)
     {
-        val votes = VoteFile.get(plugin, player).votes
+        val votes = Voter.get(plugin, player).votes
         if (plugin.data.contains(Data.MILESTONES.path + ".$votes"))
         {
             if (!plugin.config.getBoolean(Setting.DISABLED_BROADCAST_MILESTONE.path))
@@ -238,6 +245,40 @@ class CustomVote(
                 plugin.runCommand(command.replace("%PLAYER%", player.name).withPlaceholders(player))
             }
             player.addToInventoryOrDrop(plugin.data.getItems("${Data.MILESTONES}.$votes.${Data.ITEM_REWARDS}"))
+        }
+    }
+
+    private fun giveStreakRewards(player: Player)
+    {
+        val voter = Voter.get(plugin, player)
+        val streak = voter.streakDaily
+        if (plugin.data.contains(Data.STREAKS.path + ".$streak"))
+        {
+            if (previousLast.dayDifferenceToday() == 1 || votes == 0)
+            {
+                if (!plugin.config.getBoolean(Setting.DISABLED_BROADCAST_STREAK.path))
+                {
+                    val placeholders = HashMap<String, String>()
+                    placeholders["%PLAYER%"] = player.name
+                    placeholders["%STREAK%"] = "$streak"
+                    player.sendText(plugin, Message.STREAK_REACHED, placeholders)
+                }
+
+                val permissions = plugin.data.getStringList(Data.STREAKS.path + ".$streak.permissions")
+                if (CV.PERMISSION != null)
+                {
+                    for (permission in permissions)
+                    {
+                        CV.PERMISSION!!.playerAdd(null, player, permission)
+                    }
+                }
+                val commands = plugin.data.getStringList(Data.STREAKS.path + ".$streak.commands")
+                for (command in commands)
+                {
+                    plugin.runCommand(command.replace("%PLAYER%", player.name).withPlaceholders(player))
+                }
+                player.addToInventoryOrDrop(plugin.data.getItems("${Data.STREAKS}.$streak.${Data.ITEM_REWARDS}"))
+            }
         }
     }
 

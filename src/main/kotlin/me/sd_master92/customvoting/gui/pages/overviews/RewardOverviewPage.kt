@@ -12,6 +12,11 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 class RewardOverviewPage(private val plugin: CV, backPage: GUI?) :
     GUI(plugin, backPage, PMessage.REWARD_SETTINGS_INVENTORY_NAME_OVERVIEW.toString(), 9)
 {
+    override fun newInstance(): GUI
+    {
+        return RewardOverviewPage(plugin, backPage)
+    }
+
     override fun onBack(event: InventoryClickEvent, player: Player)
     {
         SoundType.CLICK.play(plugin, player)
@@ -37,6 +42,7 @@ class RewardOverviewPage(private val plugin: CV, backPage: GUI?) :
         addItem(PowerRewardSettingsShortcut(plugin, this))
         addItem(LuckySettingsShortcut(plugin, this))
         addItem(MilestoneOverviewShortcut(plugin, this))
+        addItem(StreakOverviewShortcut(plugin, this))
         addItem(VotePartySettingsShortcut(plugin, this))
         addItem(CrateOverviewShortcut(plugin, this))
     }
