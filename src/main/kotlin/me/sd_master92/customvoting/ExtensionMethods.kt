@@ -5,7 +5,7 @@ import me.sd_master92.core.file.PlayerFile
 import me.sd_master92.customvoting.constants.enumerations.Message
 import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.Setting
-import me.sd_master92.customvoting.database.PlayerTable
+import me.sd_master92.customvoting.constants.interfaces.Voter
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
 import org.bukkit.Bukkit
@@ -108,18 +108,18 @@ fun Player.addToInventoryOrDrop(item: ItemStack)
     this.inventory.addItem(item).values.forEach { this.world.dropItemNaturally(this.location, it) }
 }
 
-fun Player.hasPowerRewards(plugin: CV): Boolean
+fun OfflinePlayer.hasPowerRewards(plugin: CV): Boolean
 {
     return this.hasPowerRewardsByGroup(plugin) || this.hasPowerRewardsByUser(plugin)
 }
 
-fun Player.hasPowerRewardsByGroup(plugin: CV): Boolean
+fun OfflinePlayer.hasPowerRewardsByGroup(plugin: CV): Boolean
 {
     if (CV.PERMISSION != null)
     {
         try
         {
-            for (group in CV.PERMISSION!!.getPlayerGroups(this))
+            for (group in CV.PERMISSION!!.getPlayerGroups(null, this))
             {
                 if (plugin.config.getStringList(Setting.ENABLED_PERM_GROUPS.path).contains(group.lowercase()))
                 {
@@ -134,10 +134,13 @@ fun Player.hasPowerRewardsByGroup(plugin: CV): Boolean
     return false
 }
 
-fun Player.hasPowerRewardsByUser(plugin: CV): Boolean
+fun OfflinePlayer.hasPowerRewardsByUser(plugin: CV): Boolean
 {
-    val voter = if (plugin.hasDatabaseConnection()) PlayerTable.get(plugin, this) else VoteFile.get(plugin, this)
-    return voter.power
+    if (this is Player)
+    {
+        return Voter.get(plugin, this).power
+    }
+    return false
 }
 
 fun Player.getPlayerFile(plugin: CV): PlayerFile

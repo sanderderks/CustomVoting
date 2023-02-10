@@ -7,7 +7,7 @@ import java.util.*
 enum class ItemRewardType(val label: String) : CarouselEnum
 {
     ALL_ITEMS("All Items"),
-    RANDOM_ITEM("Randomly");
+    RANDOM_ITEM("Random Item");
 
     override fun next(): ItemRewardType
     {

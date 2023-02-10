@@ -87,6 +87,12 @@ enum class PMessage(
     DISABLED_WORLD_OVERVIEW_ITEM_LORE("For receiving rewards.", GRAY),
     DISABLED_WORLD_ITEM_NAME_X("$X", PURPLE),
     DISABLED_WORLD_ITEM_NAME_MESSAGE("Disabled World Message", PURPLE),
+    DISABLED_WORLD_ITEM_NAME_OVERWORLD("Overworld", GREEN),
+    DISABLED_WORLD_ITEM_NAME_NETHER("Nether", RED),
+    DISABLED_WORLD_ITEM_NAME_END("The End", AQUA),
+    DISABLED_WORLD_NAME_OVERWORLD("world"),
+    DISABLED_WORLD_NAME_NETHER("world_nether"),
+    DISABLED_WORLD_NAME_END("world_the_end"),
 
     DISCORD_ITEM_LORE("Join the Discord server", GRAY),
     DISCORD_ITEM_NAME("Discord", PURPLE),
@@ -140,6 +146,8 @@ enum class PMessage(
     GENERAL_VALUE_DISABLED("Disabled", RED),
     GENERAL_VALUE_NO("No", RED),
     GENERAL_VALUE_YES("Yes", GREEN),
+    GENERAL_VALUE_FALSE("false", PURPLE),
+    GENERAL_VALUE_TRUE("true", RED),
     GENERAL_FORMAT_DATE("dd-MM-yyyy"),
 
     GENERAL_SETTINGS_INVENTORY_NAME("General Settings"),
