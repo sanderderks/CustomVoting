@@ -1,5 +1,6 @@
 # CustomVoting by sd_master92
 
+language: 0
 monthly_reset: false
 sound_effects: true
 firework: true
@@ -34,3 +35,5 @@ disabled_broadcasts:
     countdown: false
     countdown_ending: false
 first_vote_broadcast_only: false
+uuid_storage: true
+vote_settings_enabled: true
