@@ -2,6 +2,7 @@ package me.sd_master92.customvoting
 
 import me.clip.placeholderapi.PlaceholderAPI
 import me.sd_master92.core.file.PlayerFile
+import me.sd_master92.core.plugin.CustomPlugin
 import me.sd_master92.customvoting.constants.enumerations.Message
 import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.Setting
@@ -183,6 +184,11 @@ fun Long.dayDifferenceToday(): Int
 
 fun Locale.setLanguage()
 {
-    ResourceBundle.clearCache()
     CV.RESOURCE_BUNDLE = ResourceBundle.getBundle("language/messages", this)
+
+    CustomPlugin.SAVE_TEXT = PMessage.GENERAL_VALUE_SAVE.toString()
+    CustomPlugin.BACK_TEXT = PMessage.GENERAL_VALUE_BACK.toString()
+    CustomPlugin.STATUS_TEXT = PMessage.GENERAL_ITEM_LORE_STATUS.toString()
+    CustomPlugin.ON_TEXT = PMessage.GENERAL_VALUE_ON.toString()
+    CustomPlugin.OFF_TEXT = PMessage.GENERAL_VALUE_OFF.toString()
 }

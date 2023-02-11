@@ -5,8 +5,8 @@ import me.sd_master92.customvoting.constants.interfaces.EnumCompanion
 
 enum class ItemRewardType(val label: String) : CarouselEnum
 {
-    ALL_ITEMS("All Items"),
-    RANDOM_ITEM("Random Item");
+    ALL_ITEMS(PMessage.ENUM_ITEM_REWARD_TYPE_ALL.toString()),
+    RANDOM_ITEM(PMessage.ENUM_ITEM_REWARD_TYPE_RANDOM.toString());
 
     override fun next(): ItemRewardType
     {

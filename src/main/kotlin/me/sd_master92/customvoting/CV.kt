@@ -197,6 +197,8 @@ class CV : CustomPlugin(
         Language.get(this).locale.setLanguage()
         Message.initialize(this)
         Data.initialize(this)
+
+        CustomFile("messages.nl.yml", this)
     }
 
     private fun setupDatabase()
