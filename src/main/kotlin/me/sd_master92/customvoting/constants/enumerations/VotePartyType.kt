@@ -30,15 +30,18 @@ enum class VotePartyType(val label: String) : CarouselEnum
     {
         fun random(): VotePartyType
         {
-            return valueOf(Random().nextInt(1, values().size))
+            return values()[Random().nextInt(1, values().size)]
         }
 
-        override fun valueOf(value: Int): VotePartyType
+        override fun valueOf(key: Int): VotePartyType
         {
-            val votePartyType = Arrays.stream(values())
-                .filter { type: VotePartyType -> type.ordinal == value }
-                .findFirst()
-            return votePartyType.orElse(RANDOMLY)
+            return try
+            {
+                values()[key]
+            } catch (_: Exception)
+            {
+                values()[0]
+            }
         }
     }
 }

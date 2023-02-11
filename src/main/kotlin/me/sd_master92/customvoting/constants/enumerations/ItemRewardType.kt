@@ -2,7 +2,6 @@ package me.sd_master92.customvoting.constants.enumerations
 
 import me.sd_master92.customvoting.constants.interfaces.CarouselEnum
 import me.sd_master92.customvoting.constants.interfaces.EnumCompanion
-import java.util.*
 
 enum class ItemRewardType(val label: String) : CarouselEnum
 {
@@ -22,12 +21,15 @@ enum class ItemRewardType(val label: String) : CarouselEnum
 
     companion object : EnumCompanion
     {
-        override fun valueOf(value: Int): ItemRewardType
+        override fun valueOf(key: Int): ItemRewardType
         {
-            val itemRewardType = Arrays.stream(values())
-                .filter { type: ItemRewardType -> type.ordinal == value }
-                .findFirst()
-            return itemRewardType.orElse(ALL_ITEMS)
+            return try
+            {
+                values()[key]
+            } catch (_: Exception)
+            {
+                values()[0]
+            }
         }
     }
 }

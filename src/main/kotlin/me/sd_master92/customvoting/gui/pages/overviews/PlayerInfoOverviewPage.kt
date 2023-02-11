@@ -63,7 +63,7 @@ class PlayerInfoOverviewPage(private val plugin: CV, backPage: GUI?, private var
         )
         if (meta.displayName != voter.name)
         {
-            meta.setDisplayName(PMessage.AQUA.toString() + voter.name)
+            meta.setDisplayName(PMessage.AQUA.getColor() + voter.name)
         }
         skull.itemMeta = meta
         return skull

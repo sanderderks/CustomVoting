@@ -18,6 +18,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.SkullMeta
 import java.util.*
 
+
 fun String.withPlaceholders(player: Player): String
 {
     return if (CV.PAPI)
@@ -178,4 +179,10 @@ fun Long.dayDifferenceToday(): Int
     val calendar = Calendar.getInstance()
     calendar.time = Date(this)
     return Calendar.getInstance()[Calendar.DAY_OF_YEAR] - calendar[Calendar.DAY_OF_YEAR]
+}
+
+fun Locale.setLanguage()
+{
+    ResourceBundle.clearCache()
+    CV.RESOURCE_BUNDLE = ResourceBundle.getBundle("language/messages", this)
 }

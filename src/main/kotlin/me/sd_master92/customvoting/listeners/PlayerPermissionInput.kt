@@ -61,7 +61,7 @@ abstract class PlayerPermissionInput(
             player.sendMessage(PMessage.PERMISSION_REWARDS_MESSAGE_TITLE.toString())
             for (permission in permissions)
             {
-                player.sendMessage(PMessage.GREEN.toString() + permission)
+                player.sendMessage(PMessage.GREEN.getColor() + permission)
             }
         }
     }

@@ -4,6 +4,7 @@ import me.sd_master92.customvoting.CV
 
 enum class Setting(val path: String, private val defaultValue: Any? = null)
 {
+    LANGUAGE("language", 0),
     MONTHLY_RESET("monthly_reset", false),
     MONTHLY_VOTES("monthly_votes", false),
     USE_SOUND_EFFECTS("sound_effects", true),

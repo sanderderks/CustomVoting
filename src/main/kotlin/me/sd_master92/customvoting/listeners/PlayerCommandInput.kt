@@ -71,7 +71,7 @@ abstract class PlayerCommandInput(
             player.sendMessage(PMessage.COMMAND_REWARDS_MESSAGE_TITLE.toString())
             for (command in commands)
             {
-                player.sendMessage(PMessage.GRAY.toString() + "/" + PMessage.GREEN + command)
+                player.sendMessage(PMessage.GRAY.getColor() + "/" + PMessage.GREEN.getColor() + command)
             }
         }
     }

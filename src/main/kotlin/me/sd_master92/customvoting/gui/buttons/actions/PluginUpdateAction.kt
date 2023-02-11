@@ -28,10 +28,10 @@ class PluginUpdateAction(private val plugin: CV, private val currentPage: GUI) :
     {
         val lore = if (plugin.isUpToDate())
         {
-            PMessage.GENERAL_VALUE_YES.toString() + ";" + PMessage.GENERAL_ITEM_LORE_CURRENT_X.with(PMessage.GREEN.toString() + plugin.version)
+            PMessage.GENERAL_VALUE_YES.toString() + ";" + PMessage.GENERAL_ITEM_LORE_CURRENT_X.with(PMessage.GREEN.getColor() + plugin.version)
         } else
         {
-            PMessage.GENERAL_ITEM_LORE_CURRENT_X.with(PMessage.RED.toString() + plugin.version) + ";" + PMessage.PLUGIN_VERSION_ITEM_LORE_LATEST_X.with(
+            PMessage.GENERAL_ITEM_LORE_CURRENT_X.with(PMessage.RED.getColor() + plugin.version) + ";" + PMessage.PLUGIN_VERSION_ITEM_LORE_LATEST_X.with(
                 plugin.latestVersion
             )
         }

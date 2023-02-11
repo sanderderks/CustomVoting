@@ -7,10 +7,7 @@ import me.sd_master92.core.infoLog
 import me.sd_master92.core.plugin.CustomPlugin
 import me.sd_master92.customvoting.commands.*
 import me.sd_master92.customvoting.commands.voteparty.VotePartyCommand
-import me.sd_master92.customvoting.constants.enumerations.Data
-import me.sd_master92.customvoting.constants.enumerations.Message
-import me.sd_master92.customvoting.constants.enumerations.Setting
-import me.sd_master92.customvoting.constants.enumerations.VotePartyType
+import me.sd_master92.customvoting.constants.enumerations.*
 import me.sd_master92.customvoting.constants.interfaces.Voter
 import me.sd_master92.customvoting.database.PlayerDatabase
 import me.sd_master92.customvoting.database.PlayerTable
@@ -25,6 +22,7 @@ import org.bstats.bukkit.Metrics
 import org.bstats.charts.AdvancedPie
 import org.bstats.charts.SimplePie
 import org.bukkit.Bukkit
+import java.util.*
 import kotlin.system.measureTimeMillis
 
 
@@ -196,6 +194,7 @@ class CV : CustomPlugin(
         } / 1000
         infoLog("|___finished caching in ${time}s")
         Setting.initialize(this)
+        Language.get(this).locale.setLanguage()
         Message.initialize(this)
         Data.initialize(this)
     }
@@ -230,9 +229,9 @@ class CV : CustomPlugin(
         metrics.addCustomChart(SimplePie("lucky_vote_enabled") { if (config.getBoolean(Setting.LUCKY_VOTE.path)) "true" else "false" })
         metrics.addCustomChart(SimplePie("uuid_support") { if (config.getBoolean(Setting.UUID_STORAGE.path)) "true" else "false" })
         metrics.addCustomChart(SimplePie("vote_party_type") {
-            if (config.getBoolean(Setting.VOTE_PARTY.path)) VotePartyType.valueOf(
+            if (config.getBoolean(Setting.VOTE_PARTY.path)) VotePartyType.values()[
                 config.getNumber(Setting.VOTE_PARTY_TYPE.path)
-            ).label else "None"
+            ].label else "None"
         })
         metrics.addCustomChart(SimplePie("vote_crates") {
             if (data.getLocations(Data.VOTE_CRATES.path).isNotEmpty()) "true" else "false"
@@ -325,6 +324,7 @@ class CV : CustomPlugin(
 
     companion object
     {
+        var RESOURCE_BUNDLE: ResourceBundle? = null
         var PAPI = false
             private set
         var CITIZENS = false

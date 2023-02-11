@@ -38,6 +38,7 @@
                     <include>settings.yml</include>
                     <include>messages.yml</include>
                     <include>data.yml</include>
+                    <include>language/*</include>
                 </includes>
                 <excludes>
                     <exclude>**/*.java</exclude>

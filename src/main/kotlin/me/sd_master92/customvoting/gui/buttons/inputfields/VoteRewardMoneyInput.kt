@@ -58,7 +58,7 @@ class VoteRewardMoneyInput(
         val path = plugin.config.getDouble(Setting.VOTE_REWARD_MONEY.path.appendWhenTrue(power, Setting.POWER_REWARDS))
         if (CV.ECONOMY != null)
         {
-            setLore(PMessage.GENERAL_ITEM_LORE_CURRENT_X.with(PMessage.GREEN.toString() + CV.ECONOMY!!.format(path)))
+            setLore(PMessage.GENERAL_ITEM_LORE_CURRENT_X.with(PMessage.GREEN.getColor() + CV.ECONOMY!!.format(path)))
         } else
         {
             setLore(PMessage.GENERAL_VALUE_DISABLED.toString())
