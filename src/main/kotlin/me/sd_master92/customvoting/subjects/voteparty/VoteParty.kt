@@ -62,7 +62,7 @@ class VoteParty(private val plugin: CV)
                             SoundType.VOTE_PARTY_START.playForAll(plugin)
                         }
                         val placeholders = HashMap<String, String>()
-                        placeholders["%TYPE%"] = votePartyType.label
+                        placeholders["%TYPE%"] = votePartyType.label()
                         plugin.broadcastText(Message.VOTE_PARTY_START, placeholders)
                         executeCommands()
                         when (votePartyType)

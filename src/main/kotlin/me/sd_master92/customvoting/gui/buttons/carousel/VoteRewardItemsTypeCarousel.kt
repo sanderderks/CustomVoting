@@ -26,7 +26,7 @@ class VoteRewardItemsTypeCarousel(private val plugin: CV, private val power: Boo
     init
     {
         val value = plugin.config.getNumber(Setting.ITEM_REWARD_TYPE.path.appendWhenTrue(power, Setting.POWER_REWARDS))
-        val type = ItemRewardType.valueOf(value).label
+        val type = ItemRewardType.valueOf(value).label()
         setLore(PMessage.GENERAL_ITEM_LORE_STATUS_X.with(type))
     }
 }

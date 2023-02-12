@@ -3,10 +3,10 @@ package me.sd_master92.customvoting.constants.enumerations
 import me.sd_master92.customvoting.constants.interfaces.CarouselEnum
 import me.sd_master92.customvoting.constants.interfaces.EnumCompanion
 
-enum class ItemRewardType(val label: String) : CarouselEnum
+enum class ItemRewardType(val label: () -> String) : CarouselEnum
 {
-    ALL_ITEMS(PMessage.ENUM_ITEM_REWARD_TYPE_ALL.toString()),
-    RANDOM_ITEM(PMessage.ENUM_ITEM_REWARD_TYPE_RANDOM.toString());
+    ALL_ITEMS({ PMessage.ENUM_ITEM_REWARD_TYPE_ALL.toString() }),
+    RANDOM_ITEM({ PMessage.ENUM_ITEM_REWARD_TYPE_RANDOM.toString() });
 
     override fun next(): ItemRewardType
     {
