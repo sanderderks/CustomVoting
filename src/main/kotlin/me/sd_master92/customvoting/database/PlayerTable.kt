@@ -140,8 +140,7 @@ class PlayerTable(private val plugin: CV, override val uuid: String) : Voter
             {
                 while (result.next())
                 {
-                    val voter = PlayerTable(plugin, result.getString(PlayerTableColumn.UUID.columnName))
-                    ALL[voter.uuid] = voter
+                    PlayerTable(plugin, result.getString(PlayerTableColumn.UUID.columnName))
                 }
             }
         }

@@ -37,7 +37,6 @@ enum class PlayerTableColumn(
                 }
                 plugin.infoLog("| successfully created table '$table'")
                 plugin.infoLog("|")
-                PlayerTable.init(plugin)
             }
         }
 

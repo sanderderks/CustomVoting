@@ -215,6 +215,7 @@ class CV : CustomPlugin(
             } else
             {
                 playerDatabase = PlayerDatabase(this, database)
+                PlayerTable.init(this)
             }
         } else
         {

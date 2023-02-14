@@ -307,7 +307,6 @@ class PlayerDatabase(private val plugin: CV, database: CustomDatabase)
             plugin.infoLog("| successfully located table '$PLAYERS_TABLE'")
             plugin.infoLog("|")
             migratePlayers()
-            PlayerTable.init(plugin)
         }
         queueTable = database.getTable(QUEUE_TABLE)
         if (!queueTable.exists())
