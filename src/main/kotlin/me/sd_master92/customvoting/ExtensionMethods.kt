@@ -2,21 +2,22 @@ package me.sd_master92.customvoting
 
 import me.clip.placeholderapi.PlaceholderAPI
 import me.sd_master92.core.file.PlayerFile
+import me.sd_master92.core.plugin.CustomPlugin
 import me.sd_master92.customvoting.constants.enumerations.Message
 import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.Setting
-import me.sd_master92.customvoting.database.PlayerTable
+import me.sd_master92.customvoting.constants.interfaces.Voter
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
-import org.bukkit.Bukkit
-import org.bukkit.ChatColor
-import org.bukkit.Material
-import org.bukkit.OfflinePlayer
+import org.bukkit.*
 import org.bukkit.command.CommandSender
+import org.bukkit.entity.ArmorStand
+import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.SkullMeta
 import java.util.*
+
 
 fun String.withPlaceholders(player: Player): String
 {
@@ -108,18 +109,18 @@ fun Player.addToInventoryOrDrop(item: ItemStack)
     this.inventory.addItem(item).values.forEach { this.world.dropItemNaturally(this.location, it) }
 }
 
-fun Player.hasPowerRewards(plugin: CV): Boolean
+fun OfflinePlayer.hasPowerRewards(plugin: CV): Boolean
 {
     return this.hasPowerRewardsByGroup(plugin) || this.hasPowerRewardsByUser(plugin)
 }
 
-fun Player.hasPowerRewardsByGroup(plugin: CV): Boolean
+fun OfflinePlayer.hasPowerRewardsByGroup(plugin: CV): Boolean
 {
     if (CV.PERMISSION != null)
     {
         try
         {
-            for (group in CV.PERMISSION!!.getPlayerGroups(this))
+            for (group in CV.PERMISSION!!.getPlayerGroups(null, this))
             {
                 if (plugin.config.getStringList(Setting.ENABLED_PERM_GROUPS.path).contains(group.lowercase()))
                 {
@@ -134,10 +135,13 @@ fun Player.hasPowerRewardsByGroup(plugin: CV): Boolean
     return false
 }
 
-fun Player.hasPowerRewardsByUser(plugin: CV): Boolean
+fun OfflinePlayer.hasPowerRewardsByUser(plugin: CV): Boolean
 {
-    val voter = if (plugin.hasDatabaseConnection()) PlayerTable.get(plugin, this) else VoteFile.get(plugin, this)
-    return voter.power
+    if (this is Player)
+    {
+        return Voter.get(plugin, this).power
+    }
+    return false
 }
 
 fun Player.getPlayerFile(plugin: CV): PlayerFile
@@ -170,9 +174,32 @@ fun String.getOfflinePlayer(): OfflinePlayer?
     return Bukkit.getOfflinePlayers().toList().firstOrNull { player -> player.name == this }
 }
 
+fun Location.spawnArmorStand(): ArmorStand
+{
+    val stand = world!!.spawnEntity(this, EntityType.ARMOR_STAND) as ArmorStand
+    stand.removeWhenFarAway = false
+    stand.isSilent = true
+    stand.setGravity(false)
+    stand.isCustomNameVisible = true
+    stand.isInvulnerable = true
+    stand.isVisible = false
+    return stand
+}
+
 fun Long.dayDifferenceToday(): Int
 {
     val calendar = Calendar.getInstance()
     calendar.time = Date(this)
     return Calendar.getInstance()[Calendar.DAY_OF_YEAR] - calendar[Calendar.DAY_OF_YEAR]
+}
+
+fun Locale.setLanguage()
+{
+    CV.RESOURCE_BUNDLE = ResourceBundle.getBundle("language/messages", this)
+
+    CustomPlugin.SAVE_TEXT = PMessage.GENERAL_VALUE_SAVE.toString()
+    CustomPlugin.BACK_TEXT = PMessage.GENERAL_VALUE_BACK.toString()
+    CustomPlugin.STATUS_TEXT = PMessage.GENERAL_ITEM_LORE_STATUS.toString()
+    CustomPlugin.ON_TEXT = PMessage.GENERAL_VALUE_ON.toString()
+    CustomPlugin.OFF_TEXT = PMessage.GENERAL_VALUE_OFF.toString()
 }

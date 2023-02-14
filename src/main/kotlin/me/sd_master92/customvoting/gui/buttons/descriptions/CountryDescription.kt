@@ -17,9 +17,9 @@ class CountryDescription : SimpleItem(
         for ((i, country) in countries.take(3).withIndex())
         {
             val number = i + 1
-            lore += ";" + PMessage.GRAY + "$number. " + PMessage.AQUA + country.name
+            lore += ";" + PMessage.GRAY.getColor() + "$number. " + PMessage.AQUA.getColor() + country.name
             val percentage = (country.y.toDouble() / countries.sumOf { it.y } * 100).roundToInt()
-            lore += PMessage.GRAY.toString() + " $percentage%"
+            lore += PMessage.GRAY.getColor() + " $percentage%"
         }
         setLore(lore)
     }

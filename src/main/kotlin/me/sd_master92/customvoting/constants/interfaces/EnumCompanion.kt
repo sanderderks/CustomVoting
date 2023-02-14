@@ -2,5 +2,5 @@ package me.sd_master92.customvoting.constants.interfaces
 
 interface EnumCompanion
 {
-    fun valueOf(value: Int): CarouselEnum
+    fun valueOf(key: Int): CarouselEnum
 }

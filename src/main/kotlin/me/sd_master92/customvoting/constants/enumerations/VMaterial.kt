@@ -9,7 +9,8 @@ enum class VMaterial(
 )
 {
     SOUL_TORCH("SOUL_TORCH", "TORCH"),
-    SPYGLASS("SPYGLASS", "LEAD");
+    SPYGLASS("SPYGLASS", "LEAD"),
+    CRIMSON_SIGN("CRIMSON_SIGN", "SIGN");
 
     fun get(): Material
     {

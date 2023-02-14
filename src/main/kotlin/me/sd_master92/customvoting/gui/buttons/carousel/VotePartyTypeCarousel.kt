@@ -19,7 +19,7 @@ class VotePartyTypeCarousel(private val plugin: CV) : AbstractEnumCarousel(
 
     init
     {
-        val type = VotePartyType.valueOf(plugin.config.getNumber(Setting.VOTE_PARTY_TYPE.path)).label
+        val type = VotePartyType.valueOf(plugin.config.getNumber(Setting.VOTE_PARTY_TYPE.path)).label()
         setLore(PMessage.GENERAL_ITEM_LORE_CURRENT_X.with(type))
     }
 }

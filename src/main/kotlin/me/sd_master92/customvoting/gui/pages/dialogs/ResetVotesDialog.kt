@@ -15,7 +15,9 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 class ResetVotesDialog(private val plugin: CV, private val monthly: Boolean) :
     ConfirmGUI(
         plugin,
-        if (monthly) PMessage.RESET_VOTES_INVENTORY_NAME_MONTHLY.toString() else PMessage.RESET_VOTES_INVENTORY_NAME_ALL.toString()
+        if (monthly) PMessage.RESET_VOTES_INVENTORY_NAME_MONTHLY.toString() else PMessage.RESET_VOTES_INVENTORY_NAME_ALL.toString(),
+        PMessage.GENERAL_VALUE_CONFIRM.toString(),
+        PMessage.GENERAL_VALUE_CANCEL.toString()
     )
 {
     override fun onConfirm(event: InventoryClickEvent, player: Player)

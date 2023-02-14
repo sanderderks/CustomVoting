@@ -9,6 +9,7 @@ import me.sd_master92.customvoting.getOfflinePlayer
 import me.sd_master92.customvoting.getSkull
 import me.sd_master92.customvoting.gui.buttons.actions.PaginationNextAction
 import me.sd_master92.customvoting.gui.buttons.actions.PaginationPreviousAction
+import me.sd_master92.customvoting.hasPowerRewards
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
@@ -54,13 +55,15 @@ class PlayerInfoOverviewPage(private val plugin: CV, backPage: GUI?, private var
             PMessage.PLAYER_INFO_ITEM_LORE_STREAK_DAILY_X.with("" + voter.streakDaily),
             PMessage.PLAYER_INFO_ITEM_LORE_LAST_X.with(lastVote),
             PMessage.PLAYER_INFO_ITEM_LORE_POWER_X.with(
-                if (voter.power) PMessage.RED.toString() + voter.power else
-                    PMessage.PURPLE.toString() + voter.power
+                if (voter.name.getOfflinePlayer()
+                        ?.hasPowerRewards(plugin) == true
+                ) PMessage.GENERAL_VALUE_TRUE.toString() else
+                    PMessage.GENERAL_VALUE_FALSE.toString()
             ),
         )
         if (meta.displayName != voter.name)
         {
-            meta.setDisplayName(PMessage.AQUA.toString() + voter.name)
+            meta.setDisplayName(PMessage.AQUA.getColor() + voter.name)
         }
         skull.itemMeta = meta
         return skull

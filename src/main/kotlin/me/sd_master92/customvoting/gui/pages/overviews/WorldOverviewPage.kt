@@ -40,7 +40,17 @@ class WorldOverviewPage(private val plugin: CV, backPage: GUI?) :
     {
         for (world in Bukkit.getWorlds())
         {
-            addItem(WorldEnabledSwitch(plugin, world.name))
+            var name = world.name
+            val overworld = PMessage.DISABLED_WORLD_NAME_OVERWORLD.toString()
+            val nether = PMessage.DISABLED_WORLD_NAME_NETHER.toString()
+            val end = PMessage.DISABLED_WORLD_NAME_END.toString()
+            when (name)
+            {
+                overworld -> name = name.replace(overworld, PMessage.DISABLED_WORLD_ITEM_NAME_OVERWORLD.toString())
+                nether    -> name = name.replace(nether, PMessage.DISABLED_WORLD_ITEM_NAME_NETHER.toString())
+                end       -> name = name.replace(end, PMessage.DISABLED_WORLD_ITEM_NAME_END.toString())
+            }
+            addItem(WorldEnabledSwitch(plugin, name))
         }
     }
 }

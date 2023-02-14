@@ -5,7 +5,7 @@ import me.sd_master92.customvoting.VoteFile
 import me.sd_master92.customvoting.constants.enumerations.Setting
 import me.sd_master92.customvoting.database.PlayerTable
 import me.sd_master92.customvoting.subjects.VoteTopSign
-import me.sd_master92.customvoting.subjects.VoteTopStand
+import me.sd_master92.customvoting.subjects.stands.VoteTopStand
 import org.bukkit.entity.Player
 
 interface Voter

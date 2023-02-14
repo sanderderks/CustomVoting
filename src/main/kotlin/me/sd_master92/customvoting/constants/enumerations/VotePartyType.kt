@@ -4,16 +4,16 @@ import me.sd_master92.customvoting.constants.interfaces.CarouselEnum
 import me.sd_master92.customvoting.constants.interfaces.EnumCompanion
 import java.util.*
 
-enum class VotePartyType(val label: String) : CarouselEnum
+enum class VotePartyType(val label: () -> String) : CarouselEnum
 {
-    RANDOMLY("Randomly"),
-    RANDOM_CHEST_AT_A_TIME("Random Chest at a Time"),
-    ALL_CHESTS_AT_ONCE("All Chests at Once"),
-    ONE_CHEST_AT_A_TIME("One Chest at a Time"),
-    ADD_TO_INVENTORY("Add To Inventory"),
-    EXPLODE_CHESTS("Explode Chests"),
-    SCARY("Scary"),
-    PIG_HUNT("Pig Hunt");
+    RANDOMLY({ PMessage.ENUM_VOTE_PARTY_TYPE_RANDOM.toString() }),
+    RANDOM_CHEST_AT_A_TIME({ PMessage.ENUM_VOTE_PARTY_TYPE_RANDOM_CHEST_AT_A_TIME.toString() }),
+    ALL_CHESTS_AT_ONCE({ PMessage.ENUM_VOTE_PARTY_TYPE_ALL_CHESTS_AT_ONCE.toString() }),
+    ONE_CHEST_AT_A_TIME({ PMessage.ENUM_VOTE_PARTY_TYPE_ONE_CHEST_AT_A_TIME.toString() }),
+    ADD_TO_INVENTORY({ PMessage.ENUM_VOTE_PARTY_TYPE_ADD_TO_INVENTORY.toString() }),
+    EXPLODE_CHESTS({ PMessage.ENUM_VOTE_PARTY_TYPE_EXPLODE_CHESTS.toString() }),
+    SCARY({ PMessage.ENUM_VOTE_PARTY_TYPE_SCARY.toString() }),
+    PIG_HUNT({ PMessage.ENUM_VOTE_PARTY_TYPE_PIG_HUNT.toString() });
 
     override fun next(): VotePartyType
     {
@@ -30,15 +30,18 @@ enum class VotePartyType(val label: String) : CarouselEnum
     {
         fun random(): VotePartyType
         {
-            return valueOf(Random().nextInt(1, values().size))
+            return values()[Random().nextInt(1, values().size)]
         }
 
-        override fun valueOf(value: Int): VotePartyType
+        override fun valueOf(key: Int): VotePartyType
         {
-            val votePartyType = Arrays.stream(values())
-                .filter { type: VotePartyType -> type.ordinal == value }
-                .findFirst()
-            return votePartyType.orElse(RANDOMLY)
+            return try
+            {
+                values()[key]
+            } catch (_: Exception)
+            {
+                values()[0]
+            }
         }
     }
 }

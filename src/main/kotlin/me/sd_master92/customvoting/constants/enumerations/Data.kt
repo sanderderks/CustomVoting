@@ -42,6 +42,7 @@ enum class Data(val path: String)
             )
 
             plugin.data.keyMigrations(keyMigrations)
+            plugin.data.deleteLocation("armor_stands")
         }
     }
 }
