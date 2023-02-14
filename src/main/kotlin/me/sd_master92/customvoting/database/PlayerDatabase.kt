@@ -240,8 +240,8 @@ class PlayerDatabase(private val plugin: CV, database: CustomDatabase)
 
     private fun migratePlayers()
     {
-        rename("period", "votes_monthly", CustomColumn.DataType.INT)
-        rename("votes_monthly", PlayerTableColumn.MONTHLY_VOTES.columnName, CustomColumn.DataType.INT)
+        rename("period", PlayerTableColumn.MONTHLY_VOTES.columnName, CustomColumn.DataType.INT)
+        rename("monthly_votes", PlayerTableColumn.MONTHLY_VOTES.columnName, CustomColumn.DataType.INT)
         rename("is_op", PlayerTableColumn.POWER.columnName, CustomColumn.DataType.BOOLEAN)
         for (column in PlayerTableColumn.columns())
         {
@@ -263,12 +263,19 @@ class PlayerDatabase(private val plugin: CV, database: CustomDatabase)
 
     private fun rename(oldName: String, newName: String, dataType: CustomColumn.DataType)
     {
-        if (playersTable.getColumn(oldName).renameOrCreate(newName, dataType))
+        if (!playersTable.getColumn(newName).exists())
         {
-            plugin.infoLog("| successfully added column '$newName'!")
-        } else
-        {
-            plugin.errorLog("| could not create column '$newName'!")
+            val column = playersTable.getColumn(oldName)
+            if (column.exists())
+            {
+                if (column.renameOrCreate(newName, dataType))
+                {
+                    plugin.infoLog("| successfully added column '$newName'!")
+                } else
+                {
+                    plugin.errorLog("| could not create column '$newName'!")
+                }
+            }
         }
     }
 
