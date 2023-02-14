@@ -9,11 +9,10 @@ import me.sd_master92.customvoting.constants.enumerations.Setting
 import me.sd_master92.customvoting.constants.interfaces.Voter
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
-import org.bukkit.Bukkit
-import org.bukkit.ChatColor
-import org.bukkit.Material
-import org.bukkit.OfflinePlayer
+import org.bukkit.*
 import org.bukkit.command.CommandSender
+import org.bukkit.entity.ArmorStand
+import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.SkullMeta
@@ -173,6 +172,18 @@ fun OfflinePlayer?.getSkull(): ItemStack
 fun String.getOfflinePlayer(): OfflinePlayer?
 {
     return Bukkit.getOfflinePlayers().toList().firstOrNull { player -> player.name == this }
+}
+
+fun Location.spawnArmorStand(): ArmorStand
+{
+    val stand = world!!.spawnEntity(this, EntityType.ARMOR_STAND) as ArmorStand
+    stand.removeWhenFarAway = false
+    stand.isSilent = true
+    stand.setGravity(false)
+    stand.isCustomNameVisible = true
+    stand.isInvulnerable = true
+    stand.isVisible = false
+    return stand
 }
 
 fun Long.dayDifferenceToday(): Int

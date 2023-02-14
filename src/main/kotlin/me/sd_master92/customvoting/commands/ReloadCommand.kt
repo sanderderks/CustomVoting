@@ -8,7 +8,7 @@ import me.sd_master92.customvoting.constants.enumerations.Message
 import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.interfaces.Voter
 import me.sd_master92.customvoting.subjects.VoteTopSign
-import me.sd_master92.customvoting.subjects.VoteTopStand
+import me.sd_master92.customvoting.subjects.stands.VoteTopStand
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 

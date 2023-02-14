@@ -10,10 +10,10 @@ import me.sd_master92.customvoting.constants.interfaces.Voter
 import me.sd_master92.customvoting.gui.pages.editors.VotePartyRewardItemsEditor
 import me.sd_master92.customvoting.gui.pages.menus.CrateMenu
 import me.sd_master92.customvoting.sendText
+import me.sd_master92.customvoting.spawnArmorStand
 import me.sd_master92.customvoting.stripColor
 import me.sd_master92.customvoting.subjects.CustomVote
 import me.sd_master92.customvoting.subjects.VoteTopSign
-import me.sd_master92.customvoting.subjects.VoteTopStand
 import me.sd_master92.customvoting.subjects.voteparty.VoteParty
 import me.sd_master92.customvoting.tasks.UpdateChecker
 import me.sd_master92.customvoting.tasks.VoteReminder
@@ -23,17 +23,17 @@ import org.bukkit.Material
 import org.bukkit.block.BlockFace
 import org.bukkit.block.Sign
 import org.bukkit.block.data.Directional
-import org.bukkit.entity.EntityType
+import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.Action
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.block.BlockPlaceEvent
+import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.event.player.PlayerChangedWorldEvent
-import org.bukkit.event.player.PlayerInteractAtEntityEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerJoinEvent
 import java.util.*
@@ -81,9 +81,9 @@ class PlayerListener(private val plugin: CV) : Listener
     }
 
     @EventHandler
-    fun onPlayerInteractEntity(event: PlayerInteractAtEntityEvent)
+    fun onPlayerInteractEntity(event: EntityDamageByEntityEvent)
     {
-        if (event.rightClicked.type == EntityType.ARMOR_STAND)
+        if (event.entity is ArmorStand && event.damager is Player)
         {
             val section = plugin.data.getConfigurationSection(Data.VOTE_TOP_STANDS.path)
             if (section != null)
@@ -92,12 +92,12 @@ class PlayerListener(private val plugin: CV) : Listener
                 {
                     for (sub in listOf("top", "name", "votes"))
                     {
-                        if (section.getString("$top.$sub") == event.rightClicked.uniqueId.toString())
+                        if (section.getString("$top.$sub") == event.entity.uniqueId.toString())
                         {
                             event.isCancelled = true
                             if (!plugin.config.getBoolean(Setting.DISABLED_MESSAGE_ARMOR_STAND.path))
                             {
-                                event.player.sendText(plugin, Message.VOTE_TOP_STANDS_DONT)
+                                event.damager.sendText(plugin, Message.VOTE_TOP_STANDS_DONT)
                             }
                         }
                     }
@@ -307,19 +307,14 @@ class PlayerListener(private val plugin: CV) : Listener
                                                 location.block.blockData = directional
                                                 plugin.data.setLocation(path, location)
 
-                                                val stand =
-                                                    VoteTopStand.spawnArmorStand(
-                                                        Location(
-                                                            loc.world,
-                                                            loc.x + 0.5,
-                                                            loc.y + 1,
-                                                            loc.z + 0.5
-                                                        )
-                                                    )
+                                                val stand = Location(
+                                                    loc.world,
+                                                    loc.x + 0.5,
+                                                    loc.y + 1,
+                                                    loc.z + 0.5
+                                                ).spawnArmorStand()
                                                 stand.customName = PMessage.CRATE_NAME_STAND_X.with(name)
-                                                stand.setGravity(false)
                                                 plugin.data.set("$path.stand", stand.uniqueId.toString())
-
                                                 plugin.data.saveConfig()
 
                                                 SoundType.SUCCESS.play(plugin, player)

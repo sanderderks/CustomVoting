@@ -5,7 +5,7 @@ import me.sd_master92.core.errorLog
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.Message
 import me.sd_master92.customvoting.constants.enumerations.PMessage
-import me.sd_master92.customvoting.subjects.VoteTopStand
+import me.sd_master92.customvoting.subjects.stands.VoteTopStand
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
@@ -20,10 +20,10 @@ class DeleteTopCommand(private val plugin: CV) : SimpleCommand(plugin, "deleteto
         try
         {
             val top = args[0].toInt()
-            val voteTopStand = VoteTopStand[top]
-            if (voteTopStand != null)
+            val stand = VoteTopStand[plugin, top]
+            if (stand.exists())
             {
-                voteTopStand.delete(player)
+                stand.delete(player)
             } else
             {
                 player.sendMessage(PMessage.GENERAL_ERROR_NOT_EXIST_X.with(PMessage.VOTE_TOP_UNIT_STAND.toString()))
