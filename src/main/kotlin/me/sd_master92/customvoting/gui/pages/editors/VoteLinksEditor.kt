@@ -12,7 +12,6 @@ import org.bukkit.entity.Player
 import org.bukkit.event.inventory.ClickType
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
-import org.bukkit.inventory.ItemStack
 
 class VoteLinksEditor constructor(private val plugin: CV) :
     AbstractItemEditor(
@@ -35,7 +34,7 @@ class VoteLinksEditor constructor(private val plugin: CV) :
     {
         if (event.click == ClickType.RIGHT)
         {
-            save(player, contents, false)
+            save(player, false)
             cancelCloseEvent = true
             player.closeInventory()
             enterTitle(player, event.slot)
@@ -44,7 +43,7 @@ class VoteLinksEditor constructor(private val plugin: CV) :
 
     override fun onClose(event: InventoryCloseEvent, player: Player)
     {
-        save(player, contents, true)
+        save(player, true)
     }
 
     private fun enterTitle(player: Player, slot: Int)
@@ -60,18 +59,15 @@ class VoteLinksEditor constructor(private val plugin: CV) :
             override fun onInputReceived(input: String)
             {
                 val message = ChatColor.translateAlternateColorCodes('&', input)
-                val items = plugin.data.getItems(Data.VOTE_LINK_ITEMS.path)
-                val item = items[slot]
+                val item = contents[slot]
                 val meta = item.itemMeta
                 if (meta != null)
                 {
                     meta.setDisplayName(message)
                     item.itemMeta = meta
                 }
-                items[slot] = item
-
-                @Suppress("UNCHECKED_CAST")
-                save(player, items as Array<ItemStack?>, false)
+                setItem(slot, item)
+                save(player, false)
 
                 SoundType.SUCCESS.play(plugin, player)
                 enterMessage(player, slot)
@@ -102,8 +98,7 @@ class VoteLinksEditor constructor(private val plugin: CV) :
             override fun onInputReceived(input: String)
             {
                 val message = ChatColor.translateAlternateColorCodes('&', input)
-                val items = plugin.data.getItems(Data.VOTE_LINK_ITEMS.path)
-                val item = items[slot]
+                val item = contents[slot]
                 val meta = item.itemMeta
                 if (meta != null)
                 {
@@ -112,10 +107,8 @@ class VoteLinksEditor constructor(private val plugin: CV) :
                     meta.lore = lore
                     item.itemMeta = meta
                 }
-                items[slot] = item
-
-                @Suppress("UNCHECKED_CAST")
-                save(player, items as Array<ItemStack?>, false)
+                setItem(slot, item)
+                save(player, false)
 
                 SoundType.SUCCESS.play(plugin, player)
                 player.sendMessage(
@@ -147,8 +140,19 @@ class VoteLinksEditor constructor(private val plugin: CV) :
         {
             override fun onInputReceived(input: String)
             {
-                plugin.data[Data.VOTE_LINKS.path + ".$slot"] = input
-                plugin.data.saveConfig()
+                val message = ChatColor.translateAlternateColorCodes('&', input)
+                val item = contents[slot]
+                val meta = item.itemMeta
+                if (meta != null)
+                {
+                    val lore = if (meta.hasLore()) meta.lore!!.toMutableList() else ArrayList()
+                    lore.add(PMessage.GRAY.getColor() + LINK_SIGN)
+                    lore.add(message)
+                    lore.add(PMessage.GRAY.getColor() + LINK_SIGN)
+                    meta.lore = lore
+                    item.itemMeta = meta
+                }
+                setItem(slot, item)
 
                 SoundType.SUCCESS.play(plugin, player)
                 VoteLinksEditor(plugin).open(player)
@@ -161,5 +165,10 @@ class VoteLinksEditor constructor(private val plugin: CV) :
                 VoteLinksEditor(plugin).open(player)
             }
         }
+    }
+
+    companion object
+    {
+        val LINK_SIGN = PMessage.UNDERLINE.getColor() + "!URL!"
     }
 }

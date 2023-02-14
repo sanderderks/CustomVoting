@@ -34,16 +34,17 @@ abstract class AbstractItemEditor(
 
     override fun onClose(event: InventoryCloseEvent, player: Player)
     {
-        save(player, event.inventory.contents)
+        save(player)
     }
 
     override fun onSave(event: InventoryClickEvent, player: Player)
     {
-        save(player, event.inventory.contents)
+        save(player)
     }
 
-    fun save(player: Player, items: Array<ItemStack?>, notify: Boolean = true)
+    fun save(player: Player, notify: Boolean = true)
     {
+        val items = contents
         for (i in clickableItems.keys)
         {
             items[i] = null

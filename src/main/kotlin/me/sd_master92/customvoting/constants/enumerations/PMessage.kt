@@ -30,6 +30,7 @@ enum class PMessage(
     GRAY(ChatColor.GRAY),
     YELLOW(ChatColor.YELLOW),
     BOLD(ChatColor.BOLD),
+    UNDERLINE(ChatColor.UNDERLINE),
 
     ACTION_ERROR_BREAK_BLOCK_NO_PERMISSION(RED.color),
     ACTION_ERROR_INTERACT_NEED_CRATE(RED.color),
