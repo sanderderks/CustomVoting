@@ -63,21 +63,24 @@ class StreakOverviewPage(private val plugin: CV, backPage: GUI?, private val pag
             {
                 override fun onNext(player: Player, newPage: Int)
                 {
-                    MilestoneOverviewPage(plugin, backPage, newPage).open(player)
+                    StreakOverviewPage(plugin, backPage, newPage).open(player)
                 }
             })
         setItem(nonClickableSizeWithNull - 1, object : PaginationPreviousAction(plugin, this, page)
         {
             override fun onPrevious(player: Player, newPage: Int)
             {
-                MilestoneOverviewPage(plugin, backPage, newPage).open(player)
+                StreakOverviewPage(plugin, backPage, newPage).open(player)
             }
         })
         val start = page * nonClickableSizeWithNull
-        val streaks = plugin.data.getConfigurationSection(Data.STREAKS.path)?.getKeys(false)
-            ?.filterIndexed { i, _ -> i in start until start + nonClickableSizeWithNull }?.mapNotNull { key ->
-                key.toIntOrNull()
-            }?.sorted() ?: listOf()
+        val streaks = plugin.data.getConfigurationSection(Data.STREAKS.path)
+            ?.getKeys(false)
+            ?.mapNotNull { it.toIntOrNull() }
+            ?.sorted()
+            ?.drop(start)
+            ?.take(nonClickableSizeWithNull)
+            ?: emptyList()
         for (key in streaks)
         {
             addItem(StreakSettingsShortcut(plugin, this, key))

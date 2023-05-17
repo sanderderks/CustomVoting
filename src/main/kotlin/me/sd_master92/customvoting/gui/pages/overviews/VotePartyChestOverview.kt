@@ -5,16 +5,18 @@ import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.Data
 import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.SoundType
+import me.sd_master92.customvoting.gui.buttons.actions.PaginationNextAction
+import me.sd_master92.customvoting.gui.buttons.actions.PaginationPreviousAction
 import me.sd_master92.customvoting.gui.buttons.shortcuts.VotePartyRewardItemsShortcut
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 
-class VotePartyChestOverview(private val plugin: CV, backPage: GUI?) :
+class VotePartyChestOverview(private val plugin: CV, backPage: GUI?, private val page: Int = 0) :
     GUI(
         plugin,
         backPage,
-        PMessage.VOTE_PARTY_INVENTORY_NAME_CHEST_OVERVIEW.toString(),
+        PMessage.VOTE_PARTY_INVENTORY_NAME_CHEST_OVERVIEW.toString() + " #${page + 1}",
         calculateInventorySize(plugin)
     )
 {
@@ -45,20 +47,38 @@ class VotePartyChestOverview(private val plugin: CV, backPage: GUI?) :
     {
         private fun calculateInventorySize(plugin: CV): Int
         {
-            val crates = (plugin.data.getConfigurationSection(Data.VOTE_CRATES.path)?.getKeys(false)?.size ?: 0) + 1
-            return if (crates % 9 == 0)
-            {
-                crates
-            } else
-            {
-                crates + (9 - (crates % 9))
-            }
+            val chests = plugin.data.getLocations(Data.VOTE_PARTY_CHESTS.path).size + 3
+            val size = if (chests % 9 == 0) chests else chests + (9 - (chests % 9))
+            return size.coerceAtMost(54)
         }
     }
 
     init
     {
-        for (key in plugin.data.getLocations(Data.VOTE_PARTY_CHESTS.path).keys.map { key -> key.toInt() }.sorted())
+        setItem(
+            nonClickableSizeWithNull - 1,
+            object : PaginationNextAction(plugin, this, page)
+            {
+                override fun onNext(player: Player, newPage: Int)
+                {
+                    VotePartyChestOverview(plugin, backPage, newPage).open(player)
+                }
+            })
+        setItem(nonClickableSizeWithNull - 1, object : PaginationPreviousAction(plugin, this, page)
+        {
+            override fun onPrevious(player: Player, newPage: Int)
+            {
+                VotePartyChestOverview(plugin, backPage, newPage).open(player)
+            }
+        })
+        val start = page * nonClickableSizeWithNull
+        val chests = plugin.data.getLocations(Data.VOTE_PARTY_CHESTS.path)
+            .keys.asSequence()
+            .mapNotNull { it.toIntOrNull() }
+            .sorted()
+            .drop(start)
+            .take(nonClickableSizeWithNull)
+        for (key in chests)
         {
             addItem(VotePartyRewardItemsShortcut(plugin, this, key))
         }

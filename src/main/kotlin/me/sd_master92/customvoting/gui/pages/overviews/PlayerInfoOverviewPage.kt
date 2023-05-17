@@ -88,8 +88,8 @@ class PlayerInfoOverviewPage(private val plugin: CV, backPage: GUI?, private var
             }
         })
         val start = nonClickableSizeWithNull * page
-        for (voter in Voter.getTopVoters(plugin).asSequence()
-            .filterIndexed { i, _ -> i in start until nonClickableSizeWithNull })
+        val voters = Voter.getTopVoters(plugin).filterIndexed { i, _ -> i in start until nonClickableSizeWithNull }
+        for (voter in voters)
         {
             addItem(getSkull(voter))
         }

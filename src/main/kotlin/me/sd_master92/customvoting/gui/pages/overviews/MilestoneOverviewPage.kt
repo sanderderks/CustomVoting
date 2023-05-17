@@ -74,10 +74,13 @@ class MilestoneOverviewPage(private val plugin: CV, backPage: GUI?, private val 
             }
         })
         val start = page * nonClickableSizeWithNull
-        val milestones = plugin.data.getConfigurationSection(Data.MILESTONES.path)?.getKeys(false)
-            ?.filterIndexed { i, _ -> i in start until start + nonClickableSizeWithNull }?.mapNotNull { key ->
-                key.toIntOrNull()
-            }?.sorted() ?: listOf()
+        val milestones = plugin.data.getConfigurationSection(Data.MILESTONES.path)
+            ?.getKeys(false)
+            ?.mapNotNull { it.toIntOrNull() }
+            ?.sorted()
+            ?.drop(start)
+            ?.take(nonClickableSizeWithNull)
+            ?: emptyList()
         for (key in milestones)
         {
             addItem(MilestoneSettingsShortcut(plugin, this, key))

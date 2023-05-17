@@ -74,10 +74,13 @@ class CrateOverviewPage(private val plugin: CV, backPage: GUI?, private val page
             }
         })
         val start = page * nonClickableSizeWithNull
-        val crates = plugin.data.getConfigurationSection(Data.VOTE_CRATES.path)?.getKeys(false)
-            ?.filterIndexed { i, _ -> i in start until start + nonClickableSizeWithNull }?.mapNotNull { key ->
-                key.toIntOrNull()
-            }?.sorted() ?: listOf()
+        val crates = plugin.data.getConfigurationSection(Data.VOTE_CRATES.path)
+            ?.getKeys(false)
+            ?.mapNotNull { it.toIntOrNull() }
+            ?.sorted()
+            ?.drop(start)
+            ?.take(nonClickableSizeWithNull)
+            ?: emptyList()
         for (key in crates)
         {
             addItem(CrateSettingsShortcut(plugin, this, key))
