@@ -2,12 +2,12 @@ package me.sd_master92.customvoting.subjects.voteparty
 
 import me.sd_master92.core.tasks.TaskTimer
 import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.constants.Data
+import me.sd_master92.customvoting.constants.enumerations.Data
+import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.helpers.ParticleHelper
 import me.sd_master92.customvoting.listeners.EntityListener
 import me.sd_master92.customvoting.listeners.ItemListener
-import org.bukkit.ChatColor
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.block.BlockFace
@@ -20,8 +20,8 @@ import java.util.*
 
 class VotePartyChest(private val plugin: CV, key: String)
 {
-    val items: MutableList<ItemStack> = plugin.data.getItems(Data.VOTE_PARTY + ".$key").toMutableList()
-    val loc: Location = plugin.data.getLocation(Data.VOTE_PARTY + ".$key")!!.clone()
+    val items: MutableList<ItemStack> = plugin.data.getItems(Data.VOTE_PARTY_CHESTS.path + ".$key").toMutableList()
+    val loc: Location = plugin.data.getLocation(Data.VOTE_PARTY_CHESTS.path + ".$key")!!.clone()
     var dropLoc: Location = Location(loc.world, loc.x + 0.5, loc.y - 1, loc.z + 0.5)
     private val fireworkLoc: Location = Location(loc.world, loc.x + 0.5, loc.y + 1, loc.z + 0.5)
     private val random: Random = Random()
@@ -88,7 +88,7 @@ class VotePartyChest(private val plugin: CV, key: String)
         {
             if (it.count > 0)
             {
-                pig.customName = ChatColor.LIGHT_PURPLE.toString() + ChatColor.BOLD + it.count
+                pig.customName = PMessage.VOTE_PARTY_NAME_PIG_X.with("" + it.count)
                 SoundType.CLICK.play(plugin, pig.location)
             } else
             {
@@ -128,7 +128,7 @@ class VotePartyChest(private val plugin: CV, key: String)
         fun getAll(plugin: CV): MutableList<VotePartyChest>
         {
             val list = mutableListOf<VotePartyChest>()
-            for (key in plugin.data.getLocations(Data.VOTE_PARTY).keys)
+            for (key in plugin.data.getLocations(Data.VOTE_PARTY_CHESTS.path).keys)
             {
                 list.add(VotePartyChest(plugin, key))
             }

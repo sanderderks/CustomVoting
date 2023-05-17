@@ -1,0 +1,125 @@
+# CustomVoting door sd_master92
+
+no_permission: '&cJe hebt geen toestemming om dit commando uit te voeren.'
+must_be_player: '&cJe moet een speler zijn om dit commando uit te voeren.'
+invalid_player: '&cDie speler bestaat niet.'
+
+month_reset: '&d&lAlle stemmen zijn gereset, want er is een nieuwe maand begonnen!'
+
+# %PLAYER% naam van de speler die gestemd heeft
+# %SERVICE% stem website
+vote_broadcast: '&d%PLAYER% &7heeft net gestemd op &d%SERVICE%&7!'
+lucky_vote: '&aJe hebt een &dLucky Prijs&a ontvangen!'
+disabled_world: '&cGa alsjeblieft naar een andere wereld om je prijzen te ontvangen.'
+
+vote_command:
+  - '&bStem op &dServernaam &b!'
+  - '&B---------------'
+  - '&dStem op een website'
+  - '&avotelink1.com'
+  - '&dStem op een andere website'
+  - '&avotelink2.com'
+  - '&dStem op een andere website'
+  - '&avotelink3.com'
+  - '&B---------------'
+
+vote_reminder:
+  - '&bJe hebt vandaag nog niet op onze server gestemd.'
+  - '&dGebruik /vote voor mooie prijzen!'
+
+vote_rewards:
+  prefix: '&aOntvangen: '
+  divider: ' &a+ '
+  # %MONEY% bedrag aan geldprijs
+  money: '&b$%MONEY%'
+  # %XP% hoeveelheid xp-levels prijs
+  # %s% extra s voor wanneer XP hoger is dan 1
+  xp: '&b%XP% &aXP-level%s%'
+
+votes_command:
+  # %VOTES% stemmen van de speler
+  # %VOTES_MONTHLY% maandelijkse stemmen van de speler
+  # %VOTES_DAILY% dagelijkse stemmen van de speler
+  # %s% extra s voor als VOTES hoger is dan 1
+  self: '&aJe hebt momenteel &b%VOTES% &avote%s%!'
+  # %PLAYER% naam van de speler
+  # %VOTES% stemmen van de speler
+  # %VOTES_MONTHLY% maandelijkse stemmen van de speler
+  # %VOTES_DAILY% dagelijkse stemmen van de speler
+  # %s% extra s voor als STEMMEN hoger is dan 1
+  others: '&b%PLAYER% &aheeft momenteel &b%VOTES% &avote%s%!'
+  not_found: '&cDie speler bestaat niet.'
+
+vote_top_command:
+  # %PLAYERS% 5x de regel 'spelers'
+  format:
+    - '&aTop voters'
+    - '&B---------------'
+    - '%PLAYERS%'
+    - '&B---------------'
+  # %PLAYER% naam van de speler
+  # %VOTES% stemmen van de speler
+  # %VOTES_MONTHLY% maandelijkse stemmen van de speler
+  # %s% extra s voor als STEMMEN hoger is dan 1
+  players: '&d%PLAYER%&7: &b%VOTES%'
+  not_found: '&cEr zijn geen spelers om te laten zien.'
+
+vote_top_signs:
+  title_sign:
+    - '&4Top voters'
+    - '&c&lvan'
+    - '&4&lDeze server!'
+    - ''
+  player_signs:
+    # %NUMBER% bovenste x
+    # %PLAYER% naam van de speler
+    # %VOTES% stemmen van de speler
+    # %VOTES_MONTHLY% maandelijkse stemmen van de speler
+    # %s% extra s voor als VOTES hoger is dan 1
+    formaat:
+      - '&4&lTop %NUMBER%:'
+      - '&b%PLAYER%'
+      - '&d%VOTES% vote%s%'
+      - ''
+    not_found: '&cNiet gevonden'
+    outdated: '&cVerouderd'
+
+# %TOP% top x
+# %PLAYER% naam van de speler
+# %VOTES% stemmen van de speler
+# %VOTES_MONTHLY% maandelijkse stemmen van de speler
+vote_top_stands:
+  top: '&a&lTop %TOP%:'
+  center: '&b%PLAYER%'
+  bottom: '&7Stemmen: &d%VOTES%'
+  dont: '&cMaak me niet kapot!'
+
+vote_party:
+  # %VOTES% stemt tot de stemmende partij
+  # %s% extra s voor als STEMMEN hoger is dan 1
+  until: '&b%VOTES% &vote%s% tot de &bVote Party&a!'
+  # %TIME% seconden tot de stempartij
+  countdown: '&aVote Party begint over &b%TIME% &aseconden!'
+  # %TIME% seconden tot de stempartij
+  # %s% extra s voor als TIME hoger is dan 1
+  countdown_ending: '&aVote Party begint over &b%TIME%'
+  # %TYPE% stem partijtype
+  start: '&aDe Vote Party &d%TYPE% &ais begonnen!'
+  end: '&7De Vote Party is afgelopen!'
+  # %COUNT% varkens gedood
+  # %TOGO% varkens om te doden
+  # %KILLER% moordenaar
+  # %s% extra s voor als TOGO hoger is dan 1
+  pig_killed: '&dVarken gedood door &b%KILLER%&d! Nog maar &b%TOGO% &dvarken%s% te gaan!'
+
+  # %PLAYER% naam van de speler
+  # %MILESTONE% bereikt
+milestone:
+  milestone_reached: '&b%PLAYER% &dheeft mijlpaal #&b%MILESTONE%&d bereikt!'
+
+# %PLAYER% naam van de speler
+# %STREAK% streak bereikt
+streak:
+  streak_reached: '&b%PLAYER% &dheeft reeks #&b%STREAK%&d gehaald!'
+
+vote_links_title: 'Stem op ons!'

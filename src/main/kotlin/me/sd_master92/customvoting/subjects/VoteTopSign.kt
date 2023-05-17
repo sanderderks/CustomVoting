@@ -2,12 +2,12 @@ package me.sd_master92.customvoting.subjects
 
 import me.sd_master92.core.tasks.TaskTimer
 import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.constants.Data
-import me.sd_master92.customvoting.constants.Voter
-import me.sd_master92.customvoting.constants.enumerations.Messages
-import me.sd_master92.customvoting.constants.enumerations.Settings
+import me.sd_master92.customvoting.constants.enumerations.Data
+import me.sd_master92.customvoting.constants.enumerations.Message
+import me.sd_master92.customvoting.constants.enumerations.PMessage
+import me.sd_master92.customvoting.constants.enumerations.Setting
+import me.sd_master92.customvoting.constants.interfaces.Voter
 import org.bukkit.Bukkit
-import org.bukkit.ChatColor
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.block.BlockFace
@@ -17,7 +17,7 @@ import org.bukkit.block.data.type.WallSign
 import org.bukkit.entity.Player
 import java.util.*
 
-class VoteTopSign @JvmOverloads constructor(
+class VoteTopSign constructor(
     private val plugin: CV,
     private val top: Int,
     val location: Location?,
@@ -40,7 +40,7 @@ class VoteTopSign @JvmOverloads constructor(
         if (location!!.block.state is Sign)
         {
             val sign = location.block.state as Sign
-            val messages = Messages.VOTE_TOP_SIGNS_TITLE_SIGN.getMessages(plugin)
+            val messages = Message.VOTE_TOP_SIGNS_TITLE_SIGN.getMessages(plugin)
             for (i in messages.indices)
             {
                 sign.setLine(i, messages[i])
@@ -57,7 +57,7 @@ class VoteTopSign @JvmOverloads constructor(
             val topVoter = Voter.getTopVoter(plugin, top)
             if (topVoter != null)
             {
-                val oldLoc = plugin.data.getLocation(Data.VOTE_TOP_SIGNS + "." + top)
+                val oldLoc = plugin.data.getLocation(Data.VOTE_TOP_SIGNS.path + "." + top)
                 if (oldLoc != null && oldLoc != location)
                 {
                     if (oldLoc.block.state is Sign)
@@ -69,7 +69,7 @@ class VoteTopSign @JvmOverloads constructor(
                             {
                                 oldSign.setLine(
                                     i,
-                                    Messages.VOTE_TOP_SIGNS_PLAYER_SIGNS_OUTDATED.getMessage(plugin)
+                                    Message.VOTE_TOP_SIGNS_PLAYER_SIGNS_OUTDATED.getMessage(plugin)
                                 )
                             } else
                             {
@@ -79,20 +79,21 @@ class VoteTopSign @JvmOverloads constructor(
                         oldSign.update(true)
                     }
                 }
-                plugin.data.setLocation(Data.VOTE_TOP_SIGNS + "." + top, location)
+                plugin.data.setLocation(Data.VOTE_TOP_SIGNS.path + "." + top, location)
                 val placeholders = HashMap<String, String>()
                 placeholders["%NUMBER%"] = "" + top
                 placeholders["%PLAYER%"] = topVoter.name
                 placeholders["%VOTES%"] = "${topVoter.votes}"
-                placeholders["%MONTHLY_VOTES%"] = "${topVoter.monthlyVotes}"
-                if (plugin.config.getBoolean(Settings.MONTHLY_VOTES.path))
+                placeholders["%VOTES_MONTHLY%"] = "${topVoter.votesMonthly}"
+                placeholders["%VOTES_DAILY%"] = "${topVoter.votesDaily}"
+                if (plugin.config.getBoolean(Setting.MONTHLY_VOTES.path))
                 {
-                    placeholders["%s%"] = if (topVoter.monthlyVotes == 1) "" else "s"
+                    placeholders["%s%"] = if (topVoter.votesMonthly == 1) "" else "s"
                 } else
                 {
                     placeholders["%s%"] = if (topVoter.votes == 1) "" else "s"
                 }
-                for ((i, message) in Messages.VOTE_TOP_SIGNS_PLAYER_SIGNS_FORMAT.getMessages(plugin, placeholders)
+                for ((i, message) in Message.VOTE_TOP_SIGNS_PLAYER_SIGNS_FORMAT.getMessages(plugin, placeholders)
                     .withIndex())
                 {
                     sign.setLine(i, message)
@@ -106,7 +107,7 @@ class VoteTopSign @JvmOverloads constructor(
                     {
                         sign.setLine(
                             i,
-                            Messages.VOTE_TOP_SIGNS_PLAYER_SIGNS_NOT_FOUND.getMessage(plugin)
+                            Message.VOTE_TOP_SIGNS_PLAYER_SIGNS_NOT_FOUND.getMessage(plugin)
                         )
                     } else
                     {
@@ -168,10 +169,10 @@ class VoteTopSign @JvmOverloads constructor(
 
     fun delete(player: Player)
     {
-        if (plugin.data.deleteLocation(Data.VOTE_TOP_SIGNS + "." + if (top == 0) "title" else top))
+        if (plugin.data.deleteLocation(Data.VOTE_TOP_SIGNS.path + "." + if (top == 0) "title" else top))
         {
             voteTops.remove(top)
-            player.sendMessage(ChatColor.RED.toString() + "Unregistered Vote Sign #" + if (top == 0) "title" else top)
+            player.sendMessage(PMessage.VOTE_TOP_MESSAGE_SIGN_DELETED_X.with(if (top == 0) "title" else "$top"))
         }
     }
 
@@ -208,7 +209,7 @@ class VoteTopSign @JvmOverloads constructor(
 
         private fun initialize(plugin: CV)
         {
-            val locations = plugin.data.getLocations(Data.VOTE_TOP_SIGNS)
+            val locations = plugin.data.getLocations(Data.VOTE_TOP_SIGNS.path)
             for (key in locations.keys)
             {
                 val loc = locations[key]
@@ -227,7 +228,7 @@ class VoteTopSign @JvmOverloads constructor(
     {
         if (player != null && (top == 0 || !voteTops.containsKey(top)))
         {
-            player.sendMessage(ChatColor.GREEN.toString() + "Registered Vote Sign #" + if (top == 0) "title" else top)
+            player.sendMessage(PMessage.VOTE_TOP_MESSAGE_SIGN_CREATED_X.with(if (top == 0) "title" else "$top"))
         }
         voteTops[top] = this
         update()

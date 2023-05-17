@@ -3,9 +3,9 @@ package me.sd_master92.customvoting.commands
 import me.sd_master92.core.command.SimpleCommand
 import me.sd_master92.core.errorLog
 import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.constants.enumerations.Messages
-import me.sd_master92.customvoting.subjects.VoteTopStand
-import org.bukkit.ChatColor
+import me.sd_master92.customvoting.constants.enumerations.Message
+import me.sd_master92.customvoting.constants.enumerations.PMessage
+import me.sd_master92.customvoting.subjects.stands.VoteTopStand
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
@@ -22,25 +22,25 @@ class CreateTopCommand(private val plugin: CV) : SimpleCommand(plugin, "createto
             val top = args[0].toInt()
             if (top > 0)
             {
-                VoteTopStand(plugin, top, player)
+                VoteTopStand[plugin, top].create(player)
             } else
             {
-                player.sendMessage(ChatColor.RED.toString() + "Invalid argument: 'top' must be a positive number.")
+                player.sendMessage(PMessage.GENERAL_ERROR_INVALID_ARGUMENT_NOT_POSITIVE_X.with("top"))
             }
         } catch (e: NumberFormatException)
         {
-            player.sendMessage(ChatColor.RED.toString() + "Invalid argument: 'top' must be a number.")
+            player.sendMessage(PMessage.GENERAL_ERROR_INVALID_ARGUMENT_NOT_NUMBER_X.with("top"))
         } catch (e: Exception)
         {
-            player.sendMessage(ChatColor.RED.toString() + "Something went wrong!")
-            plugin.errorLog("Error while creating vote top", e)
+            player.sendMessage(PMessage.GENERAL_ERROR.toString())
+            plugin.errorLog(PMessage.VOTE_TOP_ERROR_CREATE.toString(), e)
         }
     }
 
     init
     {
-        withPlayer(Messages.MUST_BE_PLAYER.getMessage(plugin))
-        withUsage(ChatColor.RED.toString() + "- /createtop <top>")
-        withNoPermMessage(Messages.NO_PERMISSION.getMessage(plugin))
+        withPlayer(Message.MUST_BE_PLAYER.getMessage(plugin))
+        withUsage(PMessage.VOTE_TOP_MESSAGE_CREATE_COMMAND_USAGE.toString())
+        withNoPermMessage(Message.NO_PERMISSION.getMessage(plugin))
     }
 }

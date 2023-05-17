@@ -1,17 +1,12 @@
 package me.sd_master92.customvoting.subjects.voteparty
 
-import me.sd_master92.core.inventory.BaseItem
 import me.sd_master92.core.tasks.TaskTimer
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.addToInventoryOrDrop
-import me.sd_master92.customvoting.constants.Data
-import me.sd_master92.customvoting.constants.enumerations.Messages
-import me.sd_master92.customvoting.constants.enumerations.Settings
-import me.sd_master92.customvoting.constants.enumerations.SoundType
-import me.sd_master92.customvoting.constants.enumerations.VotePartyType
+import me.sd_master92.customvoting.constants.enumerations.*
+import me.sd_master92.customvoting.gui.items.SimpleItem
 import me.sd_master92.customvoting.withPlaceholders
 import org.bukkit.Bukkit
-import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.potion.PotionEffect
@@ -20,36 +15,36 @@ import java.util.*
 
 class VoteParty(private val plugin: CV)
 {
-    private var votePartyType = VotePartyType.valueOf(plugin.config.getNumber(Settings.VOTE_PARTY_TYPE.path))
+    private var votePartyType = VotePartyType.valueOf(plugin.config.getNumber(Setting.VOTE_PARTY_TYPE.path))
 
     fun start()
     {
         if (!isActive)
         {
             isActive = true
-            TaskTimer.repeat(plugin, 20, 0, plugin.config.getNumber(Settings.VOTE_PARTY_COUNTDOWN.path)) {
+            TaskTimer.repeat(plugin, 20, 0, plugin.config.getNumber(Setting.VOTE_PARTY_COUNTDOWN.path)) {
                 when (it.count)
                 {
                     30, 15, 10    ->
                     {
-                        if (!plugin.config.getBoolean(Settings.DISABLED_BROADCAST_VOTE_PARTY_COUNTDOWN.path))
+                        if (!plugin.config.getBoolean(Setting.DISABLED_BROADCAST_VOTE_PARTY_COUNTDOWN.path))
                         {
                             val placeholders = HashMap<String, String>()
                             placeholders["%TIME%"] = "" + it.count
                             SoundType.NOTIFY.playForAll(plugin)
-                            plugin.broadcastText(Messages.VOTE_PARTY_COUNTDOWN, placeholders)
+                            plugin.broadcastText(Message.VOTE_PARTY_COUNTDOWN, placeholders)
                         }
                     }
 
                     5, 4, 3, 2, 1 ->
                     {
-                        if (!plugin.config.getBoolean(Settings.DISABLED_BROADCAST_VOTE_PARTY_COUNTDOWN_ENDING.path))
+                        if (!plugin.config.getBoolean(Setting.DISABLED_BROADCAST_VOTE_PARTY_COUNTDOWN_ENDING.path))
                         {
                             val placeholders = HashMap<String, String>()
                             placeholders["%TIME%"] = "" + it.count
                             placeholders["%s%"] = if (it.count == 1) "" else "s"
                             SoundType.NOTIFY.playForAll(plugin)
-                            plugin.broadcastText(Messages.VOTE_PARTY_COUNTDOWN_ENDING, placeholders)
+                            plugin.broadcastText(Message.VOTE_PARTY_COUNTDOWN_ENDING, placeholders)
                         }
                     }
 
@@ -67,8 +62,8 @@ class VoteParty(private val plugin: CV)
                             SoundType.VOTE_PARTY_START.playForAll(plugin)
                         }
                         val placeholders = HashMap<String, String>()
-                        placeholders["%TYPE%"] = votePartyType.label
-                        plugin.broadcastText(Messages.VOTE_PARTY_START, placeholders)
+                        placeholders["%TYPE%"] = votePartyType.label()
+                        plugin.broadcastText(Message.VOTE_PARTY_START, placeholders)
                         executeCommands()
                         when (votePartyType)
                         {
@@ -101,7 +96,7 @@ class VoteParty(private val plugin: CV)
 
     private fun executeCommands()
     {
-        for (command in plugin.data.getStringList(Data.VOTE_PARTY_COMMANDS))
+        for (command in plugin.data.getStringList(Data.VOTE_PARTY_COMMANDS.path))
         {
             if (command.contains("%PLAYER%"))
             {
@@ -247,19 +242,17 @@ class VoteParty(private val plugin: CV)
 
     companion object
     {
-        val VOTE_PARTY_ITEM = BaseItem(
-            Material.ENDER_CHEST, ChatColor.LIGHT_PURPLE.toString() +
-                    "Vote Party Chest",
-            ChatColor.GRAY.toString() + "Place this chest somewhere in the sky.;" + ChatColor.GRAY + "The contents of this chest" +
-                    " will;" +
-                    ChatColor.GRAY + "start dropping when the voteparty starts."
+        val VOTE_PARTY_ITEM = SimpleItem(
+            Material.ENDER_CHEST,
+            PMessage.VOTE_PARTY_ITEM_NAME_CHEST.toString(),
+            PMessage.VOTE_PARTY_ITEM_LORE_CHEST.toString()
         )
         private val queue: MutableList<VoteParty> = ArrayList()
         private var isActive = false
 
         fun stop(plugin: CV)
         {
-            plugin.broadcastText(Messages.VOTE_PARTY_END)
+            plugin.broadcastText(Message.VOTE_PARTY_END)
 
             isActive = false
             queue.removeFirstOrNull()

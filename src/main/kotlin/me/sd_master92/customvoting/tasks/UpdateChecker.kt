@@ -2,9 +2,9 @@ package me.sd_master92.customvoting.tasks
 
 import me.sd_master92.core.tasks.TaskTimer
 import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.constants.enumerations.Settings
+import me.sd_master92.customvoting.constants.enumerations.PMessage
+import me.sd_master92.customvoting.constants.enumerations.Setting
 import org.bukkit.Bukkit
-import org.bukkit.ChatColor
 import org.bukkit.entity.Player
 
 class UpdateChecker(plugin: CV)
@@ -13,13 +13,13 @@ class UpdateChecker(plugin: CV)
     {
         fun checkUpdates(plugin: CV, player: Player)
         {
-            if (player.isOp && plugin.config.getBoolean(Settings.INGAME_UPDATES.path) && !plugin.isUpToDate())
+            if (player.isOp && plugin.config.getBoolean(Setting.INGAME_UPDATES.path) && !plugin.isUpToDate())
             {
                 TaskTimer.delay(plugin, 20 * 5)
                 {
                     plugin.sendDownloadUrl(player)
                     player.sendMessage("")
-                    player.sendMessage(ChatColor.GRAY.toString() + "Updates can be turned off in the /votesettings")
+                    player.sendMessage(PMessage.PLUGIN_UPDATE_MESSAGE_DISABLE.toString())
                 }.run()
             }
         }

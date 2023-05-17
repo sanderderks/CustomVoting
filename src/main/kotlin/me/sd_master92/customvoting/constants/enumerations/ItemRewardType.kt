@@ -1,35 +1,35 @@
 package me.sd_master92.customvoting.constants.enumerations
 
-import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.constants.Data
-import java.util.*
+import me.sd_master92.customvoting.constants.interfaces.CarouselEnum
+import me.sd_master92.customvoting.constants.interfaces.EnumCompanion
 
-enum class ItemRewardType(val value: Int, val label: String)
+enum class ItemRewardType(val label: () -> String) : CarouselEnum
 {
-    ALL_ITEMS(0, "All Items"),
-    RANDOM_ITEM(1, "Randomly");
+    ALL_ITEMS({ PMessage.ENUM_ITEM_REWARD_TYPE_ALL.toString() }),
+    RANDOM_ITEM({ PMessage.ENUM_ITEM_REWARD_TYPE_RANDOM.toString() });
 
-    companion object
+    override fun next(): ItemRewardType
     {
-        fun next(plugin: CV, op: Boolean): ItemRewardType
+        return if (ordinal < values().size - 1)
         {
-            val currentValue =
-                valueOf(plugin.config.getNumber(Settings.ITEM_REWARD_TYPE.path + if (op) Data.OP_REWARDS else "")).value
-            return if (currentValue < values().size - 1)
-            {
-                valueOf(currentValue + 1)
-            } else
-            {
-                valueOf(0)
-            }
+            valueOf(ordinal + 1)
+        } else
+        {
+            valueOf(0)
         }
+    }
 
-        fun valueOf(value: Int): ItemRewardType
+    companion object : EnumCompanion
+    {
+        override fun valueOf(key: Int): ItemRewardType
         {
-            val itemRewardType = Arrays.stream(values())
-                .filter { type: ItemRewardType -> type.value == value }
-                .findFirst()
-            return itemRewardType.orElse(ALL_ITEMS)
+            return try
+            {
+                values()[key]
+            } catch (_: Exception)
+            {
+                values()[0]
+            }
         }
     }
 }

@@ -2,8 +2,8 @@ package me.sd_master92.customvoting.listeners
 
 import me.sd_master92.core.input.PlayerStringInput
 import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.constants.enumerations.Settings
-import org.bukkit.ChatColor
+import me.sd_master92.customvoting.constants.enumerations.PMessage
+import me.sd_master92.customvoting.constants.enumerations.Setting
 import org.bukkit.entity.Player
 
 abstract class PlayerCommandInput(
@@ -19,11 +19,11 @@ abstract class PlayerCommandInput(
     override fun onInputReceived(input: String)
     {
         var command = input
-        for (forbidden in plugin.config.getStringList(Settings.FORBIDDEN_COMMANDS.path))
+        for (forbidden in plugin.config.getStringList(Setting.FORBIDDEN_COMMANDS.path))
         {
             if (command.lowercase().contains(forbidden))
             {
-                player.sendMessage(ChatColor.RED.toString() + "This command is forbidden.")
+                player.sendMessage(PMessage.COMMAND_REWARDS_ERROR_FORBIDDEN.toString())
                 return
             }
         }
@@ -35,11 +35,21 @@ abstract class PlayerCommandInput(
         if (commands.contains(command))
         {
             commands.remove(command)
-            player.sendMessage(ChatColor.RED.toString() + "Removed /" + command + " from commands")
+            player.sendMessage(
+                PMessage.GENERAL_MESSAGE_LIST_REMOVED_XY.with(
+                    "/$command",
+                    PMessage.COMMAND_REWARDS_UNIT_MULTIPLE.toString()
+                )
+            )
         } else
         {
             commands.add(command)
-            player.sendMessage(ChatColor.GREEN.toString() + "Added /" + command + " to commands")
+            player.sendMessage(
+                PMessage.GENERAL_MESSAGE_LIST_ADDED_XY.with(
+                    "/$command",
+                    PMessage.COMMAND_REWARDS_UNIT_MULTIPLE.toString()
+                )
+            )
         }
         plugin.data[path] = commands
         plugin.data.saveConfig()
@@ -49,19 +59,19 @@ abstract class PlayerCommandInput(
 
     init
     {
-        player.sendMessage(ChatColor.GREEN.toString() + "Please enter a command to add or remove from the list")
-        player.sendMessage(ChatColor.GREEN.toString() + "(with %PLAYER% as placeholder)")
-        player.sendMessage(ChatColor.GRAY.toString() + "Type 'cancel' to go back")
+        player.sendMessage(PMessage.GENERAL_MESSAGE_LIST_ALTER_X.with(PMessage.COMMAND_REWARDS_UNIT.toString()))
+        player.sendMessage(PMessage.COMMAND_REWARDS_MESSAGE_PLACEHOLDER.toString())
+        player.sendMessage(PMessage.GENERAL_MESSAGE_CANCEL_BACK.toString())
         player.sendMessage("")
         if (commands.isEmpty())
         {
-            player.sendMessage(ChatColor.RED.toString() + "There are currently no commands.")
+            player.sendMessage(PMessage.GENERAL_MESSAGE_LIST_EMPTY_X.with(PMessage.COMMAND_REWARDS_UNIT_MULTIPLE.toString()))
         } else
         {
-            player.sendMessage(ChatColor.GRAY.toString() + "Commands:")
+            player.sendMessage(PMessage.COMMAND_REWARDS_MESSAGE_TITLE.toString())
             for (command in commands)
             {
-                player.sendMessage(ChatColor.GRAY.toString() + "/" + ChatColor.GREEN + command)
+                player.sendMessage(PMessage.GRAY.getColor() + "/" + PMessage.GREEN.getColor() + command)
             }
         }
     }
