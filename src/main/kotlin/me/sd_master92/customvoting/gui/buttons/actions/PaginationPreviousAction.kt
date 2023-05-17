@@ -16,6 +16,7 @@ abstract class PaginationPreviousAction(private val plugin: CV, private val curr
 
     override fun onClick(event: InventoryClickEvent, player: Player)
     {
+        event.isCancelled = true
         if (page > 0)
         {
             SoundType.CLICK.play(plugin, player)

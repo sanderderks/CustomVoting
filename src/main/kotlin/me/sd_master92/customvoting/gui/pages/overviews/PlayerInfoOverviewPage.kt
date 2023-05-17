@@ -71,23 +71,27 @@ class PlayerInfoOverviewPage(private val plugin: CV, backPage: GUI?, private var
 
     init
     {
-        for (voter in Voter.getTopVoters(plugin).filterIndexed { i, _ -> i >= page * 51 }.take(51))
-        {
-            addItem(getSkull(voter))
-        }
-        setItem(51, object : PaginationPreviousAction(plugin, this, page)
+        setItem(
+            nonClickableSizeWithNull - 1,
+            object : PaginationNextAction(plugin, this, page)
+            {
+                override fun onNext(player: Player, newPage: Int)
+                {
+                    PlayerInfoOverviewPage(plugin, backPage, newPage).open(player)
+                }
+            })
+        setItem(nonClickableSizeWithNull - 1, object : PaginationPreviousAction(plugin, this, page)
         {
             override fun onPrevious(player: Player, newPage: Int)
             {
                 PlayerInfoOverviewPage(plugin, backPage, newPage).open(player)
             }
         })
-        setItem(52, object : PaginationNextAction(plugin, this, page, Voter.getTopVoters(plugin).size)
+        val start = nonClickableSizeWithNull * page
+        for (voter in Voter.getTopVoters(plugin).asSequence()
+            .filterIndexed { i, _ -> i in start until nonClickableSizeWithNull })
         {
-            override fun onNext(player: Player, newPage: Int)
-            {
-                PlayerInfoOverviewPage(plugin, backPage, newPage).open(player)
-            }
-        })
+            addItem(getSkull(voter))
+        }
     }
 }

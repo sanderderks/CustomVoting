@@ -13,7 +13,7 @@ import org.bukkit.event.inventory.ClickType
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 
-class VoteLinksEditor constructor(private val plugin: CV) :
+class VoteLinksEditor(private val plugin: CV) :
     AbstractItemEditor(
         plugin,
         null,
@@ -34,7 +34,7 @@ class VoteLinksEditor constructor(private val plugin: CV) :
     {
         if (event.click == ClickType.RIGHT)
         {
-            save(player, false)
+            save(player, notifyNoChanges = false)
             cancelCloseEvent = true
             player.closeInventory()
             enterTitle(player, event.slot)
@@ -43,7 +43,7 @@ class VoteLinksEditor constructor(private val plugin: CV) :
 
     override fun onClose(event: InventoryCloseEvent, player: Player)
     {
-        save(player, true)
+        save(player)
     }
 
     private fun enterTitle(player: Player, slot: Int)
@@ -60,13 +60,16 @@ class VoteLinksEditor constructor(private val plugin: CV) :
             {
                 val message = ChatColor.translateAlternateColorCodes('&', input)
                 val item = contents[slot]
-                val meta = item.itemMeta
+                val meta = item?.itemMeta
                 if (meta != null)
                 {
                     meta.setDisplayName(message)
                     item.itemMeta = meta
                 }
-                setItem(slot, item)
+                if (item != null)
+                {
+                    setItem(slot, item)
+                }
                 save(player, false)
 
                 SoundType.SUCCESS.play(plugin, player)
@@ -99,7 +102,7 @@ class VoteLinksEditor constructor(private val plugin: CV) :
             {
                 val message = ChatColor.translateAlternateColorCodes('&', input)
                 val item = contents[slot]
-                val meta = item.itemMeta
+                val meta = item?.itemMeta
                 if (meta != null)
                 {
                     val lore = if (add && meta.lore != null) meta.lore else ArrayList()
@@ -107,7 +110,10 @@ class VoteLinksEditor constructor(private val plugin: CV) :
                     meta.lore = lore
                     item.itemMeta = meta
                 }
-                setItem(slot, item)
+                if (item != null)
+                {
+                    setItem(slot, item)
+                }
                 save(player, false)
 
                 SoundType.SUCCESS.play(plugin, player)
@@ -142,7 +148,7 @@ class VoteLinksEditor constructor(private val plugin: CV) :
             {
                 val message = ChatColor.translateAlternateColorCodes('&', input)
                 val item = contents[slot]
-                val meta = item.itemMeta
+                val meta = item?.itemMeta
                 if (meta != null)
                 {
                     val lore = if (meta.hasLore()) meta.lore!!.toMutableList() else ArrayList()
@@ -152,7 +158,10 @@ class VoteLinksEditor constructor(private val plugin: CV) :
                     meta.lore = lore
                     item.itemMeta = meta
                 }
-                setItem(slot, item)
+                if (item != null)
+                {
+                    setItem(slot, item)
+                }
 
                 SoundType.SUCCESS.play(plugin, player)
                 VoteLinksEditor(plugin).open(player)

@@ -82,28 +82,27 @@ class PermUserOverviewPage(private val plugin: CV, backPage: GUI?, private var p
 
     init
     {
-        val voters = Voter.getTopVoters(plugin)
-        if (page < 0 || voters.size < 51 * page)
-        {
-            page = 0
-        }
-        for (voter in voters.asSequence().filterIndexed { i, _ -> i >= 51 * page }.take(51))
-        {
-            addItem(getSkull(voter))
-        }
-        setItem(51, object : PaginationPreviousAction(plugin, this, page)
+        setItem(
+            nonClickableSizeWithNull - 1,
+            object : PaginationNextAction(plugin, this, page)
+            {
+                override fun onNext(player: Player, newPage: Int)
+                {
+                    PermUserOverviewPage(plugin, backPage, newPage).open(player)
+                }
+            })
+        setItem(nonClickableSizeWithNull - 1, object : PaginationPreviousAction(plugin, this, page)
         {
             override fun onPrevious(player: Player, newPage: Int)
             {
                 PermUserOverviewPage(plugin, backPage, newPage).open(player)
             }
         })
-        setItem(52, object : PaginationNextAction(plugin, this, page, Voter.getTopVoters(plugin).size)
+        val start = nonClickableSizeWithNull * page
+        for (voter in Voter.getTopVoters(plugin).asSequence()
+            .filterIndexed { i, _ -> i in start until nonClickableSizeWithNull })
         {
-            override fun onNext(player: Player, newPage: Int)
-            {
-                PermUserOverviewPage(plugin, backPage, newPage).open(player)
-            }
-        })
+            addItem(getSkull(voter))
+        }
     }
 }
