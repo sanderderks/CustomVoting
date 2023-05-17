@@ -14,8 +14,9 @@ abstract class AbstractStatusSwitch(
     private val plugin: CV,
     mat: Material,
     private val setting: Setting,
-    name: PMessage
-) : StatusItem(mat, name.toString(), plugin.config, setting.path)
+    name: PMessage,
+    reverse: Boolean = false
+) : StatusItem(mat, name.toString(), plugin.config, setting.path, reverse)
 {
     abstract fun newInstance(): ItemStack
 

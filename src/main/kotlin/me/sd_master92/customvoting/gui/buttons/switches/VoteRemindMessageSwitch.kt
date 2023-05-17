@@ -9,8 +9,10 @@ import org.bukkit.inventory.ItemStack
 
 class VoteRemindMessageSwitch(private val plugin: CV) : AbstractStatusSwitch(
     plugin,
-    Material.OAK_SIGN, Setting.DISABLED_MESSAGE_VOTE_REMINDER,
-    PMessage.VOTE_REMINDER_ITEM_NAME
+    Material.OAK_SIGN,
+    Setting.DISABLED_MESSAGE_VOTE_REMINDER,
+    PMessage.VOTE_REMINDER_ITEM_NAME,
+    true
 )
 {
     override fun newInstance(): ItemStack

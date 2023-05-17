@@ -9,8 +9,10 @@ import org.bukkit.inventory.ItemStack
 
 class VotePartyUntilBroadcastSwitch(private val plugin: CV) : AbstractStatusSwitch(
     plugin,
-    Material.BOOKSHELF, Setting.DISABLED_BROADCAST_VOTE_PARTY_UNTIL,
-    PMessage.VOTE_PARTY_ITEM_NAME_BROADCAST_UNTIL
+    Material.BOOKSHELF,
+    Setting.DISABLED_BROADCAST_VOTE_PARTY_UNTIL,
+    PMessage.VOTE_PARTY_ITEM_NAME_BROADCAST_UNTIL,
+    true
 )
 {
     override fun newInstance(): ItemStack

@@ -10,7 +10,8 @@ import org.bukkit.inventory.ItemStack
 class ArmorStandBreakMessageSwitch(private val plugin: CV) : AbstractStatusSwitch(
     plugin,
     Material.ARMOR_STAND, Setting.DISABLED_MESSAGE_ARMOR_STAND,
-    PMessage.VOTE_TOP_ITEM_NAME_STAND_BREAK_MESSAGE
+    PMessage.VOTE_TOP_ITEM_NAME_STAND_BREAK_MESSAGE,
+    true
 )
 {
     override fun newInstance(): ItemStack

@@ -16,7 +16,7 @@ class VoteRewardSettingsShortcut(
 ) :
     BaseItem(
         Material.DIAMOND, PMessage.VOTE_REWARDS_ITEM_NAME.toString(),
-        null, true
+        PMessage.VOTE_REWARDS_ITEM_LORE.toString(), true
     )
 {
     override fun onClick(event: InventoryClickEvent, player: Player)

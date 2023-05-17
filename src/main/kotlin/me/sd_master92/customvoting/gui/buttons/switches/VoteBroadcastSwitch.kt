@@ -9,8 +9,10 @@ import org.bukkit.inventory.ItemStack
 
 class VoteBroadcastSwitch(private val plugin: CV) : AbstractStatusSwitch(
     plugin,
-    Material.DIAMOND, Setting.DISABLED_BROADCAST_VOTE,
-    PMessage.VOTE_ITEM_NAME_BROADCAST
+    Material.DIAMOND,
+    Setting.DISABLED_BROADCAST_VOTE,
+    PMessage.VOTE_ITEM_NAME_BROADCAST,
+    true
 )
 {
     override fun newInstance(): ItemStack

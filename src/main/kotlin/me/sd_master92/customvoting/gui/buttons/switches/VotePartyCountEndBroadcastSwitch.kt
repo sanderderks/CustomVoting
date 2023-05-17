@@ -9,8 +9,10 @@ import org.bukkit.inventory.ItemStack
 
 class VotePartyCountEndBroadcastSwitch(private val plugin: CV) : AbstractStatusSwitch(
     plugin,
-    Material.FIREWORK_ROCKET, Setting.DISABLED_BROADCAST_VOTE_PARTY_COUNTDOWN_ENDING,
-    PMessage.VOTE_PARTY_ITEM_NAME_BROADCAST_COUNTDOWN_END
+    Material.FIREWORK_ROCKET,
+    Setting.DISABLED_BROADCAST_VOTE_PARTY_COUNTDOWN_ENDING,
+    PMessage.VOTE_PARTY_ITEM_NAME_BROADCAST_COUNTDOWN_END,
+    true
 )
 {
     override fun newInstance(): ItemStack

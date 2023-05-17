@@ -10,7 +10,8 @@ import org.bukkit.inventory.ItemStack
 class MilestoneBroadcastSwitch(private val plugin: CV) : AbstractStatusSwitch(
     plugin,
     Material.ENDER_PEARL, Setting.DISABLED_BROADCAST_MILESTONE,
-    PMessage.MILESTONE_ITEM_NAME_BROADCAST
+    PMessage.MILESTONE_ITEM_NAME_BROADCAST,
+    true
 )
 {
     override fun newInstance(): ItemStack
