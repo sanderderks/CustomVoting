@@ -24,7 +24,6 @@
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
-                <!-- Keeping filtering at true here reduces plugin.yml redundancy! -->
                 <filtering>true</filtering>
                 <includes>
                     <include>plugin.yml</include>
@@ -32,14 +31,12 @@
             </resource>
             <resource>
                 <directory>src/main/resources</directory>
-                <!-- Keep filtering at false for other resources to prevent bad magic -->
                 <filtering>false</filtering>
                 <includes>
                     <include>settings.yml</include>
-                    <include>messages.yml</include>
-                    <include>messages.nl.yml</include>
+                    <include>messages*.yml</include>
                     <include>data.yml</include>
-                    <include>language/*</include>
+                    <include>language/**</include>
                 </includes>
                 <excludes>
                     <exclude>**/*.java</exclude>
@@ -51,7 +48,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.3</version>
+                <version>3.8.1</version>
                 <configuration>
                     <source>8</source>
                     <target>8</target>
@@ -74,13 +71,10 @@
                         </relocation>
                     </relocations>
                     <transformers>
-                        <transformer
-                                implementation="org.apache.maven.plugins.shade.resource.DontIncludeResourceTransformer">
+                        <transformer implementation="org.apache.maven.plugins.shade.resource.DontIncludeResourceTransformer">
                             <resource>MANIFEST.MF</resource>
                         </transformer>
-                        <!-- Add a transformer to include your custom manifest file. -->
-                        <transformer
-                                implementation="org.apache.maven.plugins.shade.resource.IncludeResourceTransformer">
+                        <transformer implementation="org.apache.maven.plugins.shade.resource.IncludeResourceTransformer">
                             <resource>META-INF/MANIFEST.MF</resource>
                             <file>src/main/resources/META-INF/MANIFEST.MF</file>
                         </transformer>
