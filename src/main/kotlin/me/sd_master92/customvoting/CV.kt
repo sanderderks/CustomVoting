@@ -234,7 +234,7 @@ class CV : CustomPlugin(
         metrics.addCustomChart(SimplePie("vote_party_type") {
             if (config.getBoolean(Setting.VOTE_PARTY.path)) VotePartyType.values()[
                 config.getNumber(Setting.VOTE_PARTY_TYPE.path)
-            ].label() else "None"
+            ].label(Locale.ENGLISH) else "None"
         })
         metrics.addCustomChart(SimplePie("vote_crates") {
             if (data.getLocations(Data.VOTE_CRATES.path).isNotEmpty()) "true" else "false"

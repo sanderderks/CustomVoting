@@ -14,7 +14,7 @@ class TopVoteSitesDescription(plugin: CV) : SimpleItem(
 {
     init
     {
-        val voteSites = BStatsData.VOTE_SITES.sortedByDescending { it.y }
+        val voteSites = BStatsData.VOTE_SITES.filter { site -> site.name != "Other" }.sortedByDescending { it.y }
         var lore = PMessage.STATISTICS_ITEM_LORE_VOTE_TOP_SITES.toString()
         for ((i, site) in voteSites.take(8).withIndex())
         {

@@ -3,6 +3,7 @@ package me.sd_master92.customvoting.constants.enumerations
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.replaceIfNotNull
 import org.bukkit.ChatColor
+import java.util.*
 
 /**
  * SUBJECT_TYPE\[_NAME]
@@ -350,9 +351,11 @@ enum class PMessage(
 
     XP_UNIT_LEVELS_MULTIPLE;
 
-    fun getValue(): String
+    fun getValue(locale: Locale? = null): String
     {
-        var value = CV.RESOURCE_BUNDLE?.getString(name.uppercase()) ?: ""
+        var value = if (locale == null) CV.RESOURCE_BUNDLE?.getString(name.uppercase())
+            ?: "" else ResourceBundle.getBundle(CV.RESOURCE_BUNDLE?.baseBundleName ?: "", locale)
+            .getString(name.uppercase())
         if (color != null)
         {
             value = "$color$value"
