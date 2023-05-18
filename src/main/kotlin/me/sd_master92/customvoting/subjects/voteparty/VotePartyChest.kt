@@ -15,18 +15,20 @@ import org.bukkit.attribute.Attribute
 import org.bukkit.block.BlockFace
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Pig
+import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import java.util.*
 
-class VotePartyChest(private val plugin: CV, key: String)
+class VotePartyChest private constructor(private val plugin: CV, val key: String)
 {
-    val items: MutableList<ItemStack> = plugin.data.getItems(Data.VOTE_PARTY_CHESTS.path + ".$key").toMutableList()
-    val loc: Location = plugin.data.getLocation(Data.VOTE_PARTY_CHESTS.path + ".$key")!!.clone()
-    var dropLoc: Location = Location(loc.world, loc.x + 0.5, loc.y - 1, loc.z + 0.5)
-    private val fireworkLoc: Location = Location(loc.world, loc.x + 0.5, loc.y + 1, loc.z + 0.5)
-    private val random: Random = Random()
+    private val path = Data.VOTE_PARTY_CHESTS.path + ".$key"
+    val items = plugin.data.getItems(path).toMutableList()
+    val loc = plugin.data.getLocation(path)!!.clone()
+    var dropLoc = Location(loc.world, loc.x + 0.5, loc.y - 1, loc.z + 0.5)
+    private val fireworkLoc = Location(loc.world, loc.x + 0.5, loc.y + 1, loc.z + 0.5)
+    private val random = Random()
 
     fun isEmpty(): Boolean
     {
@@ -36,6 +38,15 @@ class VotePartyChest(private val plugin: CV, key: String)
     fun isNotEmpty(): Boolean
     {
         return !isEmpty()
+    }
+
+    fun delete(player: Player)
+    {
+        if (plugin.data.deleteLocation(path))
+        {
+            plugin.data.deleteItems(path)
+            player.sendMessage(PMessage.VOTE_PARTY_MESSAGE_CHEST_DELETED_X.with(key))
+        }
     }
 
     fun show()
@@ -128,6 +139,27 @@ class VotePartyChest(private val plugin: CV, key: String)
 
     companion object
     {
+        fun create(plugin: CV, loc: Location, player: Player)
+        {
+            val numbers = getAll(plugin).map { chest -> chest.key }.mapNotNull { it.toIntOrNull() }
+            val maxNumber = numbers.maxOrNull() ?: 0
+            var newNumber = maxNumber + 1
+
+            for (i in 1..maxNumber)
+            {
+                if (i !in numbers)
+                {
+                    newNumber = i
+                    break
+                }
+            }
+
+            plugin.data.setLocation(Data.VOTE_PARTY_CHESTS.path + ".$newNumber", loc)
+            SoundType.SUCCESS.play(plugin, player)
+            player.sendMessage(PMessage.VOTE_PARTY_MESSAGE_CHEST_CREATED_X.with("$newNumber"))
+            player.inventory.setItemInMainHand(VoteParty.VOTE_PARTY_ITEM)
+        }
+
         fun getAll(plugin: CV): MutableList<VotePartyChest>
         {
             val list = mutableListOf<VotePartyChest>()
@@ -136,6 +168,11 @@ class VotePartyChest(private val plugin: CV, key: String)
                 list.add(VotePartyChest(plugin, key))
             }
             return list
+        }
+
+        fun getByLocation(plugin: CV, loc: Location): VotePartyChest?
+        {
+            return getAll(plugin).firstOrNull { chest -> chest.loc == loc }
         }
     }
 }

@@ -7,6 +7,7 @@ import me.sd_master92.customvoting.addToInventoryOrDrop
 import me.sd_master92.customvoting.constants.enumerations.Data
 import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.SoundType
+import me.sd_master92.customvoting.gui.items.CrateKeyItem
 import me.sd_master92.customvoting.gui.items.SimpleItem
 import me.sd_master92.customvoting.helpers.ParticleHelper
 import org.bukkit.Material
@@ -16,11 +17,11 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 import java.util.*
 
-class CrateMenu(private val plugin: CV, private val player: Player, path: String) :
+class CrateMenu(private val plugin: CV, private val player: Player, private val key: String) :
     GUI(
         plugin,
         null,
-        (plugin.data.getString("$path.name") ?: PMessage.CRATE_INVENTORY_NAME.toString()),
+        (plugin.data.getString(Data.VOTE_CRATES.path + ".$key.name") ?: PMessage.CRATE_INVENTORY_NAME.toString()),
         45
     )
 {
@@ -135,6 +136,7 @@ class CrateMenu(private val plugin: CV, private val player: Player, path: String
             keepAlive = false
             player.closeInventory()
             player.sendMessage(PMessage.CRATE_ERROR_EMPTY.toString())
+            player.inventory.addItem(CrateKeyItem(plugin, key.toInt()))
         }
     }
 
@@ -142,7 +144,7 @@ class CrateMenu(private val plugin: CV, private val player: Player, path: String
     {
         for (key in Data.CRATE_REWARD_CHANCES)
         {
-            rewards[key] = plugin.data.getItems("$path.${Data.ITEM_REWARDS}.$key")
+            rewards[key] = plugin.data.getItems(Data.VOTE_CRATES.path + ".${this.key}.${Data.ITEM_REWARDS}.$key")
         }
 
         for (key in rewards.keys)
