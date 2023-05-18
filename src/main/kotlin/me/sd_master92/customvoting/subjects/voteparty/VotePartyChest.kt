@@ -5,11 +5,13 @@ import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.Data
 import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.SoundType
+import me.sd_master92.customvoting.getEntityHealthString
 import me.sd_master92.customvoting.helpers.ParticleHelper
 import me.sd_master92.customvoting.listeners.EntityListener
 import me.sd_master92.customvoting.listeners.ItemListener
 import org.bukkit.Location
 import org.bukkit.Material
+import org.bukkit.attribute.Attribute
 import org.bukkit.block.BlockFace
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Pig
@@ -80,6 +82,8 @@ class VotePartyChest(private val plugin: CV, key: String)
     {
         hide()
         val pig = loc.world!!.spawnEntity(loc, EntityType.PIG) as Pig
+        pig.getAttribute(Attribute.GENERIC_MAX_HEALTH)?.baseValue = 40.0
+        pig.health = 40.0
         pig.isInvulnerable = true
         pig.isCustomNameVisible = true
         pig.addPotionEffect(PotionEffect(PotionEffectType.SPEED, 20 * 120, 2))
@@ -92,8 +96,7 @@ class VotePartyChest(private val plugin: CV, key: String)
                 SoundType.CLICK.play(plugin, pig.location)
             } else
             {
-                pig.customName = null
-                pig.isCustomNameVisible = false
+                pig.customName = pig.getEntityHealthString()
                 pig.isInvulnerable = false
                 SoundType.NOTIFY.play(plugin, pig.location)
             }

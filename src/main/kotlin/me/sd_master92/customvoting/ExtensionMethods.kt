@@ -10,13 +10,16 @@ import me.sd_master92.customvoting.constants.interfaces.Voter
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
 import org.bukkit.*
+import org.bukkit.attribute.Attribute
 import org.bukkit.command.CommandSender
-import org.bukkit.entity.ArmorStand
-import org.bukkit.entity.EntityType
-import org.bukkit.entity.Player
+import org.bukkit.entity.*
 import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.meta.PotionMeta
 import org.bukkit.inventory.meta.SkullMeta
+import org.bukkit.potion.PotionEffect
+import org.bukkit.potion.PotionEffectType
 import java.util.*
+import kotlin.math.ceil
 
 
 fun String.withPlaceholders(player: Player): String
@@ -202,4 +205,43 @@ fun Locale.setLanguage()
     CustomPlugin.STATUS_TEXT = PMessage.GENERAL_ITEM_LORE_STATUS.toString()
     CustomPlugin.ON_TEXT = PMessage.GENERAL_VALUE_ON.toString()
     CustomPlugin.OFF_TEXT = PMessage.GENERAL_VALUE_OFF.toString()
+}
+
+fun LivingEntity.getEntityHealthString(): String
+{
+    val redHeart = "${ChatColor.DARK_RED}❤"
+    val halfRedHeart = "${ChatColor.RED}❤"
+    val grayHeart = "${ChatColor.GRAY}❤"
+    val maxHealth = getAttribute(Attribute.GENERIC_MAX_HEALTH)?.value ?: 20.0
+
+    val health = ceil(health / (maxHealth / 20)).toInt()
+
+    return buildString {
+        for (i in 0 until 10)
+        {
+            append(
+                when
+                {
+                    i * 2 + 2 <= health -> redHeart
+                    i * 2 + 1 == health -> halfRedHeart
+                    else                -> grayHeart
+                }
+            )
+        }
+    }
+}
+
+fun Location.splashPotion(mat: Material, type: PotionEffectType)
+{
+    val potion = ItemStack(mat)
+        .apply {
+            val potionMeta = itemMeta as PotionMeta
+            potionMeta.addCustomEffect(PotionEffect(type, 0, 0), true)
+            itemMeta = potionMeta
+        }
+
+    val thrownPotion = world!!.spawn(this, ThrownPotion::class.java)
+    thrownPotion.item = potion
+    thrownPotion.shooter = null
+    thrownPotion.velocity = direction.multiply(1.5)
 }
