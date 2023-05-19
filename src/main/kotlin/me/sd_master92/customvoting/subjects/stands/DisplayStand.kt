@@ -16,7 +16,7 @@ class DisplayStand(
     private val main: Boolean = false
 )
 {
-    private var stand: ArmorStand? = null
+    var stand: ArmorStand? = null
     val location
         get() = stand?.location
 

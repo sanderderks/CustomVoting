@@ -5,7 +5,10 @@ import me.sd_master92.core.infoLog
 import me.sd_master92.core.inventory.ConfirmGUI
 import me.sd_master92.core.tasks.TaskTimer
 import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.constants.enumerations.*
+import me.sd_master92.customvoting.constants.enumerations.Message
+import me.sd_master92.customvoting.constants.enumerations.PMessage
+import me.sd_master92.customvoting.constants.enumerations.Setting
+import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.constants.interfaces.Voter
 import me.sd_master92.customvoting.gui.pages.editors.VotePartyRewardItemsEditor
 import me.sd_master92.customvoting.sendText
@@ -13,6 +16,7 @@ import me.sd_master92.customvoting.stripColor
 import me.sd_master92.customvoting.subjects.CustomVote
 import me.sd_master92.customvoting.subjects.VoteCrate
 import me.sd_master92.customvoting.subjects.VoteTopSign
+import me.sd_master92.customvoting.subjects.stands.VoteTopStand
 import me.sd_master92.customvoting.subjects.voteparty.VoteParty
 import me.sd_master92.customvoting.subjects.voteparty.VotePartyChest
 import me.sd_master92.customvoting.tasks.UpdateChecker
@@ -80,23 +84,22 @@ class PlayerListener(private val plugin: CV) : Listener
     @EventHandler
     fun onPlayerInteractEntity(event: EntityDamageByEntityEvent)
     {
-        if (event.entity is ArmorStand && event.damager is Player)
+        val entity = event.entity
+        val damager = event.damager
+
+        if (entity is ArmorStand && damager is Player)
         {
-            val section = plugin.data.getConfigurationSection(Data.VOTE_TOP_STANDS.path)
-            if (section != null)
+            for (voteTopStand in VoteTopStand.voteTops.values)
             {
-                for (top in section.getKeys(false))
+                if (voteTopStand.topStand.stand?.uniqueId == entity.uniqueId ||
+                    voteTopStand.nameStand.stand?.uniqueId == entity.uniqueId ||
+                    voteTopStand.votesStand.stand?.uniqueId == entity.uniqueId
+                )
                 {
-                    for (sub in listOf("top", "name", "votes"))
+                    event.isCancelled = true
+                    if (!plugin.config.getBoolean(Setting.DISABLED_MESSAGE_ARMOR_STAND.path))
                     {
-                        if (section.getString("$top.$sub") == event.entity.uniqueId.toString())
-                        {
-                            event.isCancelled = true
-                            if (!plugin.config.getBoolean(Setting.DISABLED_MESSAGE_ARMOR_STAND.path))
-                            {
-                                event.damager.sendText(plugin, Message.VOTE_TOP_STANDS_DONT)
-                            }
-                        }
+                        damager.sendText(plugin, Message.VOTE_TOP_STANDS_DONT)
                     }
                 }
             }

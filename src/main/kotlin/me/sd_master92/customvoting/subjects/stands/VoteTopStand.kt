@@ -12,9 +12,9 @@ import org.bukkit.entity.Player
 class VoteTopStand private constructor(private val plugin: CV, private val top: Int)
 {
     private val path = Data.VOTE_TOP_STANDS.path + ".$top"
-    private var topStand = DisplayStand(plugin, "$path.top", top)
-    private var nameStand = DisplayStand(plugin, "$path.name", top)
-    private var votesStand = DisplayStand(plugin, "$path.votes", top, true)
+    var topStand = DisplayStand(plugin, "$path.top", top)
+    var nameStand = DisplayStand(plugin, "$path.name", top)
+    var votesStand = DisplayStand(plugin, "$path.votes", top, true)
     private var citizen = Citizen(plugin, "$path.citizen", top, votesStand.location)
 
     fun exists(): Boolean
@@ -75,7 +75,7 @@ class VoteTopStand private constructor(private val plugin: CV, private val top: 
 
     companion object
     {
-        private val voteTops: MutableMap<Int, VoteTopStand> = HashMap()
+        val voteTops: MutableMap<Int, VoteTopStand> = HashMap()
 
         operator fun get(plugin: CV, top: Int): VoteTopStand
         {
