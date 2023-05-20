@@ -33,7 +33,7 @@ enum class PlayerTableColumn(
             {
                 for (column in columns())
                 {
-                    if (!table.createIFNotExists(column.columnName, column.dataType))
+                    if (!table.getColumn(column.columnName).create(column.dataType))
                     {
                         plugin.errorLog("| could not create column '${column.columnName}'")
                     }

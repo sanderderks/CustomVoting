@@ -148,8 +148,13 @@ class EntityListener(private val plugin: CV) : Listener
                         {
                             if (event.entity.world.difficulty == Difficulty.PEACEFUL || random.nextInt(2) == 1)
                             {
-                                val pig = event.entity.world.spawnEntity(event.entity.location, EntityType.PIG) as Pig
-                                pig.addPassenger(event.entity)
+                                var entity = event.entity
+                                while (entity.isInsideVehicle)
+                                {
+                                    entity = entity.vehicle!!
+                                }
+                                val pig = entity.world.spawnEntity(entity.location, EntityType.PIG) as Pig
+                                pig.addPassenger(entity)
                             } else if (random.nextInt(2) == 1)
                             {
                                 val creeper =

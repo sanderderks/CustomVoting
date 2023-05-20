@@ -27,7 +27,7 @@ enum class QueueTableColumn(
             {
                 for (column in columns())
                 {
-                    if (!table.createIFNotExists(column.columnName, column.dataType))
+                    if (!table.getColumn(column.columnName).create(column.dataType))
                     {
                         plugin.errorLog("| could not create column '${column.columnName}'")
                     }
@@ -37,7 +37,7 @@ enum class QueueTableColumn(
             }
         }
 
-        private fun columns(): Array<QueueTableColumn>
+        fun columns(): Array<QueueTableColumn>
         {
             return values().filter { it != ID }.toTypedArray()
         }

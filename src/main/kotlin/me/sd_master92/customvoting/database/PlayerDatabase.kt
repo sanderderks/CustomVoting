@@ -240,37 +240,49 @@ class PlayerDatabase(private val plugin: CV, database: CustomDatabase)
 
     private fun migratePlayers()
     {
-        rename("period", PlayerTableColumn.MONTHLY_VOTES.columnName, CustomColumn.DataType.INT)
-        rename("monthly_votes", PlayerTableColumn.MONTHLY_VOTES.columnName, CustomColumn.DataType.INT)
-        rename("is_op", PlayerTableColumn.POWER.columnName, CustomColumn.DataType.BOOLEAN)
+        rename(playersTable, "period", PlayerTableColumn.MONTHLY_VOTES.columnName, CustomColumn.DataType.INT)
+        rename(playersTable, "monthly_votes", PlayerTableColumn.MONTHLY_VOTES.columnName, CustomColumn.DataType.INT)
+        rename(playersTable, "is_op", PlayerTableColumn.POWER.columnName, CustomColumn.DataType.BOOLEAN)
         for (column in PlayerTableColumn.columns())
         {
-            create(column.columnName, column.dataType)
+            create(playersTable, column.columnName, column.dataType)
         }
-        delete("queue")
+        delete(playersTable, "queue")
     }
 
-    private fun create(name: String, dataType: CustomColumn.DataType)
+    private fun migrateQueue()
     {
-        if (playersTable.getColumn(name).createIFNotExists(dataType))
+        for (column in QueueTableColumn.columns())
         {
-            plugin.infoLog("| successfully added column '$name'!")
-        } else
-        {
-            plugin.errorLog("| could not create column '$name'!")
+            create(queueTable, column.columnName, column.dataType)
         }
     }
 
-    private fun rename(oldName: String, newName: String, dataType: CustomColumn.DataType)
+    private fun create(table: CustomTable, name: String, dataType: CustomColumn.DataType)
     {
-        if (!playersTable.getColumn(newName).exists())
+        val column = table.getColumn(name)
+        if (!column.exists())
+        {
+            if (column.create(dataType))
+            {
+                plugin.infoLog("| successfully created column '$name'!")
+            } else
+            {
+                plugin.errorLog("| could not create column '$name'!")
+            }
+        }
+    }
+
+    private fun rename(table: CustomTable, oldName: String, newName: String, dataType: CustomColumn.DataType)
+    {
+        if (!table.getColumn(newName).exists())
         {
             val column = playersTable.getColumn(oldName)
             if (column.exists())
             {
                 if (column.renameOrCreate(newName, dataType))
                 {
-                    plugin.infoLog("| successfully added column '$newName'!")
+                    plugin.infoLog("| successfully created column '$newName'!")
                 } else
                 {
                     plugin.errorLog("| could not create column '$newName'!")
@@ -279,14 +291,18 @@ class PlayerDatabase(private val plugin: CV, database: CustomDatabase)
         }
     }
 
-    private fun delete(name: String)
+    private fun delete(table: CustomTable, name: String)
     {
-        if (playersTable.getColumn(name).delete())
+        val column = table.getColumn(name)
+        if (column.exists())
         {
-            plugin.infoLog("| successfully deleted column '$name'!")
-        } else
-        {
-            plugin.errorLog("| could not delete column '$name'!")
+            if (table.getColumn(name).delete())
+            {
+                plugin.infoLog("| successfully deleted column '$name'!")
+            } else
+            {
+                plugin.errorLog("| could not delete column '$name'!")
+            }
         }
     }
 
@@ -316,6 +332,7 @@ class PlayerDatabase(private val plugin: CV, database: CustomDatabase)
         {
             plugin.infoLog("| successfully located table '$QUEUE_TABLE'")
             plugin.infoLog("|")
+            migrateQueue()
         }
         if (playersTable.exists() && queueTable.exists())
         {
