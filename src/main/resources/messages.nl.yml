@@ -111,6 +111,7 @@ vote_party:
   # %KILLER% moordenaar
   # %s% extra s voor als TOGO hoger is dan 1
   pig_killed: '&dVarken gedood door &b%KILLER%&d! Nog maar &b%TOGO% &dvarken%s% te gaan!'
+  pig_killed_last: '&dLaatste varken gedood door &b%KILLER%&d!'
 
   # %PLAYER% naam van de speler
   # %MILESTONE% bereikt

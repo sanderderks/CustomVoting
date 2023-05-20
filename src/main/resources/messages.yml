@@ -111,6 +111,7 @@ vote_party:
   # %KILLER% killer
   # %s% extra s for when TOGO is higher than 1
   pig_killed: '&dPig killed by &b%KILLER%&d! Only &b%TOGO% &dpig%s% to go!'
+  pig_killed_last: '&dPig killed by &b%KILLER%&d!'
 
 # %PLAYER% name of the player
 # %MILESTONE% milestone reached

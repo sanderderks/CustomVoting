@@ -52,17 +52,18 @@ class EntityListener(private val plugin: CV) : Listener
             PIG_HUNT.remove(uuid)
             ParticleHelper.shootFirework(plugin, event.entity.location)
 
-            if (PIG_HUNT.isEmpty())
+            val placeholders = HashMap<String, String>()
+            placeholders["%KILLER%"] = event.entity.killer?.name ?: event.entity.type.toString()
+            if (PIG_HUNT.isNotEmpty())
             {
-                VoteParty.stop(plugin)
-            } else
-            {
-                val placeholders = HashMap<String, String>()
                 placeholders["%COUNT%"] = "" + (VotePartyChest.getAll(plugin).size - PIG_HUNT.size)
                 placeholders["%TOGO%"] = "" + PIG_HUNT.size
-                placeholders["%KILLER%"] = event.entity.killer?.name ?: event.entity.type.toString()
                 placeholders["%s%"] = if (PIG_HUNT.size == 1) "" else "s"
                 plugin.broadcastText(Message.VOTE_PARTY_PIG_KILLED, placeholders)
+            } else
+            {
+                plugin.broadcastText(Message.VOTE_PARTY_PIG_KILLED_LAST, placeholders)
+                VoteParty.stop(plugin)
             }
         }
     }
@@ -107,14 +108,14 @@ class EntityListener(private val plugin: CV) : Listener
                             4.0
                         }
 
-                        1    ->
+                        1    -> 3.0
+                        2    -> 2.0
+                        3    ->
                         {
                             SoundType.FUNNY_2.play(plugin, event.entity.location)
-                            3.0
+                            0.0
                         }
 
-                        2    -> 2.0
-                        3    -> 0.0
                         else -> 1.0
                     }
 

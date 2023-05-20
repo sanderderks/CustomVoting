@@ -67,6 +67,7 @@ enum class Message(private val path: String, private val defaultValue: Any?)
     VOTE_PARTY_START("$VOTE_PARTY.start", "&aThe Vote Party has begun!"),
     VOTE_PARTY_END("$VOTE_PARTY.end", "&7The Vote Party has ended!"),
     VOTE_PARTY_PIG_KILLED("$VOTE_PARTY.pig_killed", "&dPig killed by &b%KILLER%&d! Only &b%TOGO% &dpig%s% to go!"),
+    VOTE_PARTY_PIG_KILLED_LAST("$VOTE_PARTY.pig_killed_last", "&dPig killed by &b%KILLER%&d!"),
 
     MILESTONE("milestone", null),
     MILESTONE_REACHED("$MILESTONE.milestone_reached", "&b%PLAYER% &dreached vote milestone #&b%MILESTONE%&d!"),
