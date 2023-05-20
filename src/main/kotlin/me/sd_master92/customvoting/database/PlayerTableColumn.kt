@@ -38,7 +38,7 @@ enum class PlayerTableColumn(
                         plugin.errorLog("| could not create column '${column.columnName}'")
                     }
                 }
-                plugin.infoLog("| successfully created table '$table'")
+                plugin.infoLog("| successfully created table '${table.name}'")
                 plugin.infoLog("|")
             }
         }
