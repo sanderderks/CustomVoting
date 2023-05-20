@@ -4,6 +4,7 @@ import me.sd_master92.core.input.PlayerStringInput
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.Setting
+import me.sd_master92.customvoting.trimPrefixColor
 import org.bukkit.entity.Player
 
 abstract class PlayerCommandInput(
@@ -18,7 +19,7 @@ abstract class PlayerCommandInput(
 
     override fun onInputReceived(input: String)
     {
-        var command = input
+        var command = input.trimPrefixColor()
         for (forbidden in plugin.config.getStringList(Setting.FORBIDDEN_COMMANDS.path))
         {
             if (command.lowercase().contains(forbidden))
