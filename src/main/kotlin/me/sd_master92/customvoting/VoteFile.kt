@@ -118,19 +118,16 @@ class VoteFile : Voter
     override fun clearMonthlyVotes()
     {
         playerFile.setNumber(VOTES_MONTHLY, 0)
-        Voter.getTopVoters(plugin, true)
     }
 
     override fun clearWeeklyVotes()
     {
         playerFile.setNumber(VOTES_WEEKLY, 0)
-        Voter.getTopVoters(plugin, true)
     }
 
     override fun clearDailyVotes()
     {
         playerFile.setNumber(VOTES_DAILY, 0)
-        Voter.getTopVoters(plugin, true)
     }
 
     override fun addVote(): Boolean

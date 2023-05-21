@@ -6,6 +6,7 @@ import me.sd_master92.customvoting.constants.enumerations.Setting
 import me.sd_master92.customvoting.constants.interfaces.TopVoter
 import me.sd_master92.customvoting.constants.interfaces.Voter
 import me.sd_master92.customvoting.dayDifferenceToday
+import me.sd_master92.customvoting.monthDifferenceToday
 import me.sd_master92.customvoting.weekDifferenceToday
 import org.bukkit.entity.Player
 
@@ -18,7 +19,17 @@ class PlayerTable(private val plugin: CV, override val uuid: String) : Voter
     override val votes: Int
         get() = players?.getVotes(uuid) ?: 0
     override val votesMonthly: Int
-        get() = players?.getMonthlyVotes(uuid) ?: 0
+        get()
+        {
+            return if (last.monthDifferenceToday() > 0)
+            {
+                clearMonthlyVotes()
+                0
+            } else
+            {
+                players?.getMonthlyVotes(uuid) ?: 0
+            }
+        }
     override val votesWeekly: Int
         get()
         {
@@ -80,7 +91,6 @@ class PlayerTable(private val plugin: CV, override val uuid: String) : Voter
     override fun clearMonthlyVotes()
     {
         players?.setMonthlyVotes(uuid, 0)
-        Voter.getTopVoters(plugin, true)
     }
 
     override fun addVote(): Boolean
@@ -133,13 +143,11 @@ class PlayerTable(private val plugin: CV, override val uuid: String) : Voter
     override fun clearWeeklyVotes()
     {
         players?.setWeeklyVotes(uuid, 0) ?: false
-        Voter.getTopVoters(plugin, true)
     }
 
     override fun clearDailyVotes()
     {
         players?.setDailyVotes(uuid, 0) ?: false
-        Voter.getTopVoters(plugin, true)
     }
 
     companion object : TopVoter

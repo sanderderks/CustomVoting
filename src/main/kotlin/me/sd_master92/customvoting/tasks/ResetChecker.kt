@@ -2,46 +2,61 @@ package me.sd_master92.customvoting.tasks
 
 import me.sd_master92.core.tasks.TaskTimer
 import me.sd_master92.customvoting.CV
+import me.sd_master92.customvoting.constants.enumerations.Setting
 import me.sd_master92.customvoting.constants.interfaces.Voter
 import java.util.*
 
 class ResetChecker(private val plugin: CV)
 {
-    private var lastResetDay: Int = -1
-    private var lastResetWeek: Int = -1
-    private var lastResetMonth: Int = -1
+    private var lastResetMonth
+        get() = plugin.config.getNumber(Setting.LAST_VOTE_RESET_MONTH.path)
+        set(value)
+        {
+            plugin.config.setNumber(Setting.LAST_VOTE_RESET_MONTH.path, value)
+        }
+    private var lastResetWeek
+        get() = plugin.config.getNumber(Setting.LAST_VOTE_RESET_WEEK.path)
+        set(value)
+        {
+            plugin.config.setNumber(Setting.LAST_VOTE_RESET_WEEK.path, value)
+        }
+    private var lastResetDay
+        get() = plugin.config.getNumber(Setting.LAST_VOTE_RESET_DAY.path)
+        set(value)
+        {
+            plugin.config.setNumber(Setting.LAST_VOTE_RESET_DAY.path, value)
+        }
 
     init
     {
         TaskTimer.repeat(plugin, 20 * 60 * 60, 20 * 3) {
             val calendar = Calendar.getInstance()
+            val currentMonth = calendar[Calendar.MONTH]
+            val currentWeek = calendar[Calendar.WEEK_OF_YEAR]
+            val currentDay = calendar[Calendar.DAY_OF_MONTH]
 
-            if (calendar[Calendar.MONTH] != lastResetMonth)
+            if (lastResetMonth != currentMonth)
             {
-                lastResetMonth = calendar[Calendar.MONTH]
-                for (voter in Voter.getTopVoters(plugin))
-                {
-                    voter.clearMonthlyVotes()
-                }
+                lastResetMonth = currentMonth
+                performActionForVoters(Voter::clearMonthlyVotes)
             }
 
-            if (calendar[Calendar.WEEK_OF_YEAR] != lastResetWeek)
+            if (lastResetWeek != currentWeek)
             {
-                lastResetWeek = calendar[Calendar.WEEK_OF_YEAR]
-                for (voter in Voter.getTopVoters(plugin))
-                {
-                    voter.clearWeeklyVotes()
-                }
+                lastResetWeek = currentWeek
+                performActionForVoters(Voter::clearWeeklyVotes)
             }
 
-            if (calendar[Calendar.DAY_OF_MONTH] != lastResetDay)
+            if (lastResetDay != currentDay)
             {
-                lastResetDay = calendar[Calendar.DAY_OF_MONTH]
-                for (voter in Voter.getTopVoters(plugin))
-                {
-                    voter.clearDailyVotes()
-                }
+                lastResetDay = currentDay
+                performActionForVoters(Voter::clearDailyVotes)
             }
         }.run()
+    }
+
+    private fun performActionForVoters(action: (Voter) -> Unit)
+    {
+        Voter.getTopVoters(plugin).forEach(action)
     }
 }
