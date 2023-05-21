@@ -5,9 +5,8 @@ import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.gui.buttons.actions.MergeDuplicatesAction
+import me.sd_master92.customvoting.gui.buttons.carousel.VotesSortTypeCarousel
 import me.sd_master92.customvoting.gui.buttons.switches.DatabaseSwitch
-import me.sd_master92.customvoting.gui.buttons.switches.MonthlyResetSwitch
-import me.sd_master92.customvoting.gui.buttons.switches.MonthlyVotesSwitch
 import me.sd_master92.customvoting.gui.buttons.switches.UuidSupportSwitch
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
@@ -41,8 +40,7 @@ class DangerZoneSettingsPage(private val plugin: CV, backPage: GUI?) :
 
     init
     {
-        addItem(MonthlyResetSwitch(plugin))
-        addItem(MonthlyVotesSwitch(plugin))
+        addItem(VotesSortTypeCarousel(plugin))
         addItem(UuidSupportSwitch(plugin))
         addItem(DatabaseSwitch(plugin))
         addItem(MergeDuplicatesAction(plugin))
