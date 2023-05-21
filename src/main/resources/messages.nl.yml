@@ -4,7 +4,7 @@ no_permission: '&cJe hebt geen toestemming om dit commando uit te voeren.'
 must_be_player: '&cJe moet een speler zijn om dit commando uit te voeren.'
 invalid_player: '&cDie speler bestaat niet.'
 
-month_reset: '&d&lAlle stemmen zijn gereset, want er is een nieuwe maand begonnen!'
+vote_reset: '&d&lAlle stemmen zijn gereset!'
 
 # %PLAYER% naam van de speler die gestemd heeft
 # %SERVICE% stem website

@@ -7,7 +7,7 @@ enum class Message(private val path: String, private val defaultValue: Any?)
     NO_PERMISSION("no_permission", "&cYou do not have permission to perform this command."),
     MUST_BE_PLAYER("must_be_player", "&cYou must be a player to perform this command."),
     INVALID_PLAYER("invalid_player", "&cThat player does not exist."),
-    MONTHLY_RESET("monthly_reset", "&d&lAll votes have been reset, because a new month has started!"),
+    VOTE_RESET("vote_reset", "&d&lAll votes have been reset!"),
     DISABLED_WORLD("disabled_world", "&cPlease go to another world to receive your rewards."),
     VOTE_BROADCAST("vote_broadcast", "&d%PLAYER% &7just voted at &d%SERVICE%&7!"),
     VOTE_LUCKY("lucky_vote", "&aYou received a &dLucky Reward&a!"),
