@@ -101,6 +101,32 @@ class PlayerDatabase(private val plugin: CV, database: CustomDatabase)
         )
     }
 
+    fun getWeeklyVotes(uuid: String): Int
+    {
+        val result = playersTable.getData(PlayerTableColumn.UUID.columnName, uuid)
+        try
+        {
+            if (result.next())
+            {
+                return result.getInt(PlayerTableColumn.WEEKLY_VOTES.columnName)
+            }
+        } catch (e: Exception)
+        {
+            plugin.errorLog("Could not retrieve weekly votes of $uuid from database", e)
+        }
+        return 0
+    }
+
+    fun setWeeklyVotes(uuid: String, votes: Int): Boolean
+    {
+        return playersTable.updateData(
+            PlayerTableColumn.UUID.columnName,
+            uuid,
+            PlayerTableColumn.WEEKLY_VOTES.columnName,
+            votes
+        )
+    }
+
     fun getDailyVotes(uuid: String): Int
     {
         val result = playersTable.getData(PlayerTableColumn.UUID.columnName, uuid)

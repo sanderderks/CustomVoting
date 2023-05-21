@@ -17,7 +17,7 @@ import org.bukkit.block.data.type.WallSign
 import org.bukkit.entity.Player
 import java.util.*
 
-class VoteTopSign constructor(
+class VoteTopSign(
     private val plugin: CV,
     private val top: Int,
     val location: Location?,
@@ -85,6 +85,7 @@ class VoteTopSign constructor(
                 placeholders["%PLAYER%"] = topVoter.name
                 placeholders["%VOTES%"] = "${topVoter.votes}"
                 placeholders["%VOTES_MONTHLY%"] = "${topVoter.votesMonthly}"
+                placeholders["%VOTES_WEEKLY%"] = "${topVoter.votesWeekly}"
                 placeholders["%VOTES_DAILY%"] = "${topVoter.votesDaily}"
                 if (plugin.config.getBoolean(Setting.MONTHLY_VOTES.path))
                 {

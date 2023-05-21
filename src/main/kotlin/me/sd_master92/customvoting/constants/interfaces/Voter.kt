@@ -3,6 +3,7 @@ package me.sd_master92.customvoting.constants.interfaces
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.VoteFile
 import me.sd_master92.customvoting.constants.enumerations.Setting
+import me.sd_master92.customvoting.constants.enumerations.VoteSortType
 import me.sd_master92.customvoting.database.PlayerTable
 import me.sd_master92.customvoting.subjects.VoteTopSign
 import me.sd_master92.customvoting.subjects.stands.VoteTopStand
@@ -13,8 +14,9 @@ interface Voter
     val uuid: String
     val name: String
     val votes: Int
-    val votesDaily: Int
     val votesMonthly: Int
+    val votesWeekly: Int
+    val votesDaily: Int
     val last: Long
     val power: Boolean
     val queue: List<String>
@@ -24,12 +26,12 @@ interface Voter
     fun addVote(): Boolean
     fun addQueue(site: String): Boolean
     fun clearMonthlyVotes()
+    fun clearWeeklyVotes()
+    fun clearDailyVotes()
     fun clearQueue(): Boolean
     fun setPower(power: Boolean): Boolean
     fun addStreak(): Boolean
     fun clearStreak(): Boolean
-    fun addDailyVote(): Boolean
-    fun clearDailyVotes(): Boolean
 
     companion object
     {
@@ -47,15 +49,15 @@ interface Voter
             {
                 val type = if (plugin.hasDatabaseConnection()) PlayerTable else VoteFile
                 val topVoters = type.getAll(plugin)
-                val useMonthly = plugin.config.getBoolean(Setting.MONTHLY_VOTES.path)
+                val sortType = VoteSortType.valueOf(plugin.config.getNumber(Setting.VOTES_SORT_TYPE.path))
 
                 topVoters.sortWith { x: Voter, y: Voter ->
-                    var compare = if (useMonthly)
+                    var compare = when (sortType)
                     {
-                        y.votesMonthly.compareTo(x.votesMonthly)
-                    } else
-                    {
-                        y.votes.compareTo(x.votes)
+                        VoteSortType.ALL     -> y.votes.compareTo(x.votes)
+                        VoteSortType.MONTHLY -> y.votesMonthly.compareTo(x.votesMonthly)
+                        VoteSortType.WEEKLY  -> y.votesWeekly.compareTo(x.votesWeekly)
+                        VoteSortType.DAILY   -> y.votesDaily.compareTo(x.votesDaily)
                     }
                     if (compare == 0)
                     {

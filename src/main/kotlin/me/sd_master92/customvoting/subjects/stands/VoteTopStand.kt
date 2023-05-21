@@ -48,12 +48,14 @@ class VoteTopStand private constructor(private val plugin: CV, private val top: 
             placeholders["%PLAYER%"] = topVoter.name
             placeholders["%VOTES%"] = "" + topVoter.votes
             placeholders["%VOTES_MONTHLY%"] = "" + topVoter.votesMonthly
+            placeholders["%VOTES_WEEKLY%"] = "" + topVoter.votesWeekly
             placeholders["%VOTES_DAILY%"] = "" + topVoter.votesDaily
         } else
         {
             placeholders["%PLAYER%"] = PMessage.PLAYER_NAME_UNKNOWN_COLORED.toString()
             placeholders["%VOTES%"] = "0"
             placeholders["%VOTES_MONTHLY%"] = "0"
+            placeholders["%VOTES_WEEKLY%"] = "0"
             placeholders["%VOTES_DAILY%"] = "0"
         }
         topStand.update(Message.VOTE_TOP_STANDS_TOP.getMessage(plugin, placeholders))

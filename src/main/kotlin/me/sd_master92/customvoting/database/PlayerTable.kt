@@ -6,6 +6,7 @@ import me.sd_master92.customvoting.constants.enumerations.Setting
 import me.sd_master92.customvoting.constants.interfaces.TopVoter
 import me.sd_master92.customvoting.constants.interfaces.Voter
 import me.sd_master92.customvoting.dayDifferenceToday
+import me.sd_master92.customvoting.weekDifferenceToday
 import org.bukkit.entity.Player
 
 class PlayerTable(private val plugin: CV, override val uuid: String) : Voter
@@ -18,6 +19,18 @@ class PlayerTable(private val plugin: CV, override val uuid: String) : Voter
         get() = players?.getVotes(uuid) ?: 0
     override val votesMonthly: Int
         get() = players?.getMonthlyVotes(uuid) ?: 0
+    override val votesWeekly: Int
+        get()
+        {
+            return if (last.weekDifferenceToday() > 0)
+            {
+                clearWeeklyVotes()
+                0
+            } else
+            {
+                players?.getWeeklyVotes(uuid) ?: 0
+            }
+        }
     override val votesDaily: Int
         get()
         {
@@ -54,6 +67,7 @@ class PlayerTable(private val plugin: CV, override val uuid: String) : Voter
     {
         players?.setVotes(uuid, n)
         players?.setMonthlyVotes(uuid, 0)
+        players?.setWeeklyVotes(uuid, 0)
         players?.setDailyVotes(uuid, 0)
         players?.setLast(uuid)
 
@@ -66,9 +80,6 @@ class PlayerTable(private val plugin: CV, override val uuid: String) : Voter
     override fun clearMonthlyVotes()
     {
         players?.setMonthlyVotes(uuid, 0)
-        players?.setDailyVotes(uuid, 0)
-        clearStreak()
-
         Voter.getTopVoters(plugin, true)
     }
 
@@ -119,14 +130,16 @@ class PlayerTable(private val plugin: CV, override val uuid: String) : Voter
         return players?.setStreak(uuid, 0) ?: false
     }
 
-    override fun addDailyVote(): Boolean
+    override fun clearWeeklyVotes()
     {
-        return players?.setDailyVotes(uuid, votesDaily + 1) ?: false
+        players?.setWeeklyVotes(uuid, 0) ?: false
+        Voter.getTopVoters(plugin, true)
     }
 
-    override fun clearDailyVotes(): Boolean
+    override fun clearDailyVotes()
     {
-        return players?.setDailyVotes(uuid, 0) ?: false
+        players?.setDailyVotes(uuid, 0) ?: false
+        Voter.getTopVoters(plugin, true)
     }
 
     companion object : TopVoter
