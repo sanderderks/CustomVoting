@@ -300,7 +300,6 @@ class CV : CustomPlugin(
         ReloadCommand(this).register()
         SettingsCommand(this).register()
         SetVotesCommand(this).register()
-        ClearMonthlyVotesCommand(this).register()
         VoteCommand(this).register()
         VotePartyCommand(this).register()
         VotesCommand(this).register()
