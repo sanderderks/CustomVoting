@@ -69,6 +69,15 @@ class CustomPlaceholders(private val plugin: CV) : PlaceholderExpansion()
                     return "0"
                 }
 
+                PLAYER_VOTES + SUF_WEEKLY  ->
+                {
+                    if (player != null)
+                    {
+                        return "" + Voter.get(plugin, player).votesWeekly
+                    }
+                    return "0"
+                }
+
                 PLAYER_VOTES + SUF_DAILY   ->
                 {
                     if (player != null)
@@ -121,6 +130,11 @@ class CustomPlaceholders(private val plugin: CV) : PlaceholderExpansion()
                             return "" + (getTopVoter(params)?.votesMonthly ?: 0)
                         }
 
+                        (params.contains(PLAYER_VOTES) && params.contains(SUF_WEEKLY))  ->
+                        {
+                            return "" + (getTopVoter(params)?.votesWeekly ?: 0)
+                        }
+
                         (params.contains(PLAYER_VOTES) && params.contains(SUF_DAILY))   ->
                         {
                             return "" + (getTopVoter(params)?.votesDaily ?: 0)
@@ -158,6 +172,7 @@ class CustomPlaceholders(private val plugin: CV) : PlaceholderExpansion()
         const val PLAYER_VOTES = "PLAYER_VOTES"
         const val PLAYER_STREAK = "PLAYER_STREAK"
         const val SUF_MONTHLY = "_MONTHLY"
+        const val SUF_WEEKLY = "_WEEKLY"
         const val SUF_DAILY = "_DAILY"
         const val SUF_NAME = "_NAME"
 
