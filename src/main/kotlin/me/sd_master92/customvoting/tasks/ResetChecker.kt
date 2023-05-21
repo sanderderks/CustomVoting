@@ -35,19 +35,28 @@ class ResetChecker(private val plugin: CV)
             val currentWeek = calendar[Calendar.WEEK_OF_YEAR]
             val currentDay = calendar[Calendar.DAY_OF_MONTH]
 
-            if (lastResetMonth != currentMonth)
+            if (lastResetMonth < 0)
+            {
+                lastResetMonth = currentMonth
+            } else if (lastResetMonth != currentMonth)
             {
                 lastResetMonth = currentMonth
                 performActionForVoters(Voter::clearMonthlyVotes)
             }
 
-            if (lastResetWeek != currentWeek)
+            if (lastResetWeek < 0)
+            {
+                lastResetWeek = currentWeek
+            } else if (lastResetWeek != currentWeek)
             {
                 lastResetWeek = currentWeek
                 performActionForVoters(Voter::clearWeeklyVotes)
             }
 
-            if (lastResetDay != currentDay)
+            if (lastResetDay < 0)
+            {
+                lastResetDay = currentDay
+            } else if (lastResetDay != currentDay)
             {
                 lastResetDay = currentDay
                 performActionForVoters(Voter::clearDailyVotes)
