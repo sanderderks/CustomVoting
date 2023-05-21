@@ -2,10 +2,7 @@ package me.sd_master92.customvoting.subjects
 
 import me.sd_master92.core.tasks.TaskTimer
 import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.constants.enumerations.Data
-import me.sd_master92.customvoting.constants.enumerations.Message
-import me.sd_master92.customvoting.constants.enumerations.PMessage
-import me.sd_master92.customvoting.constants.enumerations.Setting
+import me.sd_master92.customvoting.constants.enumerations.*
 import me.sd_master92.customvoting.constants.interfaces.Voter
 import org.bukkit.Bukkit
 import org.bukkit.Location
@@ -87,12 +84,12 @@ class VoteTopSign(
                 placeholders["%VOTES_MONTHLY%"] = "${topVoter.votesMonthly}"
                 placeholders["%VOTES_WEEKLY%"] = "${topVoter.votesWeekly}"
                 placeholders["%VOTES_DAILY%"] = "${topVoter.votesDaily}"
-                if (plugin.config.getBoolean(Setting.MONTHLY_VOTES.path))
+                when (VoteSortType.valueOf(plugin.config.getNumber(Setting.VOTES_SORT_TYPE.path)))
                 {
-                    placeholders["%s%"] = if (topVoter.votesMonthly == 1) "" else "s"
-                } else
-                {
-                    placeholders["%s%"] = if (topVoter.votes == 1) "" else "s"
+                    VoteSortType.ALL     -> placeholders["%s%"] = if (topVoter.votes == 1) "" else "s"
+                    VoteSortType.MONTHLY -> placeholders["%s%"] = if (topVoter.votesMonthly == 1) "" else "s"
+                    VoteSortType.WEEKLY  -> placeholders["%s%"] = if (topVoter.votesWeekly == 1) "" else "s"
+                    VoteSortType.DAILY   -> placeholders["%s%"] = if (topVoter.votesDaily == 1) "" else "s"
                 }
                 for ((i, message) in Message.VOTE_TOP_SIGNS_PLAYER_SIGNS_FORMAT.getMessages(plugin, placeholders)
                     .withIndex())
