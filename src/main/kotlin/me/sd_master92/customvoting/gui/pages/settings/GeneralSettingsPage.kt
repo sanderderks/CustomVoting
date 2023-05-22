@@ -5,6 +5,7 @@ import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.gui.buttons.carousel.LanguageCarousel
+import me.sd_master92.customvoting.gui.buttons.carousel.VotesSortTypeCarousel
 import me.sd_master92.customvoting.gui.buttons.shortcuts.DangerZoneSettingsShortcut
 import me.sd_master92.customvoting.gui.buttons.shortcuts.WorldDisabledOverviewShortcut
 import me.sd_master92.customvoting.gui.buttons.switches.FireworkSwitch
@@ -41,10 +42,11 @@ class GeneralSettingsPage(private val plugin: CV, backPage: GUI?) :
 
     init
     {
+        addItem(LanguageCarousel(plugin, this))
+        addItem(VotesSortTypeCarousel(plugin))
         addItem(SoundEffectsSwitch(plugin))
         addItem(FireworkSwitch(plugin))
         addItem(WorldDisabledOverviewShortcut(plugin, this))
-        addItem(LanguageCarousel(plugin, this))
         addItem(DangerZoneSettingsShortcut(plugin, this))
     }
 }
