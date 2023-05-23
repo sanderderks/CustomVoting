@@ -18,13 +18,14 @@ class Citizen(private val plugin: CV, private val path: String, private val top:
     {
         if (CV.CITIZENS)
         {
-            if (npc != null)
-            {
-                npc!!.name = name
-                ArmorType.dress(npc!!.getOrAddTrait(Equipment::class.java), top)
-                refresh()
-            } else if (loc != null)
-            {
+            npc?.let {
+                if (it.name != name)
+                {
+                    it.name = name
+                    ArmorType.dress(it.getOrAddTrait(Equipment::class.java), top)
+                    refresh()
+                }
+            } ?: run {
                 findOrCreate()
             }
         }
@@ -34,11 +35,13 @@ class Citizen(private val plugin: CV, private val path: String, private val top:
     {
         if (CV.CITIZENS)
         {
-            npc =
-                CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, PMessage.PLAYER_NAME_UNKNOWN.toString(), loc)
-            refresh()
-            plugin.data.set(path, npc!!.uniqueId.toString())
-            plugin.data.saveConfig()
+            npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, PMessage.PLAYER_NAME_UNKNOWN.toString())
+            npc?.let {
+                it.spawn(loc)
+                ArmorType.dress(it.getOrAddTrait(Equipment::class.java), top)
+                plugin.data.set(path, it.uniqueId.toString())
+                plugin.data.saveConfig()
+            }
         }
     }
 
@@ -51,33 +54,30 @@ class Citizen(private val plugin: CV, private val path: String, private val top:
     private fun findOrCreate()
     {
         val uuid = plugin.data.getString(path)
-        if (uuid != null)
+        npc = if (uuid != null)
         {
-            npc = CitizensAPI.getNPCRegistry().getByUniqueId(UUID.fromString(uuid))
-            refresh()
-        } else if (loc != null)
+            CitizensAPI.getNPCRegistry().getByUniqueId(UUID.fromString(uuid))
+        } else
         {
-            create(loc)
+            create(loc!!)
+            return
         }
+        refresh()
     }
 
     private fun refresh()
     {
-        if (npc != null)
-        {
-            if (npc!!.entity != null)
+        npc?.let {
+            if (it.isSpawned)
             {
-                val loc = npc!!.entity.location
-                npc!!.despawn()
-                npc!!.data().setPersistent(NPC.Metadata.NAMEPLATE_VISIBLE, false)
-                npc!!.spawn(loc)
+                val loc = it.entity.location
+                it.despawn()
+                it.spawn(loc)
             } else if (loc != null)
             {
-                npc!!.spawn(loc)
+                it.spawn(loc)
             }
-        } else if (loc != null)
-        {
-            create(loc)
+            it.data().setPersistent(NPC.Metadata.NAMEPLATE_VISIBLE, false)
         }
     }
 
