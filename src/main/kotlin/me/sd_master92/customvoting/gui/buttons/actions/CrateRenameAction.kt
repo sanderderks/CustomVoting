@@ -8,6 +8,7 @@ import me.sd_master92.customvoting.constants.enumerations.Data
 import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import org.bukkit.Bukkit
+import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.Player
@@ -28,8 +29,9 @@ class CrateRenameAction(private val plugin: CV, private val currentPage: GUI, pr
         {
             override fun onInputReceived(input: String)
             {
+                val name = ChatColor.translateAlternateColorCodes('&', input)
                 SoundType.SUCCESS.play(plugin, player)
-                plugin.data.set(Data.VOTE_CRATES.path + ".$number.name", input)
+                plugin.data.set(Data.VOTE_CRATES.path + ".$number.name", name)
                 plugin.data.saveConfig()
                 player.sendMessage(PMessage.CRATE_MESSAGE_NAME_CHANGED_X.with(input))
                 currentPage.backPage = currentPage.backPage?.newInstance()
@@ -40,7 +42,7 @@ class CrateRenameAction(private val plugin: CV, private val currentPage: GUI, pr
                     val entity = Bukkit.getEntity(UUID.fromString(uuid))
                     if (entity is ArmorStand)
                     {
-                        entity.customName = PMessage.CRATE_NAME_STAND_X.with(input)
+                        entity.customName = name
                     }
                 }
                 cancel()

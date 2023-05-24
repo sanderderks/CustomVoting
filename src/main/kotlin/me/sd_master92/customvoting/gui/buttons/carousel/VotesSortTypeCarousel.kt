@@ -3,15 +3,15 @@ package me.sd_master92.customvoting.gui.buttons.carousel
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.Setting
+import me.sd_master92.customvoting.constants.enumerations.VMaterial
 import me.sd_master92.customvoting.constants.enumerations.VoteSortType
 import me.sd_master92.customvoting.constants.interfaces.Voter
 import me.sd_master92.customvoting.gui.buttons.abstracts.AbstractEnumCarousel
-import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 
 class VotesSortTypeCarousel(private val plugin: CV) : AbstractEnumCarousel(
     plugin,
-    Material.TNT, VoteSortType, Setting.VOTES_SORT_TYPE.path,
+    VMaterial.SCULK_SENSOR.get(), VoteSortType, Setting.VOTES_SORT_TYPE.path,
     PMessage.VOTES_SORT_TYPE_ITEM_NAME
 )
 {

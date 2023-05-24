@@ -68,7 +68,6 @@ enum class PMessage(
     CRATE_ERROR_EMPTY(RED.color),
     CRATE_NAME_DEFAULT_X(PURPLE.color),
     CRATE_NAME_X(PURPLE.color),
-    CRATE_NAME_STAND_X(AQUA.color),
 
     DANGER_ZONE_INVENTORY_NAME,
     DANGER_ZONE_ITEM_NAME(RED.color),
