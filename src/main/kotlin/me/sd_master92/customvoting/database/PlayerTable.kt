@@ -88,17 +88,13 @@ class PlayerTable(private val plugin: CV, override val uuid: String) : Voter
         }
     }
 
-    override fun clearMonthlyVotes()
-    {
-        players?.setMonthlyVotes(uuid, 0)
-    }
-
     override fun addVote(): Boolean
     {
         val votesBefore = votes
         addStreak()
         players?.setVotes(uuid, votes + 1)
         players?.setMonthlyVotes(uuid, votesMonthly + 1)
+        players?.setWeeklyVotes(uuid, votesWeekly + 1)
         players?.setDailyVotes(uuid, votesDaily + 1)
         players?.setLast(uuid)
 
@@ -138,6 +134,11 @@ class PlayerTable(private val plugin: CV, override val uuid: String) : Voter
     override fun clearStreak(): Boolean
     {
         return players?.setStreak(uuid, 0) ?: false
+    }
+
+    override fun clearMonthlyVotes()
+    {
+        players?.setMonthlyVotes(uuid, 0)
     }
 
     override fun clearWeeklyVotes()
