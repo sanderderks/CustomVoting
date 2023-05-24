@@ -55,7 +55,7 @@ class Citizen(private val plugin: CV, private val path: String, private val top:
 
     fun update(name: String)
     {
-        if (npc == null) findOrCreate()
+        findOrCreate()
         npc?.let { npc ->
             if (npc.name != name)
             {
