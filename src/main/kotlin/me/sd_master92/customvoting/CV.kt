@@ -239,24 +239,31 @@ class CV : CustomPlugin(
         metrics.addCustomChart(SimplePie("vote_crates") {
             if (data.getLocations(Data.VOTE_CRATES.path).isNotEmpty()) "true" else "false"
         })
-        metrics.addCustomChart(SimplePie("number_of_playerfiles") {
-            val number = VoteFile.getAll(this).size
-            var max = 100
-            while (number >= max)
-            {
-                max += 100
-            }
-            "${max - 100}-$max"
-        })
-        metrics.addCustomChart(SimplePie("number_of_databaserows") {
-            val number = PlayerTable.getAll(this).size
-            var max = 100
-            while (number >= max)
-            {
-                max += 100
-            }
-            "${max - 100}-$max"
-        })
+        if (!hasDatabaseConnection())
+        {
+            metrics.addCustomChart(SimplePie("number_of_playerfiles") {
+                val number = VoteFile.getAll(this).size
+                var max = 100
+                while (number >= max)
+                {
+                    max += 100
+                }
+                "${max - 100}-$max"
+            })
+        }
+        if (hasDatabaseConnection())
+        {
+            metrics.addCustomChart(SimplePie("number_of_databaserows") {
+
+                val number = PlayerTable.getAll(this).size
+                var max = 100
+                while (number >= max)
+                {
+                    max += 100
+                }
+                "${max - 100}-$max"
+            })
+        }
         metrics.addCustomChart(AdvancedPie("vote_sites") {
             val valueMap: MutableMap<String, Int> = HashMap()
             for (site in data.getStringList(Data.VOTE_SITES.path).filter { site -> !site.lowercase().contains("test") })

@@ -3,6 +3,7 @@ package me.sd_master92.customvoting.listeners
 import me.sd_master92.core.input.PlayerStringInput
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.PMessage
+import me.sd_master92.customvoting.trimPrefixColor
 import org.bukkit.entity.Player
 
 abstract class PlayerPermissionInput(
@@ -17,7 +18,7 @@ abstract class PlayerPermissionInput(
 
     override fun onInputReceived(input: String)
     {
-        var permission = input
+        var permission = input.trimPrefixColor()
         if (permission.startsWith("/"))
         {
             permission = permission.substring(1)

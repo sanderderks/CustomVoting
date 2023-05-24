@@ -2,7 +2,6 @@ package me.sd_master92.customvoting.subjects.stands
 
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.ArmorType
-import me.sd_master92.customvoting.constants.enumerations.PMessage
 import net.citizensnpcs.api.CitizensAPI
 import net.citizensnpcs.api.npc.NPC
 import net.citizensnpcs.api.trait.trait.Equipment
@@ -10,36 +9,58 @@ import org.bukkit.Location
 import org.bukkit.entity.EntityType
 import java.util.*
 
-class Citizen(private val plugin: CV, private val path: String, private val top: Int, private val loc: Location?)
+class Citizen(private val plugin: CV, private val path: String, private val top: Int, private var loc: Location?)
 {
     private var npc: NPC? = null
 
-    fun update(name: String)
+    private fun refresh()
     {
-        if (CV.CITIZENS)
-        {
-            if (npc != null)
-            {
-                npc!!.name = name
-                ArmorType.dress(npc!!.getOrAddTrait(Equipment::class.java), top)
-                refresh()
-            } else if (loc != null)
-            {
-                findOrCreate()
-            }
+        npc?.let { npc ->
+            npc.data().setPersistent(NPC.Metadata.NAMEPLATE_VISIBLE, false)
+            if (npc.isSpawned) npc.despawn()
+            loc?.let { npc.spawn(it) }
         }
     }
 
-    fun create(loc: Location)
+    private fun findOrCreate()
     {
-        if (CV.CITIZENS)
-        {
-            npc =
-                CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, PMessage.PLAYER_NAME_UNKNOWN.toString(), loc)
-            refresh()
-            plugin.data.set(path, npc!!.uniqueId.toString())
-            plugin.data.saveConfig()
+        npc = npc ?: plugin.data.getString(path)?.let { storedUUID ->
+            try
+            {
+                CitizensAPI.getNPCRegistry().getByUniqueId(UUID.fromString(storedUUID))
+            } catch (e: IllegalArgumentException)
+            {
+                null
+            }
+        } ?: plugin.data.getNumber(path).let { id ->
+            if (id > 0) CitizensAPI.getNPCRegistry().getById(id) else create(loc)
         }
+
+        npc?.takeIf { !it.isSpawned && loc != null }?.spawn(loc)
+    }
+
+    fun create(newLoc: Location?): NPC?
+    {
+        this.loc = newLoc
+        if (loc == null) return null
+        val newNpc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, "Steve")
+        ArmorType.dress(newNpc.getOrAddTrait(Equipment::class.java), top)
+        plugin.data.setNumber(path, newNpc.id)
+        newNpc.spawn(loc)
+        return newNpc
+    }
+
+    fun update(name: String)
+    {
+        findOrCreate()
+        npc?.let { npc ->
+            if (npc.name != name)
+            {
+                npc.name = name
+                ArmorType.dress(npc.getOrAddTrait(Equipment::class.java), top)
+            }
+        }
+        refresh()
     }
 
     fun delete()
@@ -48,44 +69,13 @@ class Citizen(private val plugin: CV, private val path: String, private val top:
         plugin.data.delete(path)
     }
 
-    private fun findOrCreate()
-    {
-        val uuid = plugin.data.getString(path)
-        if (uuid != null)
-        {
-            npc = CitizensAPI.getNPCRegistry().getByUniqueId(UUID.fromString(uuid))
-            refresh()
-        } else if (loc != null)
-        {
-            create(loc)
-        }
-    }
-
-    private fun refresh()
-    {
-        if (npc != null)
-        {
-            if (npc!!.entity != null)
-            {
-                val loc = npc!!.entity.location
-                npc!!.despawn()
-                npc!!.data().setPersistent(NPC.Metadata.NAMEPLATE_VISIBLE, false)
-                npc!!.spawn(loc)
-            } else if (loc != null)
-            {
-                npc!!.spawn(loc)
-            }
-        } else if (loc != null)
-        {
-            create(loc)
-        }
-    }
-
     init
     {
         if (CV.CITIZENS)
         {
             findOrCreate()
+            refresh()
         }
     }
 }
+

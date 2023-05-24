@@ -32,6 +32,7 @@ class CrateRenameAction(private val plugin: CV, private val currentPage: GUI, pr
                 plugin.data.set(Data.VOTE_CRATES.path + ".$number.name", input)
                 plugin.data.saveConfig()
                 player.sendMessage(PMessage.CRATE_MESSAGE_NAME_CHANGED_X.with(input))
+                currentPage.backPage = currentPage.backPage?.newInstance()
                 currentPage.newInstance().open(player)
                 val uuid = plugin.data.getString(Data.VOTE_CRATES.path + ".$number.stand")
                 if (uuid != null)

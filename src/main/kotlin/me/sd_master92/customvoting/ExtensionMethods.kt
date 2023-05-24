@@ -259,3 +259,8 @@ fun Location.splashPotion(mat: Material, type: PotionEffectType)
     thrownPotion.shooter = null
     thrownPotion.velocity = direction.multiply(1.5)
 }
+
+fun String.trimPrefixColor(): String
+{
+    return replaceFirst(Regex("^§."), "")
+}
