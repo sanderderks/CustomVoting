@@ -7,6 +7,7 @@ import net.citizensnpcs.api.npc.NPC
 import net.citizensnpcs.api.trait.trait.Equipment
 import org.bukkit.Location
 import org.bukkit.entity.EntityType
+import java.util.*
 
 class Citizen(private val plugin: CV, private val path: String, private val top: Int, private var loc: Location?)
 {
@@ -23,23 +24,19 @@ class Citizen(private val plugin: CV, private val path: String, private val top:
 
     private fun findOrCreate()
     {
-        if (npc == null)
-        {
-            val id = plugin.data.getNumber(path)
-            npc = if (id > 0)
+        npc = npc ?: plugin.data.getString(path)?.let { storedUUID ->
+            try
             {
-                CitizensAPI.getNPCRegistry().getById(id)
-            } else
+                CitizensAPI.getNPCRegistry().getByUniqueId(UUID.fromString(storedUUID))
+            } catch (e: IllegalArgumentException)
             {
-                create(loc)
+                null
             }
+        } ?: plugin.data.getNumber(path).let { id ->
+            if (id > 0) CitizensAPI.getNPCRegistry().getById(id) else create(loc)
         }
-        npc?.let { npc ->
-            if (!npc.isSpawned && loc != null)
-            {
-                npc.spawn(loc)
-            }
-        }
+
+        npc?.takeIf { !it.isSpawned && loc != null }?.spawn(loc)
     }
 
     fun create(newLoc: Location?): NPC?
@@ -47,9 +44,9 @@ class Citizen(private val plugin: CV, private val path: String, private val top:
         this.loc = newLoc
         if (loc == null) return null
         val newNpc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, "Steve")
-        newNpc.spawn(loc)
         ArmorType.dress(newNpc.getOrAddTrait(Equipment::class.java), top)
         plugin.data.setNumber(path, newNpc.id)
+        newNpc.spawn(loc)
         return newNpc
     }
 
