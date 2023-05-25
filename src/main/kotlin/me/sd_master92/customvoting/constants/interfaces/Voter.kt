@@ -23,7 +23,7 @@ interface Voter
     val streakDaily: Int
 
     fun setVotes(n: Int, update: Boolean)
-    fun addVote(): Boolean
+    fun addVote(site: String? = null): Boolean
     fun addQueue(site: String): Boolean
     fun clearMonthlyVotes()
     fun clearWeeklyVotes()

@@ -88,7 +88,7 @@ class PlayerTable(private val plugin: CV, override val uuid: String) : Voter
         }
     }
 
-    override fun addVote(): Boolean
+    override fun addVote(site: String?): Boolean
     {
         val votesBefore = votes
         addStreak()
@@ -96,7 +96,7 @@ class PlayerTable(private val plugin: CV, override val uuid: String) : Voter
         players?.setMonthlyVotes(uuid, votesMonthly + 1)
         players?.setWeeklyVotes(uuid, votesWeekly + 1)
         players?.setDailyVotes(uuid, votesDaily + 1)
-        players?.setLast(uuid)
+        players?.setLast(uuid, site)
 
         Voter.getTopVoters(plugin, true)
 

@@ -44,7 +44,7 @@ class CustomVote(
             val voter = Voter.get(plugin, player)
             previousLast = voter.last
             votes = voter.votes
-            voter.addVote()
+            voter.addVote(serviceName)
             ParticleHelper.shootFirework(plugin, player.location)
             giveRewards(player, player.hasPowerRewards(plugin))
             if (plugin.config.getBoolean(Setting.VOTE_PARTY.path))

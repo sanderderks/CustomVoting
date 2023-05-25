@@ -130,7 +130,7 @@ class VoteFile : Voter
         playerFile.setNumber(VOTES_DAILY, 0)
     }
 
-    override fun addVote(): Boolean
+    override fun addVote(site: String?): Boolean
     {
         val beforeVotes = votes
         addStreak()

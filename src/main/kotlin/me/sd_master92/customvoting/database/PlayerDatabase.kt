@@ -7,6 +7,7 @@ import me.sd_master92.core.errorLog
 import me.sd_master92.core.infoLog
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.models.UniqueVote
+import me.sd_master92.customvoting.dayDifferenceToday
 import java.util.*
 
 class PlayerDatabase(private val plugin: CV, database: CustomDatabase)
@@ -174,14 +175,39 @@ class PlayerDatabase(private val plugin: CV, database: CustomDatabase)
         return 0
     }
 
-    fun setLast(uuid: String): Boolean
+    fun getLastSite(uuid: String): String?
+    {
+        val result = playersTable.getData(PlayerTableColumn.UUID.columnName, uuid)
+        try
+        {
+            if (result.next())
+            {
+                return result.getString(PlayerTableColumn.LAST_SITE.columnName)
+            } else
+            {
+                addPlayer(uuid)
+            }
+        } catch (e: Exception)
+        {
+            plugin.errorLog("Could not retrieve last site of $uuid from database", e)
+        }
+        return null
+    }
+
+    fun setLast(uuid: String, site: String? = null): Boolean
     {
         return playersTable.updateData(
             PlayerTableColumn.UUID.columnName,
             uuid,
             PlayerTableColumn.LAST_VOTE.columnName,
             System.currentTimeMillis()
-        )
+        ) &&
+                playersTable.updateData(
+                    PlayerTableColumn.UUID.columnName,
+                    uuid,
+                    PlayerTableColumn.LAST_SITE.columnName,
+                    site
+                )
     }
 
     fun getQueue(uuid: String): List<String>
@@ -194,6 +220,11 @@ class PlayerDatabase(private val plugin: CV, database: CustomDatabase)
             while (result.next())
             {
                 val site = result.getString(QueueTableColumn.SITE.columnName)
+                if (getLastSite(uuid) == site && getLast(uuid).dayDifferenceToday() == 0)
+                {
+                    continue
+                }
+                
                 val calendar = Calendar.getInstance()
                 calendar.time = Date(result.getLong(QueueTableColumn.TIME.columnName))
 

@@ -20,6 +20,7 @@ enum class PlayerTableColumn(
     DAILY_VOTES("votes_daily", CustomColumn.DataType.INT, 0),
     DAILY_VOTE_STREAK("streak_daily", CustomColumn.DataType.INT, 0),
     LAST_VOTE("last", CustomColumn.DataType.LONG, 0),
+    LAST_SITE("last_site", CustomColumn.DataType.VARCHAR, null),
     POWER("power", CustomColumn.DataType.BOOLEAN, 0);
 
     companion object
