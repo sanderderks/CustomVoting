@@ -37,16 +37,21 @@ vote_rewards:
   xp: '&b%XP% &aXP level%s%'
 
 votes_command:
+  # %PLAYER% name of the player
   # %VOTES% votes of the player
   # %VOTES_MONTHLY% monthly votes of the player
+  # %VOTES_WEEKLY% weekly votes of the player
   # %VOTES_DAILY% daily votes of the player
-  # %s% extra s for when VOTES is higher than 1
+  # %VOTES_AUTO% votes based on vote top sorting
+  # %s% extra s for when VOTES_AUTO is higher than 1
   self: '&aYou currently have &b%VOTES% &avote%s%!'
   # %PLAYER% name of the player
   # %VOTES% votes of the player
   # %VOTES_MONTHLY% monthly votes of the player
+  # %VOTES_WEEKLY% weekly votes of the player
   # %VOTES_DAILY% daily votes of the player
-  # %s% extra s for when VOTES is higher than 1
+  # %VOTES_AUTO% votes based on vote top sorting
+  # %s% extra s for when VOTES_AUTO is higher than 1
   others: '&b%PLAYER% &acurrently has &b%VOTES% &avote%s%!'
   not_found: '&cThat player does not exist.'
 
@@ -60,7 +65,10 @@ vote_top_command:
   # %PLAYER% name of the player
   # %VOTES% votes of the player
   # %VOTES_MONTHLY% monthly votes of the player
-  # %s% extra s for when VOTES is higher than 1
+  # %VOTES_WEEKLY% weekly votes of the player
+  # %VOTES_DAILY% daily votes of the player
+  # %VOTES_AUTO% votes based on vote top sorting
+  # %s% extra s for when VOTES_AUTO is higher than 1
   players: '&d%PLAYER%&7: &b%VOTES%'
   not_found: '&cThere are no players to show.'
 
@@ -75,7 +83,10 @@ vote_top_signs:
     # %PLAYER% name of the player
     # %VOTES% votes of the player
     # %VOTES_MONTHLY% monthly votes of the player
-    # %s% extra s for when VOTES is higher than 1
+    # %VOTES_WEEKLY% weekly votes of the player
+    # %VOTES_DAILY% daily votes of the player
+    # %VOTES_AUTO% votes based on vote top sorting
+    # %s% extra s for when VOTES_AUTO is higher than 1
     format:
       - '&4&lTop %NUMBER%:'
       - '&b%PLAYER%'
@@ -88,6 +99,10 @@ vote_top_signs:
 # %PLAYER% name of the player
 # %VOTES% votes of the player
 # %VOTES_MONTHLY% monthly votes of the player
+# %VOTES_WEEKLY% weekly votes of the player
+# %VOTES_DAILY% daily votes of the player
+# %VOTES_AUTO% votes based on vote top sorting
+# %s% extra s for when VOTES_AUTO is higher than 1
 vote_top_stands:
   top: '&a&lTop %TOP%:'
   center: '&b%PLAYER%'

@@ -6,6 +6,7 @@ import me.sd_master92.customvoting.constants.enumerations.Data
 import me.sd_master92.customvoting.constants.enumerations.Message
 import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.interfaces.Voter
+import me.sd_master92.customvoting.getVotesPlaceholders
 import org.bukkit.entity.Player
 
 
@@ -41,16 +42,9 @@ class VoteTopStand private constructor(private val plugin: CV, private val top: 
     private fun update()
     {
         val topVoter = Voter.getTopVoter(plugin, top)
-        val placeholders: MutableMap<String, String> = HashMap()
+        val placeholders = topVoter?.getVotesPlaceholders(plugin) ?: mutableMapOf()
         placeholders["%TOP%"] = "$top"
-        if (topVoter != null)
-        {
-            placeholders["%PLAYER%"] = topVoter.name
-            placeholders["%VOTES%"] = "" + topVoter.votes
-            placeholders["%VOTES_MONTHLY%"] = "" + topVoter.votesMonthly
-            placeholders["%VOTES_WEEKLY%"] = "" + topVoter.votesWeekly
-            placeholders["%VOTES_DAILY%"] = "" + topVoter.votesDaily
-        } else
+        if (topVoter == null)
         {
             placeholders["%PLAYER%"] = PMessage.PLAYER_NAME_UNKNOWN_COLORED.toString()
             placeholders["%VOTES%"] = "0"

@@ -2,8 +2,11 @@ package me.sd_master92.customvoting.subjects
 
 import me.sd_master92.core.tasks.TaskTimer
 import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.constants.enumerations.*
+import me.sd_master92.customvoting.constants.enumerations.Data
+import me.sd_master92.customvoting.constants.enumerations.Message
+import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.interfaces.Voter
+import me.sd_master92.customvoting.getVotesPlaceholders
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Material
@@ -77,20 +80,8 @@ class VoteTopSign(
                     }
                 }
                 plugin.data.setLocation(Data.VOTE_TOP_SIGNS.path + "." + top, location)
-                val placeholders = HashMap<String, String>()
-                placeholders["%NUMBER%"] = "" + top
-                placeholders["%PLAYER%"] = topVoter.name
-                placeholders["%VOTES%"] = "${topVoter.votes}"
-                placeholders["%VOTES_MONTHLY%"] = "${topVoter.votesMonthly}"
-                placeholders["%VOTES_WEEKLY%"] = "${topVoter.votesWeekly}"
-                placeholders["%VOTES_DAILY%"] = "${topVoter.votesDaily}"
-                when (VoteSortType.valueOf(plugin.config.getNumber(Setting.VOTES_SORT_TYPE.path)))
-                {
-                    VoteSortType.ALL     -> placeholders["%s%"] = if (topVoter.votes == 1) "" else "s"
-                    VoteSortType.MONTHLY -> placeholders["%s%"] = if (topVoter.votesMonthly == 1) "" else "s"
-                    VoteSortType.WEEKLY  -> placeholders["%s%"] = if (topVoter.votesWeekly == 1) "" else "s"
-                    VoteSortType.DAILY   -> placeholders["%s%"] = if (topVoter.votesDaily == 1) "" else "s"
-                }
+                val placeholders = topVoter.getVotesPlaceholders(plugin)
+                placeholders["%NUMBER%"] = "$top"
                 for ((i, message) in Message.VOTE_TOP_SIGNS_PLAYER_SIGNS_FORMAT.getMessages(plugin, placeholders)
                     .withIndex())
                 {

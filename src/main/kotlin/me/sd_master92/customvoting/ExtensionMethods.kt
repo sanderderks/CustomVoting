@@ -6,6 +6,7 @@ import me.sd_master92.core.plugin.CustomPlugin
 import me.sd_master92.customvoting.constants.enumerations.Message
 import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.Setting
+import me.sd_master92.customvoting.constants.enumerations.VoteSortType
 import me.sd_master92.customvoting.constants.interfaces.Voter
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
@@ -263,4 +264,42 @@ fun Location.splashPotion(mat: Material, type: PotionEffectType)
 fun String.trimPrefixColor(): String
 {
     return replaceFirst(Regex("^§."), "")
+}
+
+fun Voter.getVotesPlaceholders(plugin: CV): MutableMap<String, String>
+{
+    val placeholders: MutableMap<String, String> = HashMap()
+    placeholders["%PLAYER%"] = name
+    placeholders["%VOTES%"] = "$votes"
+    placeholders["%VOTES_MONTHLY%"] = "$votesMonthly"
+    placeholders["%VOTES_WEEKLY%"] = "$votesWeekly"
+    placeholders["%VOTES_DAILY%"] = "$votesDaily"
+
+    when (VoteSortType.valueOf(plugin.config.getNumber(Setting.VOTES_SORT_TYPE.path)))
+    {
+        VoteSortType.ALL     ->
+        {
+            placeholders["%VOTES_AUTO%"] = "$votes"
+            placeholders["%s%"] = if (votes == 1) "" else "s"
+        }
+
+        VoteSortType.MONTHLY ->
+        {
+            placeholders["%VOTES_AUTO%"] = "$votesMonthly"
+            placeholders["%s%"] = if (votesMonthly == 1) "" else "s"
+        }
+
+        VoteSortType.WEEKLY  ->
+        {
+            placeholders["%VOTES_AUTO%"] = "$votesWeekly"
+            placeholders["%s%"] = if (votesWeekly == 1) "" else "s"
+        }
+
+        VoteSortType.DAILY   ->
+        {
+            placeholders["%VOTES_AUTO%"] = "$votesDaily"
+            placeholders["%s%"] = if (votesDaily == 1) "" else "s"
+        }
+    }
+    return placeholders
 }

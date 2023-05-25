@@ -31,8 +31,8 @@ enum class Message(private val path: String, private val defaultValue: Any?)
     VOTE_REWARD_XP("$VOTE_REWARDS.xp", "&b%XP% &aXP level%s%"),
 
     VOTES_COMMAND("votes_command", null),
-    VOTES_COMMAND_SELF("$VOTES_COMMAND.self", "&aYou currently have &b%VOTES% &avote%s%!"),
-    VOTES_COMMAND_OTHERS("$VOTES_COMMAND.others", "&b%PLAYER% &acurrently has &b%VOTES% &avote%s%!"),
+    VOTES_COMMAND_SELF("$VOTES_COMMAND.self", "&aYou currently have &b%VOTES_AUTO% &avote%s%!"),
+    VOTES_COMMAND_OTHERS("$VOTES_COMMAND.others", "&b%PLAYER% &acurrently has &b%VOTES_AUTO% &avote%s%!"),
     VOTES_COMMAND_NOT_FOUND("$VOTES_COMMAND.not_found", "&cThat player does not exist."),
 
     VOTE_LINKS_TITLE("vote_links_title", "Vote for us!"),
@@ -42,14 +42,14 @@ enum class Message(private val path: String, private val defaultValue: Any?)
         "$VOTE_TOP_COMMAND.format",
         listOf("&aTop Voters", "&b---------------", "%PLAYERS%", "&b---------------")
     ),
-    VOTE_TOP_COMMAND_PLAYERS("$VOTE_TOP_COMMAND.players", "&d%PLAYER%&7: &b%VOTES%"),
+    VOTE_TOP_COMMAND_PLAYERS("$VOTE_TOP_COMMAND.players", "&d%PLAYER%&7: &b%VOTES_AUTO%"),
     VOTE_TOP_COMMAND_NOT_FOUND("$VOTE_TOP_COMMAND.not_found", "&cThere are no players to show."),
 
     VOTE_TOP_SIGNS("vote_top_signs", null),
     VOTE_TOP_SIGNS_TITLE_SIGN("$VOTE_TOP_SIGNS.title_sign", listOf("&4Top Voters", "&c&lof", "&4&lSome Server!", "")),
     VOTE_TOP_SIGNS_PLAYER_SIGNS_FORMAT(
         "$VOTE_TOP_SIGNS.player_signs.format",
-        listOf("&4&lTop %NUMBER%:", "&b%PLAYER%", "&d%VOTES% vote%s%", "")
+        listOf("&4&lTop %NUMBER%:", "&b%PLAYER%", "&d%VOTES_AUTO% vote%s%", "")
     ),
     VOTE_TOP_SIGNS_PLAYER_SIGNS_NOT_FOUND("$VOTE_TOP_SIGNS.player_signs.not_found", "&cNot found"),
     VOTE_TOP_SIGNS_PLAYER_SIGNS_OUTDATED("$VOTE_TOP_SIGNS.player_signs.outdated", "&cOutdated"),
@@ -57,7 +57,7 @@ enum class Message(private val path: String, private val defaultValue: Any?)
     VOTE_TOP_STANDS("vote_top_stands", null),
     VOTE_TOP_STANDS_TOP("$VOTE_TOP_STANDS.top", "&a&lTop %TOP%:"),
     VOTE_TOP_STANDS_CENTER("$VOTE_TOP_STANDS.center", "&b%PLAYER%"),
-    VOTE_TOP_STANDS_BOTTOM("$VOTE_TOP_STANDS.bottom", "&7Votes: &d%VOTES%"),
+    VOTE_TOP_STANDS_BOTTOM("$VOTE_TOP_STANDS.bottom", "&7Votes: &d%VOTES_AUTO%"),
     VOTE_TOP_STANDS_DONT("$VOTE_TOP_STANDS.dont", "&cDon't break me!"),
 
     VOTE_PARTY("vote_party", null),
