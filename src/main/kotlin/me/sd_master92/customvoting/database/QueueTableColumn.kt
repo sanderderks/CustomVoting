@@ -13,7 +13,8 @@ enum class QueueTableColumn(
 {
     ID("id", CustomColumn.DataType.INT_PRIMARY),
     UUID("uuid", CustomColumn.DataType.VARCHAR),
-    SITE("votes", CustomColumn.DataType.VARCHAR);
+    SITE("site", CustomColumn.DataType.VARCHAR),
+    TIME("timestamp", CustomColumn.DataType.LONG);
 
     companion object
     {
