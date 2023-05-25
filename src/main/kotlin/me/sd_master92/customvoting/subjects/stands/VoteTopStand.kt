@@ -51,6 +51,7 @@ class VoteTopStand private constructor(private val plugin: CV, private val top: 
             placeholders["%VOTES_MONTHLY%"] = "0"
             placeholders["%VOTES_WEEKLY%"] = "0"
             placeholders["%VOTES_DAILY%"] = "0"
+            placeholders["%VOTES_AUTO%"] = "0"
         }
         topStand.update(Message.VOTE_TOP_STANDS_TOP.getMessage(plugin, placeholders))
         nameStand.update(Message.VOTE_TOP_STANDS_CENTER.getMessage(plugin, placeholders))
