@@ -16,6 +16,7 @@ enum class PlayerTableColumn(
     NAME("name", CustomColumn.DataType.VARCHAR, "Unknown"),
     VOTES("votes", CustomColumn.DataType.INT, 0),
     MONTHLY_VOTES("votes_monthly", CustomColumn.DataType.INT, 0),
+    WEEKLY_VOTES("votes_weekly", CustomColumn.DataType.INT, 0),
     DAILY_VOTES("votes_daily", CustomColumn.DataType.INT, 0),
     DAILY_VOTE_STREAK("streak_daily", CustomColumn.DataType.INT, 0),
     LAST_VOTE("last", CustomColumn.DataType.LONG, 0),

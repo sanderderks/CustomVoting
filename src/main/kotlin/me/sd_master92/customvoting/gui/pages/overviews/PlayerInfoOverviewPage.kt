@@ -51,6 +51,7 @@ class PlayerInfoOverviewPage(private val plugin: CV, backPage: GUI?, private var
         meta!!.lore = listOf(
             PMessage.PLAYER_INFO_ITEM_LORE_VOTES_X.with("" + voter.votes),
             PMessage.PLAYER_INFO_ITEM_LORE_VOTES_MONTHLY_X.with("" + voter.votesMonthly),
+            PMessage.PLAYER_INFO_ITEM_LORE_VOTES_WEEKLY_X.with("" + voter.votesWeekly),
             PMessage.PLAYER_INFO_ITEM_LORE_VOTES_DAILY_X.with("" + voter.votesDaily),
             PMessage.PLAYER_INFO_ITEM_LORE_STREAK_DAILY_X.with("" + voter.streakDaily),
             PMessage.PLAYER_INFO_ITEM_LORE_LAST_X.with(lastVote),

@@ -19,7 +19,29 @@ class VoteFile : Voter
     override val votes: Int
         get() = playerFile.getNumber(VOTES)
     override val votesMonthly: Int
-        get() = playerFile.getNumber(VOTES_MONTHLY)
+        get()
+        {
+            return if (last.monthDifferenceToday() > 0)
+            {
+                clearMonthlyVotes()
+                0
+            } else
+            {
+                playerFile.getNumber(VOTES_MONTHLY)
+            }
+        }
+    override val votesWeekly: Int
+        get()
+        {
+            return if (last.weekDifferenceToday() > 0)
+            {
+                clearWeeklyVotes()
+                0
+            } else
+            {
+                playerFile.getNumber(VOTES_WEEKLY)
+            }
+        }
     override val votesDaily: Int
         get()
         {
@@ -78,8 +100,9 @@ class VoteFile : Voter
     {
         playerFile.setTimeStamp(VOTE_LAST)
         playerFile.setNumber(VOTES, n)
-        playerFile.setNumber(VOTES_MONTHLY, n)
-        playerFile.setNumber(VOTES_DAILY, n)
+        playerFile.setNumber(VOTES_MONTHLY, 0)
+        playerFile.setNumber(VOTES_WEEKLY, 0)
+        playerFile.setNumber(VOTES_DAILY, 0)
 
         if (n == 0)
         {
@@ -95,10 +118,16 @@ class VoteFile : Voter
     override fun clearMonthlyVotes()
     {
         playerFile.setNumber(VOTES_MONTHLY, 0)
-        playerFile.setNumber(VOTES_DAILY, 0)
-        clearStreak()
+    }
 
-        Voter.getTopVoters(plugin, true)
+    override fun clearWeeklyVotes()
+    {
+        playerFile.setNumber(VOTES_WEEKLY, 0)
+    }
+
+    override fun clearDailyVotes()
+    {
+        playerFile.setNumber(VOTES_DAILY, 0)
     }
 
     override fun addVote(): Boolean
@@ -108,6 +137,7 @@ class VoteFile : Voter
         playerFile.setTimeStamp(VOTE_LAST)
         playerFile.addNumber(VOTES)
         playerFile.addNumber(VOTES_MONTHLY)
+        playerFile.addNumber(VOTES_WEEKLY)
         playerFile.addNumber(VOTES_DAILY)
 
         Voter.getTopVoters(plugin, true)
@@ -153,20 +183,11 @@ class VoteFile : Voter
         return playerFile.setNumber(STREAK_DAILY, 0)
     }
 
-    override fun addDailyVote(): Boolean
-    {
-        return playerFile.addNumber(VOTES_DAILY, 1)
-    }
-
-    override fun clearDailyVotes(): Boolean
-    {
-        return playerFile.setNumber(VOTES_DAILY, 0)
-    }
-
     companion object : TopVoter
     {
         private const val VOTES = "votes"
         private const val VOTES_MONTHLY = "votes_monthly"
+        private const val VOTES_WEEKLY = "votes_weekly"
         private const val VOTES_DAILY = "votes_daily"
         private const val STREAK_DAILY = "streak_daily"
         private const val VOTE_LAST = "last"

@@ -38,6 +38,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.event.player.PlayerChangedWorldEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerJoinEvent
+import org.bukkit.event.player.PlayerQuitEvent
 
 class PlayerListener(private val plugin: CV) : Listener
 {
@@ -48,6 +49,15 @@ class PlayerListener(private val plugin: CV) : Listener
         executeQueue(player)
         VoteReminder.remindPlayer(plugin, player)
         UpdateChecker.checkUpdates(plugin, player)
+    }
+
+    @EventHandler
+    fun onPlayerLeave(event: PlayerQuitEvent)
+    {
+        TaskTimer.delay(plugin, 20)
+        {
+            VoteTopStand.updateAll(plugin)
+        }.run()
     }
 
     @EventHandler

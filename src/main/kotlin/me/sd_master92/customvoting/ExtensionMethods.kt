@@ -196,6 +196,20 @@ fun Long.dayDifferenceToday(): Int
     return Calendar.getInstance()[Calendar.DAY_OF_YEAR] - calendar[Calendar.DAY_OF_YEAR]
 }
 
+fun Long.weekDifferenceToday(): Int
+{
+    val calendar = Calendar.getInstance()
+    calendar.time = Date(this)
+    return Calendar.getInstance()[Calendar.WEEK_OF_YEAR] - calendar[Calendar.WEEK_OF_YEAR]
+}
+
+fun Long.monthDifferenceToday(): Int
+{
+    val calendar = Calendar.getInstance()
+    calendar.time = Date(this)
+    return Calendar.getInstance()[Calendar.MONTH] - calendar[Calendar.MONTH]
+}
+
 fun Locale.setLanguage()
 {
     CV.RESOURCE_BUNDLE = ResourceBundle.getBundle("language/messages", this)

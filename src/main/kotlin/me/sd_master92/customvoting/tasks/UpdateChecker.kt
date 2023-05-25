@@ -13,7 +13,9 @@ class UpdateChecker(plugin: CV)
     {
         fun checkUpdates(plugin: CV, player: Player)
         {
-            if (player.isOp && plugin.config.getBoolean(Setting.INGAME_UPDATES.path) && !plugin.isUpToDate())
+            if (player.isOp && plugin.config.getBoolean(Setting.INGAME_UPDATES.path) && !plugin.versionStatus()
+                    .isValid()
+            )
             {
                 TaskTimer.delay(plugin, 20 * 5)
                 {

@@ -8,9 +8,10 @@ enum class VMaterial(
     private val material_1_13_plus: String
 )
 {
-    SOUL_TORCH("SOUL_TORCH", "TORCH"),
-    SPYGLASS("SPYGLASS", "LEAD"),
-    CRIMSON_SIGN("CRIMSON_SIGN", "SIGN");
+    SOUL_TORCH("SOUL_TORCH", Material.TORCH.name),
+    SPYGLASS("SPYGLASS", Material.LEAD.name),
+    CRIMSON_SIGN("CRIMSON_SIGN", Material.OAK_SIGN.name),
+    SCULK_SENSOR("SCULK_SENSOR", Material.REPEATER.name);
 
     fun get(): Material
     {

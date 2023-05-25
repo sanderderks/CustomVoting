@@ -53,7 +53,7 @@ class VoteCrate private constructor(private val plugin: CV, val key: String)
             loc.y + 1,
             loc.z + 0.5
         ).spawnArmorStand()
-        stand.customName = PMessage.CRATE_NAME_STAND_X.with(name)
+        stand.customName = name
         plugin.data.set("$path.stand", stand.uniqueId.toString())
         plugin.data.saveConfig()
 

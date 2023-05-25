@@ -6,6 +6,8 @@ import me.sd_master92.core.database.CustomTable
 import me.sd_master92.core.errorLog
 import me.sd_master92.core.infoLog
 import me.sd_master92.customvoting.CV
+import me.sd_master92.customvoting.constants.models.UniqueVote
+import java.util.*
 
 class PlayerDatabase(private val plugin: CV, database: CustomDatabase)
 {
@@ -101,6 +103,32 @@ class PlayerDatabase(private val plugin: CV, database: CustomDatabase)
         )
     }
 
+    fun getWeeklyVotes(uuid: String): Int
+    {
+        val result = playersTable.getData(PlayerTableColumn.UUID.columnName, uuid)
+        try
+        {
+            if (result.next())
+            {
+                return result.getInt(PlayerTableColumn.WEEKLY_VOTES.columnName)
+            }
+        } catch (e: Exception)
+        {
+            plugin.errorLog("Could not retrieve weekly votes of $uuid from database", e)
+        }
+        return 0
+    }
+
+    fun setWeeklyVotes(uuid: String, votes: Int): Boolean
+    {
+        return playersTable.updateData(
+            PlayerTableColumn.UUID.columnName,
+            uuid,
+            PlayerTableColumn.WEEKLY_VOTES.columnName,
+            votes
+        )
+    }
+
     fun getDailyVotes(uuid: String): Int
     {
         val result = playersTable.getData(PlayerTableColumn.UUID.columnName, uuid)
@@ -159,12 +187,22 @@ class PlayerDatabase(private val plugin: CV, database: CustomDatabase)
     fun getQueue(uuid: String): List<String>
     {
         val result = queueTable.getData(QueueTableColumn.UUID.columnName, uuid)
+        val uniqueVotes = mutableSetOf<UniqueVote>()
         val queue = mutableListOf<String>()
         try
         {
             while (result.next())
             {
-                queue.add(result.getString(QueueTableColumn.SITE.columnName))
+                val site = result.getString(QueueTableColumn.SITE.columnName)
+                val calendar = Calendar.getInstance()
+                calendar.time = Date(result.getLong(QueueTableColumn.TIME.columnName))
+
+                val vote = UniqueVote(calendar[Calendar.DAY_OF_YEAR], site)
+
+                if (uniqueVotes.add(vote))
+                {
+                    queue.add(site)
+                }
             }
         } catch (e: Exception)
         {
@@ -176,8 +214,12 @@ class PlayerDatabase(private val plugin: CV, database: CustomDatabase)
     fun addQueue(uuid: String, site: String): Boolean
     {
         return queueTable.insertData(
-            arrayOf(QueueTableColumn.UUID.columnName, QueueTableColumn.SITE.columnName),
-            arrayOf(uuid, site)
+            arrayOf(
+                QueueTableColumn.UUID.columnName,
+                QueueTableColumn.SITE.columnName,
+                QueueTableColumn.TIME.columnName
+            ),
+            arrayOf(uuid, site, Date().time)
         )
     }
 
@@ -252,6 +294,7 @@ class PlayerDatabase(private val plugin: CV, database: CustomDatabase)
 
     private fun migrateQueue()
     {
+        rename(queueTable, "votes", QueueTableColumn.SITE.columnName, QueueTableColumn.SITE.dataType)
         for (column in QueueTableColumn.columns())
         {
             create(queueTable, column.columnName, column.dataType)
@@ -277,7 +320,7 @@ class PlayerDatabase(private val plugin: CV, database: CustomDatabase)
     {
         if (!table.getColumn(newName).exists())
         {
-            val column = playersTable.getColumn(oldName)
+            val column = table.getColumn(oldName)
             if (column.exists())
             {
                 if (column.renameOrCreate(newName, dataType))

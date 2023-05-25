@@ -5,8 +5,7 @@ import me.sd_master92.customvoting.CV
 enum class Setting(val path: String, private val defaultValue: Any? = null)
 {
     LANGUAGE("language", 0),
-    MONTHLY_RESET("monthly_reset", false),
-    MONTHLY_VOTES("monthly_votes", false),
+    VOTES_SORT_TYPE("votes_sort_type", 0),
     USE_SOUND_EFFECTS("sound_effects", true),
     VOTE_PARTY_COUNTDOWN("vote_party_countdown", 30),
     FIREWORK("firework", true),
@@ -20,6 +19,9 @@ enum class Setting(val path: String, private val defaultValue: Any? = null)
     LUCKY_VOTE_CHANCE("lucky_vote_chance", 50),
     VOTE_LINK_INVENTORY("vote_link_inventory", false),
     FORBIDDEN_COMMANDS("forbidden_commands", arrayOf("fakevote", "op", "stop", "restart", "reload")),
+    LAST_VOTE_RESET_MONTH("vote_reset.last_month", -1),
+    LAST_VOTE_RESET_WEEK("vote_reset.last_week", -1),
+    LAST_VOTE_RESET_DAY("vote_reset.last_day", -1),
     INGAME_UPDATES("ingame_updates", true),
 
     DISABLED_BROADCASTS("disabled_broadcasts"),
@@ -75,7 +77,7 @@ enum class Setting(val path: String, private val defaultValue: Any? = null)
         {
             val keyMigrations = mapOf(
                 Pair("$DISABLED_BROADCASTS.vote_streak", DISABLED_BROADCAST_MILESTONE.path),
-                Pair("monthly_period", MONTHLY_VOTES.path)
+                Pair("monthly_period", "monthly_votes")
             )
 
             plugin.config.keyMigrations(keyMigrations)

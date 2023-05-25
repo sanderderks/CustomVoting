@@ -22,9 +22,6 @@ commands:
   setvotes:
     description: set votes
     permission: customvoting.setvotes
-  clearmonthlyvotes:
-    description: clear monthly votes
-    permission: customvoting.monthly
   createtop:
     description: create top stand
     permission: customvoting.createtop
@@ -51,7 +48,7 @@ permissions:
     children:
       customvoting.vote: true
       customvoting.votes.*: true
-      customvoting.monthly: true
+      customvoting.reset: true
       customvoting.votetop: true
       customvoting.createtop: true
       customvoting.deletetop: true
@@ -73,8 +70,6 @@ permissions:
   customvoting.votes.others:
     default: op
   customvoting.votes.set:
-    default: op
-  customvoting.monthly:
     default: op
   customvoting.createtop:
     default: op
