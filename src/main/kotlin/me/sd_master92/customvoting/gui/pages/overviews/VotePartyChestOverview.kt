@@ -7,6 +7,7 @@ import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.gui.buttons.actions.PaginationNextAction
 import me.sd_master92.customvoting.gui.buttons.actions.PaginationPreviousAction
+import me.sd_master92.customvoting.gui.buttons.actions.VotePartyCreateAction
 import me.sd_master92.customvoting.gui.buttons.shortcuts.VotePartyRewardItemsShortcut
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
@@ -47,7 +48,7 @@ class VotePartyChestOverview(private val plugin: CV, backPage: GUI?, private val
     {
         private fun calculateInventorySize(plugin: CV): Int
         {
-            val chests = plugin.data.getLocations(Data.VOTE_PARTY_CHESTS.path).size + 3
+            val chests = plugin.data.getLocations(Data.VOTE_PARTY_CHESTS.path).size + 4
             val size = if (chests % 9 == 0) chests else chests + (9 - (chests % 9))
             return size.coerceAtMost(54)
         }
@@ -55,6 +56,7 @@ class VotePartyChestOverview(private val plugin: CV, backPage: GUI?, private val
 
     init
     {
+        setItem(nonClickableSizeWithNull - 1, VotePartyCreateAction())
         setItem(
             nonClickableSizeWithNull - 1,
             object : PaginationNextAction(plugin, this, page)
