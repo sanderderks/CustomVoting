@@ -89,6 +89,7 @@ class CV : CustomPlugin(
         {
             when
             {
+                contains("1.20") -> 20
                 contains("1.19") -> 19
                 contains("1.18") -> 18
                 contains("1.17") -> 17
@@ -116,7 +117,18 @@ class CV : CustomPlugin(
         infoLog("")
         infoLog("| checking for Vault")
         infoLog("|")
-        if (server.pluginManager.getPlugin("Vault") != null)
+        val vault = server.pluginManager.getPlugin("Vault")
+        if (vault == null)
+        {
+            errorLog("| Vault not found")
+            errorLog("|")
+            errorLog("|___Economy and permissions disabled")
+        } else if (!vault.isEnabled)
+        {
+            errorLog("| Vault not enabled")
+            errorLog("|")
+            errorLog("|___Economy and permissions disabled")
+        } else
         {
             infoLog("|___Vault found")
             infoLog("")
@@ -139,18 +151,17 @@ class CV : CustomPlugin(
             {
                 infoLog("|___successfully hooked into '" + PERMISSION!!.name + "'")
             }
-        } else
-        {
-            errorLog("| Vault not found")
-            errorLog("|")
-            errorLog("|___Economy and permissions disabled")
         }
         infoLog("")
         infoLog("| checking for PlaceholderAPI hook")
         infoLog("|")
-        if (server.pluginManager.getPlugin("PlaceholderAPI") == null)
+        val papi = server.pluginManager.getPlugin("PlaceholderAPI")
+        if (papi == null)
         {
             errorLog("|___PlaceholderAPI hook not found")
+        } else if (!papi.isEnabled)
+        {
+            errorLog("|___PlaceholderAPI not enabled")
         } else
         {
             PAPI = true
@@ -160,9 +171,13 @@ class CV : CustomPlugin(
         infoLog("")
         infoLog("| checking for Citizens hook")
         infoLog("|")
-        if (server.pluginManager.getPlugin("Citizens") == null)
+        val citizens = server.pluginManager.getPlugin("Citizens")
+        if (citizens == null)
         {
             errorLog("|___Citizens hook not found")
+        } else if (!citizens.isEnabled)
+        {
+            errorLog("|___Citizens not enabled")
         } else
         {
             CITIZENS = true

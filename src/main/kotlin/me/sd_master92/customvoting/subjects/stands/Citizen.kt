@@ -71,11 +71,8 @@ class Citizen(private val plugin: CV, private val path: String, private val top:
 
     init
     {
-        if (CV.CITIZENS)
-        {
-            findOrCreate()
-            refresh()
-        }
+        findOrCreate()
+        refresh()
     }
 }
 

@@ -16,7 +16,7 @@ class VoteTopStand private constructor(private val plugin: CV, private val top: 
     var topStand = DisplayStand(plugin, "$path.top", top)
     var nameStand = DisplayStand(plugin, "$path.name", top)
     var votesStand = DisplayStand(plugin, "$path.votes", top, true)
-    private var citizen = Citizen(plugin, "$path.citizen", top, votesStand.location)
+    private var citizen = if (CV.CITIZENS) Citizen(plugin, "$path.citizen", top, votesStand.location) else null
 
     fun exists(): Boolean
     {
@@ -30,7 +30,7 @@ class VoteTopStand private constructor(private val plugin: CV, private val top: 
             topStand.create(player.location.add(0.0, 1.0, 0.0))
             nameStand.create(player.location.add(0.0, 0.5, 0.0))
             votesStand.create(player.location)
-            citizen.create(player.location)
+            citizen?.create(player.location)
             player.sendMessage(PMessage.VOTE_TOP_MESSAGE_STAND_CREATED_X.with("$top"))
             updateAll(plugin)
         } else
@@ -56,7 +56,7 @@ class VoteTopStand private constructor(private val plugin: CV, private val top: 
         topStand.update(Message.VOTE_TOP_STANDS_TOP.getMessage(plugin, placeholders))
         nameStand.update(Message.VOTE_TOP_STANDS_CENTER.getMessage(plugin, placeholders))
         votesStand.update(Message.VOTE_TOP_STANDS_BOTTOM.getMessage(plugin, placeholders), topVoter?.uuid)
-        citizen.update(topVoter?.name ?: PMessage.PLAYER_NAME_UNKNOWN_COLORED.toString())
+        citizen?.update(topVoter?.name ?: PMessage.PLAYER_NAME_UNKNOWN_COLORED.toString())
     }
 
     fun delete(player: Player)
@@ -64,7 +64,7 @@ class VoteTopStand private constructor(private val plugin: CV, private val top: 
         topStand.delete()
         nameStand.delete()
         votesStand.delete()
-        citizen.delete()
+        citizen?.delete()
         plugin.data.delete(path)
         voteTops.remove(top)
         player.sendMessage(PMessage.VOTE_TOP_MESSAGE_STAND_DELETED_X.with("$top"))
