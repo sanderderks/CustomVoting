@@ -44,7 +44,8 @@ class PlayerInfoOverviewPage(private val plugin: CV, backPage: GUI?, private var
 
     private fun getSkull(voter: Voter): ItemStack
     {
-        val skull = voter.name.getOfflinePlayer().getSkull()
+        val player = voter.name.getOfflinePlayer(plugin)
+        val skull = player.getSkull()
         val meta = skull.itemMeta
         val lastVote = if (voter.votes > 0) java.text.SimpleDateFormat(PMessage.GENERAL_FORMAT_DATE.toString())
             .format(Date(voter.last)) else PMessage.PLAYER_INFO_VALUE_NEVER.toString()
@@ -56,8 +57,7 @@ class PlayerInfoOverviewPage(private val plugin: CV, backPage: GUI?, private var
             PMessage.PLAYER_INFO_ITEM_LORE_STREAK_DAILY_X.with("" + voter.streakDaily),
             PMessage.PLAYER_INFO_ITEM_LORE_LAST_X.with(lastVote),
             PMessage.PLAYER_INFO_ITEM_LORE_POWER_X.with(
-                if (voter.name.getOfflinePlayer()
-                        ?.hasPowerRewards(plugin) == true
+                if (player?.hasPowerRewards(plugin) == true
                 ) PMessage.GENERAL_VALUE_TRUE.toString() else
                     PMessage.GENERAL_VALUE_FALSE.toString()
             ),

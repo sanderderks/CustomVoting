@@ -10,7 +10,6 @@ import me.sd_master92.customvoting.constants.enumerations.*
 import me.sd_master92.customvoting.constants.interfaces.Voter
 import me.sd_master92.customvoting.helpers.ParticleHelper
 import me.sd_master92.customvoting.subjects.voteparty.VoteParty
-import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import java.text.DecimalFormat
 import java.util.*
@@ -26,7 +25,7 @@ class CustomVote(
 
     private fun forwardVote()
     {
-        val player = Bukkit.getPlayer(username)
+        val player = username.getPlayer(plugin)
         if (player == null)
         {
             plugin.infoLog(PMessage.QUEUE_MESSAGE_ADD.toString())

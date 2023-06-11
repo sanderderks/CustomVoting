@@ -62,7 +62,7 @@ class PermUserOverviewPage(private val plugin: CV, backPage: GUI?, private var p
 
     private fun getSkull(voter: Voter): ItemStack
     {
-        val skull = voter.name.getOfflinePlayer().getSkull()
+        val skull = voter.name.getOfflinePlayer(plugin).getSkull()
         val meta = skull.itemMeta!!
         val lore = mutableListOf(
             PMessage.GENERAL_ITEM_LORE_ENABLED_X.with(

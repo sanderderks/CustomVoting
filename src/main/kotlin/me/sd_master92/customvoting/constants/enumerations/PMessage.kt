@@ -109,6 +109,10 @@ enum class PMessage(
     ENUM_VOTE_PARTY_TYPE_SCARY,
     ENUM_VOTE_PARTY_TYPE_PIG_HUNT,
 
+    SUFFIX_SUPPORT_ITEM_NAME(RED.color),
+    SUFFIX_SUPPORT_MESSAGE_INPUT(GREEN.color),
+    SUFFIX_SUPPORT_MESSAGE_INPUT_CHANGED(GREEN.color),
+
     SUPPORTER_INVENTORY_NAME,
     SUPPORTER_ITEM_LORE(GRAY.color),
     SUPPORTER_ITEM_NAME(PURPLE.color),
@@ -353,16 +357,28 @@ enum class PMessage(
 
     fun getValue(locale: Locale? = null): String
     {
-        var value = if (locale == null) CV.RESOURCE_BUNDLE?.getString(name.uppercase())
-            ?: "" else ResourceBundle.getBundle(CV.RESOURCE_BUNDLE?.baseBundleName ?: "", locale)
-            .getString(name.uppercase())
-        if (color != null)
+        val bundle = if (locale != null) ResourceBundle.getBundle(
+            CV.RESOURCE_BUNDLE?.baseBundleName ?: "",
+            locale
+        ) else CV.RESOURCE_BUNDLE
+        if (bundle != null)
         {
-            value = "$color$value"
-            value = value.split(";").joinToString(";${color}")
+            val value = try
+            {
+                bundle.getString(name.uppercase())
+            } catch (e: MissingResourceException)
+            {
+                ""
+            }
+            if (color != null)
+            {
+                return "$color$value".split(";").joinToString(";${color}")
+            }
+            return value
         }
-        return value
+        return ""
     }
+
 
     fun with(x_: String, y_: String? = null): String
     {

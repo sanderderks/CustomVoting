@@ -39,7 +39,10 @@ enum class Setting(val path: String, private val defaultValue: Any? = null)
     FIRST_VOTE_BROADCAST_ONLY("first_vote_broadcast_only", false),
     DISABLED_WORLDS("disabled_worlds"),
     ENABLED_PERM_GROUPS("enabled_op_groups"),
+
     UUID_STORAGE("uuid_storage", true),
+    SUFFIX_SUPPORT("suffix_support"),
+
     USE_DATABASE("use_database", false),
 
     DATABASE("database"),
