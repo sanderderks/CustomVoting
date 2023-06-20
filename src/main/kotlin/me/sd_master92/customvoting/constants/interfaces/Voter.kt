@@ -5,6 +5,7 @@ import me.sd_master92.customvoting.VoteFile
 import me.sd_master92.customvoting.constants.enumerations.Setting
 import me.sd_master92.customvoting.constants.enumerations.VoteSortType
 import me.sd_master92.customvoting.database.PlayerTable
+import me.sd_master92.customvoting.getPlayerNameWithSuffix
 import me.sd_master92.customvoting.subjects.VoteTopSign
 import me.sd_master92.customvoting.subjects.stands.VoteTopStand
 import org.bukkit.entity.Player
@@ -97,7 +98,9 @@ interface Voter
 
         fun getByName(plugin: CV, name: String): Voter?
         {
-            return getTopVoters(plugin).firstOrNull { voter -> voter.name == name }
+            val topVoters = getTopVoters(plugin)
+            return topVoters.firstOrNull { voter -> voter.name == name }
+                ?: topVoters.firstOrNull { voter -> voter.name == name.getPlayerNameWithSuffix(plugin) }
         }
     }
 }
