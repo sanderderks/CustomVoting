@@ -149,7 +149,7 @@ class VoteParty(private val plugin: CV)
                     VotePartyType.ADD_TO_INVENTORY       ->
                     {
                         val chest = chests[random.nextInt(chests.size)]
-                        val players: List<Player> = ArrayList(Bukkit.getOnlinePlayers())
+                        val players = ArrayList(Bukkit.getOnlinePlayers())
                         val player = players[random.nextInt(players.size)]
 
                         player.addToInventoryOrDrop(chest.popRandomItem())

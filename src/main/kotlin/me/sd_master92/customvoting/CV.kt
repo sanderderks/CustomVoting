@@ -246,11 +246,14 @@ class CV : CustomPlugin(
         metrics.addCustomChart(SimplePie("vote_party_enabled") { if (config.getBoolean(Setting.VOTE_PARTY.path)) "true" else "false" })
         metrics.addCustomChart(SimplePie("lucky_vote_enabled") { if (config.getBoolean(Setting.LUCKY_VOTE.path)) "true" else "false" })
         metrics.addCustomChart(SimplePie("uuid_support") { if (config.getBoolean(Setting.UUID_STORAGE.path)) "true" else "false" })
-        metrics.addCustomChart(SimplePie("vote_party_type") {
-            if (config.getBoolean(Setting.VOTE_PARTY.path)) VotePartyType.values()[
-                config.getNumber(Setting.VOTE_PARTY_TYPE.path)
-            ].label(Locale.ENGLISH) else "None"
-        })
+        if (config.getBoolean(Setting.VOTE_PARTY.path))
+        {
+            metrics.addCustomChart(SimplePie("vote_party_type") {
+                VotePartyType.values()[
+                    config.getNumber(Setting.VOTE_PARTY_TYPE.path)
+                ].label(Locale.ENGLISH)
+            })
+        }
         metrics.addCustomChart(SimplePie("vote_crates") {
             if (data.getLocations(Data.VOTE_CRATES.path).isNotEmpty()) "true" else "false"
         })
