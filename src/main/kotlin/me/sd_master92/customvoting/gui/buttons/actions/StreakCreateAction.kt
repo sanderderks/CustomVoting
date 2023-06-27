@@ -21,7 +21,7 @@ class StreakCreateAction(private val plugin: CV, private val currentPage: GUI) :
         currentPage.cancelCloseEvent = true
         player.closeInventory()
         player.sendMessage(PMessage.STREAK_MESSAGE_NUMBER_ENTER.toString())
-        player.sendMessage(PMessage.GENERAL_MESSAGE_CANCEL_BACK.toString())
+        player.sendMessage(PMessage.GENERAL_MESSAGE_CANCEL_BACK_X.with("cancel"))
         object : PlayerNumberInput(plugin, player)
         {
             override fun onNumberReceived(input: Int)

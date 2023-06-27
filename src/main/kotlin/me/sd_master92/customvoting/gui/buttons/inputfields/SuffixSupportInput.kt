@@ -25,7 +25,7 @@ class SuffixSupportInput(
         currentPage.cancelCloseEvent = true
         player.closeInventory()
         player.sendMessage(PMessage.SUFFIX_SUPPORT_MESSAGE_INPUT.toString())
-        player.sendMessage(PMessage.GENERAL_MESSAGE_CANCEL_BACK.toString())
+        player.sendMessage(PMessage.GENERAL_MESSAGE_CANCEL_BACK_X.with("cancel"))
         object : PlayerStringInput(plugin, player)
         {
             override fun onInputReceived(input: String)

@@ -3,6 +3,7 @@ package me.sd_master92.customvoting.gui.buttons.inputfields
 import me.sd_master92.core.inventory.GUI
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.Data
+import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.gui.buttons.abstracts.AbstractRewardCommandsButton
 import me.sd_master92.customvoting.listeners.PlayerCommandInput
@@ -16,7 +17,8 @@ class VotePartyCommandsInput(
 ) : AbstractRewardCommandsButton(
     plugin,
     Data.VOTE_PARTY_COMMANDS.path,
-    Material.COMMAND_BLOCK
+    Material.COMMAND_BLOCK,
+    PMessage.COMMAND_REWARDS_ITEM_NAME_VOTE_PARTY.toString()
 )
 {
     override fun onClick(event: InventoryClickEvent, player: Player)

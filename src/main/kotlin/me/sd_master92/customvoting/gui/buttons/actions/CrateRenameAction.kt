@@ -24,7 +24,7 @@ class CrateRenameAction(private val plugin: CV, private val currentPage: GUI, pr
         currentPage.cancelCloseEvent = true
         player.closeInventory()
         player.sendMessage(PMessage.CRATE_MESSAGE_NAME_ENTER.toString())
-        player.sendMessage(PMessage.GENERAL_MESSAGE_CANCEL_BACK.toString())
+        player.sendMessage(PMessage.GENERAL_MESSAGE_CANCEL_BACK_X.with("cancel"))
         object : PlayerStringInput(plugin, player)
         {
             override fun onInputReceived(input: String)

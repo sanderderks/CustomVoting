@@ -62,7 +62,7 @@ abstract class PlayerCommandInput(
     {
         player.sendMessage(PMessage.GENERAL_MESSAGE_LIST_ALTER_X.with(PMessage.COMMAND_REWARDS_UNIT.toString()))
         player.sendMessage(PMessage.COMMAND_REWARDS_MESSAGE_PLACEHOLDER.toString())
-        player.sendMessage(PMessage.GENERAL_MESSAGE_CANCEL_BACK.toString())
+        player.sendMessage(PMessage.GENERAL_MESSAGE_CANCEL_BACK_X.with("cancel"))
         player.sendMessage("")
         if (commands.isEmpty())
         {

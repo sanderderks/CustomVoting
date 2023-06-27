@@ -52,7 +52,7 @@ abstract class PlayerPermissionInput(
     init
     {
         player.sendMessage(PMessage.GENERAL_MESSAGE_LIST_ALTER_X.with(PMessage.PERMISSION_REWARDS_UNIT.toString()))
-        player.sendMessage(PMessage.GENERAL_MESSAGE_CANCEL_BACK.toString())
+        player.sendMessage(PMessage.GENERAL_MESSAGE_CANCEL_BACK_X.with("cancel"))
         player.sendMessage("")
         if (permissions.isEmpty())
         {
