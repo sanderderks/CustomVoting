@@ -1,7 +1,7 @@
 package me.sd_master92.customvoting.commands
 
-import me.sd_master92.core.appendWhenTrue
 import me.sd_master92.core.command.SimpleCommand
+import me.sd_master92.core.command.SimpleSubCommand
 import me.sd_master92.core.file.PlayerFile
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.Message
@@ -12,15 +12,32 @@ import me.sd_master92.customvoting.subjects.stands.VoteTopStand
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
-class ReloadCommand(private val plugin: CV) : SimpleCommand(plugin, "votereload")
+class ReloadCommand(private val plugin: CV) : SimpleCommand(
+    plugin, "votereload",
+    subCommands = arrayOf(object : SimpleSubCommand("cache")
+    {
+        override fun onCommand(sender: CommandSender, args: Array<String>)
+        {
+            if (reload(plugin, true))
+            {
+                sender.sendMessage(PMessage.RELOAD_MESSAGE_FINISH_X.with(" and cache"))
+            } else
+            {
+                sender.sendMessage(PMessage.RELOAD_ERROR_FAIL.toString())
+            }
+        }
+
+        override fun onCommand(player: Player, args: Array<String>)
+        {
+        }
+    })
+)
 {
     override fun onCommand(sender: CommandSender, args: Array<String>)
     {
-        val cache = args.isNotEmpty() && args[0] == "cache"
-        sender.sendMessage(PMessage.RELOAD_MESSAGE_START_X.with("".appendWhenTrue(cache, " and cache")))
-        if (reload(plugin, cache))
+        if (reload(plugin))
         {
-            sender.sendMessage(PMessage.RELOAD_MESSAGE_FINISH_X.with("".appendWhenTrue(cache, " and cache")))
+            sender.sendMessage(PMessage.RELOAD_MESSAGE_FINISH_X.toString())
         } else
         {
             sender.sendMessage(PMessage.RELOAD_ERROR_FAIL.toString())
