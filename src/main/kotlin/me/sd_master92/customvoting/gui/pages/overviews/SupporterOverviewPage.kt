@@ -38,7 +38,7 @@ class SupporterOverviewPage(private val plugin: CV, backPage: GUI?) :
 
     init
     {
-        for (supporter in listOf("sd_master92", "Dutchbeard", "Smirren"))
+        for (supporter in listOf("sd_master92", "Dutchbeard", "Smirren", "King_Tom_94"))
         {
             @Suppress("DEPRECATION")
             addItem(Bukkit.getOfflinePlayer(supporter).getSkull())
