@@ -8,7 +8,14 @@ import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
 class VotePartyCommand(plugin: CV) :
-    SimpleCommand(plugin, "voteparty", false, VotePartyCreateCommand(), VotePartyStartCommand(plugin))
+    SimpleCommand(
+        plugin,
+        "voteparty",
+        false,
+        VotePartyCreateCommand(),
+        VotePartyStartCommand(plugin),
+        VotePartyStopCommand(plugin)
+    )
 {
     override fun onCommand(sender: CommandSender, args: Array<String>)
     {
