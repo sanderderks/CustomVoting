@@ -13,7 +13,8 @@ enum class VotePartyType(private val label_: PMessage) : CarouselEnum
     ADD_TO_INVENTORY(PMessage.ENUM_VOTE_PARTY_TYPE_ADD_TO_INVENTORY),
     EXPLODE_CHESTS(PMessage.ENUM_VOTE_PARTY_TYPE_EXPLODE_CHESTS),
     SCARY(PMessage.ENUM_VOTE_PARTY_TYPE_SCARY),
-    PIG_HUNT(PMessage.ENUM_VOTE_PARTY_TYPE_PIG_HUNT);
+    PIG_HUNT(PMessage.ENUM_VOTE_PARTY_TYPE_PIG_HUNT),
+    LOCKED_CRATES(PMessage.ENUM_VOTE_PARTY_TYPE_LOCKED_CRATES);
 
     fun label(locale: Locale? = null): String
     {

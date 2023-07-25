@@ -5,12 +5,11 @@ import me.sd_master92.core.infoLog
 import me.sd_master92.core.inventory.ConfirmGUI
 import me.sd_master92.core.tasks.TaskTimer
 import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.constants.enumerations.Message
-import me.sd_master92.customvoting.constants.enumerations.PMessage
-import me.sd_master92.customvoting.constants.enumerations.Setting
-import me.sd_master92.customvoting.constants.enumerations.SoundType
+import me.sd_master92.customvoting.constants.enumerations.*
 import me.sd_master92.customvoting.constants.interfaces.Voter
 import me.sd_master92.customvoting.gui.pages.editors.VotePartyRewardItemsEditor
+import me.sd_master92.customvoting.gui.pages.menus.VotePartyCrate
+import me.sd_master92.customvoting.helpers.ParticleHelper
 import me.sd_master92.customvoting.sendText
 import me.sd_master92.customvoting.stripColor
 import me.sd_master92.customvoting.subjects.CustomVote
@@ -212,21 +211,39 @@ class PlayerListener(private val plugin: CV) : Listener
             {
                 event.isCancelled = true
 
-                if (player.hasPermission("customvoting.voteparty"))
+                if (VoteParty.IS_ACTIVE && VoteParty.getCurrent()?.votePartyType == VotePartyType.LOCKED_CRATES && !votePartyChest.isOpened)
                 {
+                    votePartyChest.isOpened = true
+                    votePartyChest.hide()
                     SoundType.OPEN.play(plugin, player)
-                    VotePartyRewardItemsEditor(plugin, null, votePartyChest.key).open(player)
+                    VotePartyCrate(plugin, votePartyChest).open(player)
+                    
+                    plugin.broadcastText(Message.VOTE_PARTY_CHEST_CLAIMED, mapOf(Pair("%PLAYER%", player.name)))
+                    ParticleHelper.shootFirework(plugin, player.location)
+
+                    if (VotePartyChest.getAll(plugin).none { chest -> !chest.isOpened })
+                    {
+                        VoteParty.stop(plugin)
+                    }
+                    return
                 } else
                 {
-                    player.sendMessage(PMessage.ACTION_ERROR_OPEN_CHEST_NO_PERMISSION.toString())
+                    if (player.hasPermission("customvoting.voteparty"))
+                    {
+                        SoundType.OPEN.play(plugin, player)
+                        VotePartyRewardItemsEditor(plugin, null, votePartyChest.key).open(player)
+                    } else
+                    {
+                        player.sendMessage(PMessage.ACTION_ERROR_OPEN_CHEST_NO_PERMISSION.toString())
+                    }
+                    return
                 }
-                return
             }
         }
 
         var voteCrate = VoteCrate.getByLocation(plugin, clicked.location)
         if (voteCrate != null && (event.item?.type != Material.TRIPWIRE_HOOK || event.item?.itemMeta?.lore?.get(0)
-                ?.contains("#") == false)
+                    ?.contains("#") == false)
         )
         {
             event.isCancelled = true

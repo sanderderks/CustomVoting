@@ -15,13 +15,17 @@ import java.util.*
 
 class VoteParty(private val plugin: CV)
 {
-    private var votePartyType = VotePartyType.valueOf(plugin.config.getNumber(Setting.VOTE_PARTY_TYPE.path))
+    var votePartyType = VotePartyType.valueOf(plugin.config.getNumber(Setting.VOTE_PARTY_TYPE.path))
+        private set
+    private val chests = VotePartyChest.getAll(plugin)
+    private val random = Random()
 
     fun start()
     {
-        if (!isActive)
+        if (!IS_ACTIVE)
         {
-            isActive = true
+            IS_ACTIVE = true
+            VotePartyChest.resetAll(plugin)
             TaskTimer.repeat(plugin, 20, 0, plugin.config.getNumber(Setting.VOTE_PARTY_COUNTDOWN.path)) {
                 when (it.count)
                 {
@@ -82,6 +86,10 @@ class VoteParty(private val plugin: CV)
                                 pigHunt()
                             }
 
+                            VotePartyType.LOCKED_CRATES  ->
+                            {
+                            }
+
                             else                         ->
                             {
                                 dropChests()
@@ -113,9 +121,6 @@ class VoteParty(private val plugin: CV)
 
     private fun dropChests()
     {
-        val chests = VotePartyChest.getAll(plugin)
-        val random = Random()
-
         TaskTimer.repeat(plugin, 10)
         {
             chests.removeIf { chest -> chest.isEmpty() }
@@ -170,9 +175,6 @@ class VoteParty(private val plugin: CV)
 
     private fun explode()
     {
-        val chests = VotePartyChest.getAll(plugin)
-        val random = Random()
-
         TaskTimer.repeat(plugin, 30)
         {
             if (chests.isNotEmpty())
@@ -190,9 +192,6 @@ class VoteParty(private val plugin: CV)
 
     private fun scare()
     {
-        val chests = VotePartyChest.getAll(plugin)
-        val random = Random()
-
         chests.firstOrNull()?.loc?.let { loc ->
             val players = loc.world!!.getNearbyEntities(loc, 50.0, 50.0, 50.0).filterIsInstance<Player>()
             for (player in players)
@@ -234,7 +233,7 @@ class VoteParty(private val plugin: CV)
 
     private fun pigHunt()
     {
-        for (chest in VotePartyChest.getAll(plugin))
+        for (chest in chests)
         {
             chest.convertToPig()
         }
@@ -247,16 +246,26 @@ class VoteParty(private val plugin: CV)
             PMessage.VOTE_PARTY_ITEM_NAME_CHEST.toString(),
             PMessage.VOTE_PARTY_ITEM_LORE_CHEST.toString()
         )
+        var IS_ACTIVE = false
+            private set
         private val queue: MutableList<VoteParty> = ArrayList()
-        private var isActive = false
+
+        fun getCurrent(): VoteParty?
+        {
+            return queue.firstOrNull()
+        }
 
         fun stop(plugin: CV)
         {
-            plugin.broadcastText(Message.VOTE_PARTY_END)
+            if (IS_ACTIVE)
+            {
+                IS_ACTIVE = false
+                queue.removeFirstOrNull()
+                plugin.broadcastText(Message.VOTE_PARTY_END)
+                VotePartyChest.resetAll(plugin)
 
-            isActive = false
-            queue.removeFirstOrNull()
-            queue.firstOrNull()?.start()
+                queue.firstOrNull()?.start()
+            }
         }
     }
 

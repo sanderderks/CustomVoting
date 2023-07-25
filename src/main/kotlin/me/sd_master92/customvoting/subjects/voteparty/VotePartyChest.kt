@@ -27,6 +27,13 @@ class VotePartyChest private constructor(private val plugin: CV, val key: String
     val items = plugin.data.getItems(path).toMutableList()
     val loc = plugin.data.getLocation(path)!!.clone()
     var dropLoc = Location(loc.world, loc.x + 0.5, loc.y - 1, loc.z + 0.5)
+    var isOpened
+        get() = plugin.data.getBoolean("$path.is_opened")
+        set(value)
+        {
+            plugin.data.set("$path.is_opened", value)
+            plugin.data.saveConfig()
+        }
     private val fireworkLoc = Location(loc.world, loc.x + 0.5, loc.y + 1, loc.z + 0.5)
     private val random = Random()
 
@@ -173,6 +180,15 @@ class VotePartyChest private constructor(private val plugin: CV, val key: String
         fun getByLocation(plugin: CV, loc: Location): VotePartyChest?
         {
             return getAll(plugin).firstOrNull { chest -> chest.loc == loc }
+        }
+
+        fun resetAll(plugin: CV)
+        {
+            for (chest in getAll(plugin))
+            {
+                chest.isOpened = false
+                chest.show()
+            }
         }
     }
 }
