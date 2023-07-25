@@ -62,7 +62,8 @@ class CrateMenu(private val plugin: CV, private val player: Player, private val 
 
     private fun giveReward(number: Int? = null)
     {
-        val rewards = if (number != null && this.rewards.isNotEmpty()) this.rewards[number] else null
+        val backupNumber = Data.CRATE_REWARD_CHANCES.firstOrNull { this.rewards[it]?.isNotEmpty() == true }
+        val rewards = this.rewards[number ?: backupNumber]
         val reward = if (rewards?.isNotEmpty() == true) rewards.random() else null
         val none = SimpleItem(
             Material.BARRIER,
@@ -77,6 +78,11 @@ class CrateMenu(private val plugin: CV, private val player: Player, private val 
             player.addToInventoryOrDrop(reward)
             ParticleHelper.shootFirework(plugin, player.location)
             player.sendMessage(PMessage.CRATE_MESSAGE_REWARD_X.with("$number"))
+        } else if (reward != null && plugin.data.getBoolean(Data.VOTE_CRATES.path + ".$key.always"))
+        {
+            player.addToInventoryOrDrop(reward)
+            ParticleHelper.shootFirework(plugin, player.location)
+            player.sendMessage(PMessage.CRATE_MESSAGE_REWARD_X.with("$backupNumber"))
         } else
         {
             SoundType.FAILURE.play(plugin, player)

@@ -9,6 +9,7 @@ import me.sd_master92.customvoting.gui.buttons.actions.CrateDeleteAction
 import me.sd_master92.customvoting.gui.buttons.actions.CrateGetKeyAction
 import me.sd_master92.customvoting.gui.buttons.actions.CrateRenameAction
 import me.sd_master92.customvoting.gui.buttons.shortcuts.CrateRewardItemsShortcut
+import me.sd_master92.customvoting.gui.buttons.switches.AlwaysCrateRewardSwitch
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
@@ -18,7 +19,7 @@ class CrateSettingsPage(private val plugin: CV, backPage: GUI?, private val numb
     backPage,
     (plugin.data.getString(Data.VOTE_CRATES.path + ".$number.name")
         ?: PMessage.CRATE_NAME_DEFAULT_X.with("$number")),
-    9
+    18
 )
 {
     override fun newInstance(): GUI
@@ -52,6 +53,7 @@ class CrateSettingsPage(private val plugin: CV, backPage: GUI?, private val numb
         {
             addItem(CrateRewardItemsShortcut(plugin, this, number, chance))
         }
-        setItem(7, CrateDeleteAction(plugin, this, number, name))
+        addItem(AlwaysCrateRewardSwitch(plugin, number))
+        setItem(16, CrateDeleteAction(plugin, this, number, name))
     }
 }
