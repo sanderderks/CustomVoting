@@ -12,7 +12,7 @@ enum class VoteSortType(val label: PMessage) : CarouselEnum
 
     override fun next(): VoteSortType
     {
-        return if (ordinal < values().size - 1)
+        return if (ordinal < Setting.entries.size - 1)
         {
             valueOf(ordinal + 1)
         } else
@@ -27,10 +27,10 @@ enum class VoteSortType(val label: PMessage) : CarouselEnum
         {
             return try
             {
-                values()[key]
+                entries[key]
             } catch (_: Exception)
             {
-                values()[0]
+                entries[0]
             }
         }
     }

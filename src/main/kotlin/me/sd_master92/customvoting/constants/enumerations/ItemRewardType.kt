@@ -10,7 +10,7 @@ enum class ItemRewardType(val label: () -> String) : CarouselEnum
 
     override fun next(): ItemRewardType
     {
-        return if (ordinal < values().size - 1)
+        return if (ordinal < entries.size - 1)
         {
             valueOf(ordinal + 1)
         } else
@@ -25,10 +25,10 @@ enum class ItemRewardType(val label: () -> String) : CarouselEnum
         {
             return try
             {
-                values()[key]
+                entries[key]
             } catch (_: Exception)
             {
-                values()[0]
+                entries[0]
             }
         }
     }

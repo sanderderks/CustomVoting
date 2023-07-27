@@ -23,7 +23,7 @@ enum class VotePartyType(private val label_: PMessage) : CarouselEnum
 
     override fun next(): VotePartyType
     {
-        return if (ordinal < values().size - 1)
+        return if (ordinal < entries.size - 1)
         {
             valueOf(ordinal + 1)
         } else
@@ -36,17 +36,17 @@ enum class VotePartyType(private val label_: PMessage) : CarouselEnum
     {
         fun random(): VotePartyType
         {
-            return values()[Random().nextInt(1, values().size)]
+            return entries[Random().nextInt(1, entries.size)]
         }
 
         override fun valueOf(key: Int): VotePartyType
         {
             return try
             {
-                values()[key]
+                entries[key]
             } catch (_: Exception)
             {
-                values()[0]
+                entries[0]
             }
         }
     }

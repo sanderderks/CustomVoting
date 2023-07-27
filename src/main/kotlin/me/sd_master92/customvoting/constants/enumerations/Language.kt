@@ -12,7 +12,7 @@ enum class Language(val locale: Locale, val label: String)
 
     fun switch(plugin: CV)
     {
-        val language = if (ordinal < values().size - 1)
+        val language = if (ordinal < entries.size - 1)
         {
             valueOf(ordinal + 1)
         } else
@@ -34,10 +34,10 @@ enum class Language(val locale: Locale, val label: String)
         {
             return try
             {
-                values()[key]
+                entries[key]
             } catch (_: Exception)
             {
-                values()[0]
+                entries[0]
             }
         }
     }

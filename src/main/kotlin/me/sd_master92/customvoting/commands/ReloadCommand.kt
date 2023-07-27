@@ -18,6 +18,7 @@ class ReloadCommand(private val plugin: CV) : SimpleCommand(
     {
         override fun onCommand(sender: CommandSender, args: Array<String>)
         {
+            sender.sendMessage(PMessage.RELOAD_MESSAGE_START_X.with(" and cache"))
             if (reload(plugin, true))
             {
                 sender.sendMessage(PMessage.RELOAD_MESSAGE_FINISH_X.with(" and cache"))
@@ -35,9 +36,10 @@ class ReloadCommand(private val plugin: CV) : SimpleCommand(
 {
     override fun onCommand(sender: CommandSender, args: Array<String>)
     {
+        sender.sendMessage(PMessage.RELOAD_MESSAGE_START_X.with(""))
         if (reload(plugin))
         {
-            sender.sendMessage(PMessage.RELOAD_MESSAGE_FINISH_X.toString())
+            sender.sendMessage(PMessage.RELOAD_MESSAGE_FINISH_X.with(""))
         } else
         {
             sender.sendMessage(PMessage.RELOAD_ERROR_FAIL.toString())

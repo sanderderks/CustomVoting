@@ -66,7 +66,7 @@ enum class Setting(val path: String, private val defaultValue: Any? = null)
         fun initialize(plugin: CV)
         {
             migrate(plugin)
-            for (setting in values())
+            for (setting in entries)
             {
                 if (setting.defaultValue != null && plugin.config[setting.path] == null)
                 {
