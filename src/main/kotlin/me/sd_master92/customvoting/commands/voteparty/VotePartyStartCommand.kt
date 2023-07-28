@@ -14,7 +14,10 @@ class VotePartyStartCommand(private val plugin: CV) : SimpleSubCommand("start")
     {
         if (plugin.data.getLocations(Data.VOTE_PARTY_CHESTS.path).isNotEmpty())
         {
-            VoteParty(plugin).start()
+            if (!VoteParty(plugin).start())
+            {
+                sender.sendMessage(PMessage.VOTE_PARTY_MESSAGE_QUEUED.toString())
+            }
         } else
         {
             sender.sendMessage(PMessage.VOTE_PARTY_ERROR_NO_CHESTS.toString())

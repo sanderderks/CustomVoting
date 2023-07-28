@@ -20,7 +20,7 @@ class VoteParty(private val plugin: CV)
     private val chests = VotePartyChest.getAll(plugin)
     private val random = Random()
 
-    fun start()
+    fun start(): Boolean
     {
         if (!IS_ACTIVE)
         {
@@ -99,7 +99,11 @@ class VoteParty(private val plugin: CV)
                     }
                 }
             }.run()
+        } else
+        {
+            return false
         }
+        return true
     }
 
     private fun executeCommands()
