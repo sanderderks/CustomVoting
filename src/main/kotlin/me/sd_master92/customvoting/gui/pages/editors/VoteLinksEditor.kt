@@ -51,7 +51,7 @@ class VoteLinksEditor(private val plugin: CV) :
         player.sendMessage(
             arrayOf(
                 PMessage.VOTE_LINKS_MESSAGE_TITLE_ENTER.toString(),
-                PMessage.GENERAL_MESSAGE_CANCEL_CONTINUE.toString()
+                PMessage.GENERAL_MESSAGE_CANCEL_CONTINUE_X.with("cancel")
             )
         )
         object : PlayerStringInput(plugin, player)
@@ -92,7 +92,7 @@ class VoteLinksEditor(private val plugin: CV) :
             player.sendMessage(
                 arrayOf(
                     PMessage.VOTE_LINKS_MESSAGE_LORE_ENTER.toString(),
-                    PMessage.GENERAL_MESSAGE_CANCEL_CONTINUE.toString()
+                    PMessage.GENERAL_MESSAGE_CANCEL_CONTINUE_X.with("cancel")
                 )
             )
         }
@@ -120,7 +120,7 @@ class VoteLinksEditor(private val plugin: CV) :
                 player.sendMessage(
                     arrayOf(
                         PMessage.VOTE_LINKS_MESSAGE_LORE_ENTER_MORE.toString(),
-                        PMessage.GENERAL_MESSAGE_CANCEL_CONTINUE.toString()
+                        PMessage.GENERAL_MESSAGE_CANCEL_CONTINUE_X.with("cancel")
                     )
                 )
                 enterMessage(player, slot, true)
@@ -139,7 +139,7 @@ class VoteLinksEditor(private val plugin: CV) :
     {
         player.sendMessage(
             arrayOf(
-                PMessage.VOTE_LINKS_MESSAGE_URL.toString(), PMessage.GENERAL_MESSAGE_CANCEL_CONTINUE.toString()
+                PMessage.VOTE_LINKS_MESSAGE_URL.toString(), PMessage.GENERAL_MESSAGE_CANCEL_CONTINUE_X.with("cancel")
             )
         )
         object : PlayerStringInput(plugin, player)
