@@ -29,7 +29,8 @@ class CrateMenu(private val plugin: CV, private val player: Player, private val 
     private var searching = true
     private var rewards = mutableMapOf<Int, Array<ItemStack>>()
     private var allRewards = mutableListOf<ItemStack>()
-    private var abort = false
+    private val tasks = mutableListOf<TaskTimer>()
+    private var chanceBox: Int? = null
 
     override fun newInstance(): GUI
     {
@@ -48,13 +49,12 @@ class CrateMenu(private val plugin: CV, private val player: Player, private val 
     {
         if (keepAlive)
         {
-            TaskTimer.delay(plugin)
-            {
-                open(player)
-            }.run()
-        } else if (!abort)
+            TaskTimer.delay(plugin) { open(player) }.run()
+        } else if (tasks.isNotEmpty())
         {
-            abort = true
+            tasks.forEach { it.cancel() }
+            tasks.clear()
+            giveReward()
         } else
         {
             SoundType.CLOSE.play(plugin, player)
@@ -65,10 +65,10 @@ class CrateMenu(private val plugin: CV, private val player: Player, private val 
     {
     }
 
-    private fun giveReward(number: Int? = null)
+    private fun giveReward()
     {
         val backupNumber = Data.CRATE_REWARD_CHANCES.firstOrNull { this.rewards[it]?.isNotEmpty() == true }
-        val rewards = this.rewards[number ?: backupNumber]
+        val rewards = this.rewards[chanceBox ?: backupNumber]
         val reward = if (rewards?.isNotEmpty() == true) rewards.random() else null
         val none = SimpleItem(
             Material.BARRIER,
@@ -78,11 +78,11 @@ class CrateMenu(private val plugin: CV, private val player: Player, private val 
         clear()
         setItem(22, reward ?: none)
 
-        if (number != null && reward != null)
+        if (chanceBox != null && reward != null)
         {
             player.addToInventoryOrDrop(reward)
             ParticleHelper.shootFirework(plugin, player.location)
-            player.sendMessage(PMessage.CRATE_MESSAGE_REWARD_X.with("$number"))
+            player.sendMessage(PMessage.CRATE_MESSAGE_REWARD_X.with("$chanceBox"))
         } else if (reward != null && plugin.data.getBoolean(Data.VOTE_CRATES.path + ".$key.always"))
         {
             player.addToInventoryOrDrop(reward)
@@ -96,29 +96,32 @@ class CrateMenu(private val plugin: CV, private val player: Player, private val 
         keepAlive = false
     }
 
-    private fun shuffle(number: Int? = null)
+    private fun shuffle()
     {
         var shuffle = 1
         var wait = 0L
-        while (shuffle < 20 && !abort)
+        while (shuffle < 20)
         {
             wait += shuffle
-            TaskTimer.delay(plugin, wait)
-            {
-                for (i in 0 until size)
+            tasks.add(
+                TaskTimer.delay(plugin, wait)
                 {
-                    if (i != 22)
+                    for (i in 0 until size)
                     {
-                        setItem(i, allRewards.random())
+                        if (i != 22)
+                        {
+                            setItem(i, allRewards.random())
+                        }
                     }
-                }
-                SoundType.SUCCESS.play(plugin, player)
-                player.updateInventory()
-            }.run()
+                    SoundType.SUCCESS.play(plugin, player)
+                    player.updateInventory()
+                }.run()
+            )
             shuffle++
         }
-        TaskTimer.delay(plugin, wait) { giveReward(number) }.run()
-        abort = true
+        tasks.add(TaskTimer.delay(plugin, wait) {
+            giveReward()
+        }.run())
     }
 
     fun run()
@@ -131,8 +134,9 @@ class CrateMenu(private val plugin: CV, private val player: Player, private val 
             {
                 if (chance in min until number + min)
                 {
+                    chanceBox = number
                     searching = false
-                    shuffle(number)
+                    shuffle()
                     break
                 } else
                 {
