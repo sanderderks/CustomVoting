@@ -9,6 +9,7 @@ import me.sd_master92.customvoting.gui.buttons.actions.CrateDeleteAction
 import me.sd_master92.customvoting.gui.buttons.actions.CrateGetKeyAction
 import me.sd_master92.customvoting.gui.buttons.actions.CrateRenameAction
 import me.sd_master92.customvoting.gui.buttons.shortcuts.CrateRewardItemsShortcut
+import me.sd_master92.customvoting.gui.buttons.switches.AllowCrateClose
 import me.sd_master92.customvoting.gui.buttons.switches.AlwaysCrateRewardSwitch
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
@@ -54,6 +55,7 @@ class CrateSettingsPage(private val plugin: CV, backPage: GUI?, private val numb
             addItem(CrateRewardItemsShortcut(plugin, this, number, chance))
         }
         addItem(AlwaysCrateRewardSwitch(plugin, number))
+        addItem(AllowCrateClose(plugin))
         setItem(16, CrateDeleteAction(plugin, this, number, name))
     }
 }

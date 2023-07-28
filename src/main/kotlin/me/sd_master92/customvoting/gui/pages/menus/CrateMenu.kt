@@ -6,6 +6,7 @@ import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.addToInventoryOrDrop
 import me.sd_master92.customvoting.constants.enumerations.Data
 import me.sd_master92.customvoting.constants.enumerations.PMessage
+import me.sd_master92.customvoting.constants.enumerations.Setting
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.gui.items.CrateKeyItem
 import me.sd_master92.customvoting.gui.items.SimpleItem
@@ -28,6 +29,7 @@ class CrateMenu(private val plugin: CV, private val player: Player, private val 
     private var searching = true
     private var rewards = mutableMapOf<Int, Array<ItemStack>>()
     private var allRewards = mutableListOf<ItemStack>()
+    private var abort = false
 
     override fun newInstance(): GUI
     {
@@ -50,6 +52,9 @@ class CrateMenu(private val plugin: CV, private val player: Player, private val 
             {
                 open(player)
             }.run()
+        } else if (!abort)
+        {
+            abort = true
         } else
         {
             SoundType.CLOSE.play(plugin, player)
@@ -95,7 +100,7 @@ class CrateMenu(private val plugin: CV, private val player: Player, private val 
     {
         var shuffle = 1
         var wait = 0L
-        while (shuffle < 20)
+        while (shuffle < 20 && !abort)
         {
             wait += shuffle
             TaskTimer.delay(plugin, wait)
@@ -113,6 +118,7 @@ class CrateMenu(private val plugin: CV, private val player: Player, private val 
             shuffle++
         }
         TaskTimer.delay(plugin, wait) { giveReward(number) }.run()
+        abort = true
     }
 
     fun run()
@@ -157,6 +163,10 @@ class CrateMenu(private val plugin: CV, private val player: Player, private val 
         {
             allRewards.addAll(rewards[key]!!)
         }
-        keepAlive = true
+
+        if (!plugin.config.getBoolean(Setting.ALLOW_CRATE_CLOSE.path))
+        {
+            keepAlive = true
+        }
     }
 }
