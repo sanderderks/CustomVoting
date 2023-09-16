@@ -15,11 +15,11 @@ enum class Message(private val path: String, private val defaultValue: Any?)
         "vote_command", listOf(
             "&bVote for &dServerName &b!",
             "&b---------------",
-            "&dVote for SomeWebsite",
+            "&dVote on SomeWebsite",
             "&avotelink1.com",
-            "&dVote for AnotherWebsite",
+            "&dVote on AnotherWebsite",
             "&avotelink2.com",
-            "&dVote for AnotherWebsite",
+            "&dVote on AnotherWebsite",
             "&avotelink3.com",
             "&b---------------",
         )

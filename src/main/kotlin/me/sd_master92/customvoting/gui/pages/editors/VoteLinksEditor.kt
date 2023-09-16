@@ -3,96 +3,200 @@ package me.sd_master92.customvoting.gui.pages.editors
 import me.sd_master92.core.input.PlayerStringInput
 import me.sd_master92.core.inventory.GUI
 import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.constants.enumerations.Data
 import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.SoundType
-import me.sd_master92.customvoting.gui.pages.abstracts.AbstractItemEditor
+import me.sd_master92.customvoting.sendTexts
+import me.sd_master92.customvoting.subjects.VoteSite
 import org.bukkit.ChatColor
 import org.bukkit.entity.Player
+import org.bukkit.event.EventHandler
 import org.bukkit.event.inventory.ClickType
+import org.bukkit.event.inventory.InventoryAction
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
+import org.bukkit.inventory.ItemStack
 
 class VoteLinksEditor(private val plugin: CV) :
-    AbstractItemEditor(
+    GUI(
         plugin,
         null,
-        Data.VOTE_LINK_ITEMS.path,
         PMessage.VOTE_LINKS_INVENTORY_NAME.toString(),
         27,
         true,
-        false,
         false
     )
 {
+    private var lastSlot = -1
+    private var lastSlotIsEditor = false
+
     override fun newInstance(): GUI
     {
-        return this
+        return VoteLinksEditor(plugin)
+    }
+
+    override fun onBack(event: InventoryClickEvent, player: Player)
+    {
+    }
+
+    override fun onSave(event: InventoryClickEvent, player: Player)
+    {
     }
 
     override fun onClick(event: InventoryClickEvent, player: Player)
     {
         if (event.click == ClickType.RIGHT)
         {
-            save(player, notifyNoChanges = false)
+            val voteSite = VoteSite.getBySlot(plugin, event.slot)
+            if (voteSite != null)
+            {
+                SoundType.CLICK.play(plugin, player)
+                cancelCloseEvent = true
+                player.closeInventory()
+                enterTitle(player, voteSite)
+            } else
+            {
+                SoundType.FAILURE.play(plugin, player)
+                player.sendMessage(PMessage.GENERAL_ERROR.toString())
+            }
+        } else if (event.click == ClickType.MIDDLE)
+        {
+            SoundType.CLICK.play(plugin, player)
             cancelCloseEvent = true
             player.closeInventory()
-            enterTitle(player, event.slot)
+            player.sendTexts(
+                listOf(
+                    PMessage.VOTE_LINKS_MESSAGE_DEACTIVATE.toString(),
+                    PMessage.GENERAL_MESSAGE_CONFIRM_X.with("confirm"),
+                    PMessage.GENERAL_MESSAGE_CANCEL_BACK_X.with("cancel")
+                )
+            )
+            object : PlayerStringInput(plugin, player)
+            {
+                override fun onInputReceived(input: String)
+                {
+                    if (input == "confirm")
+                    {
+                        val voteSite = VoteSite.getBySlot(plugin, event.slot)
+                        voteSite?.active = false
+                        SoundType.SUCCESS.play(plugin, player)
+                        newInstance().open(player)
+                        cancel()
+                    }
+                }
+
+                override fun onCancel()
+                {
+                    SoundType.SUCCESS.play(plugin, player)
+                    open(player)
+                }
+            }
+        } else
+        {
+            when (event.action)
+            {
+                InventoryAction.PICKUP_ALL       ->
+                {
+                    lastSlot = event.slot
+                    lastSlotIsEditor = true
+                    event.isCancelled = false
+                }
+
+                InventoryAction.PLACE_ALL        ->
+                {
+                    if (lastSlotIsEditor)
+                    {
+                        val voteSite = VoteSite.getBySlot(plugin, lastSlot)
+                        voteSite?.slot = event.slot
+                        SoundType.CHANGE.play(plugin, player)
+                        lastSlotIsEditor = false
+                        event.isCancelled = false
+                    } else
+                    {
+                        SoundType.FAILURE.play(plugin, player)
+                        player.sendTexts(PMessage.VOTE_LINKS_MESSAGE_SETUP.toString().split(";"))
+                        event.isCancelled = true
+                    }
+                }
+
+                InventoryAction.SWAP_WITH_CURSOR ->
+                {
+                    if (clickableItems.containsKey(event.slot) && !lastSlotIsEditor)
+                    {
+                        val voteSite = VoteSite.getBySlot(plugin, event.slot)
+                        if (voteSite != null && event.cursor != null)
+                        {
+                            val originalItem = voteSite.item
+                            voteSite.item = event.cursor!!
+                            player.setItemOnCursor(ItemStack(originalItem.type))
+                            SoundType.CHANGE.play(plugin, player)
+                            event.isCancelled = false
+                            cancelCloseEvent = true
+                            newInstance().open(player)
+                        }
+                    }
+                }
+
+                else                             ->
+                {
+                }
+            }
+        }
+    }
+
+    @EventHandler
+    override fun onInventoryClick(event: InventoryClickEvent)
+    {
+        if (isThisInventory(event))
+        {
+            event.isCancelled = true
+            onClick(event, event.whoClicked as Player)
+        } else if (event.view.title == name && (lastSlotIsEditor || event.isShiftClick))
+        {
+            event.isCancelled = true
         }
     }
 
     override fun onClose(event: InventoryCloseEvent, player: Player)
     {
-        save(player)
+        SoundType.CLOSE.play(plugin, player)
     }
 
-    private fun enterTitle(player: Player, slot: Int)
+    private fun enterTitle(player: Player, voteSite: VoteSite)
     {
         player.sendMessage(
             arrayOf(
                 PMessage.VOTE_LINKS_MESSAGE_TITLE_ENTER.toString(),
-                PMessage.GENERAL_MESSAGE_CANCEL_CONTINUE_X.with("cancel")
+                PMessage.GENERAL_MESSAGE_CANCEL_CONTINUE_X.with("skip")
             )
         )
         object : PlayerStringInput(plugin, player)
         {
             override fun onInputReceived(input: String)
             {
-                val message = ChatColor.translateAlternateColorCodes('&', input)
-                val item = contents[slot]
-                val meta = item?.itemMeta
-                if (meta != null)
-                {
-                    meta.setDisplayName(message)
-                    item.itemMeta = meta
-                }
-                if (item != null)
-                {
-                    setItem(slot, item)
-                }
-                save(player, false)
+                voteSite.title = ChatColor.translateAlternateColorCodes('&', input)
 
                 SoundType.SUCCESS.play(plugin, player)
-                enterMessage(player, slot)
+                enterDescription(player, voteSite)
                 cancel()
             }
 
             override fun onCancel()
             {
                 SoundType.SUCCESS.play(plugin, player)
-                enterMessage(player, slot)
+                enterDescription(player, voteSite)
             }
         }
     }
 
-    private fun enterMessage(player: Player, slot: Int, add: Boolean = false)
+    private fun enterDescription(player: Player, voteSite: VoteSite, add: Boolean = false)
     {
         if (!add)
         {
             player.sendMessage(
                 arrayOf(
-                    PMessage.VOTE_LINKS_MESSAGE_LORE_ENTER.toString(),
-                    PMessage.GENERAL_MESSAGE_CANCEL_CONTINUE_X.with("cancel")
+                    PMessage.VOTE_LINKS_MESSAGE_DESCRIPTION_ENTER.toString(),
+                    PMessage.GENERAL_MESSAGE_LIST_CLEAR_X.with("clear"),
+                    PMessage.GENERAL_MESSAGE_CANCEL_CONTINUE_X.with("skip"),
                 )
             )
         }
@@ -101,67 +205,49 @@ class VoteLinksEditor(private val plugin: CV) :
             override fun onInputReceived(input: String)
             {
                 val message = ChatColor.translateAlternateColorCodes('&', input)
-                val item = contents[slot]
-                val meta = item?.itemMeta
-                if (meta != null)
+
+                if (message == "clear")
                 {
-                    val lore = if (add && meta.lore != null) meta.lore else ArrayList()
-                    lore!!.add(message)
-                    meta.lore = lore
-                    item.itemMeta = meta
-                }
-                if (item != null)
+                    voteSite.description = listOf()
+                } else
                 {
-                    setItem(slot, item)
+                    val description = voteSite.description.toMutableList()
+                    description.add(message)
+                    voteSite.description = description
                 }
-                save(player, false)
 
                 SoundType.SUCCESS.play(plugin, player)
                 player.sendMessage(
                     arrayOf(
-                        PMessage.VOTE_LINKS_MESSAGE_LORE_ENTER_MORE.toString(),
-                        PMessage.GENERAL_MESSAGE_CANCEL_CONTINUE_X.with("cancel")
+                        PMessage.VOTE_LINKS_MESSAGE_DESCRIPTION_ENTER_MORE.toString(),
+                        PMessage.GENERAL_MESSAGE_CANCEL_CONTINUE_X.with("skip")
                     )
                 )
-                enterMessage(player, slot, true)
+                enterDescription(player, voteSite, true)
                 cancel()
             }
 
             override fun onCancel()
             {
                 SoundType.SUCCESS.play(plugin, player)
-                enterLink(player, slot)
+                enterLink(player, voteSite)
             }
         }
     }
 
-    private fun enterLink(player: Player, slot: Int)
+    private fun enterLink(player: Player, voteSite: VoteSite)
     {
         player.sendMessage(
             arrayOf(
-                PMessage.VOTE_LINKS_MESSAGE_URL.toString(), PMessage.GENERAL_MESSAGE_CANCEL_CONTINUE_X.with("cancel")
+                PMessage.VOTE_LINKS_MESSAGE_URL.toString(),
+                PMessage.GENERAL_MESSAGE_CANCEL_CONTINUE_X.with("skip")
             )
         )
         object : PlayerStringInput(plugin, player)
         {
             override fun onInputReceived(input: String)
             {
-                val message = ChatColor.translateAlternateColorCodes('&', input)
-                val item = contents[slot]
-                val meta = item?.itemMeta
-                if (meta != null)
-                {
-                    val lore = if (meta.hasLore()) meta.lore!!.toMutableList() else ArrayList()
-                    lore.add(PMessage.GRAY.getColor() + LINK_SIGN)
-                    lore.add(message)
-                    lore.add(PMessage.GRAY.getColor() + LINK_SIGN)
-                    meta.lore = lore
-                    item.itemMeta = meta
-                }
-                if (item != null)
-                {
-                    setItem(slot, item)
-                }
+                voteSite.url = ChatColor.translateAlternateColorCodes('&', input)
 
                 SoundType.SUCCESS.play(plugin, player)
                 VoteLinksEditor(plugin).open(player)
@@ -176,8 +262,11 @@ class VoteLinksEditor(private val plugin: CV) :
         }
     }
 
-    companion object
+    init
     {
-        val LINK_SIGN = PMessage.UNDERLINE.getColor() + "!URL!"
+        for ((i, item) in VoteSite.getItems(plugin))
+        {
+            setItem(i, item)
+        }
     }
 }
