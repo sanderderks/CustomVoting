@@ -1,6 +1,7 @@
 package me.sd_master92.customvoting.constants.enumerations
 
 import me.sd_master92.customvoting.CV
+import me.sd_master92.customvoting.subjects.VoteSite
 
 enum class Data(val path: String)
 {
@@ -13,8 +14,6 @@ enum class Data(val path: String)
     VOTE_TOP_STANDS("armor_stands"),
     VOTE_COMMANDS("vote_commands"),
     VOTE_PARTY_COMMANDS("vote_party_commands"),
-    VOTE_LINK_ITEMS("vote_link_items"),
-    VOTE_LINKS("vote_links"),
     MILESTONES("milestones"),
     STREAKS("streaks"),
     VOTE_SITES("vote_sites"),
@@ -37,12 +36,16 @@ enum class Data(val path: String)
 
         private fun migrate(plugin: CV)
         {
+            VoteSite.migrate(plugin)
+
             val keyMigrations = mapOf(
-                Pair("vote_streaks", MILESTONES.path)
+                Pair("vote_streaks", MILESTONES.path),
             )
 
             plugin.data.keyMigrations(keyMigrations)
             plugin.data.deleteLocation("armor_stands")
+            plugin.data.deleteItems("vote_link_items")
+            plugin.data.delete("vote_links")
         }
     }
 }

@@ -1,42 +1,18 @@
 package me.sd_master92.customvoting.gui.pages.menus
 
 import me.sd_master92.core.inventory.GUI
+import me.sd_master92.core.tasks.TaskTimer
 import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.constants.enumerations.Data
 import me.sd_master92.customvoting.constants.enumerations.Message
 import me.sd_master92.customvoting.constants.enumerations.SoundType
-import me.sd_master92.customvoting.gui.pages.editors.VoteLinksEditor
+import me.sd_master92.customvoting.subjects.VoteSite
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
-import org.bukkit.inventory.ItemStack
 
-class VoteLinksMenu constructor(private val plugin: CV) :
-    GUI(plugin, null, Message.VOTE_LINKS_TITLE.getMessage(plugin), 27, true, false)
+class VoteLinksMenu(private val plugin: CV) :
+    GUI(plugin, null, Message.VOTE_COMMAND_TITLE.getMessage(plugin), 27, true, false)
 {
-    private val clickable = mutableMapOf<Int, String>()
-
-    override fun onClick(event: InventoryClickEvent, player: Player)
-    {
-        event.isCancelled = true
-        var url = clickable[event.slot]
-        if (url != null)
-        {
-            SoundType.SUCCESS.play(plugin, player)
-            player.closeInventory()
-            player.sendMessage(url)
-        } else
-        {
-            url = plugin.data.getMessage(Data.VOTE_LINKS.path + "." + event.slot)
-            if (url.isNotEmpty())
-            {
-                SoundType.SUCCESS.play(plugin, player)
-                player.closeInventory()
-                player.sendMessage(url)
-            }
-        }
-    }
-
     override fun newInstance(): GUI
     {
         return this
@@ -44,6 +20,26 @@ class VoteLinksMenu constructor(private val plugin: CV) :
 
     override fun onBack(event: InventoryClickEvent, player: Player)
     {
+    }
+
+    override fun onClick(event: InventoryClickEvent, player: Player)
+    {
+        val voteSite = VoteSite.getBySlot(plugin, event.slot)
+        if (voteSite != null)
+        {
+            TaskTimer.delay(plugin)
+            {
+                cancelCloseEvent = true
+                SoundType.SUCCESS.play(plugin, player)
+                player.sendMessage(
+                    Message.VOTE_COMMAND_PREFIX.getMessage(
+                        plugin,
+                        mapOf(Pair("%SERVICE%", voteSite.url))
+                    )
+                )
+                player.closeInventory()
+            }.run()
+        }
     }
 
     override fun onClose(event: InventoryCloseEvent, player: Player)
@@ -55,35 +51,11 @@ class VoteLinksMenu constructor(private val plugin: CV) :
     {
     }
 
-    private fun filterUrlFromLore(slot: Int, item: ItemStack): ItemStack
-    {
-        if (item.hasItemMeta() && item.itemMeta!!.hasLore())
-        {
-            val newLore = mutableListOf<String>()
-            val lore = item.itemMeta!!.lore!!.iterator()
-            while (lore.hasNext())
-            {
-                val line = lore.next()
-                if (line.contains(VoteLinksEditor.LINK_SIGN) && lore.hasNext())
-                {
-                    clickable[slot] = lore.next()
-                    break
-                }
-                newLore.add(line)
-            }
-            val meta = item.itemMeta
-            meta!!.lore = newLore
-            item.itemMeta = meta
-        }
-        return item
-    }
-
     init
     {
-        val items = plugin.data.getItems(Data.VOTE_LINK_ITEMS.path)
-        for (i in items.indices)
+        for ((i, item) in VoteSite.getItems(plugin))
         {
-            setItem(i, filterUrlFromLore(i, items[i]))
+            setItem(i, item)
         }
     }
 }

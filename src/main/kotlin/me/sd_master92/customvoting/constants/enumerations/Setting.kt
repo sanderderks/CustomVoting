@@ -24,6 +24,7 @@ enum class Setting(val path: String, private val defaultValue: Any? = null)
     LAST_VOTE_RESET_DAY("vote_reset.last_day", -1),
     INGAME_UPDATES("ingame_updates", true),
     ALLOW_CRATE_CLOSE("allow_crate_close", false),
+    VOTE_COMMAND_OVERRIDE("vote_command_override", false),
 
     DISABLED_BROADCASTS("disabled_broadcasts"),
     DISABLED_BROADCAST_VOTE("$DISABLED_BROADCASTS.vote", false),

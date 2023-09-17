@@ -13,13 +13,18 @@ lucky_vote: '&aYou received a &dLucky Reward&a!'
 disabled_world: '&cPlease go to another world to receive your rewards.'
 
 vote_command:
+  title: '&bVote for &dServerName &b!'
+  divider: '&b---------------'
+  prefix: '&dVote for us at &a%SERVICE%'
+
+vote_command_override:
   - '&bVote for &dServerName &b!'
   - '&b---------------'
-  - '&dVote for SomeWebsite'
+  - '&dVote on SomeWebsite'
   - '&avotelink1.com'
-  - '&dVote for AnotherWebsite'
+  - '&dVote on AnotherWebsite'
   - '&avotelink2.com'
-  - '&dVote for AnotherWebsite'
+  - '&dVote on AnotherWebsite'
   - '&avotelink3.com'
   - '&b---------------'
 

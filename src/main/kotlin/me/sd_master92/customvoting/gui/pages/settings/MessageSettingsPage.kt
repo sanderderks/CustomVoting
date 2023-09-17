@@ -1,8 +1,10 @@
 package me.sd_master92.customvoting.gui.pages.settings
 
 import me.sd_master92.core.inventory.GUI
+import me.sd_master92.core.tasks.TaskTimer
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.PMessage
+import me.sd_master92.customvoting.constants.enumerations.Setting
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.gui.buttons.shortcuts.VoteLinksEditorShortcut
 import me.sd_master92.customvoting.gui.buttons.switches.*
@@ -25,6 +27,14 @@ class MessageSettingsPage(private val plugin: CV, backPage: GUI?) :
 
     override fun onClick(event: InventoryClickEvent, player: Player)
     {
+        if (event.slot == 10)
+        {
+            cancelCloseEvent = true
+            TaskTimer.delay(plugin)
+            {
+                newInstance().open(player)
+            }.run()
+        }
     }
 
     override fun onClose(event: InventoryCloseEvent, player: Player)
@@ -38,8 +48,6 @@ class MessageSettingsPage(private val plugin: CV, backPage: GUI?) :
 
     init
     {
-        addItem(VoteLinksEditorShortcut(plugin, this))
-        addItem(VoteLinksEnabledSwitch(plugin))
         addItem(VoteBroadcastSwitch(plugin))
         addItem(MilestoneBroadcastSwitch(plugin))
         addItem(StreakBroadcastSwitch(plugin))
@@ -49,5 +57,12 @@ class MessageSettingsPage(private val plugin: CV, backPage: GUI?) :
         addItem(ArmorStandBreakMessageSwitch(plugin))
         addItem(WorldEnabledMessageSwitch(plugin))
         addItem(VoteRemindMessageSwitch(plugin))
+
+        setItem(9, VoteLinksEditorShortcut(plugin, this))
+        setItem(10, VoteLinksEnabledSwitch(plugin))
+        if (!plugin.config.getBoolean(Setting.VOTE_LINK_INVENTORY.path))
+        {
+            setItem(11, VoteCommandOverrideSwitch(plugin))
+        }
     }
 }
