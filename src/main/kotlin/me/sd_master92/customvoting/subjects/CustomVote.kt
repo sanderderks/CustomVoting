@@ -190,7 +190,7 @@ class CustomVote(
     {
         val path = Setting.VOTE_REWARD_EXPERIENCE.path.appendWhenTrue(power, Setting.POWER_REWARDS)
         val amount = plugin.config.getNumber(path)
-        player.level = player.level + amount
+        player.level += amount
         return amount
     }
 
