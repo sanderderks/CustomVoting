@@ -60,7 +60,7 @@ class ReloadCommand(private val plugin: CV) : SimpleCommand(
                 {
                     Voter.init(plugin)
                 }
-                if (PlayerFile.getAll().values.stream().allMatch { obj: PlayerFile -> obj.reloadConfig() })
+                if (PlayerFile.getAll().values.stream().allMatch { it.reloadConfig() })
                 {
                     VoteTopSign.updateAll(plugin)
                     VoteTopStand.updateAll(plugin)
