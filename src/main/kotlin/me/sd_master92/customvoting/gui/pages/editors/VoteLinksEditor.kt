@@ -2,6 +2,7 @@ package me.sd_master92.customvoting.gui.pages.editors
 
 import me.sd_master92.core.input.PlayerStringInput
 import me.sd_master92.core.inventory.GUI
+import me.sd_master92.core.tasks.TaskTimer
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.SoundType
@@ -16,11 +17,11 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 
-class VoteLinksEditor(private val plugin: CV) :
+class VoteLinksEditor(private val plugin: CV, private val back: GUI) :
     GUI(
         plugin,
         null,
-        PMessage.VOTE_LINKS_INVENTORY_NAME.toString(),
+        PMessage.VOTE_LINKS_INVENTORY_NAME_EDITOR.toString(),
         27,
         true,
         false
@@ -31,7 +32,7 @@ class VoteLinksEditor(private val plugin: CV) :
 
     override fun newInstance(): GUI
     {
-        return VoteLinksEditor(plugin)
+        return VoteLinksEditor(plugin, back)
     }
 
     override fun onBack(event: InventoryClickEvent, player: Player)
@@ -158,7 +159,12 @@ class VoteLinksEditor(private val plugin: CV) :
 
     override fun onClose(event: InventoryCloseEvent, player: Player)
     {
-        SoundType.CLOSE.play(plugin, player)
+        player.setItemOnCursor(null)
+        TaskTimer.delay(plugin)
+        {
+            SoundType.CLICK.play(plugin, player)
+            back.newInstance().open(player)
+        }.run()
     }
 
     private fun enterTitle(player: Player, voteSite: VoteSite)
@@ -250,14 +256,14 @@ class VoteLinksEditor(private val plugin: CV) :
                 voteSite.url = ChatColor.translateAlternateColorCodes('&', input)
 
                 SoundType.SUCCESS.play(plugin, player)
-                VoteLinksEditor(plugin).open(player)
+                VoteLinksEditor(plugin, back).open(player)
                 cancel()
             }
 
             override fun onCancel()
             {
                 SoundType.SUCCESS.play(plugin, player)
-                VoteLinksEditor(plugin).open(player)
+                VoteLinksEditor(plugin, back).open(player)
             }
         }
     }

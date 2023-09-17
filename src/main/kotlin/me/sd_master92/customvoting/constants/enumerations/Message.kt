@@ -11,9 +11,9 @@ enum class Message(private val path: String, private val defaultValue: Any?)
     DISABLED_WORLD("disabled_world", "&cPlease go to another world to receive your rewards."),
     VOTE_BROADCAST("vote_broadcast", "&d%PLAYER% &7just voted at &d%SERVICE%&7!"),
     VOTE_LUCKY("lucky_vote", "&aYou received a &dLucky Reward&a!"),
-    VOTE_COMMAND(
-        "vote_command", listOf(
-            "&bVote for &dServerName &b!",
+    VOTE_COMMAND_OVERRIDE(
+        "vote_command_override", listOf(
+            "",
             "&b---------------",
             "&dVote on SomeWebsite",
             "&avotelink1.com",
@@ -24,6 +24,10 @@ enum class Message(private val path: String, private val defaultValue: Any?)
             "&b---------------",
         )
     ),
+    VOTE_COMMAND("vote_command", null),
+    VOTE_COMMAND_TITLE("$VOTE_COMMAND.title", "&bVote for &dServerName &b!"),
+    VOTE_COMMAND_DIVIDER("$VOTE_COMMAND.divider", "&b---------------"),
+    VOTE_COMMAND_PREFIX("$VOTE_COMMAND.prefix", "&dVote for us at &a%SERVICE%"),
     VOTE_REWARDS("vote_rewards", null),
     VOTE_REWARD_PREFIX("$VOTE_REWARDS.prefix", "&aReceived: "),
     VOTE_REWARD_DIVIDER("$VOTE_REWARDS.divider", " &a+ "),
@@ -34,8 +38,6 @@ enum class Message(private val path: String, private val defaultValue: Any?)
     VOTES_COMMAND_SELF("$VOTES_COMMAND.self", "&aYou currently have &b%VOTES_AUTO% &avote%s%!"),
     VOTES_COMMAND_OTHERS("$VOTES_COMMAND.others", "&b%PLAYER% &acurrently has &b%VOTES_AUTO% &avote%s%!"),
     VOTES_COMMAND_NOT_FOUND("$VOTES_COMMAND.not_found", "&cThat player does not exist."),
-
-    VOTE_LINKS_TITLE("vote_links_title", "Vote for us!"),
 
     VOTE_TOP_COMMAND("vote_top_command", null),
     VOTE_TOP_COMMAND_FORMAT(
@@ -68,7 +70,7 @@ enum class Message(private val path: String, private val defaultValue: Any?)
     VOTE_PARTY_END("$VOTE_PARTY.end", "&7The Vote Party has ended!"),
     VOTE_PARTY_PIG_KILLED("$VOTE_PARTY.pig_killed", "&dPig killed by &b%KILLER%&d! Only &b%TOGO% &dpig%s% to go!"),
     VOTE_PARTY_PIG_KILLED_LAST("$VOTE_PARTY.pig_killed_last", "&dPig killed by &b%KILLER%&d!"),
-    VOTE_PARTY_CHEST_CLAIMED("${VOTE_PARTY}.chest_claimed", "&aChest claimed by &b%PLAYER%&a!"),
+    VOTE_PARTY_CHEST_CLAIMED("$VOTE_PARTY.chest_claimed", "&aChest claimed by &b%PLAYER%&a!"),
 
     MILESTONE("milestone", null),
     MILESTONE_REACHED("$MILESTONE.milestone_reached", "&b%PLAYER% &dreached vote milestone #&b%MILESTONE%&d!"),
@@ -113,10 +115,15 @@ enum class Message(private val path: String, private val defaultValue: Any?)
 
         private fun migrate(plugin: CV)
         {
-            val keyMigrations = mapOf(
+            val keyMigrations = mutableMapOf(
                 Pair("vote_streak", MILESTONE.path),
-                Pair("$MILESTONE.streak_reached", MILESTONE_REACHED.path),
+                Pair("$MILESTONE.streak_reached", MILESTONE_REACHED.path)
             )
+
+            if (plugin.messages.isList("vote_command"))
+            {
+                keyMigrations["vote_command"] = VOTE_COMMAND_OVERRIDE.path
+            }
 
             plugin.messages.keyMigrations(keyMigrations)
 
@@ -126,6 +133,8 @@ enum class Message(private val path: String, private val defaultValue: Any?)
             )
 
             plugin.messages.valueMigrations(valueMigrations)
+
+            plugin.messages.delete("vote_links_title")
         }
     }
 }

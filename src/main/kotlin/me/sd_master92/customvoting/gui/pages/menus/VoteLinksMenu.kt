@@ -11,7 +11,7 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 
 class VoteLinksMenu(private val plugin: CV) :
-    GUI(plugin, null, Message.VOTE_LINKS_TITLE.getMessage(plugin), 27, true, false)
+    GUI(plugin, null, Message.VOTE_COMMAND_TITLE.getMessage(plugin), 27, true, false)
 {
     override fun newInstance(): GUI
     {
@@ -27,11 +27,16 @@ class VoteLinksMenu(private val plugin: CV) :
         val voteSite = VoteSite.getBySlot(plugin, event.slot)
         if (voteSite != null)
         {
-            cancelCloseEvent = true
-            SoundType.SUCCESS.play(plugin, player)
-            player.sendMessage(voteSite.url)
             TaskTimer.delay(plugin)
             {
+                cancelCloseEvent = true
+                SoundType.SUCCESS.play(plugin, player)
+                player.sendMessage(
+                    Message.VOTE_COMMAND_PREFIX.getMessage(
+                        plugin,
+                        mapOf(Pair("%SERVICE%", voteSite.url))
+                    )
+                )
                 player.closeInventory()
             }.run()
         }

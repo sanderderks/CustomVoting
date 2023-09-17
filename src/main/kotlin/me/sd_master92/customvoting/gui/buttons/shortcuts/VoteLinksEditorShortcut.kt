@@ -20,6 +20,6 @@ class VoteLinksEditorShortcut(private val plugin: CV, private val currentPage: G
     {
         SoundType.CLICK.play(plugin, player)
         currentPage.cancelCloseEvent = true
-        VoteLinksEditor(plugin).open(player)
+        VoteLinksEditor(plugin, currentPage).open(player)
     }
 }
