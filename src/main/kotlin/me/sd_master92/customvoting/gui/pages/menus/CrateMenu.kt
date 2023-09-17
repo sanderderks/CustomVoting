@@ -94,6 +94,7 @@ class CrateMenu(private val plugin: CV, private val player: Player, private val 
             SoundType.FAILURE.play(plugin, player)
             player.sendMessage(PMessage.CRATE_MESSAGE_NO_PRICE.toString())
         }
+        tasks.clear()
         keepAlive = false
     }
 
