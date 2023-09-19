@@ -13,6 +13,11 @@ lucky_vote: '&aJe hebt een &dLucky Prijs&a ontvangen!'
 disabled_world: '&cGa alsjeblieft naar een andere wereld om je prijzen te ontvangen.'
 
 vote_command:
+  title: '&bStem op &dServernaam &b!'
+  divider: '&b---------------'
+  prefix: '&dStem voor ons op &a%SERVICE%'
+
+vote_command_override:
   - '&bStem op &dServernaam &b!'
   - '&B---------------'
   - '&dStem op een website'

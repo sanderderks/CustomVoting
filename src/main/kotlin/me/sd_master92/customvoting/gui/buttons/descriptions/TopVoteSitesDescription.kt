@@ -1,10 +1,10 @@
 package me.sd_master92.customvoting.gui.buttons.descriptions
 
 import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.constants.enumerations.Data
 import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.models.BStatsData
 import me.sd_master92.customvoting.gui.items.SimpleItem
+import me.sd_master92.customvoting.subjects.VoteSite
 import org.bukkit.Material
 import kotlin.math.roundToInt
 
@@ -20,7 +20,7 @@ class TopVoteSitesDescription(plugin: CV) : SimpleItem(
         {
             val number = i + 1
             lore += ";" + PMessage.AQUA.getColor() + "$number. "
-            lore += if (plugin.data.getStringList(Data.VOTE_SITES.path).contains(site.name))
+            lore += if (VoteSite.exists(plugin, site.name))
             {
                 PMessage.GREEN.getColor()
             } else
