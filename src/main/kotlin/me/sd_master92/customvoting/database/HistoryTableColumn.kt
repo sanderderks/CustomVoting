@@ -6,7 +6,7 @@ import me.sd_master92.core.errorLog
 import me.sd_master92.core.infoLog
 import me.sd_master92.customvoting.CV
 
-enum class QueueTableColumn(
+enum class HistoryTableColumn(
     val columnName: String,
     val dataType: CustomColumn.DataType
 )
@@ -14,7 +14,8 @@ enum class QueueTableColumn(
     ID("id", CustomColumn.DataType.INT_PRIMARY),
     UUID("uuid", CustomColumn.DataType.VARCHAR),
     SITE("site", CustomColumn.DataType.VARCHAR),
-    TIME("timestamp", CustomColumn.DataType.LONG);
+    TIME("timestamp", CustomColumn.DataType.LONG),
+    QUEUED("queued", CustomColumn.DataType.BOOLEAN);
 
     companion object
     {
@@ -38,9 +39,9 @@ enum class QueueTableColumn(
             }
         }
 
-        fun columns(): Array<QueueTableColumn>
+        fun columns(): Array<HistoryTableColumn>
         {
-            return values().filter { it != ID }.toTypedArray()
+            return entries.filter { it != ID }.toTypedArray()
         }
     }
 }

@@ -4,13 +4,14 @@ import me.sd_master92.core.inventory.GUI
 import me.sd_master92.core.tasks.TaskTimer
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.Message
+import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.subjects.VoteSite
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 
-class VoteLinksMenu(private val plugin: CV) :
+class VoteSiteMenu(private val plugin: CV) :
     GUI(plugin, null, Message.VOTE_COMMAND_TITLE.getMessage(plugin), 27, true, false)
 {
     override fun newInstance(): GUI
@@ -34,7 +35,7 @@ class VoteLinksMenu(private val plugin: CV) :
                 player.sendMessage(
                     Message.VOTE_COMMAND_PREFIX.getMessage(
                         plugin,
-                        mapOf(Pair("%SERVICE%", voteSite.url))
+                        mapOf(Pair("%SERVICE%", voteSite.url ?: PMessage.VOTE_SITES_MESSAGE_URL_DEFAULT.toString()))
                     )
                 )
                 player.closeInventory()

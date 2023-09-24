@@ -2,10 +2,10 @@ package me.sd_master92.customvoting.subjects
 
 import me.sd_master92.core.inventory.BaseItem
 import me.sd_master92.customvoting.CV
+import me.sd_master92.customvoting.capitalize
 import me.sd_master92.customvoting.constants.enumerations.Data
 import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.gui.items.SimpleItem
-import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 
@@ -36,8 +36,8 @@ class VoteSite private constructor(
             plugin.data.set("$path.description", value)
             plugin.data.saveConfig()
         }
-    var url: String
-        get() = plugin.data.getString("$path.url", PMessage.VOTE_LINKS_MESSAGE_URL_DEFAULT.toString())!!
+    var url: String?
+        get() = plugin.data.getString("$path.url")
         set(value)
         {
             plugin.data.set("$path.url", value)
@@ -58,6 +58,12 @@ class VoteSite private constructor(
         set(value)
         {
             plugin.data.setNumber("$path.slot", value)
+        }
+    var interval: Int
+        get() = plugin.data.getInt("$path.interval", 24)
+        set(value)
+        {
+            plugin.data.setNumber("$path.interval", value)
         }
 
     companion object
@@ -91,12 +97,17 @@ class VoteSite private constructor(
             ) != null
         }
 
+        fun get(plugin: CV, uniqueId: String): VoteSite?
+        {
+            return getAll(plugin).firstOrNull { it.uniqueId == uniqueId.lowercase().replace(".", "_") }
+        }
+
         fun getBySlot(plugin: CV, slot: Int): VoteSite?
         {
             return getAll(plugin).firstOrNull { it.slot == slot }
         }
 
-        fun getItems(plugin: CV): Map<Int, BaseItem>
+        fun getItems(plugin: CV, editor: Boolean = false): Map<Int, BaseItem>
         {
             val activeVoteSites = getAll(plugin)
                 .filter { it.active }
@@ -107,13 +118,19 @@ class VoteSite private constructor(
                     voteSite.slot = nextSlot(activeVoteSites)
                 }
                 voteSite.slot
-            }.mapValues { (_, value) ->
+            }.mapValues { (_, site) ->
                 SimpleItem(
-                    value.item.type,
-                    value.title,
-                    if (value.description.isEmpty()) PMessage.VOTE_LINKS_MESSAGE_DESCRIPTION_DEFAULT.toString()
-                    else value.description.joinToString(";"),
-                    value.item.itemMeta?.hasEnchants() ?: false
+                    site.item.type,
+                    site.title,
+                    (if (site.description.isEmpty()) PMessage.VOTE_SITES_MESSAGE_DESCRIPTION_DEFAULT.toString()
+                    else site.description.joinToString(";")) +
+                            if (editor) ";;" +
+                                    PMessage.GRAY + PMessage.GENERAL_UNIT_URL + ": " + PMessage.GREEN + (site.url
+                                ?: PMessage.GENERAL_VALUE_NONE.toString().lowercase()) + ";" +
+                                    PMessage.GRAY + PMessage.VOTE_SITES_UNIT_INTERVAL.toString()
+                                .capitalize() + ": " + PMessage.GREEN + site.interval + "h"
+                            else "",
+                    site.item.itemMeta?.hasEnchants() ?: false
                 )
             }
             return items
@@ -134,7 +151,7 @@ class VoteSite private constructor(
     {
         if (plugin.data.getConfigurationSection(path) == null)
         {
-            title = ChatColor.AQUA.toString() + uniqueId
+            title = PMessage.AQUA.getColor() + uniqueId
         }
     }
 }

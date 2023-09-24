@@ -48,6 +48,11 @@ fun String.stripColor(): String
     return ChatColor.stripColor(this)!!
 }
 
+fun String.capitalize(): String
+{
+    return this.replaceFirstChar { it.uppercase() }
+}
+
 fun CommandSender?.sendText(message: String)
 {
     if (this is Player)

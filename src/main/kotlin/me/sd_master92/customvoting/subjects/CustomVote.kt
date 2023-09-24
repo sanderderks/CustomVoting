@@ -29,14 +29,12 @@ class CustomVote(
         if (player == null)
         {
             plugin.infoLog(PMessage.QUEUE_MESSAGE_ADD.toString())
-            queue()
         } else if (plugin.config.getStringList(Setting.DISABLED_WORLDS.path).contains(player.world.name))
         {
             if (!plugin.config.getBoolean(Setting.DISABLED_MESSAGE_DISABLED_WORLD.path))
             {
                 player.sendText(plugin, Message.DISABLED_WORLD)
             }
-            queue()
         } else
         {
             broadcast(player)
@@ -51,14 +49,15 @@ class CustomVote(
                 subtractVotesUntilVoteParty()
             }
         }
+        register()
     }
 
-    private fun queue()
+    private fun register()
     {
         val voter = Voter.getByName(plugin, username)
         if (voter != null)
         {
-            voter.addQueue(serviceName)
+            voter.addHistory(serviceName, queued)
         } else
         {
             plugin.errorLog(PMessage.PLAYER_ERROR_NOT_EXIST_X.with(username))
@@ -84,7 +83,7 @@ class CustomVote(
                 }
             }
 
-            if (plugin.config.getBoolean(Setting.DISABLED_BROADCAST_OFFLINE.path) && queued)
+            if (plugin.config.getBoolean(Setting.DISABLED_BROADCAST_OFFLINE.path))
             {
                 return
             }
@@ -288,11 +287,12 @@ class CustomVote(
         fun create(
             plugin: CV,
             name: String,
-            service: String
+            service: String,
+            queued: Boolean = false
         )
         {
             val vote = Vote(service, name, "0.0.0.0", Date().time.toString())
-            CustomVote(plugin, vote)
+            CustomVote(plugin, vote, queued)
         }
     }
 

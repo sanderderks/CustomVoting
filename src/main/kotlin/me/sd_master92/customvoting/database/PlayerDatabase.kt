@@ -6,14 +6,13 @@ import me.sd_master92.core.database.CustomTable
 import me.sd_master92.core.errorLog
 import me.sd_master92.core.infoLog
 import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.constants.models.UniqueVote
-import me.sd_master92.customvoting.dayDifferenceToday
+import me.sd_master92.customvoting.constants.models.VoteHistory
 import java.util.*
 
-class PlayerDatabase(private val plugin: CV, database: CustomDatabase)
+class PlayerDatabase(private val plugin: CV, private val database: CustomDatabase)
 {
-    private val queueTable: CustomTable
-    val playersTable: CustomTable
+    val playersTable: CustomTable = database.getTable(PLAYERS_TABLE)
+    private val historyTable: CustomTable = database.getTable(HISTORY_TABLE)
 
     private fun addPlayer(uuid: String): Boolean
     {
@@ -156,107 +155,50 @@ class PlayerDatabase(private val plugin: CV, database: CustomDatabase)
         )
     }
 
-    fun getLast(uuid: String): Long
+    fun getHistory(uuid: String): List<VoteHistory>
     {
-        val result = playersTable.getData(PlayerTableColumn.UUID.columnName, uuid)
-        try
-        {
-            if (result.next())
-            {
-                return result.getLong(PlayerTableColumn.LAST_VOTE.columnName)
-            } else
-            {
-                addPlayer(uuid)
-            }
-        } catch (e: Exception)
-        {
-            plugin.errorLog("Could not retrieve last timestamp of $uuid from database", e)
-        }
-        return 0
-    }
-
-    fun getLastSite(uuid: String): String?
-    {
-        val result = playersTable.getData(PlayerTableColumn.UUID.columnName, uuid)
-        try
-        {
-            if (result.next())
-            {
-                return result.getString(PlayerTableColumn.LAST_SITE.columnName)
-            } else
-            {
-                addPlayer(uuid)
-            }
-        } catch (e: Exception)
-        {
-            plugin.errorLog("Could not retrieve last site of $uuid from database", e)
-        }
-        return null
-    }
-
-    fun setLast(uuid: String, site: String? = null): Boolean
-    {
-        return playersTable.updateData(
-            PlayerTableColumn.UUID.columnName,
-            uuid,
-            PlayerTableColumn.LAST_VOTE.columnName,
-            System.currentTimeMillis()
-        ) &&
-                playersTable.updateData(
-                    PlayerTableColumn.UUID.columnName,
-                    uuid,
-                    PlayerTableColumn.LAST_SITE.columnName,
-                    site
-                )
-    }
-
-    fun getQueue(uuid: String): List<String>
-    {
-        val result = queueTable.getData(QueueTableColumn.UUID.columnName, uuid)
-        val uniqueVotes = mutableSetOf<UniqueVote>()
-        val queue = mutableListOf<String>()
+        val result = historyTable.getData(HistoryTableColumn.UUID.columnName, uuid)
+        val voteHistory = mutableListOf<VoteHistory>()
         try
         {
             while (result.next())
             {
-                val site = result.getString(QueueTableColumn.SITE.columnName)
-                if (getLastSite(uuid) == site && getLast(uuid).dayDifferenceToday() == 0)
-                {
-                    continue
-                }
-                
-                val calendar = Calendar.getInstance()
-                calendar.time = Date(result.getLong(QueueTableColumn.TIME.columnName))
+                val id = result.getInt(HistoryTableColumn.ID.columnName)
+                val site = result.getString(HistoryTableColumn.SITE.columnName)
+                val time = result.getLong(HistoryTableColumn.TIME.columnName)
+                val queued = result.getBoolean(HistoryTableColumn.QUEUED.columnName)
 
-                val vote = UniqueVote(calendar[Calendar.DAY_OF_YEAR], site)
-
-                if (uniqueVotes.add(vote))
-                {
-                    queue.add(site)
-                }
+                val vote = VoteHistory(id, uuid, site, time, queued)
+                voteHistory.add(vote)
             }
         } catch (e: Exception)
         {
-            plugin.errorLog("Could not retrieve queue of $uuid from database", e)
+            plugin.errorLog("Could not retrieve history of $uuid from database", e)
         }
-        return queue
+        return voteHistory
     }
 
-    fun addQueue(uuid: String, site: String): Boolean
+    fun addHistory(uuid: String, site: String, queued: Boolean, time: Long? = null): Boolean
     {
-        return queueTable.insertData(
+        return historyTable.insertData(
             arrayOf(
-                QueueTableColumn.UUID.columnName,
-                QueueTableColumn.SITE.columnName,
-                QueueTableColumn.TIME.columnName
+                HistoryTableColumn.UUID.columnName,
+                HistoryTableColumn.SITE.columnName,
+                HistoryTableColumn.TIME.columnName,
+                HistoryTableColumn.QUEUED.columnName
             ),
-            arrayOf(uuid, site, Date().time)
+            arrayOf(uuid, site, time ?: Date().time, if (queued) 1 else 0)
         )
     }
 
     fun clearQueue(uuid: String): Boolean
     {
-        return queueTable.deleteData(QueueTableColumn.UUID.columnName, uuid)
+        return historyTable.updateData(
+            HistoryTableColumn.UUID.columnName,
+            uuid,
+            HistoryTableColumn.QUEUED.columnName,
+            0
+        )
     }
 
     fun getPower(uuid: String): Boolean
@@ -321,15 +263,35 @@ class PlayerDatabase(private val plugin: CV, database: CustomDatabase)
             create(playersTable, column.columnName, column.dataType)
         }
         delete(playersTable, "queue")
+        delete(playersTable, "last")
+        delete(playersTable, "last_site")
     }
 
     private fun migrateQueue()
     {
-        rename(queueTable, "votes", QueueTableColumn.SITE.columnName, QueueTableColumn.SITE.dataType)
-        for (column in QueueTableColumn.columns())
+        val queueTable = database.getTable("queue")
+        if (queueTable.exists())
         {
-            create(queueTable, column.columnName, column.dataType)
+            val result = queueTable.getAll()
+            try
+            {
+                while (result.next())
+                {
+                    val uuid = result.getString("uuid")
+                    val site = result.getString("site")
+                    val time = result.getLong("timestamp")
+                    addHistory(uuid, site, true, time)
+                }
+                queueTable.delete(queueTable.name)
+            } catch (e: Exception)
+            {
+                plugin.errorLog("Could not retrieve queue from database", e)
+            }
         }
+    }
+
+    private fun migrateHistory()
+    {
     }
 
     private fun create(table: CustomTable, name: String, dataType: CustomColumn.DataType)
@@ -383,12 +345,11 @@ class PlayerDatabase(private val plugin: CV, database: CustomDatabase)
     companion object
     {
         const val PLAYERS_TABLE = "players"
-        const val QUEUE_TABLE = "queue"
+        const val HISTORY_TABLE = "history"
     }
 
     init
     {
-        playersTable = database.getTable(PLAYERS_TABLE)
         if (!playersTable.exists())
         {
             PlayerTableColumn.create(plugin, playersTable)
@@ -398,17 +359,17 @@ class PlayerDatabase(private val plugin: CV, database: CustomDatabase)
             plugin.infoLog("|")
             migratePlayers()
         }
-        queueTable = database.getTable(QUEUE_TABLE)
-        if (!queueTable.exists())
+        if (!historyTable.exists())
         {
-            QueueTableColumn.create(plugin, queueTable)
+            HistoryTableColumn.create(plugin, historyTable)
         } else
         {
-            plugin.infoLog("| successfully located table '$QUEUE_TABLE'")
+            plugin.infoLog("| successfully located table '$HISTORY_TABLE'")
             plugin.infoLog("|")
+            migrateHistory()
             migrateQueue()
         }
-        if (playersTable.exists() && queueTable.exists())
+        if (playersTable.exists() && historyTable.exists())
         {
             plugin.infoLog("|___successfully connected to database")
         } else

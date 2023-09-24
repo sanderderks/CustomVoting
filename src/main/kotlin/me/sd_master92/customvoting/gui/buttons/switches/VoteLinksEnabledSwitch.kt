@@ -10,7 +10,7 @@ import org.bukkit.inventory.ItemStack
 class VoteLinksEnabledSwitch(private val plugin: CV) : AbstractStatusSwitch(
     plugin,
     Material.CHEST, Setting.VOTE_LINK_INVENTORY,
-    PMessage.VOTE_LINKS_ITEM_NAME_GUI
+    PMessage.VOTE_SITES_ITEM_NAME_GUI
 )
 {
     override fun newInstance(): ItemStack
