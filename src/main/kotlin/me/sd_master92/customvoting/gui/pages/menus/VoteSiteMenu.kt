@@ -3,6 +3,7 @@ package me.sd_master92.customvoting.gui.pages.menus
 import me.sd_master92.core.inventory.GUI
 import me.sd_master92.core.tasks.TaskTimer
 import me.sd_master92.customvoting.CV
+import me.sd_master92.customvoting.capitalize
 import me.sd_master92.customvoting.constants.enumerations.Message
 import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.SoundType
@@ -31,13 +32,20 @@ class VoteSiteMenu(private val plugin: CV) :
             TaskTimer.delay(plugin)
             {
                 cancelCloseEvent = true
-                SoundType.SUCCESS.play(plugin, player)
-                player.sendMessage(
-                    Message.VOTE_COMMAND_PREFIX.getMessage(
-                        plugin,
-                        mapOf(Pair("%SERVICE%", voteSite.url ?: PMessage.VOTE_SITES_MESSAGE_URL_DEFAULT.toString()))
+                if (voteSite.url != null)
+                {
+                    SoundType.SUCCESS.play(plugin, player)
+                    player.sendMessage(
+                        Message.VOTE_COMMAND_PREFIX.getMessage(
+                            plugin,
+                            mapOf(Pair("%SERVICE%", voteSite.url!!))
+                        )
                     )
-                )
+                } else
+                {
+                    SoundType.FAILURE.play(plugin, player)
+                    player.sendMessage(PMessage.VOTE_SITES_MESSAGE_URL_DEFAULT.toString().capitalize())
+                }
                 player.closeInventory()
             }.run()
         }
