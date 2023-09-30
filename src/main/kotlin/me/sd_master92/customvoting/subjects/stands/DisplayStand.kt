@@ -6,6 +6,7 @@ import me.sd_master92.customvoting.getSkull
 import me.sd_master92.customvoting.spawnArmorStand
 import org.bukkit.Bukkit
 import org.bukkit.Location
+import org.bukkit.OfflinePlayer
 import org.bukkit.entity.ArmorStand
 import java.util.*
 
@@ -55,14 +56,15 @@ class DisplayStand(
             } else
             {
                 ArmorType.dress(stand!!.equipment!!, top)
-                try
+                val player: OfflinePlayer? = try
                 {
-                    val id = UUID.fromString(uuid)
-                    val skull = (Bukkit.getPlayer(id) ?: Bukkit.getOfflinePlayer(id)).getSkull()
-                    stand?.setHelmet(skull)
-                } catch (ignored: Exception)
+                    val id = if (uuid != null) UUID.fromString(uuid) else UUID.randomUUID()
+                    Bukkit.getPlayer(id) ?: Bukkit.getOfflinePlayer(id)
+                } catch (_: Exception)
                 {
+                    null
                 }
+                stand?.setHelmet(player.getSkull())
             }
         }
     }

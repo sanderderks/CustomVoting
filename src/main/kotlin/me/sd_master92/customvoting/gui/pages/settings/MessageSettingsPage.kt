@@ -63,6 +63,10 @@ class MessageSettingsPage(private val plugin: CV, backPage: GUI?) :
         if (!plugin.config.getBoolean(Setting.VOTE_LINK_INVENTORY.path))
         {
             setItem(11, VoteCommandOverrideSwitch(plugin))
+            setItem(12, VoteDashboardEnabledSwitch(plugin))
+        } else
+        {
+            setItem(11, VoteDashboardEnabledSwitch(plugin))
         }
     }
 }

@@ -8,6 +8,7 @@ import me.sd_master92.core.tasks.TaskTimer
 import me.sd_master92.customvoting.*
 import me.sd_master92.customvoting.constants.enumerations.*
 import me.sd_master92.customvoting.constants.interfaces.Voter
+import me.sd_master92.customvoting.constants.models.VoteSiteUUID
 import me.sd_master92.customvoting.helpers.ParticleHelper
 import me.sd_master92.customvoting.subjects.voteparty.VoteParty
 import org.bukkit.entity.Player
@@ -41,7 +42,7 @@ class CustomVote(
             val voter = Voter.get(plugin, player)
             previousLast = voter.last
             votes = voter.votes
-            voter.addVote(serviceName)
+            voter.addVote()
             ParticleHelper.shootFirework(plugin, player.location)
             giveRewards(player, player.hasPowerRewards(plugin))
             if (plugin.config.getBoolean(Setting.VOTE_PARTY.path))
@@ -57,7 +58,7 @@ class CustomVote(
         val voter = Voter.getByName(plugin, username)
         if (voter != null)
         {
-            voter.addHistory(serviceName, queued)
+            voter.addHistory(VoteSiteUUID(serviceName), queued)
         } else
         {
             plugin.errorLog(PMessage.PLAYER_ERROR_NOT_EXIST_X.with(username))

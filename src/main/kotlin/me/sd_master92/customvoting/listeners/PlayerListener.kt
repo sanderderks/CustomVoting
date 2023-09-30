@@ -81,7 +81,7 @@ class PlayerListener(private val plugin: CV) : Listener
             {
                 if (iterator.hasNext())
                 {
-                    CustomVote.create(plugin, player.name, iterator.next().site, true)
+                    CustomVote.create(plugin, player.name, iterator.next().site.toString(), true)
                 } else
                 {
                     it.cancel()

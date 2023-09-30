@@ -6,6 +6,7 @@ import me.sd_master92.customvoting.constants.enumerations.Setting
 import me.sd_master92.customvoting.constants.interfaces.TopVoter
 import me.sd_master92.customvoting.constants.interfaces.Voter
 import me.sd_master92.customvoting.constants.models.VoteHistory
+import me.sd_master92.customvoting.constants.models.VoteSiteUUID
 import me.sd_master92.customvoting.dayDifferenceToday
 import me.sd_master92.customvoting.monthDifferenceToday
 import me.sd_master92.customvoting.weekDifferenceToday
@@ -88,7 +89,7 @@ class PlayerTable(private val plugin: CV, override val uuid: String) : Voter
         }
     }
 
-    override fun addVote(site: String?): Boolean
+    override fun addVote(): Boolean
     {
         val votesBefore = votes
         addStreak()
@@ -111,8 +112,8 @@ class PlayerTable(private val plugin: CV, override val uuid: String) : Voter
     {
         return players?.clearQueue(uuid) ?: false
     }
-    
-    override fun addHistory(site: String, queued: Boolean): Boolean
+
+    override fun addHistory(site: VoteSiteUUID, queued: Boolean): Boolean
     {
         return players?.addHistory(uuid, site, queued) ?: false
     }

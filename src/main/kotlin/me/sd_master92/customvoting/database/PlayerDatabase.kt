@@ -7,6 +7,7 @@ import me.sd_master92.core.errorLog
 import me.sd_master92.core.infoLog
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.models.VoteHistory
+import me.sd_master92.customvoting.constants.models.VoteSiteUUID
 import java.util.*
 
 class PlayerDatabase(private val plugin: CV, private val database: CustomDatabase)
@@ -168,7 +169,7 @@ class PlayerDatabase(private val plugin: CV, private val database: CustomDatabas
                 val time = result.getLong(HistoryTableColumn.TIME.columnName)
                 val queued = result.getBoolean(HistoryTableColumn.QUEUED.columnName)
 
-                val vote = VoteHistory(id, uuid, site, time, queued)
+                val vote = VoteHistory(id, uuid, VoteSiteUUID(site), time, queued)
                 voteHistory.add(vote)
             }
         } catch (e: Exception)
@@ -178,7 +179,7 @@ class PlayerDatabase(private val plugin: CV, private val database: CustomDatabas
         return voteHistory
     }
 
-    fun addHistory(uuid: String, site: String, queued: Boolean, time: Long? = null): Boolean
+    fun addHistory(uuid: String, site: VoteSiteUUID, queued: Boolean, time: Long? = null): Boolean
     {
         return historyTable.insertData(
             arrayOf(
@@ -187,7 +188,7 @@ class PlayerDatabase(private val plugin: CV, private val database: CustomDatabas
                 HistoryTableColumn.TIME.columnName,
                 HistoryTableColumn.QUEUED.columnName
             ),
-            arrayOf(uuid, site, time ?: Date().time, if (queued) 1 else 0)
+            arrayOf(uuid, site.toString(), time ?: Date().time, if (queued) 1 else 0)
         )
     }
 
@@ -278,7 +279,7 @@ class PlayerDatabase(private val plugin: CV, private val database: CustomDatabas
                 while (result.next())
                 {
                     val uuid = result.getString("uuid")
-                    val site = result.getString("site")
+                    val site = VoteSiteUUID(result.getString("site"))
                     val time = result.getLong("timestamp")
                     addHistory(uuid, site, true, time)
                 }

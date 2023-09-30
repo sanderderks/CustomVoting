@@ -6,6 +6,7 @@ import me.sd_master92.customvoting.constants.enumerations.Setting
 import me.sd_master92.customvoting.constants.interfaces.TopVoter
 import me.sd_master92.customvoting.constants.interfaces.Voter
 import me.sd_master92.customvoting.constants.models.VoteHistory
+import me.sd_master92.customvoting.constants.models.VoteSiteUUID
 import org.bukkit.entity.Player
 
 class VoteFile : Voter
@@ -70,7 +71,7 @@ class VoteFile : Voter
                 val queued = playerFile.getBoolean(Data.VOTE_HISTORY.path + ".$key.queued")
                 if (site != null)
                 {
-                    history.add(VoteHistory(key.toInt(), uuid, site, time, queued))
+                    history.add(VoteHistory(key.toInt(), uuid, VoteSiteUUID(site), time, queued))
                 }
             }
             return history
@@ -144,7 +145,7 @@ class VoteFile : Voter
         playerFile.setNumber(VOTES_DAILY, 0)
     }
 
-    override fun addVote(site: String?): Boolean
+    override fun addVote(): Boolean
     {
         val beforeVotes = votes
         addStreak()
@@ -164,10 +165,10 @@ class VoteFile : Voter
         return playerFile.saveConfig()
     }
 
-    override fun addHistory(site: String, queued: Boolean): Boolean
+    override fun addHistory(site: VoteSiteUUID, queued: Boolean): Boolean
     {
         val key = history.size
-        playerFile.set(Data.VOTE_HISTORY.path + ".$key.site", site)
+        playerFile.set(Data.VOTE_HISTORY.path + ".$key.site", site.toString())
         playerFile.setTimeStamp(Data.VOTE_HISTORY.path + ".$key.timestamp")
         playerFile.set(Data.VOTE_HISTORY.path + ".$key.queued", queued)
         return playerFile.saveConfig()

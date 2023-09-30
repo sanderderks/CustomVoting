@@ -34,7 +34,7 @@ class VoteCommand(private val plugin: CV) : SimpleCommand(plugin, "vote")
                 Message.VOTE_COMMAND_TITLE.getMessage(plugin),
                 Message.VOTE_COMMAND_DIVIDER.getMessage(plugin)
             )
-            for (voteSite in VoteSite.getAll(plugin))
+            for (voteSite in VoteSite.getAllActive(plugin))
             {
                 messages.add(voteSite.title)
                 messages.add(

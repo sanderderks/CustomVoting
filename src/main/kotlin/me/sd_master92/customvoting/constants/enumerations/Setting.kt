@@ -18,6 +18,7 @@ enum class Setting(val path: String, private val defaultValue: Any? = null)
     LUCKY_VOTE("lucky_vote", true),
     LUCKY_VOTE_CHANCE("lucky_vote_chance", 50),
     VOTE_LINK_INVENTORY("vote_link_inventory", false),
+    VOTE_INFO_INVENTORY("vote_info_inventory", false),
     FORBIDDEN_COMMANDS("forbidden_commands", arrayOf("fakevote", "op", "stop", "restart", "reload")),
     LAST_VOTE_RESET_MONTH("vote_reset.last_month", -1),
     LAST_VOTE_RESET_WEEK("vote_reset.last_week", -1),

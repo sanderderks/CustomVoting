@@ -5,6 +5,7 @@ import me.sd_master92.customvoting.VoteFile
 import me.sd_master92.customvoting.constants.enumerations.Setting
 import me.sd_master92.customvoting.constants.enumerations.VoteSortType
 import me.sd_master92.customvoting.constants.models.VoteHistory
+import me.sd_master92.customvoting.constants.models.VoteSiteUUID
 import me.sd_master92.customvoting.database.PlayerTable
 import me.sd_master92.customvoting.getPlayerNameWithSuffix
 import me.sd_master92.customvoting.subjects.VoteTopSign
@@ -25,8 +26,8 @@ interface Voter
     val streakDaily: Int
 
     fun setVotes(n: Int, update: Boolean)
-    fun addVote(site: String? = null): Boolean
-    fun addHistory(site: String, queued: Boolean): Boolean
+    fun addVote(): Boolean
+    fun addHistory(site: VoteSiteUUID, queued: Boolean): Boolean
     fun clearMonthlyVotes()
     fun clearWeeklyVotes()
     fun clearDailyVotes()
