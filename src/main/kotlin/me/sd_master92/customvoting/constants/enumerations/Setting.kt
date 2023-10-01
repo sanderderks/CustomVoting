@@ -25,6 +25,7 @@ enum class Setting(val path: String, private val defaultValue: Any? = null)
     INGAME_UPDATES("ingame_updates", true),
     ALLOW_CRATE_CLOSE("allow_crate_close", false),
     VOTE_COMMAND_OVERRIDE("vote_command_override", false),
+    VOTE_STREAK_CONSECUTIVE("vote_streak_consecutive", true),
 
     DISABLED_BROADCASTS("disabled_broadcasts"),
     DISABLED_BROADCAST_VOTE("$DISABLED_BROADCASTS.vote", false),
