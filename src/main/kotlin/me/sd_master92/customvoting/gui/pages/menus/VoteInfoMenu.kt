@@ -100,7 +100,7 @@ class VoteInfoMenu(
                 setItem(
                     9,
                     SimpleItem(
-                        Material.TORCH,
+                        Material.NETHER_STAR,
                         PMessage.MILESTONE_ITEM_NAME_X.with("#").replace("#", ""),
                         ";${PMessage.GRAY}Next milestone: " + PMessage.YELLOW + "in $required vote" + if (required != 1) "s" else ""
                     )
@@ -117,18 +117,14 @@ class VoteInfoMenu(
                 {
                     if (index < size - 2)
                     {
-                        setItem(index, object : SimpleItem(site.getGUIItem(false))
-                        {
-                            init
-                            {
-                                val last = site.getLastByDate(voter)
-                                val timeDifference =
-                                    if (last != null) last + (site.interval * 60 * 60 * 1000) - System.currentTimeMillis() else 0L
-                                setLore(
-                                    ";" + PMessage.GRAY + "Next vote: " + PMessage.RED + timeDifference.toTimeString()
-                                )
-                            }
-                        })
+                        val siteItem =  site.getGUIItem(false)
+                        val last = site.getLastByDate(voter)
+                        val timeDifference =
+                            if (last != null) last + (site.interval * 60 * 60 * 1000) - System.currentTimeMillis() else 0L
+                        siteItem.setLore(
+                            ";" + PMessage.GRAY + "Next vote: " + PMessage.RED + timeDifference.toTimeString()
+                        )
+                        setItem(index, siteItem)
                     }
                 }.run()
             )

@@ -236,7 +236,7 @@ fun Long.monthDifferenceToday(): Int
 
 fun Long.toTimeString(): String
 {
-    return if (this == 0L)
+    return if (this <= 0L)
     {
         "${PMessage.GREEN}00${PMessage.GRAY}h ${PMessage.GREEN}00${PMessage.GRAY}m ${PMessage.GREEN}00${PMessage.GRAY}s"
     } else

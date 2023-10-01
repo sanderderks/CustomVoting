@@ -1,14 +1,20 @@
 package me.sd_master92.customvoting.subjects
 
 import me.sd_master92.core.inventory.BaseItem
+import me.sd_master92.core.inventory.GUI
+import me.sd_master92.core.tasks.TaskTimer
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.capitalize
 import me.sd_master92.customvoting.constants.enumerations.Data
+import me.sd_master92.customvoting.constants.enumerations.Message
 import me.sd_master92.customvoting.constants.enumerations.PMessage
+import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.constants.interfaces.Voter
 import me.sd_master92.customvoting.constants.models.VoteSiteUUID
 import me.sd_master92.customvoting.gui.items.SimpleItem
 import org.bukkit.Material
+import org.bukkit.entity.Player
+import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.ItemStack
 
 class VoteSite private constructor(
@@ -70,7 +76,7 @@ class VoteSite private constructor(
 
     fun getGUIItem(editor: Boolean): SimpleItem
     {
-        return SimpleItem(
+        return object : SimpleItem(
             item.type,
             title,
             (if (description.isEmpty()) PMessage.VOTE_SITES_MESSAGE_DESCRIPTION_DEFAULT.toString()
@@ -83,6 +89,36 @@ class VoteSite private constructor(
                     else "",
             item.itemMeta?.hasEnchants() ?: false
         )
+        {
+            override fun onClick(event: InventoryClickEvent, player: Player)
+            {
+                if(!editor)
+                {
+                    TaskTimer.delay(plugin)
+                    {
+                        if (event.inventory is GUI)
+                        {
+                            (event.inventory as GUI).cancelCloseEvent = true
+                        }
+                        if (url != null)
+                        {
+                            SoundType.SUCCESS.play(plugin, player)
+                            player.sendMessage(
+                                Message.VOTE_COMMAND_PREFIX.getMessage(
+                                    plugin,
+                                    mapOf(Pair("%SERVICE%", url!!))
+                                )
+                            )
+                        } else
+                        {
+                            SoundType.FAILURE.play(plugin, player)
+                            player.sendMessage(PMessage.VOTE_SITES_MESSAGE_URL_DEFAULT.toString().capitalize())
+                        }
+                        player.closeInventory()
+                    }.run()
+                }
+            }
+        }
     }
 
     fun getLastByDate(voter: Voter): Long?

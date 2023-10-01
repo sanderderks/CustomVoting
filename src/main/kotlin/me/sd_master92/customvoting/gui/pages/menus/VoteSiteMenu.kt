@@ -26,29 +26,6 @@ class VoteSiteMenu(private val plugin: CV) :
 
     override fun onClick(event: InventoryClickEvent, player: Player)
     {
-        val voteSite = VoteSite.getBySlot(plugin, event.slot)
-        if (voteSite != null)
-        {
-            TaskTimer.delay(plugin)
-            {
-                cancelCloseEvent = true
-                if (voteSite.url != null)
-                {
-                    SoundType.SUCCESS.play(plugin, player)
-                    player.sendMessage(
-                        Message.VOTE_COMMAND_PREFIX.getMessage(
-                            plugin,
-                            mapOf(Pair("%SERVICE%", voteSite.url!!))
-                        )
-                    )
-                } else
-                {
-                    SoundType.FAILURE.play(plugin, player)
-                    player.sendMessage(PMessage.VOTE_SITES_MESSAGE_URL_DEFAULT.toString().capitalize())
-                }
-                player.closeInventory()
-            }.run()
-        }
     }
 
     override fun onClose(event: InventoryCloseEvent, player: Player)
