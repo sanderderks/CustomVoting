@@ -8,6 +8,8 @@ import me.sd_master92.customvoting.gui.buttons.carousel.VotePartyCountCarousel
 import me.sd_master92.customvoting.gui.buttons.carousel.VotePartyTypeCarousel
 import me.sd_master92.customvoting.gui.buttons.carousel.VotePartyVotesCarousel
 import me.sd_master92.customvoting.gui.buttons.inputfields.VotePartyCommandsInput
+import me.sd_master92.customvoting.gui.buttons.inputfields.VotePartyPigHuntDamage
+import me.sd_master92.customvoting.gui.buttons.inputfields.VotePartyPigHuntHealth
 import me.sd_master92.customvoting.gui.buttons.shortcuts.VotePartyChestOverviewShortcut
 import me.sd_master92.customvoting.gui.buttons.switches.VotePartyEnabledSwitch
 import org.bukkit.entity.Player
@@ -48,6 +50,8 @@ class VotePartySettingsPage(private val plugin: CV, backPage: GUI?) :
         addItem(VotePartyVotesCarousel(plugin))
         addItem(VotePartyCountCarousel(plugin))
         addItem(VotePartyChestOverviewShortcut(plugin, this))
+        addItem(VotePartyPigHuntHealth(plugin, this))
+        addItem(VotePartyPigHuntDamage(plugin, this))
     }
 }
 
