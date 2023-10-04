@@ -7,6 +7,7 @@ import me.sd_master92.core.tasks.TaskTimer
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.*
 import me.sd_master92.customvoting.constants.interfaces.Voter
+import me.sd_master92.customvoting.gui.items.VotePartyItem
 import me.sd_master92.customvoting.gui.pages.editors.VotePartyRewardItemsEditor
 import me.sd_master92.customvoting.gui.pages.menus.VotePartyCrate
 import me.sd_master92.customvoting.helpers.ParticleHelper
@@ -128,7 +129,7 @@ class PlayerListener(private val plugin: CV) : Listener
                 if (player.hasPermission("çustomvoting.voteparty"))
                 {
                     event.isDropItems = false
-                    votePartyChest.delete(player)
+                    votePartyChest.deleteLocation(player)
                 } else
                 {
                     event.isCancelled = true
@@ -179,16 +180,36 @@ class PlayerListener(private val plugin: CV) : Listener
     fun onBlockPlace(event: BlockPlaceEvent)
     {
         val item = event.itemInHand
-        if (item.type == VoteParty.VOTE_PARTY_ITEM.type && item.itemMeta?.displayName == VoteParty.VOTE_PARTY_ITEM.itemMeta?.displayName)
+        if(event.blockPlaced.type == Material.ENDER_CHEST)
         {
-            val player = event.player
-            if (player.hasPermission("customvoting.voteparty"))
+            val key = item.itemMeta?.displayName?.split("#")?.reversed()?.get(0)
+            if (key != null && item.itemMeta!!.displayName == (VotePartyItem(key).itemMeta?.displayName))
             {
-                VotePartyChest.create(plugin, event.block.location, player)
-            } else
-            {
-                event.isCancelled = true
-                player.sendMessage(PMessage.ACTION_ERROR_BREAK_BLOCK_NO_PERMISSION.toString())
+                val player = event.player
+                if (player.hasPermission("customvoting.voteparty"))
+                {
+                    val chest = VotePartyChest.getByKey(plugin, key)
+                    if(chest != null)
+                    {
+                        if(chest.loc == null)
+                        {
+                            chest.loc = event.block.location
+                            player.sendMessage(PMessage.VOTE_PARTY_MESSAGE_CHEST_LOCATION_SET_X.with(key))
+                        } else
+                        {
+                            event.isCancelled = true
+                            SoundType.FAILURE.play(plugin, player)
+                            player.sendMessage(PMessage.VOTE_PARTY_MESSAGE_CHEST_LOCATION_SET_ALREADY_X.with(key))
+                        }
+                    } else
+                    {
+                        VotePartyChest.create(plugin, player, key)?.loc = event.block.location
+                    }
+                } else
+                {
+                    event.isCancelled = true
+                    player.sendMessage(PMessage.ACTION_ERROR_BREAK_BLOCK_NO_PERMISSION.toString())
+                }
             }
         }
     }
@@ -214,7 +235,7 @@ class PlayerListener(private val plugin: CV) : Listener
                 if (VoteParty.IS_ACTIVE && VoteParty.getCurrent()?.votePartyType == VotePartyType.LOCKED_CRATES && !votePartyChest.isOpened)
                 {
                     votePartyChest.isOpened = true
-                    votePartyChest.hide()
+                    votePartyChest.hide(votePartyChest.loc!!)
                     SoundType.OPEN.play(plugin, player)
                     VotePartyCrate(plugin, votePartyChest).open(player)
 

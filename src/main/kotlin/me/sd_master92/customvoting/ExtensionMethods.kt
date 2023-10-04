@@ -24,7 +24,7 @@ import java.util.concurrent.TimeUnit
 import kotlin.math.ceil
 
 
-fun String.withPlaceholders(player: Player): String
+fun String.withPlaceholders(player: Player? = null): String
 {
     return if (CV.PAPI)
     {

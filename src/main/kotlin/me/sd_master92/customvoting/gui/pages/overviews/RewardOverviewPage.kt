@@ -5,6 +5,7 @@ import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.gui.buttons.shortcuts.*
+import me.sd_master92.customvoting.gui.pages.settings.StreaksSettingsPage
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
@@ -42,7 +43,7 @@ class RewardOverviewPage(private val plugin: CV, backPage: GUI?) :
         addItem(PowerRewardSettingsShortcut(plugin, this))
         addItem(LuckySettingsShortcut(plugin, this))
         addItem(MilestoneOverviewShortcut(plugin, this))
-        addItem(StreakOverviewShortcut(plugin, this))
+        addItem(StreaksSettingsShortcut(plugin, this))
         addItem(VotePartySettingsShortcut(plugin, this))
         addItem(CrateOverviewShortcut(plugin, this))
     }

@@ -121,7 +121,7 @@ class PlayerTable(private val plugin: CV, override val uuid: String) : Voter
     override fun addStreak(): Boolean
     {
         val diff = last.dayDifferenceToday()
-        if (diff == 1 || votes == 0)
+        if (!plugin.config.getBoolean(Setting.VOTE_STREAK_CONSECUTIVE.path) || diff == 1 || votes == 0)
         {
             return players?.setStreak(uuid, streakDaily + 1) ?: false
         } else if (diff > 1)

@@ -11,6 +11,7 @@ import me.sd_master92.customvoting.constants.interfaces.Voter
 import me.sd_master92.customvoting.constants.models.VoteSiteUUID
 import me.sd_master92.customvoting.helpers.ParticleHelper
 import me.sd_master92.customvoting.subjects.voteparty.VoteParty
+import me.sd_master92.customvoting.subjects.voteparty.VotePartyChest
 import org.bukkit.entity.Player
 import java.text.DecimalFormat
 import java.util.*
@@ -98,7 +99,7 @@ class CustomVote(
 
     private fun subtractVotesUntilVoteParty()
     {
-        if (plugin.data.getLocations(Data.VOTE_PARTY_CHESTS.path).isNotEmpty())
+        if (VotePartyChest.getAll(plugin).isNotEmpty())
         {
             val votesRequired = plugin.config.getNumber(Setting.VOTES_REQUIRED_FOR_VOTE_PARTY.path)
             val votesUntil = votesRequired - plugin.data.getNumber(Data.CURRENT_VOTES.path)
