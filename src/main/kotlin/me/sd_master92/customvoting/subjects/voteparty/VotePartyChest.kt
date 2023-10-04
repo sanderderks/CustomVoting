@@ -4,6 +4,7 @@ import me.sd_master92.core.tasks.TaskTimer
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.Data
 import me.sd_master92.customvoting.constants.enumerations.PMessage
+import me.sd_master92.customvoting.constants.enumerations.Setting
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.getEntityHealthString
 import me.sd_master92.customvoting.helpers.ParticleHelper
@@ -124,8 +125,9 @@ class VotePartyChest private constructor(private val plugin: CV, val key: String
     {
         hide(loc)
         val pig = loc.world!!.spawnEntity(loc, EntityType.PIG) as Pig
-        pig.getAttribute(Attribute.GENERIC_MAX_HEALTH)?.baseValue = 40.0
-        pig.health = 40.0
+        val health = plugin.config.getDouble(Setting.VOTE_PARTY_PIG_HUNT_HEALTH.path)
+        pig.getAttribute(Attribute.GENERIC_MAX_HEALTH)?.baseValue = health
+        pig.health = health
         pig.isInvulnerable = true
         pig.isCustomNameVisible = true
         pig.addPotionEffect(PotionEffect(PotionEffectType.SPEED, 20 * 120, 2))
