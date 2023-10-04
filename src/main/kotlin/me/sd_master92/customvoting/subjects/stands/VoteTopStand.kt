@@ -7,7 +7,10 @@ import me.sd_master92.customvoting.constants.enumerations.Message
 import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.interfaces.Voter
 import me.sd_master92.customvoting.getVotesPlaceholders
+import org.bukkit.Bukkit
 import org.bukkit.entity.Player
+import java.util.*
+import kotlin.collections.HashMap
 
 
 class VoteTopStand private constructor(private val plugin: CV, private val top: Int)
@@ -42,6 +45,7 @@ class VoteTopStand private constructor(private val plugin: CV, private val top: 
     private fun update()
     {
         val topVoter = Voter.getTopVoter(plugin, top)
+        var player: Player? = null
         val placeholders = topVoter?.getVotesPlaceholders(plugin) ?: mutableMapOf()
         placeholders["%TOP%"] = "$top"
         if (topVoter == null)
@@ -52,10 +56,13 @@ class VoteTopStand private constructor(private val plugin: CV, private val top: 
             placeholders["%VOTES_WEEKLY%"] = "0"
             placeholders["%VOTES_DAILY%"] = "0"
             placeholders["%VOTES_AUTO%"] = "0"
+        } else
+        {
+            player = Bukkit.getPlayer(UUID.fromString(topVoter.uuid))
         }
-        topStand.update(Message.VOTE_TOP_STANDS_TOP.getMessage(plugin, placeholders))
-        nameStand.update(Message.VOTE_TOP_STANDS_CENTER.getMessage(plugin, placeholders))
-        votesStand.update(Message.VOTE_TOP_STANDS_BOTTOM.getMessage(plugin, placeholders), topVoter?.uuid)
+        topStand.update(player, Message.VOTE_TOP_STANDS_TOP.getMessage(plugin, placeholders))
+        nameStand.update(player, Message.VOTE_TOP_STANDS_CENTER.getMessage(plugin, placeholders))
+        votesStand.update(player, Message.VOTE_TOP_STANDS_BOTTOM.getMessage(plugin, placeholders), topVoter?.uuid)
         citizen?.update(topVoter?.name ?: PMessage.PLAYER_NAME_UNKNOWN_COLORED.toString())
     }
 

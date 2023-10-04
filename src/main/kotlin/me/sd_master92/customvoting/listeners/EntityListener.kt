@@ -42,13 +42,12 @@ class EntityListener(private val plugin: CV) : Listener
         if (uuid in PIG_HUNT)
         {
             val chest = PIG_HUNT[uuid]!!
-            chest.dropLoc = event.entity.location
             while (chest.isNotEmpty())
             {
-                chest.dropRandomItem()
+                chest.dropRandomItem(event.entity.location)
             }
             event.drops.clear()
-            chest.show()
+            chest.show(chest.loc!!)
             PIG_HUNT.remove(uuid)
             ParticleHelper.shootFirework(plugin, event.entity.location)
 

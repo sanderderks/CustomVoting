@@ -12,7 +12,7 @@ class VotePartyCommand(plugin: CV) :
         plugin,
         "voteparty",
         false,
-        VotePartyCreateCommand(),
+        VotePartyCreateCommand(plugin),
         VotePartyStartCommand(plugin),
         VotePartyStopCommand(plugin)
     )
