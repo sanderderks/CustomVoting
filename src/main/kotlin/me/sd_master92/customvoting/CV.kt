@@ -13,6 +13,7 @@ import me.sd_master92.customvoting.database.PlayerDatabase
 import me.sd_master92.customvoting.database.PlayerTable
 import me.sd_master92.customvoting.extensions.CustomPlaceholders
 import me.sd_master92.customvoting.listeners.*
+import me.sd_master92.customvoting.subjects.VoteSite
 import me.sd_master92.customvoting.tasks.ResetChecker
 import me.sd_master92.customvoting.tasks.UpdateChecker
 import me.sd_master92.customvoting.tasks.VoteReminder
@@ -284,9 +285,9 @@ class CV : CustomPlugin(
         }
         metrics.addCustomChart(AdvancedPie("vote_sites") {
             val valueMap: MutableMap<String, Int> = HashMap()
-            for (site in data.getStringList(Data.VOTE_SITES.path).filter { site -> !site.lowercase().contains("test") })
+            for (site in VoteSite.getAllActive(this).filter { !it.uniqueId.toString().contains("test") })
             {
-                valueMap[site] = 1
+                valueMap[site.uniqueId.serviceName] = 1
             }
             valueMap
         })

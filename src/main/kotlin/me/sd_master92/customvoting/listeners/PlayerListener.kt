@@ -69,7 +69,7 @@ class PlayerListener(private val plugin: CV) : Listener
     private fun executeQueue(player: Player)
     {
         val voter = Voter.get(plugin, player)
-        val queue = voter.queue
+        val queue = voter.history.filter { it.queued }
         if (!voter.clearQueue())
         {
             plugin.errorLog(PMessage.QUEUE_ERROR_DELETE_XY.with(player.uniqueId.toString(), player.name))
@@ -82,7 +82,7 @@ class PlayerListener(private val plugin: CV) : Listener
             {
                 if (iterator.hasNext())
                 {
-                    CustomVote.create(plugin, player.name, iterator.next())
+                    CustomVote.create(plugin, player.name, iterator.next().site.toString(), true)
                 } else
                 {
                     it.cancel()
@@ -238,7 +238,7 @@ class PlayerListener(private val plugin: CV) : Listener
                     votePartyChest.hide(votePartyChest.loc!!)
                     SoundType.OPEN.play(plugin, player)
                     VotePartyCrate(plugin, votePartyChest).open(player)
-                    
+
                     plugin.broadcastText(Message.VOTE_PARTY_CHEST_CLAIMED, mapOf(Pair("%PLAYER%", player.name)))
                     ParticleHelper.shootFirework(plugin, player.location)
 
@@ -264,7 +264,7 @@ class PlayerListener(private val plugin: CV) : Listener
 
         var voteCrate = VoteCrate.getByLocation(plugin, clicked.location)
         if (voteCrate != null && (event.item?.type != Material.TRIPWIRE_HOOK || event.item?.itemMeta?.lore?.get(0)
-                    ?.contains("#") == false)
+                ?.contains("#") == false)
         )
         {
             event.isCancelled = true

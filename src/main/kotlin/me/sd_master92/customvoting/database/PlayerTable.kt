@@ -5,6 +5,8 @@ import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.Setting
 import me.sd_master92.customvoting.constants.interfaces.TopVoter
 import me.sd_master92.customvoting.constants.interfaces.Voter
+import me.sd_master92.customvoting.constants.models.VoteHistory
+import me.sd_master92.customvoting.constants.models.VoteSiteUUID
 import me.sd_master92.customvoting.dayDifferenceToday
 import me.sd_master92.customvoting.monthDifferenceToday
 import me.sd_master92.customvoting.weekDifferenceToday
@@ -57,9 +59,9 @@ class PlayerTable(private val plugin: CV, override val uuid: String) : Voter
     override val power: Boolean
         get() = players?.getPower(uuid) == true
     override val last: Long
-        get() = players?.getLast(uuid) ?: 0
-    override val queue: List<String>
-        get() = players?.getQueue(uuid) ?: listOf()
+        get() = history.maxByOrNull { it.time }?.time ?: 0
+    override val history: List<VoteHistory>
+        get() = players?.getHistory(uuid) ?: listOf()
     override val streakDaily: Int
         get() = players?.getStreak(uuid) ?: 0
 
@@ -80,7 +82,6 @@ class PlayerTable(private val plugin: CV, override val uuid: String) : Voter
         players?.setMonthlyVotes(uuid, 0)
         players?.setWeeklyVotes(uuid, 0)
         players?.setDailyVotes(uuid, 0)
-        players?.setLast(uuid)
 
         if (update)
         {
@@ -88,7 +89,7 @@ class PlayerTable(private val plugin: CV, override val uuid: String) : Voter
         }
     }
 
-    override fun addVote(site: String?): Boolean
+    override fun addVote(): Boolean
     {
         val votesBefore = votes
         addStreak()
@@ -96,7 +97,6 @@ class PlayerTable(private val plugin: CV, override val uuid: String) : Voter
         players?.setMonthlyVotes(uuid, votesMonthly + 1)
         players?.setWeeklyVotes(uuid, votesWeekly + 1)
         players?.setDailyVotes(uuid, votesDaily + 1)
-        players?.setLast(uuid, site)
 
         Voter.getTopVoters(plugin, true)
 
@@ -113,9 +113,9 @@ class PlayerTable(private val plugin: CV, override val uuid: String) : Voter
         return players?.clearQueue(uuid) ?: false
     }
 
-    override fun addQueue(site: String): Boolean
+    override fun addHistory(site: VoteSiteUUID, queued: Boolean): Boolean
     {
-        return players?.addQueue(uuid, site) ?: false
+        return players?.addHistory(uuid, site, queued) ?: false
     }
 
     override fun addStreak(): Boolean
