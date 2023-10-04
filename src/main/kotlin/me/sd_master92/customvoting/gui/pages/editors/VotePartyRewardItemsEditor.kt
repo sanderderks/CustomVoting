@@ -5,7 +5,10 @@ import me.sd_master92.core.inventory.GUI
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.Data
 import me.sd_master92.customvoting.constants.enumerations.PMessage
+import me.sd_master92.customvoting.gui.buttons.actions.VotePartyCreateAction
+import me.sd_master92.customvoting.gui.buttons.actions.VotePartyDeleteAction
 import me.sd_master92.customvoting.gui.pages.abstracts.AbstractItemEditor
+import me.sd_master92.customvoting.subjects.voteparty.VotePartyChest
 
 class VotePartyRewardItemsEditor(
     private val plugin: CV,
@@ -30,7 +33,12 @@ class VotePartyRewardItemsEditor(
     {
         if (backPage == null)
         {
-            setItem(52, BackButton(this))
+            setItem(nonClickableSizeWithNull - 1, BackButton(this))
+        }
+        setItem(nonClickableSizeWithNull - 1, VotePartyDeleteAction(plugin, this, key))
+        if(VotePartyChest.getByKey(plugin, key)?.loc == null)
+        {
+            setItem(nonClickableSizeWithNull - 1, VotePartyCreateAction(plugin, this, key))
         }
     }
 }

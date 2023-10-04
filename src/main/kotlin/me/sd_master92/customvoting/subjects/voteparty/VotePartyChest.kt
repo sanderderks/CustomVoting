@@ -21,13 +21,25 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import java.util.*
+import kotlin.collections.set
 
 class VotePartyChest private constructor(private val plugin: CV, val key: String)
 {
     private val path = Data.VOTE_PARTY_CHESTS.path + ".$key"
     val items = plugin.data.getItems(path).toMutableList()
-    val loc = plugin.data.getLocation(path)!!.clone()
-    var dropLoc = Location(loc.world, loc.x + 0.5, loc.y - 1, loc.z + 0.5)
+    var loc: Location?
+        get() = plugin.data.getLocation(path)?.clone()
+        set(value)
+        {
+            if (value != null)
+            {
+                plugin.data.setLocation(path, value)
+            }
+        }
+    val dropLoc: Location?
+        get() = if (loc != null) Location(loc!!.world, loc!!.x + 0.5, loc!!.y - 1, loc!!.z + 0.5) else null
+    val fireworkLoc
+        get() = if (loc != null) Location(loc!!.world, loc!!.x + 0.5, loc!!.y + 1, loc!!.z + 0.5) else null
     var isOpened
         get() = plugin.data.getBoolean("$path.is_opened")
         set(value)
@@ -35,7 +47,6 @@ class VotePartyChest private constructor(private val plugin: CV, val key: String
             plugin.data.set("$path.is_opened", value)
             plugin.data.saveConfig()
         }
-    private val fireworkLoc = Location(loc.world, loc.x + 0.5, loc.y + 1, loc.z + 0.5)
     private val random = Random()
 
     fun isEmpty(): Boolean
@@ -50,38 +61,51 @@ class VotePartyChest private constructor(private val plugin: CV, val key: String
 
     fun delete(player: Player)
     {
-        if (plugin.data.deleteLocation(path))
+        if (plugin.data.deleteItems(path))
         {
-            plugin.data.deleteItems(path)
+            if(loc != null)
+            {
+                if(loc!!.block.type == Material.ENDER_CHEST)
+                {
+                    loc!!.block.type = Material.AIR
+                    plugin.data.deleteLocation(path)
+                }
+            }
             player.sendMessage(PMessage.VOTE_PARTY_MESSAGE_CHEST_DELETED_X.with(key))
         }
     }
 
-    fun show()
+    fun deleteLocation(player: Player)
+    {
+        plugin.data.deleteLocation(path)
+        player.sendMessage(PMessage.VOTE_PARTY_MESSAGE_CHEST_LOCATION_UNSET_X.with(key))
+    }
+
+    fun show(loc: Location)
     {
         loc.block.type = Material.ENDER_CHEST
     }
 
-    fun hide()
+    fun hide(loc: Location)
     {
         loc.block.type = Material.AIR
     }
 
-    fun explode()
+    fun explode(loc: Location, dropLoc: Location)
     {
         loc.world!!.strikeLightningEffect(loc)
-        hide()
+        hide(loc)
         while (isNotEmpty())
         {
-            dropRandomItem()
+            dropRandomItem(dropLoc)
         }
         SoundType.EXPLODE.play(plugin, loc)
-        TaskTimer.delay(plugin, 20 * 3) { show() }.run()
+        TaskTimer.delay(plugin, 20 * 3) { show(loc) }.run()
     }
 
-    fun scare()
+    fun scare(loc: Location, dropLoc: Location)
     {
-        hide()
+        hide(loc)
         val vex = loc.world!!.spawnEntity(loc, EntityType.VEX)
         EntityListener.CANCEL_EVENT.add(vex.uniqueId)
         TaskTimer.delay(plugin, 20 * 8)
@@ -93,13 +117,13 @@ class VotePartyChest private constructor(private val plugin: CV, val key: String
         }.run().then(TaskTimer.delay(plugin, 20 * 2)
         {
             vex.remove()
-            explode()
+            explode(loc, dropLoc)
         })
     }
 
-    fun convertToPig()
+    fun convertToPig(loc: Location)
     {
-        hide()
+        hide(loc)
         val pig = loc.world!!.spawnEntity(loc, EntityType.PIG) as Pig
         val health = plugin.config.getDouble(Setting.VOTE_PARTY_PIG_HUNT_HEALTH.path)
         pig.getAttribute(Attribute.GENERIC_MAX_HEALTH)?.baseValue = health
@@ -128,7 +152,7 @@ class VotePartyChest private constructor(private val plugin: CV, val key: String
         return items.removeAt(random.nextInt(items.size))
     }
 
-    fun dropRandomItem()
+    fun dropRandomItem(dropLoc: Location)
     {
         if (dropLoc.world != null)
         {
@@ -138,7 +162,7 @@ class VotePartyChest private constructor(private val plugin: CV, val key: String
         }
     }
 
-    fun shootFirework()
+    fun shootFirework(fireworkLoc: Location)
     {
         if (random.nextInt(3) == 0)
         {
@@ -148,35 +172,53 @@ class VotePartyChest private constructor(private val plugin: CV, val key: String
 
     companion object
     {
-        fun create(plugin: CV, loc: Location, player: Player)
+        fun create(plugin: CV, player: Player, key: String? = null): VotePartyChest?
         {
-            val numbers = getAll(plugin).map { chest -> chest.key }.mapNotNull { it.toIntOrNull() }
-            val maxNumber = numbers.maxOrNull() ?: 0
-            var newNumber = maxNumber + 1
-
-            for (i in 1..maxNumber)
+            val number = if(key != null)
             {
-                if (i !in numbers)
+                key
+            } else
+            {
+                val numbers = getAll(plugin).map { chest -> chest.key }.mapNotNull { it.toIntOrNull() }
+                val maxNumber = numbers.maxOrNull() ?: 0
+                var newNumber = maxNumber + 1
+
+                for (i in 1..maxNumber)
                 {
-                    newNumber = i
-                    break
+                    if (i !in numbers)
+                    {
+                        newNumber = i
+                        break
+                    }
                 }
+                newNumber.toString()
             }
 
-            plugin.data.setLocation(Data.VOTE_PARTY_CHESTS.path + ".$newNumber", loc)
+            plugin.data.setItems(Data.VOTE_PARTY_CHESTS.path + ".$number", emptyArray())
             SoundType.SUCCESS.play(plugin, player)
-            player.sendMessage(PMessage.VOTE_PARTY_MESSAGE_CHEST_CREATED_X.with("$newNumber"))
-            player.inventory.setItemInMainHand(VoteParty.VOTE_PARTY_ITEM)
+            player.sendMessage(PMessage.VOTE_PARTY_MESSAGE_CHEST_CREATED_X.with(number))
+            return getByKey(plugin, number)
         }
 
         fun getAll(plugin: CV): MutableList<VotePartyChest>
         {
             val list = mutableListOf<VotePartyChest>()
-            for (key in plugin.data.getLocations(Data.VOTE_PARTY_CHESTS.path).keys)
+            for (key in plugin.data.getConfigurationSection("items.${Data.VOTE_PARTY_CHESTS.path}")?.getKeys(false)
+                ?: emptyList())
             {
                 list.add(VotePartyChest(plugin, key))
             }
             return list
+        }
+
+        fun getAllWithLocation(plugin: CV): MutableList<VotePartyChest>
+        {
+            return getAll(plugin).filter { it.loc != null }.toMutableList()
+        }
+
+        fun getByKey(plugin: CV, key: String): VotePartyChest?
+        {
+            return getAll(plugin).firstOrNull { chest -> chest.key == key }
         }
 
         fun getByLocation(plugin: CV, loc: Location): VotePartyChest?
@@ -189,7 +231,10 @@ class VotePartyChest private constructor(private val plugin: CV, val key: String
             for (chest in getAll(plugin))
             {
                 chest.isOpened = false
-                chest.show()
+                if (chest.loc != null)
+                {
+                    chest.show(chest.loc!!)
+                }
             }
         }
     }

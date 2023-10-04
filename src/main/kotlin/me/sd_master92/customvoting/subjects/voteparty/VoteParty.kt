@@ -4,10 +4,8 @@ import me.sd_master92.core.tasks.TaskTimer
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.addToInventoryOrDrop
 import me.sd_master92.customvoting.constants.enumerations.*
-import me.sd_master92.customvoting.gui.items.SimpleItem
 import me.sd_master92.customvoting.withPlaceholders
 import org.bukkit.Bukkit
-import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
@@ -17,7 +15,7 @@ class VoteParty(private val plugin: CV)
 {
     var votePartyType = VotePartyType.valueOf(plugin.config.getNumber(Setting.VOTE_PARTY_TYPE.path))
         private set
-    private val chests = VotePartyChest.getAll(plugin)
+    private val chests = if(votePartyType.requiresLocation) VotePartyChest.getAllWithLocation(plugin) else VotePartyChest.getAll(plugin)
     private val random = Random()
 
     fun start(): Boolean
@@ -136,23 +134,23 @@ class VoteParty(private val plugin: CV)
                     {
                         for (chest in chests)
                         {
-                            chest.dropRandomItem()
-                            chest.shootFirework()
+                            chest.dropRandomItem(chest.dropLoc!!)
+                            chest.shootFirework(chest.fireworkLoc!!)
                         }
                     }
 
                     VotePartyType.ONE_CHEST_AT_A_TIME    ->
                     {
                         val chest = chests.first()
-                        chest.dropRandomItem()
-                        chest.shootFirework()
+                        chest.dropRandomItem(chest.dropLoc!!)
+                        chest.shootFirework(chest.fireworkLoc!!)
                     }
 
                     VotePartyType.RANDOM_CHEST_AT_A_TIME ->
                     {
                         val chest = chests[random.nextInt(chests.size)]
-                        chest.dropRandomItem()
-                        chest.shootFirework()
+                        chest.dropRandomItem(chest.dropLoc!!)
+                        chest.shootFirework(chest.fireworkLoc!!)
                     }
 
                     VotePartyType.ADD_TO_INVENTORY       ->
@@ -184,7 +182,7 @@ class VoteParty(private val plugin: CV)
             if (chests.isNotEmpty())
             {
                 val chest = chests[random.nextInt(chests.size)]
-                chest.explode()
+                chest.explode(chest.loc!!, chest.dropLoc!!)
                 chests.remove(chest)
             } else
             {
@@ -229,7 +227,7 @@ class VoteParty(private val plugin: CV)
             while (chests.isNotEmpty())
             {
                 val chest = chests[random.nextInt(chests.size)]
-                chest.scare()
+                chest.scare(chest.loc!!, chest.dropLoc!!)
                 chests.remove(chest)
             }
         }
@@ -239,17 +237,12 @@ class VoteParty(private val plugin: CV)
     {
         for (chest in chests)
         {
-            chest.convertToPig()
+            chest.convertToPig(chest.loc!!)
         }
     }
 
     companion object
     {
-        val VOTE_PARTY_ITEM = SimpleItem(
-            Material.ENDER_CHEST,
-            PMessage.VOTE_PARTY_ITEM_NAME_CHEST.toString(),
-            PMessage.VOTE_PARTY_ITEM_LORE_CHEST.toString()
-        )
         var IS_ACTIVE = false
             private set
         private val queue: MutableList<VoteParty> = ArrayList()

@@ -168,7 +168,7 @@ class VoteFile : Voter
     override fun addStreak(): Boolean
     {
         val diff = last.dayDifferenceToday()
-        if (diff == 1 || votes == 0)
+        if (!plugin.config.getBoolean(Setting.VOTE_STREAK_CONSECUTIVE.path) || diff == 1 || votes == 0)
         {
             return playerFile.addNumber(STREAK_DAILY, 1)
         } else if (diff > 1)
