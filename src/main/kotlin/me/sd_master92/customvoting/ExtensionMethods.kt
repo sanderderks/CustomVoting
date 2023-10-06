@@ -20,10 +20,11 @@ import org.bukkit.inventory.meta.SkullMeta
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import java.util.*
+import java.util.concurrent.TimeUnit
 import kotlin.math.ceil
 
 
-fun String.withPlaceholders(player: Player): String
+fun String.withPlaceholders(player: Player? = null): String
 {
     return if (CV.PAPI)
     {
@@ -46,6 +47,11 @@ fun String.replaceIfNotNull(oldValue: String, newValue: String?): String
 fun String.stripColor(): String
 {
     return ChatColor.stripColor(this)!!
+}
+
+fun String.capitalize(): String
+{
+    return this.replaceFirstChar { it.uppercase() }
 }
 
 fun CommandSender?.sendText(message: String)
@@ -159,17 +165,17 @@ fun Player.getPlayerFile(plugin: CV): PlayerFile
 fun OfflinePlayer?.getSkull(): ItemStack
 {
     val skull = ItemStack(Material.PLAYER_HEAD)
-    val skullMeta = skull.itemMeta as SkullMeta
-    skullMeta.owningPlayer = this
-    if (this != null)
+    if (this != null && this.hasPlayedBefore())
     {
+        val skullMeta = skull.itemMeta as SkullMeta
+        skullMeta.owningPlayer = this
         skullMeta.setDisplayName(
             PMessage.PLAYER_ITEM_NAME_SKULL_X.with(
                 this.name ?: PMessage.PLAYER_NAME_UNKNOWN.toString()
             )
         )
+        skull.itemMeta = skullMeta
     }
-    skull.itemMeta = skullMeta
     return skull
 }
 
@@ -226,6 +232,20 @@ fun Long.monthDifferenceToday(): Int
     val calendar = Calendar.getInstance()
     calendar.time = Date(this)
     return Calendar.getInstance()[Calendar.MONTH] - calendar[Calendar.MONTH]
+}
+
+fun Long.toTimeString(): String
+{
+    return if (this <= 0L)
+    {
+        "${PMessage.GREEN}00${PMessage.GRAY}h ${PMessage.GREEN}00${PMessage.GRAY}m ${PMessage.GREEN}00${PMessage.GRAY}s"
+    } else
+    {
+        val hours = String.format("%02d", TimeUnit.MILLISECONDS.toHours(this))
+        val minutes = String.format("%02d", TimeUnit.MILLISECONDS.toMinutes(this) % 60)
+        val seconds = String.format("%02d", TimeUnit.MILLISECONDS.toSeconds(this) % 60)
+        "${PMessage.RED}$hours${PMessage.GRAY}h ${PMessage.RED}$minutes${PMessage.GRAY}m ${PMessage.RED}$seconds${PMessage.GRAY}s"
+    }
 }
 
 fun Locale.setLanguage()

@@ -1,5 +1,6 @@
 package me.sd_master92.customvoting.gui.pages.editors
 
+import me.sd_master92.core.input.PlayerNumberInput
 import me.sd_master92.core.input.PlayerStringInput
 import me.sd_master92.core.inventory.GUI
 import me.sd_master92.core.tasks.TaskTimer
@@ -17,11 +18,11 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 
-class VoteLinksEditor(private val plugin: CV, private val back: GUI) :
+class VoteSiteEditor(private val plugin: CV, private val back: GUI) :
     GUI(
         plugin,
         null,
-        PMessage.VOTE_LINKS_INVENTORY_NAME_EDITOR.toString(),
+        PMessage.VOTE_SITES_INVENTORY_NAME_EDITOR.toString(),
         27,
         true,
         false
@@ -32,7 +33,7 @@ class VoteLinksEditor(private val plugin: CV, private val back: GUI) :
 
     override fun newInstance(): GUI
     {
-        return VoteLinksEditor(plugin, back)
+        return VoteSiteEditor(plugin, back)
     }
 
     override fun onBack(event: InventoryClickEvent, player: Player)
@@ -66,7 +67,7 @@ class VoteLinksEditor(private val plugin: CV, private val back: GUI) :
             player.closeInventory()
             player.sendTexts(
                 listOf(
-                    PMessage.VOTE_LINKS_MESSAGE_DEACTIVATE.toString(),
+                    PMessage.VOTE_SITES_MESSAGE_DEACTIVATE.toString(),
                     PMessage.GENERAL_MESSAGE_CONFIRM_X.with("confirm"),
                     PMessage.GENERAL_MESSAGE_CANCEL_BACK_X.with("cancel")
                 )
@@ -114,7 +115,7 @@ class VoteLinksEditor(private val plugin: CV, private val back: GUI) :
                     } else
                     {
                         SoundType.FAILURE.play(plugin, player)
-                        player.sendTexts(PMessage.VOTE_LINKS_MESSAGE_SETUP.toString().split(";"))
+                        player.sendTexts(PMessage.VOTE_SITES_MESSAGE_SETUP.toString().split(";"))
                         event.isCancelled = true
                     }
                 }
@@ -171,7 +172,7 @@ class VoteLinksEditor(private val plugin: CV, private val back: GUI) :
     {
         player.sendMessage(
             arrayOf(
-                PMessage.VOTE_LINKS_MESSAGE_TITLE_ENTER.toString(),
+                PMessage.VOTE_SITES_MESSAGE_TITLE_ENTER.toString(),
                 PMessage.GENERAL_MESSAGE_CANCEL_CONTINUE_X.with("skip")
             )
         )
@@ -200,7 +201,7 @@ class VoteLinksEditor(private val plugin: CV, private val back: GUI) :
         {
             player.sendMessage(
                 arrayOf(
-                    PMessage.VOTE_LINKS_MESSAGE_DESCRIPTION_ENTER.toString(),
+                    PMessage.VOTE_SITES_MESSAGE_DESCRIPTION_ENTER.toString(),
                     PMessage.GENERAL_MESSAGE_LIST_CLEAR_X.with("clear"),
                     PMessage.GENERAL_MESSAGE_CANCEL_CONTINUE_X.with("skip"),
                 )
@@ -225,7 +226,7 @@ class VoteLinksEditor(private val plugin: CV, private val back: GUI) :
                 SoundType.SUCCESS.play(plugin, player)
                 player.sendMessage(
                     arrayOf(
-                        PMessage.VOTE_LINKS_MESSAGE_DESCRIPTION_ENTER_MORE.toString(),
+                        PMessage.VOTE_SITES_MESSAGE_DESCRIPTION_ENTER_MORE.toString(),
                         PMessage.GENERAL_MESSAGE_CANCEL_CONTINUE_X.with("skip")
                     )
                 )
@@ -245,7 +246,7 @@ class VoteLinksEditor(private val plugin: CV, private val back: GUI) :
     {
         player.sendMessage(
             arrayOf(
-                PMessage.VOTE_LINKS_MESSAGE_URL.toString(),
+                PMessage.VOTE_SITES_MESSAGE_URL.toString(),
                 PMessage.GENERAL_MESSAGE_CANCEL_CONTINUE_X.with("skip")
             )
         )
@@ -256,21 +257,48 @@ class VoteLinksEditor(private val plugin: CV, private val back: GUI) :
                 voteSite.url = ChatColor.translateAlternateColorCodes('&', input)
 
                 SoundType.SUCCESS.play(plugin, player)
-                VoteLinksEditor(plugin, back).open(player)
+                enterInterval(player, voteSite)
                 cancel()
             }
 
             override fun onCancel()
             {
                 SoundType.SUCCESS.play(plugin, player)
-                VoteLinksEditor(plugin, back).open(player)
+                enterInterval(player, voteSite)
+            }
+        }
+    }
+
+    private fun enterInterval(player: Player, voteSite: VoteSite)
+    {
+        player.sendMessage(
+            arrayOf(
+                PMessage.VOTE_SITES_MESSAGE_INTERVAL.toString(),
+                PMessage.GENERAL_MESSAGE_CANCEL_CONTINUE_X.with("skip")
+            )
+        )
+        object : PlayerNumberInput(plugin, player, 1, 1000)
+        {
+            override fun onNumberReceived(input: Int)
+            {
+                voteSite.interval = input
+
+                SoundType.SUCCESS.play(plugin, player)
+                VoteSiteEditor(plugin, back).open(player)
+                cancel()
+            }
+
+            override fun onCancel()
+            {
+                SoundType.SUCCESS.play(plugin, player)
+                VoteSiteEditor(plugin, back).open(player)
             }
         }
     }
 
     init
     {
-        for ((i, item) in VoteSite.getItems(plugin))
+        for ((i, item) in VoteSite.getItems(plugin, true))
         {
             setItem(i, item)
         }

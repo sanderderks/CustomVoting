@@ -28,6 +28,7 @@ vote_command_override:
   - '&avotelink3.com'
   - '&B---------------'
 
+# %SERVICE% stem website
 vote_reminder:
   - '&bJe hebt vandaag nog niet op onze server gestemd.'
   - '&dGebruik /vote voor mooie prijzen!'

@@ -9,7 +9,7 @@ enum class Data(val path: String)
     ITEM_REWARDS("rewards"),
     LUCKY_REWARDS("lucky_rewards"),
     CURRENT_VOTES("current_votes"),
-    VOTE_QUEUE("queue"),
+    VOTE_HISTORY("history"),
     VOTE_TOP_SIGNS("vote_top"),
     VOTE_TOP_STANDS("armor_stands"),
     VOTE_COMMANDS("vote_commands"),
@@ -46,6 +46,7 @@ enum class Data(val path: String)
             plugin.data.deleteLocation("armor_stands")
             plugin.data.deleteItems("vote_link_items")
             plugin.data.delete("vote_links")
+            plugin.data.delete("queue")
         }
     }
 }

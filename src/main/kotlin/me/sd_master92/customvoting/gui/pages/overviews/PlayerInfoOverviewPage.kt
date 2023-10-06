@@ -42,32 +42,35 @@ class PlayerInfoOverviewPage(private val plugin: CV, backPage: GUI?, private var
     {
     }
 
-    private fun getSkull(voter: Voter): ItemStack
+    companion object
     {
-        val player = voter.name.getOfflinePlayer(plugin)
-        val skull = player.getSkull()
-        val meta = skull.itemMeta
-        val lastVote = if (voter.votes > 0) java.text.SimpleDateFormat(PMessage.GENERAL_FORMAT_DATE.toString())
-            .format(Date(voter.last)) else PMessage.PLAYER_INFO_VALUE_NEVER.toString()
-        meta!!.lore = listOf(
-            PMessage.PLAYER_INFO_ITEM_LORE_VOTES_X.with("" + voter.votes),
-            PMessage.PLAYER_INFO_ITEM_LORE_VOTES_MONTHLY_X.with("" + voter.votesMonthly),
-            PMessage.PLAYER_INFO_ITEM_LORE_VOTES_WEEKLY_X.with("" + voter.votesWeekly),
-            PMessage.PLAYER_INFO_ITEM_LORE_VOTES_DAILY_X.with("" + voter.votesDaily),
-            PMessage.PLAYER_INFO_ITEM_LORE_STREAK_DAILY_X.with("" + voter.streakDaily),
-            PMessage.PLAYER_INFO_ITEM_LORE_LAST_X.with(lastVote),
-            PMessage.PLAYER_INFO_ITEM_LORE_POWER_X.with(
-                if (player?.hasPowerRewards(plugin) == true
-                ) PMessage.GENERAL_VALUE_TRUE.toString() else
-                    PMessage.GENERAL_VALUE_FALSE.toString()
-            ),
-        )
-        if (meta.displayName != voter.name)
+        fun getSkull(plugin: CV, voter: Voter): ItemStack
         {
-            meta.setDisplayName(PMessage.AQUA.getColor() + voter.name)
+            val player = voter.name.getOfflinePlayer(plugin)
+            val skull = player.getSkull()
+            val meta = skull.itemMeta
+            val lastVote = if (voter.votes > 0) java.text.SimpleDateFormat(PMessage.GENERAL_FORMAT_DATE.toString())
+                .format(Date(voter.last)) else PMessage.PLAYER_INFO_VALUE_NEVER.toString()
+            meta!!.lore = listOf(
+                PMessage.PLAYER_INFO_ITEM_LORE_VOTES_X.with("" + voter.votes),
+                PMessage.PLAYER_INFO_ITEM_LORE_VOTES_MONTHLY_X.with("" + voter.votesMonthly),
+                PMessage.PLAYER_INFO_ITEM_LORE_VOTES_WEEKLY_X.with("" + voter.votesWeekly),
+                PMessage.PLAYER_INFO_ITEM_LORE_VOTES_DAILY_X.with("" + voter.votesDaily),
+                PMessage.PLAYER_INFO_ITEM_LORE_STREAK_DAILY_X.with("" + voter.streakDaily),
+                PMessage.PLAYER_INFO_ITEM_LORE_LAST_X.with(lastVote),
+                PMessage.PLAYER_INFO_ITEM_LORE_POWER_X.with(
+                    if (player?.hasPowerRewards(plugin) == true
+                    ) PMessage.GENERAL_VALUE_TRUE.toString() else
+                        PMessage.GENERAL_VALUE_FALSE.toString()
+                ),
+            )
+            if (meta.displayName != voter.name)
+            {
+                meta.setDisplayName(PMessage.AQUA.getColor() + voter.name)
+            }
+            skull.itemMeta = meta
+            return skull
         }
-        skull.itemMeta = meta
-        return skull
     }
 
     init
@@ -92,7 +95,7 @@ class PlayerInfoOverviewPage(private val plugin: CV, backPage: GUI?, private var
         val voters = Voter.getTopVoters(plugin).filterIndexed { i, _ -> i in start until nonClickableSizeWithNull }
         for (voter in voters)
         {
-            addItem(getSkull(voter))
+            addItem(getSkull(plugin, voter))
         }
     }
 }

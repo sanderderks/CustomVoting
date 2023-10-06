@@ -1,20 +1,28 @@
 package me.sd_master92.customvoting.subjects
 
 import me.sd_master92.core.inventory.BaseItem
+import me.sd_master92.core.inventory.GUI
+import me.sd_master92.core.tasks.TaskTimer
 import me.sd_master92.customvoting.CV
+import me.sd_master92.customvoting.capitalize
 import me.sd_master92.customvoting.constants.enumerations.Data
+import me.sd_master92.customvoting.constants.enumerations.Message
 import me.sd_master92.customvoting.constants.enumerations.PMessage
+import me.sd_master92.customvoting.constants.enumerations.SoundType
+import me.sd_master92.customvoting.constants.interfaces.Voter
+import me.sd_master92.customvoting.constants.models.VoteSiteUUID
 import me.sd_master92.customvoting.gui.items.SimpleItem
-import org.bukkit.ChatColor
 import org.bukkit.Material
+import org.bukkit.entity.Player
+import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.ItemStack
 
 class VoteSite private constructor(
     private val plugin: CV,
-    private val uniqueId: String,
+    val uniqueId: VoteSiteUUID,
 )
 {
-    private val path = Data.VOTE_SITES.path + "." + uniqueId.lowercase().replace(".", "_")
+    private val path = Data.VOTE_SITES.path + ".$uniqueId"
     var active: Boolean
         get() = plugin.data.getBoolean("$path.active", true)
         set(value)
@@ -23,7 +31,7 @@ class VoteSite private constructor(
             plugin.data.saveConfig()
         }
     var title: String
-        get() = plugin.data.getString("$path.title", uniqueId)!!
+        get() = plugin.data.getString("$path.title", uniqueId.toString())!!
         set(value)
         {
             plugin.data.set("$path.title", value)
@@ -36,8 +44,8 @@ class VoteSite private constructor(
             plugin.data.set("$path.description", value)
             plugin.data.saveConfig()
         }
-    var url: String
-        get() = plugin.data.getString("$path.url", PMessage.VOTE_LINKS_MESSAGE_URL_DEFAULT.toString())!!
+    var url: String?
+        get() = plugin.data.getString("$path.url")
         set(value)
         {
             plugin.data.set("$path.url", value)
@@ -59,6 +67,66 @@ class VoteSite private constructor(
         {
             plugin.data.setNumber("$path.slot", value)
         }
+    var interval: Int
+        get() = plugin.data.getInt("$path.interval", 24)
+        set(value)
+        {
+            plugin.data.setNumber("$path.interval", value)
+        }
+
+    fun getGUIItem(editor: Boolean): SimpleItem
+    {
+        return object : SimpleItem(
+            item.type,
+            title,
+            (if (description.isEmpty()) PMessage.VOTE_SITES_MESSAGE_DESCRIPTION_DEFAULT.toString()
+            else description.joinToString(";")) +
+                    if (editor) ";;" +
+                            PMessage.GRAY + PMessage.GENERAL_UNIT_URL + ": " + PMessage.GREEN + (url
+                        ?: PMessage.GENERAL_VALUE_NONE.toString().lowercase()) + ";" +
+                            PMessage.GRAY + PMessage.VOTE_SITES_UNIT_INTERVAL.toString()
+                        .capitalize() + ": " + PMessage.GREEN + interval + "h"
+                    else "",
+            item.itemMeta?.hasEnchants() ?: false
+        )
+        {
+            override fun onClick(event: InventoryClickEvent, player: Player)
+            {
+                if(!editor)
+                {
+                    TaskTimer.delay(plugin)
+                    {
+                        if (event.inventory is GUI)
+                        {
+                            (event.inventory as GUI).cancelCloseEvent = true
+                        }
+                        if (url != null)
+                        {
+                            SoundType.SUCCESS.play(plugin, player)
+                            player.sendMessage(
+                                Message.VOTE_COMMAND_PREFIX.getMessage(
+                                    plugin,
+                                    mapOf(Pair("%SERVICE%", url!!))
+                                )
+                            )
+                        } else
+                        {
+                            SoundType.FAILURE.play(plugin, player)
+                            player.sendMessage(PMessage.VOTE_SITES_MESSAGE_URL_DEFAULT.toString().capitalize())
+                        }
+                        player.closeInventory()
+                    }.run()
+                }
+            }
+        }
+    }
+
+    fun getLastByDate(voter: Voter): Long?
+    {
+        return (voter.history.filter {
+            it.site == uniqueId
+        }.maxByOrNull { it.time }?.time)
+    }
 
     companion object
     {
@@ -69,8 +137,16 @@ class VoteSite private constructor(
                 val voteSites = plugin.data.getStringList(Data.VOTE_SITES.path)
                 for (uniqueId in voteSites)
                 {
-                    VoteSite(plugin, uniqueId)
+                    VoteSite(plugin, VoteSiteUUID(uniqueId))
                 }
+            }
+        }
+
+        fun register(plugin: CV, uniqueId: VoteSiteUUID)
+        {
+            if (!exists(plugin, uniqueId))
+            {
+                VoteSite(plugin, uniqueId)
             }
         }
 
@@ -79,16 +155,26 @@ class VoteSite private constructor(
             val list = mutableListOf<VoteSite>()
             for (key in plugin.data.getConfigurationSection(Data.VOTE_SITES.path)?.getKeys(false) ?: emptyList())
             {
-                list.add(VoteSite(plugin, key))
+                list.add(VoteSite(plugin, VoteSiteUUID(key)))
             }
             return list
         }
 
-        fun exists(plugin: CV, uniqueId: String): Boolean
+        fun getAllActive(plugin: CV): MutableList<VoteSite>
+        {
+            return getAll(plugin).filter { it.active }.toMutableList()
+        }
+
+        fun exists(plugin: CV, uniqueId: VoteSiteUUID): Boolean
         {
             return plugin.data.getConfigurationSection(
-                Data.VOTE_SITES.path + "." + uniqueId.lowercase().replace(".", "_")
+                Data.VOTE_SITES.path + ".$uniqueId"
             ) != null
+        }
+
+        fun get(plugin: CV, uniqueId: VoteSiteUUID): VoteSite?
+        {
+            return getAll(plugin).firstOrNull { it.uniqueId == uniqueId }
         }
 
         fun getBySlot(plugin: CV, slot: Int): VoteSite?
@@ -96,10 +182,9 @@ class VoteSite private constructor(
             return getAll(plugin).firstOrNull { it.slot == slot }
         }
 
-        fun getItems(plugin: CV): Map<Int, BaseItem>
+        fun getItems(plugin: CV, editor: Boolean = false): Map<Int, BaseItem>
         {
-            val activeVoteSites = getAll(plugin)
-                .filter { it.active }
+            val activeVoteSites = getAllActive(plugin)
 
             val items = activeVoteSites.associateBy { voteSite ->
                 if (voteSite.slot < 0)
@@ -107,14 +192,8 @@ class VoteSite private constructor(
                     voteSite.slot = nextSlot(activeVoteSites)
                 }
                 voteSite.slot
-            }.mapValues { (_, value) ->
-                SimpleItem(
-                    value.item.type,
-                    value.title,
-                    if (value.description.isEmpty()) PMessage.VOTE_LINKS_MESSAGE_DESCRIPTION_DEFAULT.toString()
-                    else value.description.joinToString(";"),
-                    value.item.itemMeta?.hasEnchants() ?: false
-                )
+            }.mapValues { (_, site) ->
+                site.getGUIItem(editor)
             }
             return items
         }
@@ -134,7 +213,7 @@ class VoteSite private constructor(
     {
         if (plugin.data.getConfigurationSection(path) == null)
         {
-            title = ChatColor.AQUA.toString() + uniqueId
+            title = PMessage.AQUA.getColor() + uniqueId.serviceName
         }
     }
 }

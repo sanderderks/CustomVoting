@@ -19,8 +19,6 @@ enum class PlayerTableColumn(
     WEEKLY_VOTES("votes_weekly", CustomColumn.DataType.INT, 0),
     DAILY_VOTES("votes_daily", CustomColumn.DataType.INT, 0),
     DAILY_VOTE_STREAK("streak_daily", CustomColumn.DataType.INT, 0),
-    LAST_VOTE("last", CustomColumn.DataType.LONG, 0),
-    LAST_SITE("last_site", CustomColumn.DataType.VARCHAR, ""),
     POWER("power", CustomColumn.DataType.BOOLEAN, 0);
 
     companion object
@@ -47,12 +45,12 @@ enum class PlayerTableColumn(
 
         fun columns(): Array<PlayerTableColumn>
         {
-            return values().filter { it != UUID }.toTypedArray()
+            return entries.filter { it != UUID }.toTypedArray()
         }
 
         fun columns(uuid: String): Array<PlayerTableColumn>
         {
-            return values().map {
+            return entries.map {
                 if (it == UUID)
                 {
                     it.defaultValue = uuid

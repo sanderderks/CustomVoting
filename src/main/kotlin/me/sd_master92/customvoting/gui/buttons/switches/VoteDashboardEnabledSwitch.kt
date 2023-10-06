@@ -7,14 +7,14 @@ import me.sd_master92.customvoting.gui.buttons.abstracts.AbstractStatusSwitch
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 
-class VoteLinksEnabledSwitch(private val plugin: CV) : AbstractStatusSwitch(
+class VoteDashboardEnabledSwitch(private val plugin: CV) : AbstractStatusSwitch(
     plugin,
-    Material.CHEST, Setting.VOTE_LINK_INVENTORY,
-    PMessage.VOTE_SITES_ITEM_NAME_GUI
+    Material.CHEST, Setting.VOTE_INFO_INVENTORY,
+    PMessage.VOTE_INFO_ITEM_NAME
 )
 {
     override fun newInstance(): ItemStack
     {
-        return VoteLinksEnabledSwitch(plugin)
+        return VoteDashboardEnabledSwitch(plugin)
     }
 }

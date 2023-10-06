@@ -7,14 +7,14 @@ import me.sd_master92.customvoting.gui.buttons.abstracts.AbstractStatusSwitch
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 
-class VoteLinksEnabledSwitch(private val plugin: CV) : AbstractStatusSwitch(
+class VoteStreakConsecutiveSwitch(private val plugin: CV) : AbstractStatusSwitch(
     plugin,
-    Material.CHEST, Setting.VOTE_LINK_INVENTORY,
-    PMessage.VOTE_SITES_ITEM_NAME_GUI
+    Material.REPEATER, Setting.VOTE_STREAK_CONSECUTIVE,
+    PMessage.VOTE_STREAK_ITEM_NAME_CONSECUTIVE
 )
 {
     override fun newInstance(): ItemStack
     {
-        return VoteLinksEnabledSwitch(plugin)
+        return VoteStreakConsecutiveSwitch(plugin)
     }
 }

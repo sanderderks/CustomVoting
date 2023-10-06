@@ -4,9 +4,12 @@ import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.ArmorType
 import me.sd_master92.customvoting.getSkull
 import me.sd_master92.customvoting.spawnArmorStand
+import me.sd_master92.customvoting.withPlaceholders
 import org.bukkit.Bukkit
 import org.bukkit.Location
+import org.bukkit.OfflinePlayer
 import org.bukkit.entity.ArmorStand
+import org.bukkit.entity.Player
 import java.util.*
 
 class DisplayStand(
@@ -20,9 +23,9 @@ class DisplayStand(
     val location
         get() = stand?.location
 
-    fun update(name: String, uuid: String? = null)
+    fun update(player: Player?, name: String, uuid: String? = null)
     {
-        stand?.customName = name
+        stand?.customName = name.withPlaceholders(player)
         stand?.isCustomNameVisible = true
 
         if (main)
@@ -55,14 +58,15 @@ class DisplayStand(
             } else
             {
                 ArmorType.dress(stand!!.equipment!!, top)
-                try
+                val player: OfflinePlayer? = try
                 {
-                    val id = UUID.fromString(uuid)
-                    val skull = (Bukkit.getPlayer(id) ?: Bukkit.getOfflinePlayer(id)).getSkull()
-                    stand?.setHelmet(skull)
-                } catch (ignored: Exception)
+                    val id = if (uuid != null) UUID.fromString(uuid) else UUID.randomUUID()
+                    Bukkit.getPlayer(id) ?: Bukkit.getOfflinePlayer(id)
+                } catch (_: Exception)
                 {
+                    null
                 }
+                stand?.setHelmet(player.getSkull())
             }
         }
     }

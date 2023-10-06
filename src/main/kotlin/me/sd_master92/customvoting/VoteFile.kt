@@ -5,6 +5,8 @@ import me.sd_master92.customvoting.constants.enumerations.Data
 import me.sd_master92.customvoting.constants.enumerations.Setting
 import me.sd_master92.customvoting.constants.interfaces.TopVoter
 import me.sd_master92.customvoting.constants.interfaces.Voter
+import me.sd_master92.customvoting.constants.models.VoteHistory
+import me.sd_master92.customvoting.constants.models.VoteSiteUUID
 import org.bukkit.entity.Player
 
 class VoteFile : Voter
@@ -55,11 +57,25 @@ class VoteFile : Voter
             }
         }
     override val last: Long
-        get() = playerFile.getTimeStamp(VOTE_LAST)
+        get() = history.maxByOrNull { it.time }?.time ?: 0
     override val power: Boolean
         get() = playerFile.getBoolean(POWER)
-    override val queue: List<String>
-        get() = playerFile.getStringList(Data.VOTE_QUEUE.path)
+    override val history: List<VoteHistory>
+        get()
+        {
+            val history = mutableListOf<VoteHistory>()
+            for (key in playerFile.getConfigurationSection(Data.VOTE_HISTORY.path)?.getKeys(false) ?: listOf())
+            {
+                val site = playerFile.getString(Data.VOTE_HISTORY.path + ".$key.site")
+                val time = playerFile.getTimeStamp(Data.VOTE_HISTORY.path + ".$key.timestamp")
+                val queued = playerFile.getBoolean(Data.VOTE_HISTORY.path + ".$key.queued")
+                if (site != null)
+                {
+                    history.add(VoteHistory(key.toInt(), uuid, VoteSiteUUID(site), time, queued))
+                }
+            }
+            return history
+        }
     override val streakDaily: Int
         get() = playerFile.getNumber(STREAK_DAILY)
 
@@ -98,7 +114,6 @@ class VoteFile : Voter
 
     override fun setVotes(n: Int, update: Boolean)
     {
-        playerFile.setTimeStamp(VOTE_LAST)
         playerFile.setNumber(VOTES, n)
         playerFile.setNumber(VOTES_MONTHLY, 0)
         playerFile.setNumber(VOTES_WEEKLY, 0)
@@ -130,11 +145,10 @@ class VoteFile : Voter
         playerFile.setNumber(VOTES_DAILY, 0)
     }
 
-    override fun addVote(site: String?): Boolean
+    override fun addVote(): Boolean
     {
         val beforeVotes = votes
         addStreak()
-        playerFile.setTimeStamp(VOTE_LAST)
         playerFile.addNumber(VOTES)
         playerFile.addNumber(VOTES_MONTHLY)
         playerFile.addNumber(VOTES_WEEKLY)
@@ -151,24 +165,28 @@ class VoteFile : Voter
         return playerFile.saveConfig()
     }
 
-    override fun clearQueue(): Boolean
+    override fun addHistory(site: VoteSiteUUID, queued: Boolean): Boolean
     {
-        return playerFile.delete(Data.VOTE_QUEUE.path)
+        val key = history.size
+        playerFile.set(Data.VOTE_HISTORY.path + ".$key.site", site.toString())
+        playerFile.setTimeStamp(Data.VOTE_HISTORY.path + ".$key.timestamp")
+        playerFile.set(Data.VOTE_HISTORY.path + ".$key.queued", queued)
+        return playerFile.saveConfig()
     }
 
-    override fun addQueue(site: String): Boolean
+    override fun clearQueue(): Boolean
     {
-        val path = Data.VOTE_QUEUE.path
-        val queue = playerFile.getStringList(path)
-        queue.add(site)
-        playerFile[path] = queue
-        return plugin.data.saveConfig()
+        for (vote in history.filter { it.queued })
+        {
+            playerFile.set(Data.VOTE_HISTORY.path + ".${vote.id}.queued", false)
+        }
+        return playerFile.saveConfig()
     }
 
     override fun addStreak(): Boolean
     {
         val diff = last.dayDifferenceToday()
-        if (diff == 1 || votes == 0)
+        if (!plugin.config.getBoolean(Setting.VOTE_STREAK_CONSECUTIVE.path) || diff == 1 || votes == 0)
         {
             return playerFile.addNumber(STREAK_DAILY, 1)
         } else if (diff > 1)
@@ -190,7 +208,6 @@ class VoteFile : Voter
         private const val VOTES_WEEKLY = "votes_weekly"
         private const val VOTES_DAILY = "votes_daily"
         private const val STREAK_DAILY = "streak_daily"
-        private const val VOTE_LAST = "last"
         private const val POWER = "power"
 
         private var ALL: MutableMap<String, VoteFile> = HashMap()
@@ -251,6 +268,8 @@ class VoteFile : Voter
             for (playerFile in PlayerFile.getAll().values)
             {
                 playerFile.keyMigrations(keyMigrations)
+
+                playerFile.delete("last")
             }
         }
     }

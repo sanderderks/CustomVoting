@@ -3,6 +3,7 @@ package me.sd_master92.customvoting.gui.buttons.descriptions
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.models.BStatsData
+import me.sd_master92.customvoting.constants.models.VoteSiteUUID
 import me.sd_master92.customvoting.gui.items.SimpleItem
 import me.sd_master92.customvoting.subjects.VoteSite
 import org.bukkit.Material
@@ -20,7 +21,7 @@ class TopVoteSitesDescription(plugin: CV) : SimpleItem(
         {
             val number = i + 1
             lore += ";" + PMessage.AQUA.getColor() + "$number. "
-            lore += if (VoteSite.exists(plugin, site.name))
+            lore += if (VoteSite.exists(plugin, VoteSiteUUID(site.name)))
             {
                 PMessage.GREEN.getColor()
             } else

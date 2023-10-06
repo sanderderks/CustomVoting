@@ -8,8 +8,10 @@ import me.sd_master92.core.tasks.TaskTimer
 import me.sd_master92.customvoting.*
 import me.sd_master92.customvoting.constants.enumerations.*
 import me.sd_master92.customvoting.constants.interfaces.Voter
+import me.sd_master92.customvoting.constants.models.VoteSiteUUID
 import me.sd_master92.customvoting.helpers.ParticleHelper
 import me.sd_master92.customvoting.subjects.voteparty.VoteParty
+import me.sd_master92.customvoting.subjects.voteparty.VotePartyChest
 import org.bukkit.entity.Player
 import java.text.DecimalFormat
 import java.util.*
@@ -29,21 +31,19 @@ class CustomVote(
         if (player == null)
         {
             plugin.infoLog(PMessage.QUEUE_MESSAGE_ADD.toString())
-            queue()
         } else if (plugin.config.getStringList(Setting.DISABLED_WORLDS.path).contains(player.world.name))
         {
             if (!plugin.config.getBoolean(Setting.DISABLED_MESSAGE_DISABLED_WORLD.path))
             {
                 player.sendText(plugin, Message.DISABLED_WORLD)
             }
-            queue()
         } else
         {
             broadcast(player)
             val voter = Voter.get(plugin, player)
             previousLast = voter.last
             votes = voter.votes
-            voter.addVote(serviceName)
+            voter.addVote()
             ParticleHelper.shootFirework(plugin, player.location)
             giveRewards(player, player.hasPowerRewards(plugin))
             if (plugin.config.getBoolean(Setting.VOTE_PARTY.path))
@@ -51,14 +51,15 @@ class CustomVote(
                 subtractVotesUntilVoteParty()
             }
         }
+        register()
     }
 
-    private fun queue()
+    private fun register()
     {
         val voter = Voter.getByName(plugin, username)
         if (voter != null)
         {
-            voter.addQueue(serviceName)
+            voter.addHistory(VoteSiteUUID(serviceName), queued)
         } else
         {
             plugin.errorLog(PMessage.PLAYER_ERROR_NOT_EXIST_X.with(username))
@@ -84,7 +85,7 @@ class CustomVote(
                 }
             }
 
-            if (plugin.config.getBoolean(Setting.DISABLED_BROADCAST_OFFLINE.path) && queued)
+            if (plugin.config.getBoolean(Setting.DISABLED_BROADCAST_OFFLINE.path))
             {
                 return
             }
@@ -98,7 +99,7 @@ class CustomVote(
 
     private fun subtractVotesUntilVoteParty()
     {
-        if (plugin.data.getLocations(Data.VOTE_PARTY_CHESTS.path).isNotEmpty())
+        if (VotePartyChest.getAll(plugin).isNotEmpty())
         {
             val votesRequired = plugin.config.getNumber(Setting.VOTES_REQUIRED_FOR_VOTE_PARTY.path)
             val votesUntil = votesRequired - plugin.data.getNumber(Data.CURRENT_VOTES.path)
@@ -288,11 +289,12 @@ class CustomVote(
         fun create(
             plugin: CV,
             name: String,
-            service: String
+            service: String,
+            queued: Boolean = false
         )
         {
             val vote = Vote(service, name, "0.0.0.0", Date().time.toString())
-            CustomVote(plugin, vote)
+            CustomVote(plugin, vote, queued)
         }
     }
 

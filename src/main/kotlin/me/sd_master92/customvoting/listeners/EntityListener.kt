@@ -3,6 +3,7 @@ package me.sd_master92.customvoting.listeners
 import me.sd_master92.core.tasks.TaskTimer
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.Message
+import me.sd_master92.customvoting.constants.enumerations.Setting
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.getEntityHealthString
 import me.sd_master92.customvoting.helpers.ParticleHelper
@@ -42,13 +43,12 @@ class EntityListener(private val plugin: CV) : Listener
         if (uuid in PIG_HUNT)
         {
             val chest = PIG_HUNT[uuid]!!
-            chest.dropLoc = event.entity.location
             while (chest.isNotEmpty())
             {
-                chest.dropRandomItem()
+                chest.dropRandomItem(event.entity.location)
             }
             event.drops.clear()
-            chest.show()
+            chest.show(chest.loc!!)
             PIG_HUNT.remove(uuid)
             ParticleHelper.shootFirework(plugin, event.entity.location)
 
@@ -100,23 +100,24 @@ class EntityListener(private val plugin: CV) : Listener
                     event.isCancelled = true
                 } else
                 {
+                    val maxDamage = plugin.config.getDouble(Setting.VOTE_PARTY_PIG_HUNT_DAMAGE_MAX.path)
                     event.damage = when (random.nextInt(6))
                     {
                         0    ->
                         {
                             event.entity.world.spawnParticle(Particle.SPELL, event.entity.location, 3)
-                            4.0
+                            maxDamage
                         }
 
-                        1    -> 3.0
-                        2    -> 2.0
+                        1    -> maxDamage * 0.75
+                        2    -> maxDamage * 0.5
                         3    ->
                         {
                             SoundType.FUNNY_2.play(plugin, event.entity.location)
                             0.0
                         }
 
-                        else -> 1.0
+                        else -> maxDamage * 0.25
                     }
 
                     when (random.nextInt(10))
@@ -124,7 +125,7 @@ class EntityListener(private val plugin: CV) : Listener
                         0    ->
                         {
                             event.entity.location.splashPotion(Material.SPLASH_POTION, PotionEffectType.HEAL)
-                            event.damage = -1.0
+                            event.damage = maxDamage * -0.25
                         }
 
                         1, 2 ->
