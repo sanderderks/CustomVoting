@@ -16,8 +16,14 @@ class VotePartyDeleteAction(private val plugin: CV, private val currentPage: GUI
     override fun onClick(event: InventoryClickEvent, player: Player)
     {
         SoundType.FAILURE.play(plugin, player)
-        VotePartyChest.getByKey(plugin, key)?.delete(player)
         currentPage.cancelCloseEvent = true
-        currentPage.backPage?.newInstance()?.open(player)
+        if (currentPage.backPage != null)
+        {
+            currentPage.backPage!!.newInstance().open(player)
+        } else
+        {
+            player.closeInventory()
+        }
+        VotePartyChest.getByKey(plugin, key)?.delete(player)
     }
 }

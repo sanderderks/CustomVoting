@@ -82,7 +82,7 @@ class VotePartyChestOverview(private val plugin: CV, backPage: GUI?, private val
             .take(nonClickableSizeWithNull)
         for (key in chests)
         {
-            addItem(VotePartyRewardItemsShortcut(plugin, this, key))
+            addItem(VotePartyRewardItemsShortcut(plugin, this, "$key"))
         }
     }
 }
