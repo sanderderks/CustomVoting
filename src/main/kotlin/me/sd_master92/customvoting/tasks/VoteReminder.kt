@@ -36,19 +36,24 @@ class VoteReminder(private val plugin: CV)
 
                     val currentTime = System.currentTimeMillis()
                     val firstSiteToVoteAgain = history.entries
-                        .filter { (site, lastVoteTime) ->
-                            val siteInterval = VoteSite.get(plugin, site)?.interval ?: 24
-                            currentTime - lastVoteTime >= (siteInterval * 60 * 60 * 1000)
-                        }
-                        .minByOrNull { (_, lastVoteTime) -> lastVoteTime }
-                        ?.key
+                            .filter { (site, lastVoteTime) ->
+                                val siteInterval = VoteSite.get(plugin, site)?.interval ?: 24
+                                currentTime - lastVoteTime >= (siteInterval * 60 * 60 * 1000)
+                            }
+                            .minByOrNull { (_, lastVoteTime) -> lastVoteTime }
+                            ?.key ?: VoteSite.getAllActive(plugin).firstOrNull()?.uniqueId
 
                     if (voter.votes == 0 || firstSiteToVoteAgain != null)
                     {
                         player.sendTexts(
                             plugin,
                             Message.VOTE_REMINDER,
-                            mapOf(Pair("%SERVICE%", firstSiteToVoteAgain!!.serviceName))
+                            mapOf(
+                                Pair(
+                                    "%SERVICE%",
+                                    firstSiteToVoteAgain?.serviceName ?: ""
+                                )
+                            )
                         )
                         SoundType.NOTIFY.play(plugin, player)
                     }
