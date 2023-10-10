@@ -6,7 +6,6 @@ import me.sd_master92.customvoting.constants.enumerations.Message
 import me.sd_master92.customvoting.constants.enumerations.Setting
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.constants.interfaces.Voter
-import me.sd_master92.customvoting.constants.models.VoteSiteUUID
 import me.sd_master92.customvoting.sendTexts
 import me.sd_master92.customvoting.subjects.VoteSite
 import org.bukkit.Bukkit
@@ -23,14 +22,17 @@ class VoteReminder(private val plugin: CV)
                 TaskTimer.delay(plugin, 20 * 10)
                 {
                     val voter = Voter.get(plugin, player)
-                    val history = mutableMapOf<VoteSiteUUID, Long>()
+                    val history = VoteSite.getAllActive(plugin).associateBy({ it.uniqueId }, { 0L }).toMutableMap()
 
                     for (vote in voter.history)
                     {
-                        val lastVoteTime = history[vote.site] ?: 0
-                        if (vote.time > lastVoteTime)
+                        if(history[vote.site] != null)
                         {
-                            history[vote.site] = vote.time
+                            val lastVoteTime = history[vote.site] ?: 0
+                            if (vote.time > lastVoteTime)
+                            {
+                                history[vote.site] = vote.time
+                            }
                         }
                     }
 
@@ -41,7 +43,7 @@ class VoteReminder(private val plugin: CV)
                                 currentTime - lastVoteTime >= (siteInterval * 60 * 60 * 1000)
                             }
                             .minByOrNull { (_, lastVoteTime) -> lastVoteTime }
-                            ?.key ?: VoteSite.getAllActive(plugin).firstOrNull()?.uniqueId
+                            ?.key
 
                     if (voter.votes == 0 || firstSiteToVoteAgain != null)
                     {
