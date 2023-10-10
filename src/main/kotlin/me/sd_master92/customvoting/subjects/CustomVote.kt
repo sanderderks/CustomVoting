@@ -197,7 +197,7 @@ class CustomVote(
 
     private fun giveLuckyReward(player: Player)
     {
-        if (Random().nextInt(100) < plugin.config.getNumber(Setting.LUCKY_VOTE_CHANCE.path))
+        if (plugin.config.getBoolean(Setting.LUCKY_VOTE.path) && Random().nextInt(100) < plugin.config.getNumber(Setting.LUCKY_VOTE_CHANCE.path))
         {
             val luckyRewards = plugin.data.getItems(Data.LUCKY_REWARDS.path)
             if (luckyRewards.isNotEmpty())
