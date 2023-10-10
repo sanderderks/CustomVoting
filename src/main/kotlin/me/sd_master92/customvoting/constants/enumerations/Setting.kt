@@ -49,7 +49,7 @@ enum class Setting(val path: String, private val defaultValue: Any? = null)
     ENABLED_PERM_GROUPS("enabled_op_groups"),
 
     UUID_STORAGE("uuid_storage", true),
-    SUFFIX_SUPPORT("suffix_support"),
+    PREFIX_SUPPORT("prefix_support"),
 
     USE_DATABASE("use_database", false),
 
@@ -88,7 +88,8 @@ enum class Setting(val path: String, private val defaultValue: Any? = null)
         {
             val keyMigrations = mapOf(
                 Pair("$DISABLED_BROADCASTS.vote_streak", DISABLED_BROADCAST_MILESTONE.path),
-                Pair("monthly_period", "monthly_votes")
+                Pair("monthly_period", "monthly_votes"),
+                Pair("suffix_support", PREFIX_SUPPORT.path)
             )
 
             plugin.config.keyMigrations(keyMigrations)

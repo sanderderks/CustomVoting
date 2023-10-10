@@ -179,26 +179,26 @@ fun OfflinePlayer?.getSkull(): ItemStack
     return skull
 }
 
-fun String.getPlayerNameWithSuffix(plugin: CV): String
+fun String.getPlayerNameWithPrefix(plugin: CV): String
 {
-    val suffix = plugin.config.getString(Setting.SUFFIX_SUPPORT.path)
-    if (suffix != null)
+    val prefix = plugin.config.getString(Setting.PREFIX_SUPPORT.path)
+    if (prefix != null)
     {
-        return "$suffix$this"
+        return "$prefix$this"
     }
     return this
 }
 
 fun String.getPlayer(plugin: CV): Player?
 {
-    return Bukkit.getPlayer(this) ?: Bukkit.getPlayer(this.getPlayerNameWithSuffix(plugin))
+    return Bukkit.getPlayer(this) ?: Bukkit.getPlayer(this.getPlayerNameWithPrefix(plugin))
 }
 
 fun String.getOfflinePlayer(plugin: CV): OfflinePlayer?
 {
     val offlinePlayers = Bukkit.getOfflinePlayers().toList()
     return offlinePlayers.firstOrNull { player -> player.name == this }
-        ?: offlinePlayers.firstOrNull { player -> player.name == this.getPlayerNameWithSuffix(plugin) }
+        ?: offlinePlayers.firstOrNull { player -> player.name == this.getPlayerNameWithPrefix(plugin) }
 }
 
 fun Location.spawnArmorStand(): ArmorStand
