@@ -189,9 +189,20 @@ fun String.getPlayerNameWithPrefix(plugin: CV): String
     return this
 }
 
+fun String.getPlayerNameWithoutPrefix(plugin: CV): String
+{
+    val prefix = plugin.config.getString(Setting.PREFIX_SUPPORT.path)
+    if (prefix != null && this.startsWith(prefix))
+    {
+        return this.substring(1)
+    }
+    return this
+}
+
 fun String.getPlayer(plugin: CV): Player?
 {
     return Bukkit.getPlayer(this) ?: Bukkit.getPlayer(this.getPlayerNameWithPrefix(plugin))
+    ?: Bukkit.getPlayer(this.getPlayerNameWithoutPrefix(plugin))
 }
 
 fun String.getOfflinePlayer(plugin: CV): OfflinePlayer?
@@ -286,11 +297,11 @@ fun LivingEntity.getEntityHealthString(): String
 fun Location.splashPotion(mat: Material, type: PotionEffectType)
 {
     val potion = ItemStack(mat)
-        .apply {
-            val potionMeta = itemMeta as PotionMeta
-            potionMeta.addCustomEffect(PotionEffect(type, 0, 0), true)
-            itemMeta = potionMeta
-        }
+            .apply {
+                val potionMeta = itemMeta as PotionMeta
+                potionMeta.addCustomEffect(PotionEffect(type, 0, 0), true)
+                itemMeta = potionMeta
+            }
 
     val thrownPotion = world!!.spawn(this, ThrownPotion::class.java)
     thrownPotion.item = potion
