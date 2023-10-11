@@ -247,10 +247,11 @@ class CV : CustomPlugin(
         metrics.addCustomChart(SimplePie("vote_party_enabled") { if (config.getBoolean(Setting.VOTE_PARTY_ENABLED.path)) "true" else "false" })
         metrics.addCustomChart(SimplePie("lucky_vote_enabled") { if (config.getBoolean(Setting.LUCKY_VOTE.path)) "true" else "false" })
         metrics.addCustomChart(SimplePie("uuid_support") { if (config.getBoolean(Setting.UUID_STORAGE.path)) "true" else "false" })
+        metrics.addCustomChart(SimplePie("prefix_support") { if (config.getBoolean(Setting.PREFIX_SUPPORT.path)) "true" else "false" })
         if (config.getBoolean(Setting.VOTE_PARTY_ENABLED.path))
         {
             metrics.addCustomChart(SimplePie("vote_party_type") {
-                VotePartyType.values()[
+                VotePartyType.entries[
                     config.getNumber(Setting.VOTE_PARTY_TYPE.path)
                 ].label(Locale.ENGLISH)
             })
