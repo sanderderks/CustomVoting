@@ -85,11 +85,6 @@ class CustomVote(
                 }
             }
 
-            if (plugin.config.getBoolean(Setting.DISABLED_BROADCAST_OFFLINE.path))
-            {
-                return
-            }
-
             val placeholders = HashMap<String, String>()
             placeholders["%PLAYER%"] = username
             placeholders["%SERVICE%"] = serviceName
