@@ -45,7 +45,7 @@ class VoteReminder(private val plugin: CV)
                             .minByOrNull { (_, lastVoteTime) -> lastVoteTime }
                             ?.key
 
-                    if (voter.votes == 0 || firstSiteToVoteAgain != null)
+                    if (firstSiteToVoteAgain != null)
                     {
                         player.sendTexts(
                             plugin,
@@ -53,7 +53,7 @@ class VoteReminder(private val plugin: CV)
                             mapOf(
                                 Pair(
                                     "%SERVICE%",
-                                    firstSiteToVoteAgain?.serviceName ?: ""
+                                    firstSiteToVoteAgain.serviceName
                                 )
                             )
                         )
