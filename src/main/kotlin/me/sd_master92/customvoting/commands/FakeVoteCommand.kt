@@ -1,10 +1,10 @@
 package me.sd_master92.customvoting.commands
 
 import me.sd_master92.core.command.SimpleCommand
-import me.sd_master92.core.file.PlayerFile
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.Message
 import me.sd_master92.customvoting.constants.enumerations.PMessage
+import me.sd_master92.customvoting.constants.interfaces.Voter
 import me.sd_master92.customvoting.sendText
 import me.sd_master92.customvoting.subjects.CustomVote
 import org.bukkit.command.CommandSender
@@ -27,7 +27,7 @@ class FakeVoteCommand(private val plugin: CV) : SimpleCommand(plugin, "fakevote"
         {
             val name = args[0]
             val service = if (args.size >= 2) args[1] else PMessage.FAKE_VOTE_VALUE_WEBSITE.toString()
-            if (PlayerFile.getByName(plugin, name) != null)
+            if (Voter.getByName(plugin, name) != null)
             {
                 fakeVote(name, service)
             } else

@@ -179,26 +179,37 @@ fun OfflinePlayer?.getSkull(): ItemStack
     return skull
 }
 
-fun String.getPlayerNameWithSuffix(plugin: CV): String
+fun String.getPlayerNameWithPrefix(plugin: CV): String
 {
-    val suffix = plugin.config.getString(Setting.SUFFIX_SUPPORT.path)
-    if (suffix != null)
+    val prefix = plugin.config.getString(Setting.PREFIX_SUPPORT.path)
+    if (prefix != null)
     {
-        return "$suffix$this"
+        return "$prefix$this"
+    }
+    return this
+}
+
+fun String.getPlayerNameWithoutPrefix(plugin: CV): String
+{
+    val prefix = plugin.config.getString(Setting.PREFIX_SUPPORT.path)
+    if (prefix != null && this.startsWith(prefix))
+    {
+        return this.substring(1)
     }
     return this
 }
 
 fun String.getPlayer(plugin: CV): Player?
 {
-    return Bukkit.getPlayer(this) ?: Bukkit.getPlayer(this.getPlayerNameWithSuffix(plugin))
+    return Bukkit.getPlayer(this) ?: Bukkit.getPlayer(this.getPlayerNameWithPrefix(plugin))
+    ?: Bukkit.getPlayer(this.getPlayerNameWithoutPrefix(plugin))
 }
 
 fun String.getOfflinePlayer(plugin: CV): OfflinePlayer?
 {
     val offlinePlayers = Bukkit.getOfflinePlayers().toList()
     return offlinePlayers.firstOrNull { player -> player.name == this }
-        ?: offlinePlayers.firstOrNull { player -> player.name == this.getPlayerNameWithSuffix(plugin) }
+        ?: offlinePlayers.firstOrNull { player -> player.name == this.getPlayerNameWithPrefix(plugin) }
 }
 
 fun Location.spawnArmorStand(): ArmorStand
@@ -286,11 +297,11 @@ fun LivingEntity.getEntityHealthString(): String
 fun Location.splashPotion(mat: Material, type: PotionEffectType)
 {
     val potion = ItemStack(mat)
-        .apply {
-            val potionMeta = itemMeta as PotionMeta
-            potionMeta.addCustomEffect(PotionEffect(type, 0, 0), true)
-            itemMeta = potionMeta
-        }
+            .apply {
+                val potionMeta = itemMeta as PotionMeta
+                potionMeta.addCustomEffect(PotionEffect(type, 0, 0), true)
+                itemMeta = potionMeta
+            }
 
     val thrownPotion = world!!.spawn(this, ThrownPotion::class.java)
     thrownPotion.item = potion

@@ -19,7 +19,7 @@ import java.util.*
 class CustomVote(
     private val plugin: CV,
     vote: Vote,
-    private val queued: Boolean = false
+    private var queued: Boolean = false
 ) : Vote(vote)
 {
     private var previousLast: Long = 0
@@ -31,12 +31,14 @@ class CustomVote(
         if (player == null)
         {
             plugin.infoLog(PMessage.QUEUE_MESSAGE_ADD.toString())
+            queued = true
         } else if (plugin.config.getStringList(Setting.DISABLED_WORLDS.path).contains(player.world.name))
         {
             if (!plugin.config.getBoolean(Setting.DISABLED_MESSAGE_DISABLED_WORLD.path))
             {
                 player.sendText(plugin, Message.DISABLED_WORLD)
             }
+            queued = true
         } else
         {
             broadcast(player)
