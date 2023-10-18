@@ -19,7 +19,7 @@ import java.util.*
 class CustomVote(
     private val plugin: CV,
     vote: Vote,
-    private var queued: Boolean = false
+    private var registered: Boolean = false
 ) : Vote(vote)
 {
     private var previousLast: Long = 0
@@ -31,14 +31,14 @@ class CustomVote(
         if (player == null)
         {
             plugin.infoLog(PMessage.QUEUE_MESSAGE_ADD.toString())
-            queued = true
+            register(true)
         } else if (plugin.config.getStringList(Setting.DISABLED_WORLDS.path).contains(player.world.name))
         {
             if (!plugin.config.getBoolean(Setting.DISABLED_MESSAGE_DISABLED_WORLD.path))
             {
                 player.sendText(plugin, Message.DISABLED_WORLD)
             }
-            queued = true
+            register(true)
         } else
         {
             broadcast(player)
@@ -52,19 +52,22 @@ class CustomVote(
             {
                 subtractVotesUntilVoteParty()
             }
+            register()
         }
-        register()
     }
 
-    private fun register()
+    private fun register(queue: Boolean = false)
     {
-        val voter = Voter.getByName(plugin, username)
-        if (voter != null)
+        if(!registered)
         {
-            voter.addHistory(VoteSiteUUID(serviceName), queued)
-        } else
-        {
-            plugin.errorLog(PMessage.PLAYER_ERROR_NOT_EXIST_X.with(username))
+            val voter = Voter.getByName(plugin, username)
+            if (voter != null)
+            {
+                voter.addHistory(VoteSiteUUID(serviceName), queue)
+            } else
+            {
+                plugin.errorLog(PMessage.PLAYER_ERROR_NOT_EXIST_X.with(username))
+            }
         }
     }
 
