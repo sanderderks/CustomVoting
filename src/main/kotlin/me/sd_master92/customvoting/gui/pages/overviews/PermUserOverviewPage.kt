@@ -99,7 +99,8 @@ class PermUserOverviewPage(private val plugin: CV, backPage: GUI?, private var p
             }
         })
         val start = nonClickableSizeWithNull * page
-        val voters = Voter.getTopVoters(plugin).filterIndexed { i, _ -> i in start until nonClickableSizeWithNull }
+        val end = start + nonClickableSizeWithNull
+        val voters = Voter.getTopVoters(plugin).filterIndexed { i, _ -> i in start until end }
         for (voter in voters)
         {
             addItem(getSkull(voter))
