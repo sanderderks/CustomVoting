@@ -56,6 +56,6 @@ class CrateSettingsPage(private val plugin: CV, backPage: GUI?, private val numb
         }
         addItem(AlwaysCrateRewardSwitch(plugin, number))
         addItem(AllowCrateClose(plugin))
-        setItem(16, CrateDeleteAction(plugin, this, number, name))
+        setItem(16, CrateDeleteAction(plugin, this, number))
     }
 }
