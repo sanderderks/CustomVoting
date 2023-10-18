@@ -16,6 +16,13 @@ import java.util.*
 class VoteCrate private constructor(private val plugin: CV, val key: String)
 {
     private val path = Data.VOTE_CRATES.path + ".$key"
+    private var stand: String?
+        get() = plugin.data.getString("$path.stand")
+        set(value)
+        {
+            plugin.data.set("$path.stand", value)
+            plugin.data.saveConfig()
+        }
     val name = plugin.data.getString("$path.name") ?: PMessage.CRATE_NAME_DEFAULT_X.with(key)
     val items = plugin.data.getItems(path).toMutableList()
     var loc = plugin.data.getLocation(path)?.clone()
@@ -54,24 +61,43 @@ class VoteCrate private constructor(private val plugin: CV, val key: String)
             loc.z + 0.5
         ).spawnArmorStand()
         stand.customName = name
-        plugin.data.set("$path.stand", stand.uniqueId.toString())
-        plugin.data.saveConfig()
+
+        this.stand = stand.uniqueId.toString()
 
         SoundType.SUCCESS.play(plugin, player)
+        player.sendMessage(PMessage.CRATE_MESSAGE_CHEST_LOCATION_SET_X.with(name))
         player.closeInventory()
     }
 
     fun delete(player: Player)
     {
-        if (plugin.data.deleteLocation(path))
-        {
-            plugin.data.getString("$path.stand")?.let {
-                val stand = Bukkit.getEntity(UUID.fromString(it))
-                stand?.remove()
+        loc?.let {
+            if(it.block.type == Material.ENDER_CHEST)
+            {
+                it.block.type = Material.AIR
             }
-            player.sendMessage(PMessage.GENERAL_MESSAGE_DELETE_SUCCESS_X.with(name))
+            plugin.data.deleteLocation(path)
         }
 
+        stand?.let {
+            val stand = Bukkit.getEntity(UUID.fromString(it))
+            stand?.remove()
+        }
+
+        if (plugin.data.delete(path))
+        {
+            player.sendMessage(PMessage.GENERAL_MESSAGE_DELETE_SUCCESS_X.with(name))
+        }
+    }
+
+    fun deleteLocation(player: Player)
+    {
+        plugin.data.deleteLocation(path)
+        stand?.let {
+            val stand = Bukkit.getEntity(UUID.fromString(it))
+            stand?.remove()
+        }
+        player.sendMessage(PMessage.CRATE_MESSAGE_CHEST_LOCATION_UNSET_X.with(key))
     }
 
     companion object
