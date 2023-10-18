@@ -28,31 +28,56 @@ enum class SoundType(
     FUNNY_2(Sound.ENTITY_SLIME_JUMP),
     SURPRISE(Sound.ENTITY_SHULKER_TELEPORT);
 
-    fun play(plugin: CV, loc: Location)
+    interface SoundMaker
+    {
+        fun playSound(sound: Sound, volume: Float, pitch: Float)
+    }
+
+    class PlayerSoundMaker(private val player: Player) : SoundMaker
+    {
+        override fun playSound(sound: Sound, volume: Float, pitch: Float)
+        {
+            player.playSound(player.location, sound, volume, pitch)
+        }
+    }
+
+    class WorldSoundMaker(private val loc: Location) : SoundMaker
+    {
+        override fun playSound(sound: Sound, volume: Float, pitch: Float)
+        {
+            loc.world?.playSound(loc, sound, volume, pitch)
+        }
+    }
+
+    private fun play(plugin: CV, soundMaker: SoundMaker)
     {
         if (plugin.config.getBoolean(Setting.USE_SOUND_EFFECTS.path))
         {
-            val world = loc.world
             try
             {
-                world?.playSound(loc, if (`try` != null) Sound.valueOf(`try`) else sound, 10f, 1f)
+                soundMaker.playSound(if (`try` != null) Sound.valueOf(`try`) else sound, 10f, 1f)
             } catch (_: Exception)
             {
-                world?.playSound(loc, sound, 10f, 1f)
+                soundMaker.playSound(sound, 10f, 1f)
             }
         }
     }
 
     fun play(plugin: CV, player: Player)
     {
-        play(plugin, player.location)
+        play(plugin, PlayerSoundMaker(player))
+    }
+
+    fun play(plugin: CV, loc: Location)
+    {
+        play(plugin, WorldSoundMaker(loc))
     }
 
     fun playForAll(plugin: CV)
     {
         for (player in plugin.server.onlinePlayers)
         {
-            play(plugin, player.location)
+            play(plugin, player)
         }
     }
 }
