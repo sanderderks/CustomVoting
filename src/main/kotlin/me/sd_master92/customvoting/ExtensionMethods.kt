@@ -165,10 +165,13 @@ fun Player.getPlayerFile(plugin: CV): PlayerFile
 fun OfflinePlayer?.getSkull(): ItemStack
 {
     val skull = ItemStack(Material.PLAYER_HEAD)
-    if (this != null && this.hasPlayedBefore())
+    if (this != null)
     {
         val skullMeta = skull.itemMeta as SkullMeta
-        skullMeta.owningPlayer = this
+        if(this.hasPlayedBefore())
+        {
+            skullMeta.owningPlayer = this
+        }
         skullMeta.setDisplayName(
             PMessage.PLAYER_ITEM_NAME_SKULL_X.with(
                 this.name ?: PMessage.PLAYER_NAME_UNKNOWN.toString()
