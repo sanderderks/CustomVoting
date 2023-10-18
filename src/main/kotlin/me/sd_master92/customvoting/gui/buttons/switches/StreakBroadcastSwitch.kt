@@ -8,7 +8,7 @@ import org.bukkit.inventory.ItemStack
 
 class StreakBroadcastSwitch(private val plugin: CV) : AbstractWoolStatusSwitch(
     plugin,
-    Setting.DISABLED_BROADCAST_MILESTONE,
+    Setting.DISABLED_BROADCAST_STREAK,
     PMessage.STREAK_ITEM_NAME_BROADCAST
 )
 {
