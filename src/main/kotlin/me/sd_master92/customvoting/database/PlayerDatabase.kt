@@ -30,9 +30,12 @@ class PlayerDatabase(private val plugin: CV, private val database: CustomDatabas
         val result = playersTable.getData(PlayerTableColumn.UUID.columnName, uuid)
         try
         {
-            if (result.next())
+            if (result != null)
             {
-                return result.getString(PlayerTableColumn.NAME.columnName)
+                if (result.next())
+                {
+                    return result.getString(PlayerTableColumn.NAME.columnName)
+                }
             }
         } catch (e: Exception)
         {
@@ -51,12 +54,15 @@ class PlayerDatabase(private val plugin: CV, private val database: CustomDatabas
         val result = playersTable.getData(PlayerTableColumn.UUID.columnName, uuid)
         try
         {
-            if (result.next())
+            if (result != null)
             {
-                return result.getInt(PlayerTableColumn.VOTES.columnName)
-            } else
-            {
-                addPlayer(uuid)
+                if (result.next())
+                {
+                    return result.getInt(PlayerTableColumn.VOTES.columnName)
+                } else
+                {
+                    addPlayer(uuid)
+                }
             }
         } catch (e: Exception)
         {
@@ -80,12 +86,15 @@ class PlayerDatabase(private val plugin: CV, private val database: CustomDatabas
         val result = playersTable.getData(PlayerTableColumn.UUID.columnName, uuid)
         try
         {
-            if (result.next())
+            if (result != null)
             {
-                return result.getInt(PlayerTableColumn.MONTHLY_VOTES.columnName)
-            } else
-            {
-                addPlayer(uuid)
+                if (result.next())
+                {
+                    return result.getInt(PlayerTableColumn.MONTHLY_VOTES.columnName)
+                } else
+                {
+                    addPlayer(uuid)
+                }
             }
         } catch (e: Exception)
         {
@@ -109,9 +118,12 @@ class PlayerDatabase(private val plugin: CV, private val database: CustomDatabas
         val result = playersTable.getData(PlayerTableColumn.UUID.columnName, uuid)
         try
         {
-            if (result.next())
+            if (result != null)
             {
-                return result.getInt(PlayerTableColumn.WEEKLY_VOTES.columnName)
+                if (result.next())
+                {
+                    return result.getInt(PlayerTableColumn.WEEKLY_VOTES.columnName)
+                }
             }
         } catch (e: Exception)
         {
@@ -135,9 +147,12 @@ class PlayerDatabase(private val plugin: CV, private val database: CustomDatabas
         val result = playersTable.getData(PlayerTableColumn.UUID.columnName, uuid)
         try
         {
-            if (result.next())
+            if (result != null)
             {
-                return result.getInt(PlayerTableColumn.DAILY_VOTES.columnName)
+                if (result.next())
+                {
+                    return result.getInt(PlayerTableColumn.DAILY_VOTES.columnName)
+                }
             }
         } catch (e: Exception)
         {
@@ -162,15 +177,18 @@ class PlayerDatabase(private val plugin: CV, private val database: CustomDatabas
         val voteHistory = mutableListOf<VoteHistory>()
         try
         {
-            while (result.next())
+            if (result != null)
             {
-                val id = result.getInt(HistoryTableColumn.ID.columnName)
-                val site = result.getString(HistoryTableColumn.SITE.columnName)
-                val time = result.getLong(HistoryTableColumn.TIME.columnName)
-                val queued = result.getBoolean(HistoryTableColumn.QUEUED.columnName)
+                while (result.next())
+                {
+                    val id = result.getInt(HistoryTableColumn.ID.columnName)
+                    val site = result.getString(HistoryTableColumn.SITE.columnName)
+                    val time = result.getLong(HistoryTableColumn.TIME.columnName)
+                    val queued = result.getBoolean(HistoryTableColumn.QUEUED.columnName)
 
-                val vote = VoteHistory(id, uuid, VoteSiteUUID(site), time, queued)
-                voteHistory.add(vote)
+                    val vote = VoteHistory(id, uuid, VoteSiteUUID(site), time, queued)
+                    voteHistory.add(vote)
+                }
             }
         } catch (e: Exception)
         {
@@ -207,9 +225,12 @@ class PlayerDatabase(private val plugin: CV, private val database: CustomDatabas
         val result = playersTable.getData(PlayerTableColumn.UUID.columnName, uuid)
         try
         {
-            if (result.next())
+            if (result != null)
             {
-                return result.getBoolean(PlayerTableColumn.POWER.columnName)
+                if (result.next())
+                {
+                    return result.getBoolean(PlayerTableColumn.POWER.columnName)
+                }
             }
         } catch (e: Exception)
         {
@@ -233,9 +254,12 @@ class PlayerDatabase(private val plugin: CV, private val database: CustomDatabas
         val result = playersTable.getData(PlayerTableColumn.UUID.columnName, uuid)
         try
         {
-            if (result.next())
+            if (result != null)
             {
-                return result.getInt(PlayerTableColumn.DAILY_VOTE_STREAK.columnName)
+                if (result.next())
+                {
+                    return result.getInt(PlayerTableColumn.DAILY_VOTE_STREAK.columnName)
+                }
             }
         } catch (e: Exception)
         {
@@ -276,12 +300,15 @@ class PlayerDatabase(private val plugin: CV, private val database: CustomDatabas
             val result = queueTable.getAll()
             try
             {
-                while (result.next())
+                if (result != null)
                 {
-                    val uuid = UUID.fromString(result.getString("uuid"))
-                    val site = VoteSiteUUID(result.getString("site"))
-                    val time = result.getLong("timestamp")
-                    addHistory(uuid, site, true, time)
+                    while (result.next())
+                    {
+                        val uuid = UUID.fromString(result.getString("uuid"))
+                        val site = VoteSiteUUID(result.getString("site"))
+                        val time = result.getLong("timestamp")
+                        addHistory(uuid, site, true, time)
+                    }
                 }
                 queueTable.delete(queueTable.name)
             } catch (e: Exception)
