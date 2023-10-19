@@ -141,7 +141,7 @@ class PlayerListener(private val plugin: CV) : Listener
             {
                 if (player.hasPermission("customvoting.crate"))
                 {
-                    voteCrate.delete(player)
+                    voteCrate.deleteLocation(player)
                 } else
                 {
                     event.isCancelled = true

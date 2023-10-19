@@ -9,7 +9,7 @@ import org.bukkit.inventory.ItemStack
 
 class VotePartyEnabledSwitch(private val plugin: CV) : AbstractStatusSwitch(
     plugin,
-    Material.EXPERIENCE_BOTTLE, Setting.VOTE_PARTY,
+    Material.EXPERIENCE_BOTTLE, Setting.VOTE_PARTY_ENABLED,
     PMessage.VOTE_PARTY_ITEM_NAME
 )
 {

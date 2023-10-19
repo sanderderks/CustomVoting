@@ -9,8 +9,9 @@ enum class Setting(val path: String, private val defaultValue: Any? = null)
     USE_SOUND_EFFECTS("sound_effects", true),
     VOTE_PARTY_COUNTDOWN("vote_party_countdown", 30),
     FIREWORK("firework", true),
-    VOTE_PARTY("vote_party", true),
     VOTE_PARTY_TYPE("vote_party_type"),
+    VOTE_PARTY("vote_party"),
+    VOTE_PARTY_ENABLED("$VOTE_PARTY.enabled", true),
     VOTE_PARTY_PIG_HUNT("$VOTE_PARTY.pig_hunt"),
     VOTE_PARTY_PIG_HUNT_HEALTH("$VOTE_PARTY_PIG_HUNT.health", 40),
     VOTE_PARTY_PIG_HUNT_DAMAGE_MAX("$VOTE_PARTY_PIG_HUNT.max_damage", 4),
@@ -48,7 +49,7 @@ enum class Setting(val path: String, private val defaultValue: Any? = null)
     ENABLED_PERM_GROUPS("enabled_op_groups"),
 
     UUID_STORAGE("uuid_storage", true),
-    SUFFIX_SUPPORT("suffix_support"),
+    PREFIX_SUPPORT("prefix_support"),
 
     USE_DATABASE("use_database", false),
 
@@ -87,7 +88,8 @@ enum class Setting(val path: String, private val defaultValue: Any? = null)
         {
             val keyMigrations = mapOf(
                 Pair("$DISABLED_BROADCASTS.vote_streak", DISABLED_BROADCAST_MILESTONE.path),
-                Pair("monthly_period", "monthly_votes")
+                Pair("monthly_period", "monthly_votes"),
+                Pair("suffix_support", PREFIX_SUPPORT.path)
             )
 
             plugin.config.keyMigrations(keyMigrations)

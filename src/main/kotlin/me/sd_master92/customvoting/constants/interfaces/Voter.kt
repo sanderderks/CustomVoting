@@ -7,7 +7,8 @@ import me.sd_master92.customvoting.constants.enumerations.VoteSortType
 import me.sd_master92.customvoting.constants.models.VoteHistory
 import me.sd_master92.customvoting.constants.models.VoteSiteUUID
 import me.sd_master92.customvoting.database.PlayerTable
-import me.sd_master92.customvoting.getPlayerNameWithSuffix
+import me.sd_master92.customvoting.getPlayerNameWithPrefix
+import me.sd_master92.customvoting.getPlayerNameWithoutPrefix
 import me.sd_master92.customvoting.subjects.VoteTopSign
 import me.sd_master92.customvoting.subjects.stands.VoteTopStand
 import org.bukkit.entity.Player
@@ -102,7 +103,8 @@ interface Voter
         {
             val topVoters = getTopVoters(plugin)
             return topVoters.firstOrNull { voter -> voter.name == name }
-                ?: topVoters.firstOrNull { voter -> voter.name == name.getPlayerNameWithSuffix(plugin) }
+                ?: topVoters.firstOrNull { voter -> voter.name == name.getPlayerNameWithPrefix(plugin) }
+                ?: topVoters.firstOrNull { voter -> voter.name == name.getPlayerNameWithoutPrefix(plugin) }
         }
     }
 }

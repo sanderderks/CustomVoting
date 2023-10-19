@@ -63,13 +63,12 @@ class VotePartyChest private constructor(private val plugin: CV, val key: String
     {
         if (plugin.data.deleteItems(path))
         {
-            if(loc != null)
-            {
-                if(loc!!.block.type == Material.ENDER_CHEST)
+            loc?.let {
+                if(it.block.type == Material.ENDER_CHEST)
                 {
-                    loc!!.block.type = Material.AIR
-                    plugin.data.deleteLocation(path)
+                    it.block.type = Material.AIR
                 }
+                plugin.data.deleteLocation(path)
             }
             player.sendMessage(PMessage.VOTE_PARTY_MESSAGE_CHEST_DELETED_X.with(key))
         }
