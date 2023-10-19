@@ -52,6 +52,7 @@ class PlayerListener(private val plugin: CV) : Listener
     }
 
     @EventHandler
+    @Suppress("UNUSED_PARAMETER")
     fun onPlayerLeave(event: PlayerQuitEvent)
     {
         TaskTimer.delay(plugin, 20)

@@ -221,9 +221,9 @@ class VoteFile : Voter
             migrateAll()
         }
 
-        fun mergeDuplicates(plugin: CV): Int
+        fun mergeDuplicates(): Int
         {
-            val voters = getAll(plugin)
+            val voters = getAll()
             var deleted = 0
             for (voter in voters.filter { it -> it.uuid !in voters.distinctBy { it.name }.map { it.uuid } })
             {
@@ -235,7 +235,7 @@ class VoteFile : Voter
             return deleted
         }
 
-        override fun getAll(plugin: CV): MutableList<Voter>
+        override fun getAll(): MutableList<Voter>
         {
             return ALL.values.toMutableList()
         }

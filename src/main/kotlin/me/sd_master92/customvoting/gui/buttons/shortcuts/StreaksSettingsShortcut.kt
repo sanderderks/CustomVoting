@@ -5,7 +5,6 @@ import me.sd_master92.core.inventory.GUI
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.SoundType
-import me.sd_master92.customvoting.gui.pages.overviews.StreakOverviewPage
 import me.sd_master92.customvoting.gui.pages.settings.StreaksSettingsPage
 import org.bukkit.Material
 import org.bukkit.entity.Player

@@ -39,7 +39,7 @@ enum class HistoryTableColumn(
             }
         }
 
-        fun columns(): Array<HistoryTableColumn>
+        private fun columns(): Array<HistoryTableColumn>
         {
             return entries.filter { it != ID }.toTypedArray()
         }

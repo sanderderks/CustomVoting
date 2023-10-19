@@ -173,7 +173,7 @@ class PlayerTable(private val plugin: CV, override val uuid: UUID) : Voter
             }
         }
 
-        override fun getAll(plugin: CV): MutableList<Voter>
+        override fun getAll(): MutableList<Voter>
         {
             return ALL.values.toMutableList()
         }

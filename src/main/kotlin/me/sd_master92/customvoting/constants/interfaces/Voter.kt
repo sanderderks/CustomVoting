@@ -53,7 +53,7 @@ interface Voter
             if (update == true)
             {
                 val type = if (plugin.hasDatabaseConnection()) PlayerTable else VoteFile
-                val topVoters = type.getAll(plugin)
+                val topVoters = type.getAll()
                 val sortType = VoteSortType.valueOf(plugin.config.getNumber(Setting.VOTES_SORT_TYPE.path))
 
                 topVoters.sortWith { x: Voter, y: Voter ->
