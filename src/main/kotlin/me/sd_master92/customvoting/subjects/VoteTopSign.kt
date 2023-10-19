@@ -108,7 +108,7 @@ class VoteTopSign(
         }
     }
 
-    private fun updateSkull(loc: Location, uuid: String)
+    private fun updateSkull(loc: Location, uuid: UUID)
     {
         val sign = loc.block.blockData
         if (sign is WallSign)
@@ -123,8 +123,7 @@ class VoteTopSign(
                     val skull = block.state as Skull
                     try
                     {
-                        val pUuid = UUID.fromString(uuid)
-                        skull.setOwningPlayer(Bukkit.getPlayer(pUuid) ?: Bukkit.getOfflinePlayer(pUuid))
+                        skull.setOwningPlayer(Bukkit.getPlayer(uuid) ?: Bukkit.getOfflinePlayer(uuid))
                         skull.update(true)
                     } catch (e: Exception)
                     {

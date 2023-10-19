@@ -23,7 +23,7 @@ class DisplayStand(
     val location
         get() = stand?.location
 
-    fun update(player: Player?, name: String, uuid: String? = null)
+    fun update(player: Player?, name: String, uuid: UUID? = null)
     {
         stand?.customName = name.withPlaceholders(player)
         stand?.isCustomNameVisible = true
@@ -47,26 +47,25 @@ class DisplayStand(
         plugin.data.delete(path)
     }
 
-    private fun setVisible(visible: Boolean, uuid: String?)
+    private fun setVisible(visible: Boolean, uuid: UUID?)
     {
-        if (stand != null)
-        {
-            stand!!.isVisible = visible
+        stand?.let { stand ->
+            stand.isVisible = visible
             if (!visible)
             {
-                stand!!.equipment?.clear()
+                stand.equipment?.clear()
             } else
             {
-                ArmorType.dress(stand!!.equipment!!, top)
+                ArmorType.dress(stand.equipment!!, top)
                 val player: OfflinePlayer? = try
                 {
-                    val id = if (uuid != null) UUID.fromString(uuid) else UUID.randomUUID()
+                    val id = uuid ?: UUID.randomUUID()
                     Bukkit.getPlayer(id) ?: Bukkit.getOfflinePlayer(id)
                 } catch (_: Exception)
                 {
                     null
                 }
-                stand?.setHelmet(player.getSkull())
+                stand.setHelmet(player.getSkull())
             }
         }
     }

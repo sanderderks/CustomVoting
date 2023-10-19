@@ -11,8 +11,9 @@ import me.sd_master92.customvoting.dayDifferenceToday
 import me.sd_master92.customvoting.monthDifferenceToday
 import me.sd_master92.customvoting.weekDifferenceToday
 import org.bukkit.entity.Player
+import java.util.*
 
-class PlayerTable(private val plugin: CV, override val uuid: String) : Voter
+class PlayerTable(private val plugin: CV, override val uuid: UUID) : Voter
 {
     private val players: PlayerDatabase? = plugin.playerDatabase
 
@@ -65,9 +66,9 @@ class PlayerTable(private val plugin: CV, override val uuid: String) : Voter
     override val streakDaily: Int
         get() = players?.getStreak(uuid) ?: 0
 
-    private constructor(plugin: CV, player: Player) : this(plugin, player.uniqueId.toString())
+    private constructor(plugin: CV, player: Player) : this(plugin, player.uniqueId)
     {
-        players?.setName(player.uniqueId.toString(), player.name)
+        players?.setName(player.uniqueId, player.name)
     }
 
     private fun register()
@@ -153,7 +154,7 @@ class PlayerTable(private val plugin: CV, override val uuid: String) : Voter
 
     companion object : TopVoter
     {
-        private var ALL: MutableMap<String, PlayerTable> = HashMap()
+        private var ALL: MutableMap<UUID, PlayerTable> = HashMap()
 
         fun init(plugin: CV)
         {
@@ -162,7 +163,12 @@ class PlayerTable(private val plugin: CV, override val uuid: String) : Voter
             {
                 while (result.next())
                 {
-                    PlayerTable(plugin, result.getString(PlayerTableColumn.UUID.columnName))
+                    try
+                    {
+                        PlayerTable(plugin, UUID.fromString(result.getString(PlayerTableColumn.UUID.columnName)))
+                    } catch (_: Exception)
+                    {
+                    }
                 }
             }
         }
@@ -182,7 +188,7 @@ class PlayerTable(private val plugin: CV, override val uuid: String) : Voter
 
         private fun getByUuid(plugin: CV, player: Player): PlayerTable
         {
-            return ALL.getOrDefault(player.uniqueId.toString(), PlayerTable(plugin, player))
+            return ALL.getOrDefault(player.uniqueId, PlayerTable(plugin, player))
         }
 
         private fun getByName(plugin: CV, player: Player): PlayerTable

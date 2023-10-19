@@ -48,7 +48,7 @@ enum class PlayerTableColumn(
             return entries.filter { it != UUID }.toTypedArray()
         }
 
-        fun columns(uuid: String): Array<PlayerTableColumn>
+        fun columns(uuid: java.util.UUID): Array<PlayerTableColumn>
         {
             return entries.map {
                 if (it == UUID)
