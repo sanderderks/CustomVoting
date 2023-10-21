@@ -26,7 +26,7 @@ class MilestoneOverviewPage(private val plugin: CV, backPage: GUI?, private val 
         PMessage.MILESTONE_INVENTORY_NAME_OVERVIEW.toString(),
         PMessage.GENERAL_ITEM_NAME_NEXT.toString(),
         PMessage.GENERAL_ITEM_NAME_PREVIOUS.toString(),
-        1
+        { listOf(MilestoneCreateAction(plugin, it)) }
     )
 {
     override fun newInstance(): GUI
@@ -61,10 +61,5 @@ class MilestoneOverviewPage(private val plugin: CV, backPage: GUI?, private val 
 
     override fun onSave(event: InventoryClickEvent, player: Player)
     {
-    }
-
-    init
-    {
-        addItem(MilestoneCreateAction(plugin, this), true)
     }
 }
