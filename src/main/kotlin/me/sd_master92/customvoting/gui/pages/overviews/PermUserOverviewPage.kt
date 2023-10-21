@@ -17,7 +17,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 
 class PermUserOverviewPage(private val plugin: CV, backPage: GUI?, private var page: Int = 0) :
-    GUI(plugin, backPage, PMessage.PERM_USER_OVERVIEW_INVENTORY_NAME_X.with("" + (page + 1)), 54)
+    GUI(plugin, backPage, PMessage.PERM_USER_OVERVIEW_INVENTORY_NAME_X.with("" + (page + 1)), { 54 })
 {
     override fun newInstance(): GUI
     {

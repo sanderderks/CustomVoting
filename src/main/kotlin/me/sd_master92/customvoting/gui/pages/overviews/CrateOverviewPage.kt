@@ -18,7 +18,7 @@ class CrateOverviewPage(private val plugin: CV, backPage: GUI?, private val page
         plugin,
         backPage,
         PMessage.CRATE_INVENTORY_NAME_OVERVIEW.toString() + " #${page + 1}",
-        calculateInventorySize(plugin)
+        { calculateInventorySize(plugin) }
     )
 {
     override fun newInstance(): GUI

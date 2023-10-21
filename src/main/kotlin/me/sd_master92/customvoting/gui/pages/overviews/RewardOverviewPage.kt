@@ -10,7 +10,7 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 
 class RewardOverviewPage(private val plugin: CV, backPage: GUI?) :
-    GUI(plugin, backPage, PMessage.REWARD_SETTINGS_INVENTORY_NAME_OVERVIEW.toString(), 9)
+    GUI(plugin, backPage, PMessage.REWARD_SETTINGS_INVENTORY_NAME_OVERVIEW.toString())
 {
     override fun newInstance(): GUI
     {

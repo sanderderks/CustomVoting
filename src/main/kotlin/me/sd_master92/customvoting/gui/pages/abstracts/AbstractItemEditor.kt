@@ -21,7 +21,7 @@ abstract class AbstractItemEditor(
     stack: Boolean = true,
     val page: Int? = null
 ) :
-    GUI(plugin, backPage, if (page != null) "$name #${page + 1}" else name, size, false, save)
+    GUI(plugin, backPage, if (page != null) "$name #${page + 1}" else name, { size }, false, save)
 {
     override fun onClick(event: InventoryClickEvent, player: Player)
     {
@@ -64,12 +64,12 @@ abstract class AbstractItemEditor(
             if (notify)
             {
                 SoundType.SUCCESS.play(plugin, player)
-                player.sendMessage(PMessage.GENERAL_MESSAGE_UPDATE_SUCCESS_X.with(name))
+                player.sendMessage(PMessage.GENERAL_MESSAGE_UPDATE_SUCCESS_X.with(title))
             }
         } else
         {
             SoundType.FAILURE.play(plugin, player)
-            player.sendMessage(PMessage.GENERAL_MESSAGE_UPDATE_FAIL_X.with(name))
+            player.sendMessage(PMessage.GENERAL_MESSAGE_UPDATE_FAIL_X.with(title))
         }
     }
 

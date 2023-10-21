@@ -18,7 +18,7 @@ class VotePartyChestOverview(private val plugin: CV, backPage: GUI?, private val
         plugin,
         backPage,
         PMessage.VOTE_PARTY_INVENTORY_NAME_CHEST_OVERVIEW.toString() + " #${page + 1}",
-        calculateInventorySize(plugin, backPage)
+        { calculateInventorySize(plugin, backPage) }
     )
 {
     override fun newInstance(): GUI

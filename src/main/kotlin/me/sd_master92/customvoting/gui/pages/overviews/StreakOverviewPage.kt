@@ -18,7 +18,7 @@ class StreakOverviewPage(private val plugin: CV, backPage: GUI?, private val pag
         plugin,
         backPage,
         PMessage.STREAK_INVENTORY_NAME_OVERVIEW.toString() + " #${page + 1}",
-        calculateInventorySize(plugin)
+        { calculateInventorySize(plugin) }
     )
 {
     override fun newInstance(): GUI

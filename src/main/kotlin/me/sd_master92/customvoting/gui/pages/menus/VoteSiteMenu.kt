@@ -10,7 +10,7 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 
 class VoteSiteMenu(private val plugin: CV) :
-    GUI(plugin, null, Message.VOTE_COMMAND_TITLE.getMessage(plugin), 27, true, false)
+    GUI(plugin, null, Message.VOTE_COMMAND_TITLE.getMessage(plugin), { 27 }, true, false)
 {
     override fun newInstance(): GUI
     {

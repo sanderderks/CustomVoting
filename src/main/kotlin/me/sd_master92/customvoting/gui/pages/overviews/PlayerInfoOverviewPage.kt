@@ -17,7 +17,7 @@ import org.bukkit.inventory.ItemStack
 import java.util.*
 
 class PlayerInfoOverviewPage(private val plugin: CV, backPage: GUI?, private var page: Int = 0) :
-    GUI(plugin, backPage, PMessage.PLAYER_INFO_INVENTORY_NAME_X.with("" + (page + 1)), 54)
+    GUI(plugin, backPage, PMessage.PLAYER_INFO_INVENTORY_NAME_X.with("" + (page + 1)), { 54 })
 {
     override fun newInstance(): GUI
     {

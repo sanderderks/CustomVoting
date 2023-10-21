@@ -28,7 +28,7 @@ class VoteInfoMenu(
         plugin,
         null,
         if (other) PMessage.VOTE_INFO_INVENTORY_NAME_OTHERS_X.with(voter.name) else PMessage.VOTE_INFO_INVENTORY_NAME.toString(),
-        calculateInventorySize(plugin),
+        { calculateInventorySize(plugin) },
         true,
         false
     )
