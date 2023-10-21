@@ -13,15 +13,12 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 
 class MilestoneOverviewPage(private val plugin: CV, backPage: GUI?, private val page: Int = 0) :
-    GUIWithPagination<Int>(
+    GUIWithPagination<String>(
         plugin,
         backPage,
-        plugin.data.getConfigurationSection(Data.MILESTONES.path)
-                ?.getKeys(false)
-                ?.mapNotNull { it.toIntOrNull() }
-                ?.sorted()
-            ?: emptyList(),
-        { context, item -> MilestoneSettingsShortcut(plugin, context, item) },
+        plugin.data.getConfigurationSection(Data.MILESTONES.path)?.getKeys(false)?.toList() ?: emptyList(),
+        { it.toIntOrNull() },
+        { context, _, index -> MilestoneSettingsShortcut(plugin, context, index) },
         page,
         PMessage.MILESTONE_INVENTORY_NAME_OVERVIEW.toString(),
         PMessage.GENERAL_ITEM_NAME_NEXT.toString(),
@@ -34,7 +31,7 @@ class MilestoneOverviewPage(private val plugin: CV, backPage: GUI?, private val 
         return newInstance(page)
     }
 
-    fun newInstance(page: Int): GUI
+    override fun newInstance(page: Int): GUI
     {
         return MilestoneOverviewPage(plugin, backPage, page)
     }
@@ -53,10 +50,9 @@ class MilestoneOverviewPage(private val plugin: CV, backPage: GUI?, private val 
         SoundType.CLOSE.play(plugin, player)
     }
 
-    override fun open(player: Player, page: Int)
+    override fun onPaginate(player: Player, page: Int)
     {
         SoundType.CLICK.play(plugin, player)
-        newInstance(page).open(player)
     }
 
     override fun onSave(event: InventoryClickEvent, player: Player)
