@@ -18,7 +18,7 @@ class MilestoneOverviewPage(private val plugin: CV, backPage: GUI?, private val 
         backPage,
         plugin.data.getConfigurationSection(Data.MILESTONES.path)?.getKeys(false)?.toList() ?: emptyList(),
         { it.toIntOrNull() },
-        { context, _, index -> MilestoneSettingsShortcut(plugin, context, index) },
+        { context, _, key -> MilestoneSettingsShortcut(plugin, context, key) },
         page,
         PMessage.MILESTONE_INVENTORY_NAME_OVERVIEW.toString(),
         PMessage.GENERAL_ITEM_NAME_NEXT.toString(),
@@ -26,14 +26,14 @@ class MilestoneOverviewPage(private val plugin: CV, backPage: GUI?, private val 
         { listOf(MilestoneCreateAction(plugin, it)) }
     )
 {
+    override fun newInstance(page: Int): GUI
+    {
+        return MilestoneOverviewPage(plugin, backPage?.newInstance(), page)
+    }
+
     override fun newInstance(): GUI
     {
         return newInstance(page)
-    }
-
-    override fun newInstance(page: Int): GUI
-    {
-        return MilestoneOverviewPage(plugin, backPage, page)
     }
 
     override fun onBack(event: InventoryClickEvent, player: Player)

@@ -17,6 +17,7 @@ class VotePartyDeleteAction(private val plugin: CV, private val currentPage: GUI
     {
         SoundType.FAILURE.play(plugin, player)
         currentPage.cancelCloseEvent = true
+        VotePartyChest.getByKey(plugin, key)?.delete(player)
         if (currentPage.backPage != null)
         {
             currentPage.backPage!!.newInstance().open(player)
@@ -24,6 +25,5 @@ class VotePartyDeleteAction(private val plugin: CV, private val currentPage: GUI
         {
             player.closeInventory()
         }
-        VotePartyChest.getByKey(plugin, key)?.delete(player)
     }
 }
