@@ -15,7 +15,7 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 
 class SupportSettingsPage(private val plugin: CV, backPage: GUI?) :
-    GUI(plugin, backPage, PMessage.SUPPORT_INVENTORY_NAME.toString(), 9)
+    GUI(plugin, backPage, PMessage.SUPPORT_INVENTORY_NAME.toString())
 {
     override fun newInstance(): GUI
     {

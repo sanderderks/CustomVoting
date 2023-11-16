@@ -8,13 +8,14 @@ import me.sd_master92.customvoting.constants.interfaces.Voter
 import me.sd_master92.customvoting.constants.models.VoteHistory
 import me.sd_master92.customvoting.constants.models.VoteSiteUUID
 import org.bukkit.entity.Player
+import java.util.*
 
 class VoteFile : Voter
 {
     private val plugin: CV
     private val playerFile: PlayerFile
 
-    override val uuid: String
+    override val uuid: UUID
         get() = playerFile.uuid
     override val name: String
         get() = playerFile.name
@@ -79,7 +80,7 @@ class VoteFile : Voter
     override val streakDaily: Int
         get() = playerFile.getNumber(STREAK_DAILY)
 
-    private constructor(uuid: String, plugin: CV)
+    private constructor(uuid: UUID, plugin: CV)
     {
         playerFile = PlayerFile.getByUuid(plugin, uuid)
         this.plugin = plugin
@@ -210,7 +211,7 @@ class VoteFile : Voter
         private const val STREAK_DAILY = "streak_daily"
         private const val POWER = "power"
 
-        private var ALL: MutableMap<String, VoteFile> = HashMap()
+        private var ALL: MutableMap<UUID, VoteFile> = HashMap()
 
         fun init(plugin: CV)
         {
@@ -220,9 +221,9 @@ class VoteFile : Voter
             migrateAll()
         }
 
-        fun mergeDuplicates(plugin: CV): Int
+        fun mergeDuplicates(): Int
         {
-            val voters = getAll(plugin)
+            val voters = getAll()
             var deleted = 0
             for (voter in voters.filter { it -> it.uuid !in voters.distinctBy { it.name }.map { it.uuid } })
             {
@@ -234,7 +235,7 @@ class VoteFile : Voter
             return deleted
         }
 
-        override fun getAll(plugin: CV): MutableList<Voter>
+        override fun getAll(): MutableList<Voter>
         {
             return ALL.values.toMutableList()
         }
@@ -249,7 +250,7 @@ class VoteFile : Voter
 
         private fun getByUuid(plugin: CV, player: Player): VoteFile
         {
-            return ALL.getOrDefault(player.uniqueId.toString(), VoteFile(player, plugin))
+            return ALL.getOrDefault(player.uniqueId, VoteFile(player, plugin))
         }
 
         private fun getByName(plugin: CV, player: Player): VoteFile

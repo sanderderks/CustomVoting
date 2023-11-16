@@ -13,7 +13,7 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 
 class MessageSettingsPage(private val plugin: CV, backPage: GUI?) :
-    GUI(plugin, backPage, PMessage.MESSAGE_SETTINGS_INVENTORY_NAME.toString(), 18)
+    GUI(plugin, backPage, PMessage.MESSAGE_SETTINGS_INVENTORY_NAME.toString(), { 18 })
 {
     override fun newInstance(): GUI
     {

@@ -10,7 +10,7 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 
 class VotePartyCrate(private val plugin: CV, votePartyChest: VotePartyChest) :
-    GUI(plugin, null, PMessage.VOTE_PARTY_INVENTORY_NAME_CHEST_X.with(votePartyChest.key), 54, false)
+    GUI(plugin, null, PMessage.VOTE_PARTY_INVENTORY_NAME_CHEST_X.with(votePartyChest.key), { 54 }, false)
 {
     override fun newInstance(): GUI
     {

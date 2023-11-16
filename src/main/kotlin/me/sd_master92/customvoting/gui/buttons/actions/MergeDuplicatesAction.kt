@@ -11,13 +11,13 @@ import org.bukkit.event.inventory.InventoryClickEvent
 
 class MergeDuplicatesAction(private val plugin: CV) : BaseItem(
     Material.HOPPER, PMessage.MERGE_DUPLICATES_ITEM_NAME.toString(),
-    PMessage.MERGE_DUPLICATES_ITEM_LORE.with("" + VoteFile.getAll(plugin).size)
+    PMessage.MERGE_DUPLICATES_ITEM_LORE.with("" + VoteFile.getAll().size)
 )
 {
     override fun onClick(event: InventoryClickEvent, player: Player)
     {
         SoundType.CHANGE.play(plugin, player)
-        val deleted = VoteFile.mergeDuplicates(plugin)
+        val deleted = VoteFile.mergeDuplicates()
         player.sendMessage(PMessage.MERGE_DUPLICATES_MESSAGE_DELETED_X.with("$deleted"))
         if (deleted > 0)
         {

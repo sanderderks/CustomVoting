@@ -23,7 +23,7 @@ class CrateMenu(private val plugin: CV, private val player: Player, private val 
         plugin,
         null,
         (plugin.data.getString(Data.VOTE_CRATES.path + ".$key.name") ?: PMessage.CRATE_INVENTORY_NAME.toString()),
-        45
+        { 45 }
     )
 {
     private var searching = true

@@ -17,7 +17,7 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 
 class VotePartySettingsPage(private val plugin: CV, backPage: GUI?) :
-    GUI(plugin, backPage, PMessage.VOTE_PARTY_INVENTORY_NAME_SETTINGS.toString(), 9)
+    GUI(plugin, backPage, PMessage.VOTE_PARTY_INVENTORY_NAME_SETTINGS.toString())
 {
     override fun newInstance(): GUI
     {

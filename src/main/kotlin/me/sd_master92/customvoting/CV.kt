@@ -262,7 +262,7 @@ class CV : CustomPlugin(
         if (!hasDatabaseConnection())
         {
             metrics.addCustomChart(SimplePie("number_of_playerfiles") {
-                val number = VoteFile.getAll(this).size
+                val number = VoteFile.getAll().size
                 var max = 100
                 while (number >= max)
                 {
@@ -275,7 +275,7 @@ class CV : CustomPlugin(
         {
             metrics.addCustomChart(SimplePie("number_of_databaserows") {
 
-                val number = PlayerTable.getAll(this).size
+                val number = PlayerTable.getAll().size
                 var max = 100
                 while (number >= max)
                 {

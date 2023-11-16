@@ -9,8 +9,6 @@ import me.sd_master92.customvoting.constants.interfaces.Voter
 import me.sd_master92.customvoting.getVotesPlaceholders
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
-import java.util.*
-import kotlin.collections.HashMap
 
 
 class VoteTopStand private constructor(private val plugin: CV, private val top: Int)
@@ -58,7 +56,7 @@ class VoteTopStand private constructor(private val plugin: CV, private val top: 
             placeholders["%VOTES_AUTO%"] = "0"
         } else
         {
-            player = Bukkit.getPlayer(UUID.fromString(topVoter.uuid))
+            player = Bukkit.getPlayer(topVoter.uuid)
         }
         topStand.update(player, Message.VOTE_TOP_STANDS_TOP.getMessage(plugin, placeholders))
         nameStand.update(player, Message.VOTE_TOP_STANDS_CENTER.getMessage(plugin, placeholders))

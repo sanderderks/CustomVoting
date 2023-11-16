@@ -13,7 +13,7 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 
 class DangerZoneSettingsPage(private val plugin: CV, backPage: GUI?) :
-    GUI(plugin, backPage, PMessage.DANGER_ZONE_INVENTORY_NAME.toString(), 9)
+    GUI(plugin, backPage, PMessage.DANGER_ZONE_INVENTORY_NAME.toString())
 {
     override fun newInstance(): GUI
     {

@@ -12,10 +12,11 @@ import me.sd_master92.customvoting.getPlayerNameWithoutPrefix
 import me.sd_master92.customvoting.subjects.VoteTopSign
 import me.sd_master92.customvoting.subjects.stands.VoteTopStand
 import org.bukkit.entity.Player
+import java.util.*
 
 interface Voter
 {
-    val uuid: String
+    val uuid: UUID
     val name: String
     val votes: Int
     val votesMonthly: Int
@@ -52,7 +53,7 @@ interface Voter
             if (update == true)
             {
                 val type = if (plugin.hasDatabaseConnection()) PlayerTable else VoteFile
-                val topVoters = type.getAll(plugin)
+                val topVoters = type.getAll()
                 val sortType = VoteSortType.valueOf(plugin.config.getNumber(Setting.VOTES_SORT_TYPE.path))
 
                 topVoters.sortWith { x: Voter, y: Voter ->

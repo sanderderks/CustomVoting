@@ -19,8 +19,7 @@ class RewardSettingsPage(private val plugin: CV, backPage: GUI?, private val pow
     GUI(
         plugin,
         backPage,
-        if (!power) PMessage.VOTE_REWARDS_INVENTORY_NAME.toString() else PMessage.POWER_REWARDS_INVENTORY_NAME.toString(),
-        9
+        if (!power) PMessage.VOTE_REWARDS_INVENTORY_NAME.toString() else PMessage.POWER_REWARDS_INVENTORY_NAME.toString()
     )
 {
     override fun newInstance(): GUI
