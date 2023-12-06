@@ -189,7 +189,7 @@ class PlayerListener(private val plugin: CV) : Listener
         if(event.blockPlaced.type == Material.ENDER_CHEST)
         {
             val key = item.itemMeta?.displayName?.split("#")?.reversed()?.get(0)
-            if (key != null && item.itemMeta!!.displayName == (VotePartyItem(key).itemMeta?.displayName))
+            if (!key.isNullOrEmpty() && item.itemMeta!!.displayName == (VotePartyItem(key).itemMeta?.displayName))
             {
                 val player = event.player
                 if (player.hasPermission("customvoting.voteparty"))

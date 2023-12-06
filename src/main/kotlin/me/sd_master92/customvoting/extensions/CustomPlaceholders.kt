@@ -1,12 +1,10 @@
 package me.sd_master92.customvoting.extensions
 
-import kotlinx.coroutines.runBlocking
 import me.clip.placeholderapi.expansion.PlaceholderExpansion
 import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.constants.enumerations.Data
 import me.sd_master92.customvoting.constants.enumerations.PMessage
-import me.sd_master92.customvoting.constants.enumerations.Setting
-import me.sd_master92.customvoting.constants.interfaces.Voter
+import me.sd_master92.customvoting.constants.models.VoterData
+import me.sd_master92.customvoting.tasks.PlaceholderChecker
 import org.bukkit.entity.Player
 
 class CustomPlaceholders(private val plugin: CV) : PlaceholderExpansion()
@@ -38,84 +36,73 @@ class CustomPlaceholders(private val plugin: CV) : PlaceholderExpansion()
 
     override fun onPlaceholderRequest(player: Player?, params: String): String?
     {
-        return runBlocking {
             try
             {
                 when (params)
                 {
                     SERVER_VOTES               ->
                     {
-                        var total = 0
-                        for (voter in Voter.getTopVoters(plugin))
-                        {
-                            total += voter.getVotes()
-                        }
-                        return@runBlocking "$total"
+                        return "${PlaceholderChecker.SERVER_VOTES}"
                     }
 
                     PLAYER_VOTES               ->
                     {
                         if (player != null)
                         {
-                            return@runBlocking "" + Voter.get(plugin, player).getVotes()
+                            return "${PlaceholderChecker.VOTERS[player.uniqueId]?.votes ?: 0}"
                         }
-                        return@runBlocking "0"
+                        return "0"
                     }
 
                     PLAYER_VOTES + SUF_MONTHLY ->
                     {
                         if (player != null)
                         {
-                            return@runBlocking "" + Voter.get(plugin, player).getVotesMonthly()
+                            return "${PlaceholderChecker.VOTERS[player.uniqueId]?.votesMonthly ?: 0}"
                         }
-                        return@runBlocking "0"
+                        return "0"
                     }
 
                     PLAYER_VOTES + SUF_WEEKLY  ->
                     {
                         if (player != null)
                         {
-                            return@runBlocking "" + Voter.get(plugin, player).getVotesWeekly()
+                            return "${PlaceholderChecker.VOTERS[player.uniqueId]?.votesWeekly ?: 0}"
                         }
-                        return@runBlocking "0"
+                        return "0"
                     }
 
                     PLAYER_VOTES + SUF_DAILY   ->
                     {
                         if (player != null)
                         {
-                            return@runBlocking "" + Voter.get(plugin, player).getVotesDaily()
+                            return "${PlaceholderChecker.VOTERS[player.uniqueId]?.votesDaily ?: 0}"
                         }
-                        return@runBlocking "0"
+                        return "0"
                     }
 
                     PLAYER_STREAK + SUF_DAILY  ->
                     {
                         if (player != null)
                         {
-                            return@runBlocking "" + Voter.get(plugin, player).getStreakDaily()
+                            return "${PlaceholderChecker.VOTERS[player.uniqueId]?.streakDaily ?: 0}"
                         }
-                        return@runBlocking "0"
+                        return "0"
                     }
 
                     VOTE_PARTY_TOTAL           ->
                     {
-                        val total = plugin.config.getInt(Setting.VOTES_REQUIRED_FOR_VOTE_PARTY.path)
-                        return@runBlocking "$total"
+                        return "${PlaceholderChecker.VOTE_PARTY_TOTAL}"
                     }
 
                     VOTE_PARTY_CURRENT         ->
                     {
-                        val current = plugin.data.getInt(Data.CURRENT_VOTES.path)
-                        return@runBlocking "$current"
+                        return "${PlaceholderChecker.VOTE_PARTY_CURRENT}"
                     }
 
                     VOTE_PARTY_UNTIL           ->
                     {
-                        val total = plugin.config.getInt(Setting.VOTES_REQUIRED_FOR_VOTE_PARTY.path)
-                        val current = plugin.data.getInt(Data.CURRENT_VOTES.path)
-                        val until = total - current
-                        return@runBlocking "$until"
+                        return "${PlaceholderChecker.VOTE_PARTY_UNTIL}"
                     }
 
                     else                       ->
@@ -124,47 +111,46 @@ class CustomPlaceholders(private val plugin: CV) : PlaceholderExpansion()
                         {
                             (params.contains(PLAYER_VOTES) && params.contains(SUF_NAME))    ->
                             {
-                                return@runBlocking getTopVoter(params)?.getName() ?: PMessage.PLAYER_NAME_UNKNOWN.toString()
+                                return "" + (getTopVoterData(params)?.name ?: PMessage.PLAYER_NAME_UNKNOWN)
                             }
 
                             (params.contains(PLAYER_VOTES) && params.contains(SUF_MONTHLY)) ->
                             {
-                                return@runBlocking "" + (getTopVoter(params)?.getVotesMonthly() ?: 0)
+                                return "" + (getTopVoterData(params)?.votesMonthly ?: 0)
                             }
 
                             (params.contains(PLAYER_VOTES) && params.contains(SUF_WEEKLY))  ->
                             {
-                                return@runBlocking "" + (getTopVoter(params)?.getVotesWeekly() ?: 0)
+                                return "" + (getTopVoterData(params)?.votesWeekly ?: 0)
                             }
 
                             (params.contains(PLAYER_VOTES) && params.contains(SUF_DAILY))   ->
                             {
-                                return@runBlocking "" + (getTopVoter(params)?.getVotesDaily() ?: 0)
+                                return "" + (getTopVoterData(params)?.votesDaily ?: 0)
                             }
 
                             params.contains(PLAYER_VOTES)                                   ->
                             {
-                                return@runBlocking "" + (getTopVoter(params)?.getVotes() ?: 0)
+                                return "" + (getTopVoterData(params)?.votes ?: 0)
                             }
 
                             else                                                            ->
                             {
-                                return@runBlocking null
+                                return null
                             }
                         }
                     }
                 }
             } catch (e: Exception)
             {
-                return@runBlocking null
+                return null
             }
-        }
     }
 
-    private suspend fun getTopVoter(params: String): Voter?
+    private fun getTopVoterData(params: String): VoterData?
     {
         val key = params.split("_").toTypedArray()[2].toInt()
-        return Voter.getTopVoter(plugin, key)
+        return PlaceholderChecker.VOTERS.values.withIndex().find { it.index == key }?.value
     }
 
     companion object

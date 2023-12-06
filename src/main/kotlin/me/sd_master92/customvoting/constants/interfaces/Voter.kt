@@ -8,6 +8,7 @@ import me.sd_master92.customvoting.constants.models.VoteSiteUUID
 import me.sd_master92.customvoting.database.PlayerTable
 import me.sd_master92.customvoting.subjects.VoteTopSign
 import me.sd_master92.customvoting.subjects.stands.VoteTopStand
+import me.sd_master92.customvoting.tasks.PlaceholderChecker
 import org.bukkit.entity.Player
 import java.util.*
 
@@ -70,6 +71,7 @@ interface Voter
 
                 VoteTopSign.updateAll(plugin)
                 VoteTopStand.updateAll(plugin)
+                PlaceholderChecker.updateAll(plugin, TOP_VOTERS)
             }
             return TOP_VOTERS
         }
