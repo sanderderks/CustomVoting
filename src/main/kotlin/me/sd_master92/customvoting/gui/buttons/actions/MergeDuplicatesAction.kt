@@ -1,5 +1,6 @@
 package me.sd_master92.customvoting.gui.buttons.actions
 
+import com.github.shynixn.mccoroutine.bukkit.launch
 import me.sd_master92.core.inventory.BaseItem
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.VoteFile
@@ -16,13 +17,15 @@ class MergeDuplicatesAction(private val plugin: CV) : BaseItem(
 {
     override fun onClick(event: InventoryClickEvent, player: Player)
     {
-        SoundType.CHANGE.play(plugin, player)
-        val deleted = VoteFile.mergeDuplicates()
-        player.sendMessage(PMessage.MERGE_DUPLICATES_MESSAGE_DELETED_X.with("$deleted"))
-        if (deleted > 0)
-        {
-            SoundType.SUCCESS
-            event.currentItem = MergeDuplicatesAction(plugin)
+        plugin.launch {
+            SoundType.CHANGE.play(plugin, player)
+            val deleted = VoteFile.mergeDuplicates()
+            player.sendMessage(PMessage.MERGE_DUPLICATES_MESSAGE_DELETED_X.with("$deleted"))
+            if (deleted > 0)
+            {
+                SoundType.SUCCESS
+                event.currentItem = MergeDuplicatesAction(plugin)
+            }
         }
     }
 }

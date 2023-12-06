@@ -1,5 +1,6 @@
 package me.sd_master92.customvoting.database
 
+import com.github.shynixn.mccoroutine.bukkit.launch
 import me.sd_master92.core.database.CustomColumn
 import me.sd_master92.core.database.CustomTable
 import me.sd_master92.core.errorLog
@@ -25,21 +26,23 @@ enum class PlayerTableColumn(
     {
         fun create(plugin: CV, table: CustomTable)
         {
-            if (!table.create(UUID.columnName, UUID.dataType))
-            {
-                plugin.errorLog("| could not create table '$table'")
-                plugin.errorLog("|")
-            } else
-            {
-                for (column in columns())
+            plugin.launch {
+                if (!table.createAsync(UUID.columnName, UUID.dataType))
                 {
-                    if (!table.getColumn(column.columnName).create(column.dataType))
+                    plugin.errorLog("| could not create table '$table'")
+                    plugin.errorLog("|")
+                } else
+                {
+                    for (column in columns())
                     {
-                        plugin.errorLog("| could not create column '${column.columnName}'")
+                        if (!table.getColumn(column.columnName).create(column.dataType))
+                        {
+                            plugin.errorLog("| could not create column '${column.columnName}'")
+                        }
                     }
+                    plugin.infoLog("| successfully created table '${table.name}'")
+                    plugin.infoLog("|")
                 }
-                plugin.infoLog("| successfully created table '${table.name}'")
-                plugin.infoLog("|")
             }
         }
 

@@ -1,5 +1,6 @@
 package me.sd_master92.customvoting.tasks
 
+import com.github.shynixn.mccoroutine.bukkit.launch
 import me.sd_master92.core.tasks.TaskTimer
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.Message
@@ -21,43 +22,45 @@ class VoteReminder(private val plugin: CV)
             {
                 TaskTimer.delay(plugin, 20 * 10)
                 {
-                    val voter = Voter.get(plugin, player)
-                    val history = VoteSite.getAllActive(plugin).associateBy({ it.uniqueId }, { 0L }).toMutableMap()
+                    plugin.launch {
+                        val voter = Voter.get(plugin, player)
+                        val history = VoteSite.getAllActive(plugin).associateBy({ it.uniqueId }, { 0L }).toMutableMap()
 
-                    for (vote in voter.history)
-                    {
-                        if(history[vote.site] != null)
+                        for (vote in voter.getHistory())
                         {
-                            val lastVoteTime = history[vote.site] ?: 0
-                            if (vote.time > lastVoteTime)
+                            if(history[vote.site] != null)
                             {
-                                history[vote.site] = vote.time
+                                val lastVoteTime = history[vote.site] ?: 0
+                                if (vote.time > lastVoteTime)
+                                {
+                                    history[vote.site] = vote.time
+                                }
                             }
                         }
-                    }
 
-                    val currentTime = System.currentTimeMillis()
-                    val firstSiteToVoteAgain = history.entries
-                            .filter { (site, lastVoteTime) ->
-                                val siteInterval = VoteSite.get(plugin, site)?.interval ?: 24
-                                currentTime - lastVoteTime >= (siteInterval * 60 * 60 * 1000)
-                            }
-                            .minByOrNull { (_, lastVoteTime) -> lastVoteTime }
-                            ?.key
+                        val currentTime = System.currentTimeMillis()
+                        val firstSiteToVoteAgain = history.entries
+                                .filter { (site, lastVoteTime) ->
+                                    val siteInterval = VoteSite.get(plugin, site)?.interval ?: 24
+                                    currentTime - lastVoteTime >= (siteInterval * 60 * 60 * 1000)
+                                }
+                                .minByOrNull { (_, lastVoteTime) -> lastVoteTime }
+                                ?.key
 
-                    if (firstSiteToVoteAgain != null)
-                    {
-                        player.sendTexts(
-                            plugin,
-                            Message.VOTE_REMINDER,
-                            mapOf(
-                                Pair(
-                                    "%SERVICE%",
-                                    firstSiteToVoteAgain.serviceName
+                        if (firstSiteToVoteAgain != null)
+                        {
+                            player.sendTexts(
+                                plugin,
+                                Message.VOTE_REMINDER,
+                                mapOf(
+                                    Pair(
+                                        "%SERVICE%",
+                                        firstSiteToVoteAgain.serviceName
+                                    )
                                 )
                             )
-                        )
-                        SoundType.NOTIFY.play(plugin, player)
+                            SoundType.NOTIFY.play(plugin, player)
+                        }
                     }
                 }.run()
             }

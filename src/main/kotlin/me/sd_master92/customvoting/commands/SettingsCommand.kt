@@ -10,11 +10,11 @@ import org.bukkit.entity.Player
 
 class SettingsCommand(private val plugin: CV) : SimpleCommand(plugin, "votesettings")
 {
-    override fun onCommand(sender: CommandSender, args: Array<String>)
+    override suspend fun onCommand(sender: CommandSender, args: Array<out String>)
     {
     }
 
-    override fun onCommand(player: Player, args: Array<String>)
+    override suspend fun onCommand(player: Player, args: Array<out String>)
     {
         SoundType.OPEN.play(plugin, player)
         VoteSettingsPage(plugin, null).open(player)

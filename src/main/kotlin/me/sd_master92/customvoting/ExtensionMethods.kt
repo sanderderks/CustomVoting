@@ -1,5 +1,6 @@
 package me.sd_master92.customvoting
 
+import kotlinx.coroutines.runBlocking
 import me.clip.placeholderapi.PlaceholderAPI
 import me.sd_master92.core.file.PlayerFile
 import me.sd_master92.core.plugin.CustomPlugin
@@ -119,7 +120,7 @@ fun Player.addToInventoryOrDrop(item: ItemStack)
     this.inventory.addItem(item).values.forEach { this.world.dropItemNaturally(this.location, it) }
 }
 
-fun OfflinePlayer.hasPowerRewards(plugin: CV): Boolean
+suspend fun OfflinePlayer.hasPowerRewards(plugin: CV): Boolean
 {
     return this.hasPowerRewardsByGroup(plugin) || this.hasPowerRewardsByUser(plugin)
 }
@@ -145,11 +146,11 @@ fun OfflinePlayer.hasPowerRewardsByGroup(plugin: CV): Boolean
     return false
 }
 
-fun OfflinePlayer.hasPowerRewardsByUser(plugin: CV): Boolean
+suspend fun OfflinePlayer.hasPowerRewardsByUser(plugin: CV): Boolean
 {
     if (this is Player)
     {
-        return Voter.get(plugin, this).power
+        return Voter.get(plugin, this).getPower()
     }
     return false
 }
@@ -317,40 +318,52 @@ fun String.trimPrefixColor(): String
     return replaceFirst(Regex("^§."), "")
 }
 
-fun Voter.getVotesPlaceholders(plugin: CV): MutableMap<String, String>
+suspend fun Voter.getVotesPlaceholders(plugin: CV): MutableMap<String, String>
 {
     val placeholders: MutableMap<String, String> = HashMap()
-    placeholders["%PLAYER%"] = name
-    placeholders["%VOTES%"] = "$votes"
-    placeholders["%VOTES_MONTHLY%"] = "$votesMonthly"
-    placeholders["%VOTES_WEEKLY%"] = "$votesWeekly"
-    placeholders["%VOTES_DAILY%"] = "$votesDaily"
+    placeholders["%PLAYER%"] = getName()
+    placeholders["%VOTES%"] = "${getVotes()}"
+    placeholders["%VOTES_MONTHLY%"] = "${getVotesMonthly()}"
+    placeholders["%VOTES_WEEKLY%"] = "${getVotesWeekly()}"
+    placeholders["%VOTES_DAILY%"] = "${getVotesDaily()}"
 
     when (VoteSortType.valueOf(plugin.config.getNumber(Setting.VOTES_SORT_TYPE.path)))
     {
         VoteSortType.ALL     ->
         {
+            val votes = getVotes()
             placeholders["%VOTES_AUTO%"] = "$votes"
             placeholders["%s%"] = if (votes == 1) "" else "s"
         }
 
         VoteSortType.MONTHLY ->
         {
+            val votesMonthly = getVotesMonthly()
             placeholders["%VOTES_AUTO%"] = "$votesMonthly"
             placeholders["%s%"] = if (votesMonthly == 1) "" else "s"
         }
 
         VoteSortType.WEEKLY  ->
         {
+            val votesWeekly = getVotesWeekly()
             placeholders["%VOTES_AUTO%"] = "$votesWeekly"
             placeholders["%s%"] = if (votesWeekly == 1) "" else "s"
         }
 
         VoteSortType.DAILY   ->
         {
+            val votesDaily = getVotesDaily()
             placeholders["%VOTES_AUTO%"] = "$votesDaily"
             placeholders["%s%"] = if (votesDaily == 1) "" else "s"
         }
     }
     return placeholders
+}
+
+suspend fun MutableList<Voter>.sortWithAsync(compare: suspend (x: Voter, y: Voter) -> Int) {
+    sortWith { x: Voter, y: Voter ->
+        runBlocking {
+            compare(x, y)
+        }
+    }
 }

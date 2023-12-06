@@ -1,5 +1,6 @@
 package me.sd_master92.customvoting.subjects.stands
 
+import com.github.shynixn.mccoroutine.bukkit.launch
 import me.sd_master92.core.tasks.TaskTimer
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.Data
@@ -40,7 +41,7 @@ class VoteTopStand private constructor(private val plugin: CV, private val top: 
         }
     }
 
-    private fun update()
+    private suspend fun update()
     {
         val topVoter = Voter.getTopVoter(plugin, top)
         var player: Player? = null
@@ -56,12 +57,12 @@ class VoteTopStand private constructor(private val plugin: CV, private val top: 
             placeholders["%VOTES_AUTO%"] = "0"
         } else
         {
-            player = Bukkit.getPlayer(topVoter.uuid)
+            player = Bukkit.getPlayer(topVoter.getUuid())
         }
         topStand.update(player, Message.VOTE_TOP_STANDS_TOP.getMessage(plugin, placeholders))
         nameStand.update(player, Message.VOTE_TOP_STANDS_CENTER.getMessage(plugin, placeholders))
-        votesStand.update(player, Message.VOTE_TOP_STANDS_BOTTOM.getMessage(plugin, placeholders), topVoter?.uuid)
-        citizen?.update(topVoter?.name ?: PMessage.PLAYER_NAME_UNKNOWN_COLORED.toString())
+        votesStand.update(player, Message.VOTE_TOP_STANDS_BOTTOM.getMessage(plugin, placeholders), topVoter?.getUuid())
+        citizen?.update(topVoter?.getName() ?: PMessage.PLAYER_NAME_UNKNOWN_COLORED.toString())
     }
 
     fun delete(player: Player)
@@ -94,7 +95,9 @@ class VoteTopStand private constructor(private val plugin: CV, private val top: 
             {
                 for (voteTop in voteTops.values)
                 {
-                    voteTop.update()
+                    plugin.launch {
+                        voteTop.update()
+                    }
                 }
             }.run()
         }

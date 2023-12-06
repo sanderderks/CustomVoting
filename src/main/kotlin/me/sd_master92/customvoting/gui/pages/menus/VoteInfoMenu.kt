@@ -1,5 +1,6 @@
 package me.sd_master92.customvoting.gui.pages.menus
 
+import com.github.shynixn.mccoroutine.bukkit.launch
 import me.sd_master92.core.inventory.GUI
 import me.sd_master92.core.inventory.GUIWithPagination
 import me.sd_master92.core.tasks.TaskTimer
@@ -20,7 +21,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 class VoteInfoMenu(
     private val plugin: CV,
     private val voter: Voter,
-    private val other: Boolean,
+    private val name: String? = null,
     private val page: Int = 0
 ) :
     GUIWithPagination<VoteSite>(
@@ -29,17 +30,17 @@ class VoteInfoMenu(
         VoteSite.getAllActive(plugin),
         { VoteSite.getAllActive(plugin).indexOf(it) },
         { _, site, _ ->
-            val siteItem = site.getGUIItem(false)
-            val last = site.getLastByDate(voter)
-            val timeDifference =
-                if (last != null) last + (site.interval * 60 * 60 * 1000) - System.currentTimeMillis() else 0L
-            siteItem.setLore(
-                ";" + PMessage.GRAY + "Next vote: " + PMessage.RED + timeDifference.toTimeString()
-            )
-            siteItem
+                val siteItem = site.getGUIItem(false)
+                val last = site.getLastByDate(voter)
+                val timeDifference =
+                    if (last != null) last + (site.interval * 60 * 60 * 1000) - System.currentTimeMillis() else 0L
+                siteItem.setLore(
+                    ";" + PMessage.GRAY + "Next vote: " + PMessage.RED + timeDifference.toTimeString()
+                )
+                siteItem
         },
         page,
-        if (other) PMessage.VOTE_INFO_INVENTORY_NAME_OTHERS_X.with(voter.name) else PMessage.VOTE_INFO_INVENTORY_NAME.toString(),
+        name ?: PMessage.VOTE_INFO_INVENTORY_NAME.toString(),
         PMessage.GENERAL_ITEM_NAME_NEXT.toString(),
         PMessage.GENERAL_ITEM_NAME_PREVIOUS.toString(),
         differentStartIndex = 18
@@ -49,7 +50,7 @@ class VoteInfoMenu(
 
     override fun newInstance(page: Int): GUI
     {
-        return VoteInfoMenu(plugin, voter, other, page)
+        return VoteInfoMenu(plugin, voter, name, page)
     }
 
     override fun newInstance(): GUI
@@ -99,27 +100,29 @@ class VoteInfoMenu(
 
     init
     {
-        if (page == 0)
-        {
-            setItem(4, PlayerInfoOverviewPage.getSkull(plugin, voter))
-            val milestonePath = plugin.data.getConfigurationSection(Data.MILESTONES.path)
-            if (milestonePath != null)
+        plugin.launch {
+            if (page == 0)
             {
-                val nextMilestone = milestonePath.getKeys(false).map { it.toInt() }
-                        .filter { it > voter.votes }
-                        .minOrNull()
-
-                if (nextMilestone != null)
+                setItem(4, PlayerInfoOverviewPage.getSkull(plugin, voter))
+                val milestonePath = plugin.data.getConfigurationSection(Data.MILESTONES.path)
+                if (milestonePath != null)
                 {
-                    val required = nextMilestone - voter.votes
-                    setItem(
-                        9,
-                        SimpleItem(
-                            Material.NETHER_STAR,
-                            PMessage.MILESTONE_ITEM_NAME_X.with("#").replace("#", ""),
-                            ";${PMessage.GRAY}Next milestone: " + PMessage.YELLOW + "in $required vote" + if (required != 1) "s" else ""
+                    val nextMilestone = milestonePath.getKeys(false).map { it.toInt() }
+                            .filter { it > voter.getVotes() }
+                            .minOrNull()
+
+                    if (nextMilestone != null)
+                    {
+                        val required = nextMilestone - voter.getVotes()
+                        setItem(
+                            9,
+                            SimpleItem(
+                                Material.NETHER_STAR,
+                                PMessage.MILESTONE_ITEM_NAME_X.with("#").replace("#", ""),
+                                ";${PMessage.GRAY}Next milestone: " + PMessage.YELLOW + "in $required vote" + if (required != 1) "s" else ""
+                            )
                         )
-                    )
+                    }
                 }
             }
         }

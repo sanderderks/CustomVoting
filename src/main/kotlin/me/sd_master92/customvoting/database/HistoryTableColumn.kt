@@ -19,9 +19,9 @@ enum class HistoryTableColumn(
 
     companion object
     {
-        fun create(plugin: CV, table: CustomTable)
+        suspend fun create(plugin: CV, table: CustomTable)
         {
-            if (!table.create(ID.columnName, ID.dataType))
+            if (!table.createAsync(ID.columnName, ID.dataType))
             {
                 plugin.errorLog("| could not create table '$table'")
                 plugin.errorLog("|")

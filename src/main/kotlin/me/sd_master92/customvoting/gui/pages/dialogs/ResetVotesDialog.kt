@@ -1,5 +1,6 @@
 package me.sd_master92.customvoting.gui.pages.dialogs
 
+import com.github.shynixn.mccoroutine.bukkit.launch
 import me.sd_master92.core.inventory.ConfirmGUI
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.Message
@@ -21,13 +22,15 @@ class ResetVotesDialog(private val plugin: CV) :
 {
     override fun onConfirm(event: InventoryClickEvent, player: Player)
     {
-        SoundType.CLICK.play(plugin, player)
-        for (voter in Voter.getTopVoters(plugin))
-        {
-            voter.setVotes(0, true)
+        plugin.launch {
+            SoundType.CLICK.play(plugin, player)
+            for (voter in Voter.getTopVoters(plugin))
+            {
+                voter.setVotes(0, true)
+            }
+            plugin.broadcastText(Message.VOTE_RESET)
+            VoteSettingsPage(plugin, null).open(player)
         }
-        plugin.broadcastText(Message.VOTE_RESET)
-        VoteSettingsPage(plugin, null).open(player)
     }
 
     override fun onCancel(event: InventoryClickEvent, player: Player)

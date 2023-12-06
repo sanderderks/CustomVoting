@@ -1,5 +1,6 @@
 package me.sd_master92.customvoting.gui.pages.overviews
 
+import com.github.shynixn.mccoroutine.bukkit.launch
 import me.sd_master92.core.inventory.GUI
 import me.sd_master92.core.inventory.GUIWithPagination
 import me.sd_master92.customvoting.CV
@@ -15,11 +16,11 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 
-class PermUserOverviewPage(private val plugin: CV, backPage: GUI?, private val page: Int = 0) :
+class PermUserOverviewPage(private val plugin: CV, backPage: GUI?, private val page: Int = 0, private val voters: List<Voter>) :
     GUIWithPagination<Voter>(
         plugin,
         backPage,
-        Voter.getTopVoters(plugin),
+        voters,
         { it.hashCode() },
         { _, item, _ -> getSkull(plugin, item) },
         page,
@@ -30,7 +31,7 @@ class PermUserOverviewPage(private val plugin: CV, backPage: GUI?, private val p
 {
     override fun newInstance(page: Int): GUI
     {
-        return PermUserOverviewPage(plugin, backPage, page)
+        return PermUserOverviewPage(plugin, backPage, page, voters)
     }
 
     override fun newInstance(): GUI
@@ -45,22 +46,24 @@ class PermUserOverviewPage(private val plugin: CV, backPage: GUI?, private val p
 
     override fun onClick(event: InventoryClickEvent, player: Player)
     {
-        if (event.currentItem!!.type == Material.PLAYER_HEAD)
-        {
-            SoundType.CHANGE.play(plugin, player)
-            var name = event.currentItem!!.itemMeta?.displayName?.stripColor()
-            if (name == null)
+        plugin.launch {
+            if (event.currentItem!!.type == Material.PLAYER_HEAD)
             {
-                name = ""
-            }
-            val voter = Voter.getByName(plugin, name)
-            if (voter != null)
-            {
-                voter.setPower(!voter.power)
-                event.currentItem = getSkull(plugin, voter)
-            } else
-            {
-                event.currentItem = null
+                SoundType.CHANGE.play(plugin, player)
+                var name = event.currentItem!!.itemMeta?.displayName?.stripColor()
+                if (name == null)
+                {
+                    name = ""
+                }
+                val voter = Voter.getByName(plugin, name)
+                if (voter != null)
+                {
+                    voter.setPower(!voter.getPower())
+                    event.currentItem = getSkull(plugin, voter)
+                } else
+                {
+                    event.currentItem = null
+                }
             }
         }
     }
@@ -81,21 +84,22 @@ class PermUserOverviewPage(private val plugin: CV, backPage: GUI?, private val p
 
     companion object
     {
-        private fun getSkull(plugin: CV, voter: Voter): ItemStack
+        private suspend fun getSkull(plugin: CV, voter: Voter): ItemStack
         {
-            val skull = voter.name.getOfflinePlayer(plugin).getSkull()
+            val name = voter.getName()
+            val skull = name.getOfflinePlayer(plugin).getSkull()
             val meta = skull.itemMeta!!
             val lore = mutableListOf(
                 PMessage.GENERAL_ITEM_LORE_ENABLED_X.with(
-                    if (voter.power)
+                    if (voter.getPower())
                         PMessage.GENERAL_VALUE_YES.toString() else PMessage.GENERAL_VALUE_NO.toString()
                 )
             )
             lore.addAll((";" + PMessage.PERM_USER_OVERVIEW_ITEM_LORE.toString()).split(";"))
             meta.lore = lore
-            if (meta.displayName != voter.name)
+            if (meta.displayName != name)
             {
-                meta.setDisplayName(PMessage.PLAYER_ITEM_NAME_SKULL_X.with(voter.name))
+                meta.setDisplayName(PMessage.PLAYER_ITEM_NAME_SKULL_X.with(name))
             }
             skull.itemMeta = meta
             return skull

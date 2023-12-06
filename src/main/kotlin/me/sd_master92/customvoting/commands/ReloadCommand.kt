@@ -16,7 +16,7 @@ class ReloadCommand(private val plugin: CV) : SimpleCommand(
     plugin, "votereload",
     subCommands = arrayOf(object : SimpleSubCommand("cache")
     {
-        override fun onCommand(sender: CommandSender, args: Array<String>)
+        override suspend fun onCommand(sender: CommandSender, args: Array<out String>)
         {
             sender.sendMessage(PMessage.RELOAD_MESSAGE_START_X.with(" and cache"))
             if (reload(plugin, true))
@@ -28,13 +28,13 @@ class ReloadCommand(private val plugin: CV) : SimpleCommand(
             }
         }
 
-        override fun onCommand(player: Player, args: Array<String>)
+        override suspend fun onCommand(player: Player, args: Array<out String>)
         {
         }
     })
 )
 {
-    override fun onCommand(sender: CommandSender, args: Array<String>)
+    override suspend fun onCommand(sender: CommandSender, args: Array<out String>)
     {
         sender.sendMessage(PMessage.RELOAD_MESSAGE_START_X.with(""))
         if (reload(plugin))
@@ -46,13 +46,13 @@ class ReloadCommand(private val plugin: CV) : SimpleCommand(
         }
     }
 
-    override fun onCommand(player: Player, args: Array<String>)
+    override suspend fun onCommand(player: Player, args: Array<out String>)
     {
     }
 
     companion object
     {
-        fun reload(plugin: CV, init: Boolean? = false): Boolean
+        suspend fun reload(plugin: CV, init: Boolean? = false): Boolean
         {
             if (plugin.config.reloadConfig() && plugin.data.reloadConfig() && plugin.messages.reloadConfig())
             {

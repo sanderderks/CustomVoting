@@ -1,5 +1,8 @@
 package me.sd_master92.customvoting
 
+import com.github.shynixn.mccoroutine.bukkit.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import me.sd_master92.core.database.CustomDatabase
 import me.sd_master92.core.errorLog
 import me.sd_master92.core.file.CustomFile
@@ -47,7 +50,11 @@ class CV : CustomPlugin(
         }
         checkHooks()
         setupDatabase()
-        registerFiles()
+        launch {
+            withContext(Dispatchers.IO) {
+                registerFiles()
+            }
+        }
         registerListeners()
         registerCommands()
         startTasks()
@@ -198,7 +205,7 @@ class CV : CustomPlugin(
         return PERMISSION != null
     }
 
-    private fun registerFiles()
+    private suspend fun registerFiles()
     {
         messages = CustomFile("messages.yml", this)
         data = CustomFile("data.yml", this)

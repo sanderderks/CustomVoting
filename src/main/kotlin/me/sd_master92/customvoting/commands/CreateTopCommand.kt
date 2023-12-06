@@ -11,11 +11,11 @@ import org.bukkit.entity.Player
 
 class CreateTopCommand(private val plugin: CV) : SimpleCommand(plugin, "createtop", false)
 {
-    override fun onCommand(sender: CommandSender, args: Array<String>)
+    override suspend fun onCommand(sender: CommandSender, args: Array<out String>)
     {
     }
 
-    override fun onCommand(player: Player, args: Array<String>)
+    override suspend fun onCommand(player: Player, args: Array<out String>)
     {
         try
         {

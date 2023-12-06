@@ -11,7 +11,7 @@ import org.bukkit.entity.Player
 
 class SetVotesCommand(private val plugin: CV) : SimpleCommand(plugin, "setvotes", false)
 {
-    override fun onCommand(sender: CommandSender, args: Array<String>)
+    override suspend fun onCommand(sender: CommandSender, args: Array<out String>)
     {
         if (args.size == 1)
         {
@@ -50,7 +50,7 @@ class SetVotesCommand(private val plugin: CV) : SimpleCommand(plugin, "setvotes"
                     if (voter != null)
                     {
                         voter.setVotes(n, true)
-                        sender.sendMessage(PMessage.VOTES_SET_MESSAGE_OTHER_XY.with(voter.name, "$n"))
+                        sender.sendMessage(PMessage.VOTES_SET_MESSAGE_OTHER_XY.with(voter.getName(), "$n"))
                     } else
                     {
                         sender.sendText(plugin, Message.INVALID_PLAYER)
@@ -66,7 +66,7 @@ class SetVotesCommand(private val plugin: CV) : SimpleCommand(plugin, "setvotes"
         }
     }
 
-    override fun onCommand(player: Player, args: Array<String>)
+    override suspend fun onCommand(player: Player, args: Array<out String>)
     {
     }
 

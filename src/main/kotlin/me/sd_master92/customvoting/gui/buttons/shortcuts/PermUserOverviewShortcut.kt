@@ -1,10 +1,12 @@
 package me.sd_master92.customvoting.gui.buttons.shortcuts
 
+import com.github.shynixn.mccoroutine.bukkit.launch
 import me.sd_master92.core.inventory.BaseItem
 import me.sd_master92.core.inventory.GUI
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.SoundType
+import me.sd_master92.customvoting.constants.interfaces.Voter
 import me.sd_master92.customvoting.gui.pages.overviews.PermUserOverviewPage
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -22,6 +24,14 @@ class PermUserOverviewShortcut(
     {
         SoundType.CLICK.play(plugin, player)
         currentPage.cancelCloseEvent = true
-        PermUserOverviewPage(plugin, currentPage).open(player)
+        plugin.launch {
+            open(player)
+        }
+    }
+
+    private suspend fun open(player: Player)
+    {
+        val voters = Voter.getTopVoters(plugin)
+        PermUserOverviewPage(plugin, currentPage, voters = voters).open(player)
     }
 }

@@ -8,11 +8,11 @@ import org.bukkit.entity.Player
 
 class VotePartyCreateCommand(private val plugin: CV) : SimpleSubCommand("create")
 {
-    override fun onCommand(sender: CommandSender, args: Array<String>)
+    override suspend fun onCommand(sender: CommandSender, args: Array<out String>)
     {
     }
 
-    override fun onCommand(player: Player, args: Array<String>)
+    override suspend fun onCommand(player: Player, args: Array<out String>)
     {
         VotePartyChestOverview(plugin, null).open(player)
     }
