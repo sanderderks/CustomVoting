@@ -14,7 +14,7 @@ import org.bukkit.entity.Player
 
 class VotesCommand(private val plugin: CV) : SimpleCommand(plugin, "votes")
 {
-    override fun onCommand(sender: CommandSender, args: Array<String>)
+    override suspend fun onCommand(sender: CommandSender, args: Array<out String>)
     {
         if (args.isEmpty())
         {
@@ -33,14 +33,14 @@ class VotesCommand(private val plugin: CV) : SimpleCommand(plugin, "votes")
         }
     }
 
-    private fun getVotes(sender: CommandSender, voter: Voter? = null)
+    private suspend fun getVotes(sender: CommandSender, voter: Voter? = null)
     {
         if (voter != null)
         {
             if (plugin.config.getBoolean(Setting.VOTE_INFO_INVENTORY.path) && sender is Player)
             {
                 SoundType.OPEN.play(plugin, sender)
-                VoteInfoMenu(plugin, voter, true).open(sender)
+                VoteInfoMenu(plugin, voter, voter.getName()).open(sender)
             } else
             {
                 sender.sendText(plugin, Message.VOTES_COMMAND_OTHERS, voter.getVotesPlaceholders(plugin))
@@ -51,7 +51,7 @@ class VotesCommand(private val plugin: CV) : SimpleCommand(plugin, "votes")
             if (plugin.config.getBoolean(Setting.VOTE_INFO_INVENTORY.path))
             {
                 SoundType.OPEN.play(plugin, sender)
-                VoteInfoMenu(plugin, self, false).open(sender)
+                VoteInfoMenu(plugin, self).open(sender)
             } else
             {
                 sender.sendText(plugin, Message.VOTES_COMMAND_SELF, self.getVotesPlaceholders(plugin))
@@ -59,7 +59,7 @@ class VotesCommand(private val plugin: CV) : SimpleCommand(plugin, "votes")
         }
     }
 
-    override fun onCommand(player: Player, args: Array<String>)
+    override suspend fun onCommand(player: Player, args: Array<out String>)
     {
     }
 

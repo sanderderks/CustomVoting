@@ -2,10 +2,9 @@ package me.sd_master92.customvoting.extensions
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion
 import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.constants.enumerations.Data
 import me.sd_master92.customvoting.constants.enumerations.PMessage
-import me.sd_master92.customvoting.constants.enumerations.Setting
-import me.sd_master92.customvoting.constants.interfaces.Voter
+import me.sd_master92.customvoting.constants.models.VoterData
+import me.sd_master92.customvoting.tasks.PlaceholderChecker
 import org.bukkit.entity.Player
 
 class CustomPlaceholders(private val plugin: CV) : PlaceholderExpansion()
@@ -37,131 +36,121 @@ class CustomPlaceholders(private val plugin: CV) : PlaceholderExpansion()
 
     override fun onPlaceholderRequest(player: Player?, params: String): String?
     {
-        try
-        {
-            when (params)
+            try
             {
-                SERVER_VOTES               ->
+                when (params)
                 {
-                    var total = 0
-                    for (voter in Voter.getTopVoters(plugin))
+                    SERVER_VOTES               ->
                     {
-                        total += voter.votes
+                        return "${PlaceholderChecker.SERVER_VOTES}"
                     }
-                    return "$total"
-                }
 
-                PLAYER_VOTES               ->
-                {
-                    if (player != null)
+                    PLAYER_VOTES               ->
                     {
-                        return "" + Voter.get(plugin, player).votes
-                    }
-                    return "0"
-                }
-
-                PLAYER_VOTES + SUF_MONTHLY ->
-                {
-                    if (player != null)
-                    {
-                        return "" + Voter.get(plugin, player).votesMonthly
-                    }
-                    return "0"
-                }
-
-                PLAYER_VOTES + SUF_WEEKLY  ->
-                {
-                    if (player != null)
-                    {
-                        return "" + Voter.get(plugin, player).votesWeekly
-                    }
-                    return "0"
-                }
-
-                PLAYER_VOTES + SUF_DAILY   ->
-                {
-                    if (player != null)
-                    {
-                        return "" + Voter.get(plugin, player).votesDaily
-                    }
-                    return "0"
-                }
-
-                PLAYER_STREAK + SUF_DAILY  ->
-                {
-                    if (player != null)
-                    {
-                        return "" + Voter.get(plugin, player).streakDaily
-                    }
-                    return "0"
-                }
-
-                VOTE_PARTY_TOTAL           ->
-                {
-                    val total = plugin.config.getInt(Setting.VOTES_REQUIRED_FOR_VOTE_PARTY.path)
-                    return "$total"
-                }
-
-                VOTE_PARTY_CURRENT         ->
-                {
-                    val current = plugin.data.getInt(Data.CURRENT_VOTES.path)
-                    return "$current"
-                }
-
-                VOTE_PARTY_UNTIL           ->
-                {
-                    val total = plugin.config.getInt(Setting.VOTES_REQUIRED_FOR_VOTE_PARTY.path)
-                    val current = plugin.data.getInt(Data.CURRENT_VOTES.path)
-                    val until = total - current
-                    return "$until"
-                }
-
-                else                       ->
-                {
-                    when (true)
-                    {
-                        (params.contains(PLAYER_VOTES) && params.contains(SUF_NAME))    ->
+                        if (player != null)
                         {
-                            return getTopVoter(params)?.name ?: PMessage.PLAYER_NAME_UNKNOWN.toString()
+                            return "${PlaceholderChecker.VOTERS[player.uniqueId]?.votes ?: 0}"
                         }
+                        return "0"
+                    }
 
-                        (params.contains(PLAYER_VOTES) && params.contains(SUF_MONTHLY)) ->
+                    PLAYER_VOTES + SUF_MONTHLY ->
+                    {
+                        if (player != null)
                         {
-                            return "" + (getTopVoter(params)?.votesMonthly ?: 0)
+                            return "${PlaceholderChecker.VOTERS[player.uniqueId]?.votesMonthly ?: 0}"
                         }
+                        return "0"
+                    }
 
-                        (params.contains(PLAYER_VOTES) && params.contains(SUF_WEEKLY))  ->
+                    PLAYER_VOTES + SUF_WEEKLY  ->
+                    {
+                        if (player != null)
                         {
-                            return "" + (getTopVoter(params)?.votesWeekly ?: 0)
+                            return "${PlaceholderChecker.VOTERS[player.uniqueId]?.votesWeekly ?: 0}"
                         }
+                        return "0"
+                    }
 
-                        (params.contains(PLAYER_VOTES) && params.contains(SUF_DAILY))   ->
+                    PLAYER_VOTES + SUF_DAILY   ->
+                    {
+                        if (player != null)
                         {
-                            return "" + (getTopVoter(params)?.votesDaily ?: 0)
+                            return "${PlaceholderChecker.VOTERS[player.uniqueId]?.votesDaily ?: 0}"
                         }
+                        return "0"
+                    }
 
-                        params.contains(PLAYER_VOTES)                                   ->
+                    PLAYER_STREAK + SUF_DAILY  ->
+                    {
+                        if (player != null)
                         {
-                            return "" + (getTopVoter(params)?.votes ?: 0)
+                            return "${PlaceholderChecker.VOTERS[player.uniqueId]?.streakDaily ?: 0}"
                         }
+                        return "0"
+                    }
 
-                        else                                                            ->
+                    VOTE_PARTY_TOTAL           ->
+                    {
+                        return "${PlaceholderChecker.VOTE_PARTY_TOTAL}"
+                    }
+
+                    VOTE_PARTY_CURRENT         ->
+                    {
+                        return "${PlaceholderChecker.VOTE_PARTY_CURRENT}"
+                    }
+
+                    VOTE_PARTY_UNTIL           ->
+                    {
+                        return "${PlaceholderChecker.VOTE_PARTY_UNTIL}"
+                    }
+
+                    else                       ->
+                    {
+                        when (true)
                         {
+                            (params.contains(PLAYER_VOTES) && params.contains(SUF_NAME))    ->
+                            {
+                                return "" + (getTopVoterData(params)?.name ?: PMessage.PLAYER_NAME_UNKNOWN)
+                            }
+
+                            (params.contains(PLAYER_VOTES) && params.contains(SUF_MONTHLY)) ->
+                            {
+                                return "" + (getTopVoterData(params)?.votesMonthly ?: 0)
+                            }
+
+                            (params.contains(PLAYER_VOTES) && params.contains(SUF_WEEKLY))  ->
+                            {
+                                return "" + (getTopVoterData(params)?.votesWeekly ?: 0)
+                            }
+
+                            (params.contains(PLAYER_VOTES) && params.contains(SUF_DAILY))   ->
+                            {
+                                return "" + (getTopVoterData(params)?.votesDaily ?: 0)
+                            }
+
+                            params.contains(PLAYER_VOTES)                                   ->
+                            {
+                                return "" + (getTopVoterData(params)?.votes ?: 0)
+                            }
+
+                            else                                                            ->
+                            {
+                                return null
+                            }
                         }
                     }
                 }
+            } catch (e: Exception)
+            {
+                return null
             }
-        } catch (e: Exception)
-        {
-            return null
-        }
-        return null
     }
 
-    private fun getTopVoter(params: String): Voter?
+    private fun getTopVoterData(params: String): VoterData?
     {
         val key = params.split("_").toTypedArray()[2].toInt()
-        return Voter.getTopVoter(plugin, key)
+        return PlaceholderChecker.VOTERS.values.withIndex().find { it.index == key }?.value
     }
 
     companion object

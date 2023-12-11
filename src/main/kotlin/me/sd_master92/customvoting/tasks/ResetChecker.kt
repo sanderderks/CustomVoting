@@ -1,5 +1,6 @@
 package me.sd_master92.customvoting.tasks
 
+import com.github.shynixn.mccoroutine.bukkit.launch
 import me.sd_master92.core.tasks.TaskTimer
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.Setting
@@ -30,41 +31,55 @@ class ResetChecker(private val plugin: CV)
     init
     {
         TaskTimer.repeat(plugin, 20 * 60 * 60, 20 * 3) {
-            val calendar = Calendar.getInstance()
-            val currentMonth = calendar[Calendar.MONTH]
-            val currentWeek = calendar[Calendar.WEEK_OF_YEAR]
-            val currentDay = calendar[Calendar.DAY_OF_MONTH]
+            plugin.launch {
+                val calendar = Calendar.getInstance()
+                val currentMonth = calendar[Calendar.MONTH]
+                val currentWeek = calendar[Calendar.WEEK_OF_YEAR]
+                val currentDay = calendar[Calendar.DAY_OF_MONTH]
 
-            if (lastResetMonth < 0)
-            {
-                lastResetMonth = currentMonth
-            } else if (lastResetMonth != currentMonth)
-            {
-                lastResetMonth = currentMonth
-                performActionForVoters(Voter::clearMonthlyVotes)
-            }
+                if (lastResetMonth < 0)
+                {
+                    lastResetMonth = currentMonth
+                } else if (lastResetMonth != currentMonth)
+                {
+                    lastResetMonth = currentMonth
+                    performActionForVoters { voter ->
+                        plugin.launch {
+                            voter.clearMonthlyVotes()
+                        }
+                    }
+                }
 
-            if (lastResetWeek < 0)
-            {
-                lastResetWeek = currentWeek
-            } else if (lastResetWeek != currentWeek)
-            {
-                lastResetWeek = currentWeek
-                performActionForVoters(Voter::clearWeeklyVotes)
-            }
+                if (lastResetWeek < 0)
+                {
+                    lastResetWeek = currentWeek
+                } else if (lastResetWeek != currentWeek)
+                {
+                    lastResetWeek = currentWeek
+                    performActionForVoters { voter ->
+                        plugin.launch {
+                            voter.clearWeeklyVotes()
+                        }
+                    }
+                }
 
-            if (lastResetDay < 0)
-            {
-                lastResetDay = currentDay
-            } else if (lastResetDay != currentDay)
-            {
-                lastResetDay = currentDay
-                performActionForVoters(Voter::clearDailyVotes)
+                if (lastResetDay < 0)
+                {
+                    lastResetDay = currentDay
+                } else if (lastResetDay != currentDay)
+                {
+                    lastResetDay = currentDay
+                    performActionForVoters { voter ->
+                        plugin.launch {
+                            voter.clearDailyVotes()
+                        }
+                    }
+                }
             }
         }.run()
     }
 
-    private fun performActionForVoters(action: (Voter) -> Unit)
+    private suspend fun performActionForVoters(action: (Voter) -> Unit)
     {
         Voter.getTopVoters(plugin).forEach(action)
     }

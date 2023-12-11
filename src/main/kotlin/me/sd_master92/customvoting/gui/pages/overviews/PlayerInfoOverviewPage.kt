@@ -15,11 +15,11 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 import java.util.*
 
-class PlayerInfoOverviewPage(private val plugin: CV, backPage: GUI?, private val page: Int = 0) :
+class PlayerInfoOverviewPage(private val plugin: CV, backPage: GUI?, private val page: Int = 0, private val voters: List<Voter>) :
     GUIWithPagination<Voter>(
         plugin,
         backPage,
-        Voter.getTopVoters(plugin),
+        voters,
         { it.hashCode() },
         { _, item, _ -> getSkull(plugin, item) },
         page,
@@ -30,7 +30,7 @@ class PlayerInfoOverviewPage(private val plugin: CV, backPage: GUI?, private val
 {
     override fun newInstance(page: Int): GUI
     {
-        return PlayerInfoOverviewPage(plugin, backPage?.newInstance(), page)
+        return PlayerInfoOverviewPage(plugin, backPage?.newInstance(), page, voters)
     }
 
     override fun newInstance(): GUI
@@ -63,19 +63,21 @@ class PlayerInfoOverviewPage(private val plugin: CV, backPage: GUI?, private val
 
     companion object
     {
-        fun getSkull(plugin: CV, voter: Voter): ItemStack
+        suspend fun getSkull(plugin: CV, voter: Voter): ItemStack
         {
-            val player = voter.name.getOfflinePlayer(plugin)
+            val name = voter.getName()
+            val player = name.getOfflinePlayer(plugin)
             val skull = player.getSkull()
             val meta = skull.itemMeta
-            val lastVote = if (voter.votes > 0) java.text.SimpleDateFormat(PMessage.GENERAL_FORMAT_DATE.toString())
-                    .format(Date(voter.last)) else PMessage.PLAYER_INFO_VALUE_NEVER.toString()
+            val votes = voter.getVotes()
+            val lastVote = if (votes > 0) java.text.SimpleDateFormat(PMessage.GENERAL_FORMAT_DATE.toString())
+                    .format(Date(voter.getLast())) else PMessage.PLAYER_INFO_VALUE_NEVER.toString()
             meta!!.lore = listOf(
-                PMessage.PLAYER_INFO_ITEM_LORE_VOTES_X.with("" + voter.votes),
-                PMessage.PLAYER_INFO_ITEM_LORE_VOTES_MONTHLY_X.with("" + voter.votesMonthly),
-                PMessage.PLAYER_INFO_ITEM_LORE_VOTES_WEEKLY_X.with("" + voter.votesWeekly),
-                PMessage.PLAYER_INFO_ITEM_LORE_VOTES_DAILY_X.with("" + voter.votesDaily),
-                PMessage.PLAYER_INFO_ITEM_LORE_STREAK_DAILY_X.with("" + voter.streakDaily),
+                PMessage.PLAYER_INFO_ITEM_LORE_VOTES_X.with("" + votes),
+                PMessage.PLAYER_INFO_ITEM_LORE_VOTES_MONTHLY_X.with("" + voter.getVotesMonthly()),
+                PMessage.PLAYER_INFO_ITEM_LORE_VOTES_WEEKLY_X.with("" + voter.getVotesWeekly()),
+                PMessage.PLAYER_INFO_ITEM_LORE_VOTES_DAILY_X.with("" + voter.getVotesDaily()),
+                PMessage.PLAYER_INFO_ITEM_LORE_STREAK_DAILY_X.with("" + voter.getStreakDaily()),
                 PMessage.PLAYER_INFO_ITEM_LORE_LAST_X.with(lastVote),
                 PMessage.PLAYER_INFO_ITEM_LORE_POWER_X.with(
                     if (player?.hasPowerRewards(plugin) == true
@@ -83,9 +85,9 @@ class PlayerInfoOverviewPage(private val plugin: CV, backPage: GUI?, private val
                         PMessage.GENERAL_VALUE_FALSE.toString()
                 ),
             )
-            if (meta.displayName != voter.name)
+            if (meta.displayName != name)
             {
-                meta.setDisplayName(PMessage.AQUA.getColor() + voter.name)
+                meta.setDisplayName(PMessage.AQUA.getColor() + name)
             }
             skull.itemMeta = meta
             return skull

@@ -1,5 +1,6 @@
 package me.sd_master92.customvoting.listeners
 
+import com.github.shynixn.mccoroutine.bukkit.launch
 import me.sd_master92.core.errorLog
 import me.sd_master92.core.infoLog
 import me.sd_master92.core.inventory.ConfirmGUI
@@ -46,9 +47,11 @@ class PlayerListener(private val plugin: CV) : Listener
     fun onPlayerJoin(event: PlayerJoinEvent)
     {
         val player = event.player
-        executeQueue(player)
         VoteReminder.remindPlayer(plugin, player)
         UpdateChecker.checkUpdates(plugin, player)
+        plugin.launch {
+            executeQueue(player)
+        }
     }
 
     @EventHandler
@@ -64,13 +67,15 @@ class PlayerListener(private val plugin: CV) : Listener
     @EventHandler
     fun onWorldChange(event: PlayerChangedWorldEvent)
     {
-        executeQueue(event.player)
+        plugin.launch {
+            executeQueue(event.player)
+        }
     }
 
-    private fun executeQueue(player: Player)
+    private suspend fun executeQueue(player: Player)
     {
         val voter = Voter.get(plugin, player)
-        val queue = voter.history.filter { it.queued }
+        val queue = voter.getHistory().filter { it.queued }
         if (!voter.clearQueue())
         {
             plugin.errorLog(PMessage.QUEUE_ERROR_DELETE_XY.with(player.uniqueId.toString(), player.name))
@@ -184,7 +189,7 @@ class PlayerListener(private val plugin: CV) : Listener
         if(event.blockPlaced.type == Material.ENDER_CHEST)
         {
             val key = item.itemMeta?.displayName?.split("#")?.reversed()?.get(0)
-            if (key != null && item.itemMeta!!.displayName == (VotePartyItem(key).itemMeta?.displayName))
+            if (!key.isNullOrEmpty() && item.itemMeta!!.displayName == (VotePartyItem(key).itemMeta?.displayName))
             {
                 val player = event.player
                 if (player.hasPermission("customvoting.voteparty"))

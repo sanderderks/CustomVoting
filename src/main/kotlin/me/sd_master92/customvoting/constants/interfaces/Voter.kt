@@ -1,54 +1,51 @@
 package me.sd_master92.customvoting.constants.interfaces
 
-import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.VoteFile
+import me.sd_master92.customvoting.*
 import me.sd_master92.customvoting.constants.enumerations.Setting
 import me.sd_master92.customvoting.constants.enumerations.VoteSortType
 import me.sd_master92.customvoting.constants.models.VoteHistory
 import me.sd_master92.customvoting.constants.models.VoteSiteUUID
 import me.sd_master92.customvoting.database.PlayerTable
-import me.sd_master92.customvoting.getPlayerNameWithPrefix
-import me.sd_master92.customvoting.getPlayerNameWithoutPrefix
 import me.sd_master92.customvoting.subjects.VoteTopSign
 import me.sd_master92.customvoting.subjects.stands.VoteTopStand
+import me.sd_master92.customvoting.tasks.PlaceholderChecker
 import org.bukkit.entity.Player
 import java.util.*
 
 interface Voter
 {
-    val uuid: UUID
-    val name: String
-    val votes: Int
-    val votesMonthly: Int
-    val votesWeekly: Int
-    val votesDaily: Int
-    val last: Long
-    val power: Boolean
-    val history: List<VoteHistory>
-    val streakDaily: Int
-
-    fun setVotes(n: Int, update: Boolean)
-    fun addVote(): Boolean
-    fun addHistory(site: VoteSiteUUID, queued: Boolean): Boolean
-    fun clearMonthlyVotes()
-    fun clearWeeklyVotes()
-    fun clearDailyVotes()
-    fun clearQueue(): Boolean
-    fun setPower(power: Boolean): Boolean
-    fun addStreak(): Boolean
-    fun clearStreak(): Boolean
+    suspend fun getUuid(): UUID
+    suspend fun getName(): String
+    suspend fun getVotes(): Int
+    suspend fun getVotesMonthly(): Int
+    suspend fun getVotesWeekly(): Int
+    suspend fun getVotesDaily(): Int
+    suspend fun setVotes(n: Int, update: Boolean)
+    suspend fun addVote(): Boolean
+    suspend fun getLast(): Long
+    suspend fun getHistory(): List<VoteHistory>
+    suspend fun addHistory(site: VoteSiteUUID, queued: Boolean): Boolean
+    suspend fun clearMonthlyVotes()
+    suspend fun clearWeeklyVotes()
+    suspend fun clearDailyVotes()
+    suspend fun clearQueue(): Boolean
+    suspend fun getPower(): Boolean
+    suspend fun setPower(power: Boolean): Boolean
+    suspend fun getStreakDaily(): Int
+    suspend fun addStreak(): Boolean
+    suspend fun clearStreak(): Boolean
 
     companion object
     {
         private var TOP_VOTERS: List<Voter> = listOf()
 
-        fun init(plugin: CV)
+        suspend fun init(plugin: CV)
         {
             VoteFile.init(plugin)
             getTopVoters(plugin, true)
         }
 
-        fun getTopVoters(plugin: CV, update: Boolean? = null): List<Voter>
+        suspend fun getTopVoters(plugin: CV, update: Boolean? = null): List<Voter>
         {
             if (update == true)
             {
@@ -56,17 +53,17 @@ interface Voter
                 val topVoters = type.getAll()
                 val sortType = VoteSortType.valueOf(plugin.config.getNumber(Setting.VOTES_SORT_TYPE.path))
 
-                topVoters.sortWith { x: Voter, y: Voter ->
+                topVoters.sortWithAsync { x: Voter, y: Voter ->
                     var compare = when (sortType)
                     {
-                        VoteSortType.ALL     -> y.votes.compareTo(x.votes)
-                        VoteSortType.MONTHLY -> y.votesMonthly.compareTo(x.votesMonthly)
-                        VoteSortType.WEEKLY  -> y.votesWeekly.compareTo(x.votesWeekly)
-                        VoteSortType.DAILY   -> y.votesDaily.compareTo(x.votesDaily)
+                        VoteSortType.ALL     -> y.getVotes().compareTo(x.getVotes())
+                        VoteSortType.MONTHLY -> y.getVotesMonthly().compareTo(x.getVotesMonthly())
+                        VoteSortType.WEEKLY  -> y.getVotesWeekly().compareTo(x.getVotesWeekly())
+                        VoteSortType.DAILY   -> y.getVotesDaily().compareTo(x.getVotesDaily())
                     }
                     if (compare == 0)
                     {
-                        compare = x.last.compareTo(y.last)
+                        compare = x.getLast().compareTo(y.getLast())
                     }
                     compare
                 }
@@ -74,11 +71,12 @@ interface Voter
 
                 VoteTopSign.updateAll(plugin)
                 VoteTopStand.updateAll(plugin)
+                PlaceholderChecker.updateAll(plugin, TOP_VOTERS)
             }
             return TOP_VOTERS
         }
 
-        fun getTopVoter(plugin: CV, top: Int): Voter?
+        suspend fun getTopVoter(plugin: CV, top: Int): Voter?
         {
             var n = top
             n--
@@ -89,7 +87,7 @@ interface Voter
             } else null
         }
 
-        fun get(plugin: CV, player: Player): Voter
+        suspend fun get(plugin: CV, player: Player): Voter
         {
             return if (plugin.hasDatabaseConnection())
             {
@@ -100,12 +98,12 @@ interface Voter
             }
         }
 
-        fun getByName(plugin: CV, name: String): Voter?
+        suspend fun getByName(plugin: CV, name: String): Voter?
         {
             val topVoters = getTopVoters(plugin)
-            return topVoters.firstOrNull { voter -> voter.name == name }
-                ?: topVoters.firstOrNull { voter -> voter.name == name.getPlayerNameWithPrefix(plugin) }
-                ?: topVoters.firstOrNull { voter -> voter.name == name.getPlayerNameWithoutPrefix(plugin) }
+            return topVoters.firstOrNull { voter -> voter.getName() == name }
+                ?: topVoters.firstOrNull { voter -> voter.getName() == name.getPlayerNameWithPrefix(plugin) }
+                ?: topVoters.firstOrNull { voter -> voter.getName() == name.getPlayerNameWithoutPrefix(plugin) }
         }
     }
 }

@@ -1,5 +1,6 @@
 package me.sd_master92.customvoting.gui.buttons.abstracts
 
+import com.github.shynixn.mccoroutine.bukkit.launch
 import me.sd_master92.core.inventory.BaseItem
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.PMessage
@@ -18,13 +19,15 @@ abstract class AbstractEnumCarousel(
     name: PMessage
 ) : BaseItem(mat, name.toString())
 {
-    abstract fun newInstance(): ItemStack
+    abstract suspend fun newInstance(): ItemStack
 
     override fun onClick(event: InventoryClickEvent, player: Player)
     {
-        SoundType.CHANGE.play(plugin, player)
-        val next = type.valueOf(plugin.config.getNumber(setting)).next()
-        plugin.config.setNumber(setting, next.ordinal)
-        event.currentItem = newInstance()
+        plugin.launch {
+            SoundType.CHANGE.play(plugin, player)
+            val next = type.valueOf(plugin.config.getNumber(setting)).next()
+            plugin.config.setNumber(setting, next.ordinal)
+            event.currentItem = newInstance()
+        }
     }
 }

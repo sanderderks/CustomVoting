@@ -18,7 +18,7 @@ class VoteRewardItemsTypeCarousel(private val plugin: CV, private val power: Boo
     PMessage.ITEM_REWARDS_ITEM_NAME_TYPE
 )
 {
-    override fun newInstance(): ItemStack
+    override suspend fun newInstance(): ItemStack
     {
         return VoteRewardItemsTypeCarousel(plugin, power)
     }

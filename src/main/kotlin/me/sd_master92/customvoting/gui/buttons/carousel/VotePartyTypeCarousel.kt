@@ -12,7 +12,7 @@ class VotePartyTypeCarousel(private val plugin: CV) : AbstractEnumCarousel(
     plugin, Material.SPLASH_POTION, VotePartyType, Setting.VOTE_PARTY_TYPE.path, PMessage.VOTE_PARTY_ITEM_NAME_TYPE
 )
 {
-    override fun newInstance(): ItemStack
+    override suspend fun newInstance(): ItemStack
     {
         return VotePartyTypeCarousel(plugin)
     }

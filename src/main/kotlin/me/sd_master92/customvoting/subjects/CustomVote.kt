@@ -1,5 +1,6 @@
 package me.sd_master92.customvoting.subjects
 
+import com.github.shynixn.mccoroutine.bukkit.launch
 import com.vexsoftware.votifier.model.Vote
 import me.sd_master92.core.appendWhenTrue
 import me.sd_master92.core.errorLog
@@ -25,7 +26,7 @@ class CustomVote(
     private var previousLast: Long = 0
     private var votes = 0
 
-    private fun forwardVote()
+    private suspend fun forwardVote()
     {
         val player = username.getPlayer(plugin)
         if (player == null)
@@ -43,8 +44,8 @@ class CustomVote(
         {
             broadcast(player)
             val voter = Voter.get(plugin, player)
-            previousLast = voter.last
-            votes = voter.votes
+            previousLast = voter.getLast()
+            votes = voter.getVotes()
             voter.addVote()
             ParticleHelper.shootFirework(plugin, player.location)
             giveRewards(player, player.hasPowerRewards(plugin))
@@ -56,7 +57,7 @@ class CustomVote(
         }
     }
 
-    private fun register(queue: Boolean = false)
+    private suspend fun register(queue: Boolean = false)
     {
         if(!registered)
         {
@@ -71,13 +72,13 @@ class CustomVote(
         }
     }
 
-    private fun broadcast(player: Player)
+    private suspend fun broadcast(player: Player)
     {
         if (!plugin.config.getBoolean(Setting.DISABLED_BROADCAST_VOTE.path))
         {
             if (plugin.config.getBoolean(Setting.FIRST_VOTE_BROADCAST_ONLY.path))
             {
-                val last = Voter.get(plugin, player).last
+                val last = Voter.get(plugin, player).getLast()
                 val date1 = Calendar.getInstance()
                 date1.time = Date(last)
                 val date2 = Calendar.getInstance()
@@ -130,7 +131,7 @@ class CustomVote(
         }
     }
 
-    private fun giveRewards(player: Player, power: Boolean)
+    private suspend fun giveRewards(player: Player, power: Boolean)
     {
         giveItems(player, power)
         executeCommands(player, power)
@@ -218,9 +219,9 @@ class CustomVote(
         }
     }
 
-    private fun giveMilestoneRewards(player: Player)
+    private suspend fun giveMilestoneRewards(player: Player)
     {
-        val votes = Voter.get(plugin, player).votes
+        val votes = Voter.get(plugin, player).getVotes()
         if (plugin.data.contains(Data.MILESTONES.path + ".$votes"))
         {
             if (!plugin.config.getBoolean(Setting.DISABLED_BROADCAST_MILESTONE.path))
@@ -248,10 +249,10 @@ class CustomVote(
         }
     }
 
-    private fun giveStreakRewards(player: Player)
+    private suspend fun giveStreakRewards(player: Player)
     {
         val voter = Voter.get(plugin, player)
-        val streak = voter.streakDaily
+        val streak = voter.getStreakDaily()
         if (plugin.data.contains(Data.STREAKS.path + ".$streak"))
         {
             if (previousLast.dayDifferenceToday() == 1 || votes == 0)
@@ -300,6 +301,8 @@ class CustomVote(
 
     init
     {
-        forwardVote()
+        plugin.launch {
+            forwardVote()
+        }
     }
 }
