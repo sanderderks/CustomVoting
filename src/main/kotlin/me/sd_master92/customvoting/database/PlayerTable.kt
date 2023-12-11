@@ -1,5 +1,6 @@
 package me.sd_master92.customvoting.database
 
+import com.github.shynixn.mccoroutine.bukkit.launch
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.Setting
@@ -11,31 +12,53 @@ import me.sd_master92.customvoting.dayDifferenceToday
 import me.sd_master92.customvoting.monthDifferenceToday
 import me.sd_master92.customvoting.weekDifferenceToday
 import org.bukkit.entity.Player
+import java.util.*
 
-class PlayerTable(private val plugin: CV, override val uuid: String) : Voter
+class PlayerTable(private val plugin: CV, val uuid: UUID) : Voter
 {
     private val players: PlayerDatabase? = plugin.playerDatabase
 
-    override val name: String
-        get() = players?.getName(uuid) ?: PMessage.PLAYER_NAME_UNKNOWN.toString()
-    override val votes: Int
-        get() = players?.getVotes(uuid) ?: 0
-    override val votesMonthly: Int
-        get()
-        {
-            return if (last.monthDifferenceToday() > 0)
-            {
-                clearMonthlyVotes()
-                0
-            } else
-            {
-                players?.getMonthlyVotes(uuid) ?: 0
-            }
+    private constructor(plugin: CV, player: Player) : this(plugin, player.uniqueId)
+    {
+        plugin.launch {
+            players?.setName(player.uniqueId, player.name)
         }
-    override val votesWeekly: Int
-        get()
+    }
+
+    private suspend fun register()
+    {
+        players?.getVotes(uuid)
+        ALL[uuid] = this
+    }
+
+    override suspend fun getUuid(): UUID
+    {
+        return uuid
+    }
+
+    override suspend fun getName(): String {
+        return players?.getName(uuid) ?: PMessage.PLAYER_NAME_UNKNOWN.toString()
+    }
+
+    override suspend fun getVotes(): Int {
+        return players?.getVotes(uuid) ?: 0
+    }
+
+    override suspend fun getVotesMonthly(): Int
+    {
+        return if (getLast().monthDifferenceToday() > 0)
         {
-            return if (last.weekDifferenceToday() > 0)
+            clearMonthlyVotes()
+            0
+        } else
+        {
+            players?.getMonthlyVotes(uuid) ?: 0
+        }
+    }
+
+    override suspend fun getVotesWeekly(): Int
+        {
+            return if (getLast().weekDifferenceToday() > 0)
             {
                 clearWeeklyVotes()
                 0
@@ -44,10 +67,10 @@ class PlayerTable(private val plugin: CV, override val uuid: String) : Voter
                 players?.getWeeklyVotes(uuid) ?: 0
             }
         }
-    override val votesDaily: Int
-        get()
+
+    override suspend fun getVotesDaily(): Int
         {
-            return if (last.dayDifferenceToday() > 0)
+            return if (getLast().dayDifferenceToday() > 0)
             {
                 clearDailyVotes()
                 0
@@ -56,74 +79,77 @@ class PlayerTable(private val plugin: CV, override val uuid: String) : Voter
                 players?.getDailyVotes(uuid) ?: 0
             }
         }
-    override val power: Boolean
-        get() = players?.getPower(uuid) == true
-    override val last: Long
-        get() = history.maxByOrNull { it.time }?.time ?: 0
-    override val history: List<VoteHistory>
-        get() = players?.getHistory(uuid) ?: listOf()
-    override val streakDaily: Int
-        get() = players?.getStreak(uuid) ?: 0
 
-    private constructor(plugin: CV, player: Player) : this(plugin, player.uniqueId.toString())
+    override suspend fun getPower(): Boolean
     {
-        players?.setName(player.uniqueId.toString(), player.name)
+        return players?.getPower(uuid) == true
     }
 
-    private fun register()
+    override suspend fun getLast(): Long
     {
-        players?.getVotes(uuid)
-        ALL[uuid] = this
+        return getHistory().maxByOrNull { it.time }?.time ?: 0
     }
 
-    override fun setVotes(n: Int, update: Boolean)
+    override suspend fun getHistory(): List<VoteHistory>
     {
-        players?.setVotes(uuid, n)
-        players?.setMonthlyVotes(uuid, 0)
-        players?.setWeeklyVotes(uuid, 0)
-        players?.setDailyVotes(uuid, 0)
+        return players?.getHistory(uuid) ?: listOf()
+    }
 
-        if (update)
-        {
-            Voter.getTopVoters(plugin, true)
+    override suspend fun getStreakDaily(): Int
+    {
+        return players?.getStreak(uuid) ?: 0
+    }
+
+    override suspend fun setVotes(n: Int, update: Boolean)
+    {
+        plugin.launch {
+            players?.setVotes(uuid, n)
+            players?.setMonthlyVotes(uuid, 0)
+            players?.setWeeklyVotes(uuid, 0)
+            players?.setDailyVotes(uuid, 0)
+
+            if (update)
+            {
+                Voter.getTopVoters(plugin, true)
+            }
         }
     }
 
-    override fun addVote(): Boolean
+    override suspend fun addVote(): Boolean
     {
-        val votesBefore = votes
+        val votesBefore = getVotes()
         addStreak()
-        players?.setVotes(uuid, votes + 1)
-        players?.setMonthlyVotes(uuid, votesMonthly + 1)
-        players?.setWeeklyVotes(uuid, votesWeekly + 1)
-        players?.setDailyVotes(uuid, votesDaily + 1)
+        players?.setVotes(uuid, getVotes() + 1)
+        players?.setMonthlyVotes(uuid, getVotesMonthly() + 1)
+        players?.setWeeklyVotes(uuid, getVotesWeekly() + 1)
+        players?.setDailyVotes(uuid, getVotesDaily() + 1)
 
         Voter.getTopVoters(plugin, true)
 
-        return votesBefore < votes
+        return votesBefore < getVotes()
     }
 
-    override fun setPower(power: Boolean): Boolean
+    override suspend fun setPower(power: Boolean): Boolean
     {
         return players?.setPower(uuid, power) ?: false
     }
 
-    override fun clearQueue(): Boolean
+    override suspend fun clearQueue(): Boolean
     {
         return players?.clearQueue(uuid) ?: false
     }
 
-    override fun addHistory(site: VoteSiteUUID, queued: Boolean): Boolean
+    override suspend fun addHistory(site: VoteSiteUUID, queued: Boolean): Boolean
     {
         return players?.addHistory(uuid, site, queued) ?: false
     }
 
-    override fun addStreak(): Boolean
+    override suspend fun addStreak(): Boolean
     {
-        val diff = last.dayDifferenceToday()
-        if (!plugin.config.getBoolean(Setting.VOTE_STREAK_CONSECUTIVE.path) || diff == 1 || votes == 0)
+        val diff = getLast().dayDifferenceToday()
+        if (!plugin.config.getBoolean(Setting.VOTE_STREAK_CONSECUTIVE.path) || diff == 1 || getVotes() == 0)
         {
-            return players?.setStreak(uuid, streakDaily + 1) ?: false
+            return players?.setStreak(uuid, getStreakDaily() + 1) ?: false
         } else if (diff > 1)
         {
             clearStreak()
@@ -131,48 +157,55 @@ class PlayerTable(private val plugin: CV, override val uuid: String) : Voter
         return false
     }
 
-    override fun clearStreak(): Boolean
+    override suspend fun clearStreak(): Boolean
     {
         return players?.setStreak(uuid, 0) ?: false
     }
 
-    override fun clearMonthlyVotes()
+    override suspend fun clearMonthlyVotes()
     {
         players?.setMonthlyVotes(uuid, 0)
     }
 
-    override fun clearWeeklyVotes()
+    override suspend fun clearWeeklyVotes()
     {
         players?.setWeeklyVotes(uuid, 0) ?: false
     }
 
-    override fun clearDailyVotes()
+    override suspend fun clearDailyVotes()
     {
         players?.setDailyVotes(uuid, 0) ?: false
     }
 
     companion object : TopVoter
     {
-        private var ALL: MutableMap<String, PlayerTable> = HashMap()
+        private var ALL: MutableMap<UUID, PlayerTable> = HashMap()
 
         fun init(plugin: CV)
         {
-            val result = plugin.playerDatabase?.playersTable?.getAll()
-            if (result != null)
-            {
-                while (result.next())
+            plugin.launch {
+                val result = plugin.playerDatabase?.playersTable?.getAllAsync()
+                if (result != null)
                 {
-                    PlayerTable(plugin, result.getString(PlayerTableColumn.UUID.columnName))
+                    while (result.next())
+                    {
+                        try
+                        {
+                            PlayerTable(plugin, UUID.fromString(result.getString(PlayerTableColumn.UUID.columnName)))
+                        } catch (_: Exception)
+                        {
+                        }
+                    }
                 }
             }
         }
 
-        override fun getAll(plugin: CV): MutableList<Voter>
+        override fun getAll(): MutableList<Voter>
         {
             return ALL.values.toMutableList()
         }
 
-        fun get(plugin: CV, player: Player): PlayerTable
+        suspend fun get(plugin: CV, player: Player): PlayerTable
         {
             return if (plugin.config.getBoolean(Setting.UUID_STORAGE.path)) getByUuid(plugin, player) else getByName(
                 plugin,
@@ -182,17 +215,19 @@ class PlayerTable(private val plugin: CV, override val uuid: String) : Voter
 
         private fun getByUuid(plugin: CV, player: Player): PlayerTable
         {
-            return ALL.getOrDefault(player.uniqueId.toString(), PlayerTable(plugin, player))
+            return ALL.getOrDefault(player.uniqueId, PlayerTable(plugin, player))
         }
 
-        private fun getByName(plugin: CV, player: Player): PlayerTable
+        private suspend fun getByName(plugin: CV, player: Player): PlayerTable
         {
-            return ALL.values.firstOrNull { file -> file.name == player.name } ?: PlayerTable(plugin, player)
+            return ALL.values.firstOrNull { file -> file.getName() == player.name } ?: PlayerTable(plugin, player)
         }
     }
 
     init
     {
-        register()
+        plugin.launch {
+            register()
+        }
     }
 }

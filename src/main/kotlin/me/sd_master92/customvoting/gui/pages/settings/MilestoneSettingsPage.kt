@@ -13,7 +13,7 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 
 class MilestoneSettingsPage(private val plugin: CV, backPage: GUI?, private val number: Int) :
-    GUI(plugin, backPage, PMessage.MILESTONE_INVENTORY_NAME_X.with("$number"), 9)
+    GUI(plugin, backPage, PMessage.MILESTONE_INVENTORY_NAME_X.with("$number"))
 {
     override fun newInstance(): GUI
     {

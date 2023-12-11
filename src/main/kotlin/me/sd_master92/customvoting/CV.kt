@@ -1,5 +1,8 @@
 package me.sd_master92.customvoting
 
+import com.github.shynixn.mccoroutine.bukkit.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import me.sd_master92.core.database.CustomDatabase
 import me.sd_master92.core.errorLog
 import me.sd_master92.core.file.CustomFile
@@ -47,7 +50,11 @@ class CV : CustomPlugin(
         }
         checkHooks()
         setupDatabase()
-        registerFiles()
+        launch {
+            withContext(Dispatchers.IO) {
+                registerFiles()
+            }
+        }
         registerListeners()
         registerCommands()
         startTasks()
@@ -198,7 +205,7 @@ class CV : CustomPlugin(
         return PERMISSION != null
     }
 
-    private fun registerFiles()
+    private suspend fun registerFiles()
     {
         messages = CustomFile("messages.yml", this)
         data = CustomFile("data.yml", this)
@@ -262,7 +269,7 @@ class CV : CustomPlugin(
         if (!hasDatabaseConnection())
         {
             metrics.addCustomChart(SimplePie("number_of_playerfiles") {
-                val number = VoteFile.getAll(this).size
+                val number = VoteFile.getAll().size
                 var max = 100
                 while (number >= max)
                 {
@@ -275,7 +282,7 @@ class CV : CustomPlugin(
         {
             metrics.addCustomChart(SimplePie("number_of_databaserows") {
 
-                val number = PlayerTable.getAll(this).size
+                val number = PlayerTable.getAll().size
                 var max = 100
                 while (number >= max)
                 {

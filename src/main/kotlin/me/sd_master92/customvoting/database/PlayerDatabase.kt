@@ -1,5 +1,6 @@
 package me.sd_master92.customvoting.database
 
+import com.github.shynixn.mccoroutine.bukkit.launch
 import me.sd_master92.core.database.CustomColumn
 import me.sd_master92.core.database.CustomDatabase
 import me.sd_master92.core.database.CustomTable
@@ -15,24 +16,27 @@ class PlayerDatabase(private val plugin: CV, private val database: CustomDatabas
     val playersTable: CustomTable = database.getTable(PLAYERS_TABLE)
     private val historyTable: CustomTable = database.getTable(HISTORY_TABLE)
 
-    private fun addPlayer(uuid: String): Boolean
+    private suspend fun addPlayer(uuid: UUID): Boolean
     {
         val defaultData = mutableMapOf<String, Any>()
         for (column in PlayerTableColumn.columns(uuid))
         {
             defaultData[column.columnName] = column.defaultValue!!
         }
-        return playersTable.insertData(defaultData.keys.toTypedArray(), defaultData.values.toTypedArray())
+        return playersTable.insertDataAsync(defaultData.keys.toTypedArray(), defaultData.values.toTypedArray())
     }
 
-    fun getName(uuid: String): String
+    suspend fun getName(uuid: UUID): String
     {
-        val result = playersTable.getData(PlayerTableColumn.UUID.columnName, uuid)
+        val result = playersTable.getDataAsync(PlayerTableColumn.UUID.columnName, uuid)
         try
         {
-            if (result.next())
+            if (result != null)
             {
-                return result.getString(PlayerTableColumn.NAME.columnName)
+                if (result.next())
+                {
+                    return result.getString(PlayerTableColumn.NAME.columnName)
+                }
             }
         } catch (e: Exception)
         {
@@ -41,22 +45,25 @@ class PlayerDatabase(private val plugin: CV, private val database: CustomDatabas
         return "Unknown"
     }
 
-    fun setName(uuid: String, name: String): Boolean
+    suspend fun setName(uuid: UUID, name: String): Boolean
     {
-        return playersTable.updateData(PlayerTableColumn.UUID.columnName, uuid, PlayerTableColumn.NAME.columnName, name)
+        return playersTable.updateDataAsync(PlayerTableColumn.UUID.columnName, uuid, PlayerTableColumn.NAME.columnName, name)
     }
 
-    fun getVotes(uuid: String): Int
+    suspend fun getVotes(uuid: UUID): Int
     {
-        val result = playersTable.getData(PlayerTableColumn.UUID.columnName, uuid)
+        val result = playersTable.getDataAsync(PlayerTableColumn.UUID.columnName, uuid)
         try
         {
-            if (result.next())
+            if (result != null)
             {
-                return result.getInt(PlayerTableColumn.VOTES.columnName)
-            } else
-            {
-                addPlayer(uuid)
+                if (result.next())
+                {
+                    return result.getInt(PlayerTableColumn.VOTES.columnName)
+                } else
+                {
+                    addPlayer(uuid)
+                }
             }
         } catch (e: Exception)
         {
@@ -65,9 +72,9 @@ class PlayerDatabase(private val plugin: CV, private val database: CustomDatabas
         return 0
     }
 
-    fun setVotes(uuid: String, votes: Int): Boolean
+    suspend fun setVotes(uuid: UUID, votes: Int): Boolean
     {
-        return playersTable.updateData(
+        return playersTable.updateDataAsync(
             PlayerTableColumn.UUID.columnName,
             uuid,
             PlayerTableColumn.VOTES.columnName,
@@ -75,17 +82,20 @@ class PlayerDatabase(private val plugin: CV, private val database: CustomDatabas
         )
     }
 
-    fun getMonthlyVotes(uuid: String): Int
+    suspend fun getMonthlyVotes(uuid: UUID): Int
     {
-        val result = playersTable.getData(PlayerTableColumn.UUID.columnName, uuid)
+        val result = playersTable.getDataAsync(PlayerTableColumn.UUID.columnName, uuid)
         try
         {
-            if (result.next())
+            if (result != null)
             {
-                return result.getInt(PlayerTableColumn.MONTHLY_VOTES.columnName)
-            } else
-            {
-                addPlayer(uuid)
+                if (result.next())
+                {
+                    return result.getInt(PlayerTableColumn.MONTHLY_VOTES.columnName)
+                } else
+                {
+                    addPlayer(uuid)
+                }
             }
         } catch (e: Exception)
         {
@@ -94,9 +104,9 @@ class PlayerDatabase(private val plugin: CV, private val database: CustomDatabas
         return 0
     }
 
-    fun setMonthlyVotes(uuid: String, votes: Int): Boolean
+    suspend fun setMonthlyVotes(uuid: UUID, votes: Int): Boolean
     {
-        return playersTable.updateData(
+        return playersTable.updateDataAsync(
             PlayerTableColumn.UUID.columnName,
             uuid,
             PlayerTableColumn.MONTHLY_VOTES.columnName,
@@ -104,14 +114,17 @@ class PlayerDatabase(private val plugin: CV, private val database: CustomDatabas
         )
     }
 
-    fun getWeeklyVotes(uuid: String): Int
+    suspend fun getWeeklyVotes(uuid: UUID): Int
     {
-        val result = playersTable.getData(PlayerTableColumn.UUID.columnName, uuid)
+        val result = playersTable.getDataAsync(PlayerTableColumn.UUID.columnName, uuid)
         try
         {
-            if (result.next())
+            if (result != null)
             {
-                return result.getInt(PlayerTableColumn.WEEKLY_VOTES.columnName)
+                if (result.next())
+                {
+                    return result.getInt(PlayerTableColumn.WEEKLY_VOTES.columnName)
+                }
             }
         } catch (e: Exception)
         {
@@ -120,9 +133,9 @@ class PlayerDatabase(private val plugin: CV, private val database: CustomDatabas
         return 0
     }
 
-    fun setWeeklyVotes(uuid: String, votes: Int): Boolean
+    suspend fun setWeeklyVotes(uuid: UUID, votes: Int): Boolean
     {
-        return playersTable.updateData(
+        return playersTable.updateDataAsync(
             PlayerTableColumn.UUID.columnName,
             uuid,
             PlayerTableColumn.WEEKLY_VOTES.columnName,
@@ -130,14 +143,17 @@ class PlayerDatabase(private val plugin: CV, private val database: CustomDatabas
         )
     }
 
-    fun getDailyVotes(uuid: String): Int
+    suspend fun getDailyVotes(uuid: UUID): Int
     {
-        val result = playersTable.getData(PlayerTableColumn.UUID.columnName, uuid)
+        val result = playersTable.getDataAsync(PlayerTableColumn.UUID.columnName, uuid)
         try
         {
-            if (result.next())
+            if (result != null)
             {
-                return result.getInt(PlayerTableColumn.DAILY_VOTES.columnName)
+                if (result.next())
+                {
+                    return result.getInt(PlayerTableColumn.DAILY_VOTES.columnName)
+                }
             }
         } catch (e: Exception)
         {
@@ -146,9 +162,9 @@ class PlayerDatabase(private val plugin: CV, private val database: CustomDatabas
         return 0
     }
 
-    fun setDailyVotes(uuid: String, votes: Int): Boolean
+    suspend fun setDailyVotes(uuid: UUID, votes: Int): Boolean
     {
-        return playersTable.updateData(
+        return playersTable.updateDataAsync(
             PlayerTableColumn.UUID.columnName,
             uuid,
             PlayerTableColumn.DAILY_VOTES.columnName,
@@ -156,21 +172,24 @@ class PlayerDatabase(private val plugin: CV, private val database: CustomDatabas
         )
     }
 
-    fun getHistory(uuid: String): List<VoteHistory>
+    suspend fun getHistory(uuid: UUID): List<VoteHistory>
     {
-        val result = historyTable.getData(HistoryTableColumn.UUID.columnName, uuid)
+        val result = historyTable.getDataAsync(HistoryTableColumn.UUID.columnName, uuid)
         val voteHistory = mutableListOf<VoteHistory>()
         try
         {
-            while (result.next())
+            if (result != null)
             {
-                val id = result.getInt(HistoryTableColumn.ID.columnName)
-                val site = result.getString(HistoryTableColumn.SITE.columnName)
-                val time = result.getLong(HistoryTableColumn.TIME.columnName)
-                val queued = result.getBoolean(HistoryTableColumn.QUEUED.columnName)
+                while (result.next())
+                {
+                    val id = result.getInt(HistoryTableColumn.ID.columnName)
+                    val site = result.getString(HistoryTableColumn.SITE.columnName)
+                    val time = result.getLong(HistoryTableColumn.TIME.columnName)
+                    val queued = result.getBoolean(HistoryTableColumn.QUEUED.columnName)
 
-                val vote = VoteHistory(id, uuid, VoteSiteUUID(site), time, queued)
-                voteHistory.add(vote)
+                    val vote = VoteHistory(id, uuid, VoteSiteUUID(site), time, queued)
+                    voteHistory.add(vote)
+                }
             }
         } catch (e: Exception)
         {
@@ -179,9 +198,9 @@ class PlayerDatabase(private val plugin: CV, private val database: CustomDatabas
         return voteHistory
     }
 
-    fun addHistory(uuid: String, site: VoteSiteUUID, queued: Boolean, time: Long? = null): Boolean
+    suspend fun addHistory(uuid: UUID, site: VoteSiteUUID, queued: Boolean, time: Long? = null): Boolean
     {
-        return historyTable.insertData(
+        return historyTable.insertDataAsync(
             arrayOf(
                 HistoryTableColumn.UUID.columnName,
                 HistoryTableColumn.SITE.columnName,
@@ -192,9 +211,9 @@ class PlayerDatabase(private val plugin: CV, private val database: CustomDatabas
         )
     }
 
-    fun clearQueue(uuid: String): Boolean
+    suspend fun clearQueue(uuid: UUID): Boolean
     {
-        return historyTable.updateData(
+        return historyTable.updateDataAsync(
             HistoryTableColumn.UUID.columnName,
             uuid,
             HistoryTableColumn.QUEUED.columnName,
@@ -202,14 +221,17 @@ class PlayerDatabase(private val plugin: CV, private val database: CustomDatabas
         )
     }
 
-    fun getPower(uuid: String): Boolean
+    suspend fun getPower(uuid: UUID): Boolean
     {
-        val result = playersTable.getData(PlayerTableColumn.UUID.columnName, uuid)
+        val result = playersTable.getDataAsync(PlayerTableColumn.UUID.columnName, uuid)
         try
         {
-            if (result.next())
+            if (result != null)
             {
-                return result.getBoolean(PlayerTableColumn.POWER.columnName)
+                if (result.next())
+                {
+                    return result.getBoolean(PlayerTableColumn.POWER.columnName)
+                }
             }
         } catch (e: Exception)
         {
@@ -218,9 +240,9 @@ class PlayerDatabase(private val plugin: CV, private val database: CustomDatabas
         return false
     }
 
-    fun setPower(uuid: String, power: Boolean): Boolean
+    suspend fun setPower(uuid: UUID, power: Boolean): Boolean
     {
-        return playersTable.updateData(
+        return playersTable.updateDataAsync(
             PlayerTableColumn.UUID.columnName,
             uuid,
             PlayerTableColumn.POWER.columnName,
@@ -228,14 +250,17 @@ class PlayerDatabase(private val plugin: CV, private val database: CustomDatabas
         )
     }
 
-    fun getStreak(uuid: String): Int
+    suspend fun getStreak(uuid: UUID): Int
     {
-        val result = playersTable.getData(PlayerTableColumn.UUID.columnName, uuid)
+        val result = playersTable.getDataAsync(PlayerTableColumn.UUID.columnName, uuid)
         try
         {
-            if (result.next())
+            if (result != null)
             {
-                return result.getInt(PlayerTableColumn.DAILY_VOTE_STREAK.columnName)
+                if (result.next())
+                {
+                    return result.getInt(PlayerTableColumn.DAILY_VOTE_STREAK.columnName)
+                }
             }
         } catch (e: Exception)
         {
@@ -244,9 +269,9 @@ class PlayerDatabase(private val plugin: CV, private val database: CustomDatabas
         return 0
     }
 
-    fun setStreak(uuid: String, streak: Int): Boolean
+    suspend  fun setStreak(uuid: UUID, streak: Int): Boolean
     {
-        return playersTable.updateData(
+        return playersTable.updateDataAsync(
             PlayerTableColumn.UUID.columnName,
             uuid,
             PlayerTableColumn.DAILY_VOTE_STREAK.columnName,
@@ -254,7 +279,7 @@ class PlayerDatabase(private val plugin: CV, private val database: CustomDatabas
         )
     }
 
-    private fun migratePlayers()
+    private suspend fun migratePlayers()
     {
         rename(playersTable, "period", PlayerTableColumn.MONTHLY_VOTES.columnName, CustomColumn.DataType.INT)
         rename(playersTable, "monthly_votes", PlayerTableColumn.MONTHLY_VOTES.columnName, CustomColumn.DataType.INT)
@@ -268,22 +293,25 @@ class PlayerDatabase(private val plugin: CV, private val database: CustomDatabas
         delete(playersTable, "last_site")
     }
 
-    private fun migrateQueue()
+    private suspend  fun migrateQueue()
     {
         val queueTable = database.getTable("queue")
-        if (queueTable.exists())
+        if (queueTable.existsAsync())
         {
-            val result = queueTable.getAll()
+            val result = queueTable.getAllAsync()
             try
             {
-                while (result.next())
+                if (result != null)
                 {
-                    val uuid = result.getString("uuid")
-                    val site = VoteSiteUUID(result.getString("site"))
-                    val time = result.getLong("timestamp")
-                    addHistory(uuid, site, true, time)
+                    while (result.next())
+                    {
+                        val uuid = UUID.fromString(result.getString("uuid"))
+                        val site = VoteSiteUUID(result.getString("site"))
+                        val time = result.getLong("timestamp")
+                        addHistory(uuid, site, true, time)
+                    }
                 }
-                queueTable.delete(queueTable.name)
+                queueTable.deleteAsync(queueTable.name)
             } catch (e: Exception)
             {
                 plugin.errorLog("Could not retrieve queue from database", e)
@@ -295,7 +323,7 @@ class PlayerDatabase(private val plugin: CV, private val database: CustomDatabas
     {
     }
 
-    private fun create(table: CustomTable, name: String, dataType: CustomColumn.DataType)
+    private suspend fun create(table: CustomTable, name: String, dataType: CustomColumn.DataType)
     {
         val column = table.getColumn(name)
         if (!column.exists())
@@ -310,7 +338,7 @@ class PlayerDatabase(private val plugin: CV, private val database: CustomDatabas
         }
     }
 
-    private fun rename(table: CustomTable, oldName: String, newName: String, dataType: CustomColumn.DataType)
+    private suspend fun rename(table: CustomTable, oldName: String, newName: String, dataType: CustomColumn.DataType)
     {
         if (!table.getColumn(newName).exists())
         {
@@ -328,7 +356,7 @@ class PlayerDatabase(private val plugin: CV, private val database: CustomDatabas
         }
     }
 
-    private fun delete(table: CustomTable, name: String)
+    private suspend fun delete(table: CustomTable, name: String)
     {
         val column = table.getColumn(name)
         if (column.exists())
@@ -351,31 +379,33 @@ class PlayerDatabase(private val plugin: CV, private val database: CustomDatabas
 
     init
     {
-        if (!playersTable.exists())
-        {
-            PlayerTableColumn.create(plugin, playersTable)
-        } else
-        {
-            plugin.infoLog("| successfully located table '$PLAYERS_TABLE'")
-            plugin.infoLog("|")
-            migratePlayers()
-        }
-        if (!historyTable.exists())
-        {
-            HistoryTableColumn.create(plugin, historyTable)
-        } else
-        {
-            plugin.infoLog("| successfully located table '$HISTORY_TABLE'")
-            plugin.infoLog("|")
-            migrateHistory()
-            migrateQueue()
-        }
-        if (playersTable.exists() && historyTable.exists())
-        {
-            plugin.infoLog("|___successfully connected to database")
-        } else
-        {
-            plugin.errorLog("|___database disabled")
+        plugin.launch {
+            if (!playersTable.existsAsync())
+            {
+                PlayerTableColumn.create(plugin, playersTable)
+            } else
+            {
+                plugin.infoLog("| successfully located table '$PLAYERS_TABLE'")
+                plugin.infoLog("|")
+                migratePlayers()
+            }
+            if (!historyTable.existsAsync())
+            {
+                HistoryTableColumn.create(plugin, historyTable)
+            } else
+            {
+                plugin.infoLog("| successfully located table '$HISTORY_TABLE'")
+                plugin.infoLog("|")
+                migrateHistory()
+                migrateQueue()
+            }
+            if (playersTable.existsAsync() && historyTable.existsAsync())
+            {
+                plugin.infoLog("|___successfully connected to database")
+            } else
+            {
+                plugin.errorLog("|___database disabled")
+            }
         }
     }
 }

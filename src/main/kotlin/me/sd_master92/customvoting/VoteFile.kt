@@ -1,5 +1,8 @@
 package me.sd_master92.customvoting
 
+import com.github.shynixn.mccoroutine.bukkit.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import me.sd_master92.core.file.PlayerFile
 import me.sd_master92.customvoting.constants.enumerations.Data
 import me.sd_master92.customvoting.constants.enumerations.Setting
@@ -8,22 +11,57 @@ import me.sd_master92.customvoting.constants.interfaces.Voter
 import me.sd_master92.customvoting.constants.models.VoteHistory
 import me.sd_master92.customvoting.constants.models.VoteSiteUUID
 import org.bukkit.entity.Player
+import java.util.*
 
 class VoteFile : Voter
 {
     private val plugin: CV
     private val playerFile: PlayerFile
 
-    override val uuid: String
-        get() = playerFile.uuid
-    override val name: String
-        get() = playerFile.name
-    override val votes: Int
-        get() = playerFile.getNumber(VOTES)
-    override val votesMonthly: Int
-        get()
+    private constructor(uuid: UUID, plugin: CV)
+    {
+        playerFile = PlayerFile.getByUuid(plugin, uuid)
+        this.plugin = plugin
+        plugin.launch {
+            register()
+        }
+    }
+
+    private constructor(player: Player, plugin: CV)
+    {
+        playerFile = player.getPlayerFile(plugin)
+        this.plugin = plugin
+        plugin.launch {
+            register()
+        }
+    }
+
+    private suspend fun register()
+    {
+        if (getVotes() == 0)
         {
-            return if (last.monthDifferenceToday() > 0)
+            setVotes(0, false)
+        }
+    }
+
+    override suspend fun getUuid(): UUID
+    {
+        return playerFile.uuid
+    }
+
+    override suspend fun getName(): String
+    {
+        return playerFile.name
+    }
+
+    override suspend fun getVotes(): Int
+    {
+        return playerFile.getNumber(VOTES)
+    }
+
+    override suspend fun getVotesMonthly(): Int
+        {
+            return if (getLast().monthDifferenceToday() > 0)
             {
                 clearMonthlyVotes()
                 0
@@ -32,10 +70,10 @@ class VoteFile : Voter
                 playerFile.getNumber(VOTES_MONTHLY)
             }
         }
-    override val votesWeekly: Int
-        get()
+
+    override suspend fun getVotesWeekly(): Int
         {
-            return if (last.weekDifferenceToday() > 0)
+            return if (getLast().weekDifferenceToday() > 0)
             {
                 clearWeeklyVotes()
                 0
@@ -44,10 +82,10 @@ class VoteFile : Voter
                 playerFile.getNumber(VOTES_WEEKLY)
             }
         }
-    override val votesDaily: Int
-        get()
+
+    override suspend fun getVotesDaily(): Int
         {
-            return if (last.dayDifferenceToday() > 0)
+            return if (getLast().dayDifferenceToday() > 0)
             {
                 clearDailyVotes()
                 0
@@ -56,12 +94,18 @@ class VoteFile : Voter
                 playerFile.getNumber(VOTES_DAILY)
             }
         }
-    override val last: Long
-        get() = history.maxByOrNull { it.time }?.time ?: 0
-    override val power: Boolean
-        get() = playerFile.getBoolean(POWER)
-    override val history: List<VoteHistory>
-        get()
+
+    override suspend fun getLast(): Long
+    {
+        return getHistory().maxByOrNull { it.time }?.time ?: 0
+    }
+
+    override suspend fun getPower(): Boolean
+    {
+        return playerFile.getBoolean(POWER)
+    }
+
+    override suspend fun getHistory(): List<VoteHistory>
         {
             val history = mutableListOf<VoteHistory>()
             for (key in playerFile.getConfigurationSection(Data.VOTE_HISTORY.path)?.getKeys(false) ?: listOf())
@@ -71,48 +115,29 @@ class VoteFile : Voter
                 val queued = playerFile.getBoolean(Data.VOTE_HISTORY.path + ".$key.queued")
                 if (site != null)
                 {
-                    history.add(VoteHistory(key.toInt(), uuid, VoteSiteUUID(site), time, queued))
+                    history.add(VoteHistory(key.toInt(), getUuid(), VoteSiteUUID(site), time, queued))
                 }
             }
             return history
         }
-    override val streakDaily: Int
-        get() = playerFile.getNumber(STREAK_DAILY)
 
-    private constructor(uuid: String, plugin: CV)
+    override suspend fun getStreakDaily(): Int
     {
-        playerFile = PlayerFile.getByUuid(plugin, uuid)
-        this.plugin = plugin
-        register()
+        return playerFile.getNumber(STREAK_DAILY)
     }
 
-    private constructor(player: Player, plugin: CV)
-    {
-        playerFile = player.getPlayerFile(plugin)
-        this.plugin = plugin
-        register()
-    }
-
-    private fun register()
-    {
-        if (votes == 0)
-        {
-            setVotes(0, false)
-        }
-    }
-
-    fun delete(): Boolean
+    suspend fun delete(): Boolean
     {
         if (playerFile.delete())
         {
-            ALL.remove(uuid)
+            ALL.remove(getUuid())
             Voter.getTopVoters(plugin, true)
             return true
         }
         return false
     }
 
-    override fun setVotes(n: Int, update: Boolean)
+    override suspend fun setVotes(n: Int, update: Boolean)
     {
         playerFile.setNumber(VOTES, n)
         playerFile.setNumber(VOTES_MONTHLY, 0)
@@ -130,24 +155,24 @@ class VoteFile : Voter
         }
     }
 
-    override fun clearMonthlyVotes()
+    override suspend fun clearMonthlyVotes()
     {
         playerFile.setNumber(VOTES_MONTHLY, 0)
     }
 
-    override fun clearWeeklyVotes()
+    override suspend fun clearWeeklyVotes()
     {
         playerFile.setNumber(VOTES_WEEKLY, 0)
     }
 
-    override fun clearDailyVotes()
+    override suspend fun clearDailyVotes()
     {
         playerFile.setNumber(VOTES_DAILY, 0)
     }
 
-    override fun addVote(): Boolean
+    override suspend fun addVote(): Boolean
     {
-        val beforeVotes = votes
+        val beforeVotes = getVotes()
         addStreak()
         playerFile.addNumber(VOTES)
         playerFile.addNumber(VOTES_MONTHLY)
@@ -156,37 +181,37 @@ class VoteFile : Voter
 
         Voter.getTopVoters(plugin, true)
 
-        return beforeVotes < votes
+        return beforeVotes < getVotes()
     }
 
-    override fun setPower(power: Boolean): Boolean
+    override suspend fun setPower(power: Boolean): Boolean
     {
         playerFile.set(POWER, power)
         return playerFile.saveConfig()
     }
 
-    override fun addHistory(site: VoteSiteUUID, queued: Boolean): Boolean
+    override suspend fun addHistory(site: VoteSiteUUID, queued: Boolean): Boolean
     {
-        val key = history.size
+        val key = getHistory().size
         playerFile.set(Data.VOTE_HISTORY.path + ".$key.site", site.toString())
         playerFile.setTimeStamp(Data.VOTE_HISTORY.path + ".$key.timestamp")
         playerFile.set(Data.VOTE_HISTORY.path + ".$key.queued", queued)
         return playerFile.saveConfig()
     }
 
-    override fun clearQueue(): Boolean
+    override suspend fun clearQueue(): Boolean
     {
-        for (vote in history.filter { it.queued })
+        for (vote in getHistory().filter { it.queued })
         {
             playerFile.set(Data.VOTE_HISTORY.path + ".${vote.id}.queued", false)
         }
         return playerFile.saveConfig()
     }
 
-    override fun addStreak(): Boolean
+    override suspend fun addStreak(): Boolean
     {
-        val diff = last.dayDifferenceToday()
-        if (!plugin.config.getBoolean(Setting.VOTE_STREAK_CONSECUTIVE.path) || diff == 1 || votes == 0)
+        val diff = getLast().dayDifferenceToday()
+        if (!plugin.config.getBoolean(Setting.VOTE_STREAK_CONSECUTIVE.path) || diff == 1 || getVotes() == 0)
         {
             return playerFile.addNumber(STREAK_DAILY, 1)
         } else if (diff > 1)
@@ -196,7 +221,7 @@ class VoteFile : Voter
         return false
     }
 
-    override fun clearStreak(): Boolean
+    override suspend fun clearStreak(): Boolean
     {
         return playerFile.setNumber(STREAK_DAILY, 0)
     }
@@ -210,21 +235,23 @@ class VoteFile : Voter
         private const val STREAK_DAILY = "streak_daily"
         private const val POWER = "power"
 
-        private var ALL: MutableMap<String, VoteFile> = HashMap()
+        private var ALL: MutableMap<UUID, VoteFile> = HashMap()
 
-        fun init(plugin: CV)
+        suspend fun init(plugin: CV)
         {
             PlayerFile.init(plugin)
-            ALL = PlayerFile.getAll().values.map { playerFile -> VoteFile(playerFile.uuid, plugin) }
-                .associateBy { file -> file.uuid }.toMutableMap()
+            ALL = withContext(Dispatchers.IO) {
+                PlayerFile.getAll().values.map { playerFile -> VoteFile(playerFile.uuid, plugin) }
+                        .associateBy { file -> file.getUuid() }.toMutableMap()
+            }
             migrateAll()
         }
 
-        fun mergeDuplicates(plugin: CV): Int
+        suspend fun mergeDuplicates(): Int
         {
-            val voters = getAll(plugin)
+            val voters = getAll()
             var deleted = 0
-            for (voter in voters.filter { it -> it.uuid !in voters.distinctBy { it.name }.map { it.uuid } })
+            for (voter in voters.filter { it -> it.getUuid() !in voters.distinctBy { it.getName() }.map { it.getUuid() } })
             {
                 if (voter is VoteFile && voter.delete())
                 {
@@ -234,12 +261,12 @@ class VoteFile : Voter
             return deleted
         }
 
-        override fun getAll(plugin: CV): MutableList<Voter>
+        override fun getAll(): MutableList<Voter>
         {
             return ALL.values.toMutableList()
         }
 
-        fun get(plugin: CV, player: Player): VoteFile
+        suspend fun get(plugin: CV, player: Player): VoteFile
         {
             return if (plugin.config.getBoolean(Setting.UUID_STORAGE.path)) getByUuid(plugin, player) else getByName(
                 plugin,
@@ -249,12 +276,12 @@ class VoteFile : Voter
 
         private fun getByUuid(plugin: CV, player: Player): VoteFile
         {
-            return ALL.getOrDefault(player.uniqueId.toString(), VoteFile(player, plugin))
+            return ALL.getOrDefault(player.uniqueId, VoteFile(player, plugin))
         }
 
-        private fun getByName(plugin: CV, player: Player): VoteFile
+        private suspend fun getByName(plugin: CV, player: Player): VoteFile
         {
-            return ALL.values.firstOrNull { file -> file.name == player.name } ?: VoteFile(player, plugin)
+            return ALL.values.firstOrNull { file -> file.getName() == player.name } ?: VoteFile(player, plugin)
         }
 
         private fun migrateAll()

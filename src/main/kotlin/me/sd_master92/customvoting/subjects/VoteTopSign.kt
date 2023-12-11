@@ -1,5 +1,6 @@
 package me.sd_master92.customvoting.subjects
 
+import com.github.shynixn.mccoroutine.bukkit.launch
 import me.sd_master92.core.tasks.TaskTimer
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.Data
@@ -24,7 +25,7 @@ class VoteTopSign(
     player: Player? = null
 )
 {
-    private fun update()
+    private suspend fun update()
     {
         if (top == 0)
         {
@@ -49,7 +50,7 @@ class VoteTopSign(
         }
     }
 
-    private fun updateSign()
+    private suspend fun updateSign()
     {
         if (location!!.block.state is Sign)
         {
@@ -87,7 +88,7 @@ class VoteTopSign(
                 {
                     sign.setLine(i, message)
                 }
-                updateSkull(location, topVoter.uuid)
+                updateSkull(location, topVoter.getUuid())
             } else
             {
                 for (i in 0..3)
@@ -108,7 +109,7 @@ class VoteTopSign(
         }
     }
 
-    private fun updateSkull(loc: Location, uuid: String)
+    private fun updateSkull(loc: Location, uuid: UUID)
     {
         val sign = loc.block.blockData
         if (sign is WallSign)
@@ -123,8 +124,7 @@ class VoteTopSign(
                     val skull = block.state as Skull
                     try
                     {
-                        val pUuid = UUID.fromString(uuid)
-                        skull.setOwningPlayer(Bukkit.getPlayer(pUuid) ?: Bukkit.getOfflinePlayer(pUuid))
+                        skull.setOwningPlayer(Bukkit.getPlayer(uuid) ?: Bukkit.getOfflinePlayer(uuid))
                         skull.update(true)
                     } catch (e: Exception)
                     {
@@ -191,7 +191,9 @@ class VoteTopSign(
             {
                 for (voteTop in voteTops.values)
                 {
-                    voteTop.update()
+                    plugin.launch {
+                        voteTop.update()
+                    }
                 }
             }.run()
         }
@@ -220,6 +222,8 @@ class VoteTopSign(
             player.sendMessage(PMessage.VOTE_TOP_MESSAGE_SIGN_CREATED_X.with(if (top == 0) "title" else "$top"))
         }
         voteTops[top] = this
-        update()
+        plugin.launch {
+            update()
+        }
     }
 }

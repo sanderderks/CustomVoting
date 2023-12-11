@@ -8,12 +8,12 @@ import org.bukkit.entity.Player
 
 class VotePartyStopCommand(private val plugin: CV) : SimpleSubCommand("stop")
 {
-    override fun onCommand(sender: CommandSender, args: Array<String>)
+    override suspend fun onCommand(sender: CommandSender, args: Array<out String>)
     {
         VoteParty.stop(plugin)
     }
 
-    override fun onCommand(player: Player, args: Array<String>)
+    override suspend fun onCommand(player: Player, args: Array<out String>)
     {
     }
 }

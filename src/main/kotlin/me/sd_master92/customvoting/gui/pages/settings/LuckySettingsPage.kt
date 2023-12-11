@@ -12,7 +12,7 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 
 class LuckySettingsPage(private val plugin: CV, backPage: GUI?) :
-    GUI(plugin, backPage, PMessage.LUCKY_INVENTORY_NAME_SETTINGS.toString(), 9)
+    GUI(plugin, backPage, PMessage.LUCKY_INVENTORY_NAME_SETTINGS.toString())
 {
     override fun newInstance(): GUI
     {

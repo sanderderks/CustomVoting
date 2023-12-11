@@ -13,7 +13,7 @@ import java.util.stream.Collectors
 
 class VoteTopCommand(private val plugin: CV) : SimpleCommand(plugin, "votetop")
 {
-    override fun onCommand(sender: CommandSender, args: Array<String>)
+    override suspend fun onCommand(sender: CommandSender, args: Array<out String>)
     {
         val topVoters = Voter.getTopVoters(plugin)
         if (topVoters.isNotEmpty())
@@ -46,7 +46,7 @@ class VoteTopCommand(private val plugin: CV) : SimpleCommand(plugin, "votetop")
         }
     }
 
-    override fun onCommand(player: Player, args: Array<String>)
+    override suspend fun onCommand(player: Player, args: Array<out String>)
     {
     }
 

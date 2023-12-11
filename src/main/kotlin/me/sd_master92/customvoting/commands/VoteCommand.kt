@@ -14,11 +14,11 @@ import org.bukkit.entity.Player
 
 class VoteCommand(private val plugin: CV) : SimpleCommand(plugin, "vote")
 {
-    override fun onCommand(sender: CommandSender, args: Array<String>)
+    override suspend fun onCommand(sender: CommandSender, args: Array<out String>)
     {
     }
 
-    override fun onCommand(player: Player, args: Array<String>)
+    override suspend fun onCommand(player: Player, args: Array<out String>)
     {
         SoundType.NOTIFY.play(plugin, player)
         if (plugin.config.getBoolean(Setting.VOTE_LINK_INVENTORY.path))

@@ -23,7 +23,7 @@ class VoteSiteEditor(private val plugin: CV, private val back: GUI) :
         plugin,
         null,
         PMessage.VOTE_SITES_INVENTORY_NAME_EDITOR.toString(),
-        27,
+        { 27 },
         true,
         false
     )
@@ -152,7 +152,7 @@ class VoteSiteEditor(private val plugin: CV, private val back: GUI) :
         {
             event.isCancelled = true
             onClick(event, event.whoClicked as Player)
-        } else if (event.view.title == name && (lastSlotIsEditor || event.isShiftClick))
+        } else if (event.view.title == title && (lastSlotIsEditor || event.isShiftClick))
         {
             event.isCancelled = true
         }

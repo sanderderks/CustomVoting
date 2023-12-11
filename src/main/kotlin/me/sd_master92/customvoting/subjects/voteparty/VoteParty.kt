@@ -157,10 +157,12 @@ class VoteParty(private val plugin: CV)
                     {
                         val chest = chests[random.nextInt(chests.size)]
                         val players = ArrayList(Bukkit.getOnlinePlayers())
-                        val player = players[random.nextInt(players.size)]
-
-                        player.addToInventoryOrDrop(chest.popRandomItem())
-                        SoundType.PICKUP.play(plugin, player)
+                        if(players.isNotEmpty())
+                        {
+                            val player = players[random.nextInt(players.size)]
+                            player.addToInventoryOrDrop(chest.popRandomItem())
+                            SoundType.PICKUP.play(plugin, player)
+                        }
                     }
 
                     else                                 ->

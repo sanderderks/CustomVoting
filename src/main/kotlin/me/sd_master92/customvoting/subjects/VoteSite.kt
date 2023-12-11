@@ -121,9 +121,9 @@ class VoteSite private constructor(
         }
     }
 
-    fun getLastByDate(voter: Voter): Long?
+    suspend fun getLastByDate(voter: Voter): Long?
     {
-        return (voter.history.filter {
+        return (voter.getHistory().filter {
             it.site == uniqueId
         }.maxByOrNull { it.time }?.time)
     }

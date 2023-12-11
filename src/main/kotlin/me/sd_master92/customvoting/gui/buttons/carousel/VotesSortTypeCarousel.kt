@@ -15,7 +15,7 @@ class VotesSortTypeCarousel(private val plugin: CV) : AbstractEnumCarousel(
     PMessage.VOTES_SORT_TYPE_ITEM_NAME
 )
 {
-    override fun newInstance(): ItemStack
+    override suspend fun newInstance(): ItemStack
     {
         Voter.getTopVoters(plugin, true)
         return VotesSortTypeCarousel(plugin)

@@ -20,7 +20,7 @@ class CrateSettingsPage(private val plugin: CV, backPage: GUI?, private val numb
     backPage,
     (plugin.data.getString(Data.VOTE_CRATES.path + ".$number.name")
         ?: PMessage.CRATE_NAME_DEFAULT_X.with("$number")),
-    18
+    { 18 }
 )
 {
     override fun newInstance(): GUI

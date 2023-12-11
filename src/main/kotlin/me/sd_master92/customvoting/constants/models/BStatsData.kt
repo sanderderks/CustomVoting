@@ -3,9 +3,10 @@ package me.sd_master92.customvoting.constants.models
 import com.google.gson.Gson
 import java.io.BufferedReader
 import java.io.InputStreamReader
-import java.net.URL
+import java.net.HttpURLConnection
+import java.net.URI
+import java.net.http.HttpClient.*
 import java.util.*
-import javax.net.ssl.HttpsURLConnection
 
 data class BStatsData(
     val name: String,
@@ -65,8 +66,9 @@ data class BStatsData(
         {
             val data = try
             {
-                val connection =
-                    URL("https://bstats.org/api/v1/plugins/13544/charts/$chartId/data").openConnection() as HttpsURLConnection
+                val apiUrl = "https://bstats.org/api/v1/plugins/13544/charts/$chartId/data"
+                val uri = URI(apiUrl)
+                val connection = uri.toURL().openConnection() as HttpURLConnection
                 connection.requestMethod = "GET"
                 BufferedReader(InputStreamReader(connection.inputStream)).readLine()
             } catch (e: Exception)
