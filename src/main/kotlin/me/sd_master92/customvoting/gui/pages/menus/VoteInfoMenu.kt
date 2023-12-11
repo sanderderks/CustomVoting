@@ -40,7 +40,7 @@ class VoteInfoMenu(
                 siteItem
         },
         page,
-        name ?: PMessage.VOTE_INFO_INVENTORY_NAME.toString(),
+        if(name != null) PMessage.VOTE_INFO_INVENTORY_NAME_OTHERS_X.with(name) else PMessage.VOTE_INFO_INVENTORY_NAME.toString(),
         PMessage.GENERAL_ITEM_NAME_NEXT.toString(),
         PMessage.GENERAL_ITEM_NAME_PREVIOUS.toString(),
         differentStartIndex = 18
