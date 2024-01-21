@@ -8,7 +8,7 @@ enum class Language(val locale: Locale, val label: String)
 {
     EN(Locale.ENGLISH, Locale.ENGLISH.getDisplayLanguage(Locale.ENGLISH) + "/" + Locale.ENGLISH.displayLanguage),
     DE(Locale.GERMAN, Locale.GERMAN.getDisplayLanguage(Locale.GERMAN) + "/" + Locale.GERMAN.displayLanguage),
-    NL(Locale.of("nl"), Locale.of("nl").getDisplayLanguage(Locale.of("nl")) + "/" + Locale.of("nl").displayLanguage);
+    NL(Locale.forLanguageTag("nl"), Locale.forLanguageTag("nl").getDisplayLanguage(Locale.forLanguageTag("nl")) + "/" + Locale.forLanguageTag("nl").displayLanguage);
 
     fun switch(plugin: CV)
     {
