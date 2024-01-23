@@ -1,7 +1,10 @@
 package me.sd_master92.customvoting
 
 import com.github.shynixn.mccoroutine.bukkit.launch
+import com.github.shynixn.mccoroutine.bukkit.scope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancelChildren
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import me.sd_master92.core.database.CustomDatabase
 import me.sd_master92.core.errorLog
@@ -9,6 +12,7 @@ import me.sd_master92.core.file.CustomFile
 import me.sd_master92.core.infoLog
 import me.sd_master92.core.plugin.CustomPlugin
 import me.sd_master92.customvoting.commands.*
+import me.sd_master92.customvoting.commands.migrate.MigrateVotesCommand
 import me.sd_master92.customvoting.commands.voteparty.VotePartyCommand
 import me.sd_master92.customvoting.constants.enumerations.*
 import me.sd_master92.customvoting.constants.interfaces.Voter
@@ -53,12 +57,14 @@ class CV : CustomPlugin(
         launch {
             withContext(Dispatchers.IO) {
                 registerFiles()
+                runBlocking {
+                    registerListeners()
+                    registerCommands()
+                    startTasks()
+                    setupBStatsMetrics()
+                }
             }
         }
-        registerListeners()
-        registerCommands()
-        startTasks()
-        setupBStatsMetrics()
     }
 
     override fun disable()
@@ -67,6 +73,7 @@ class CV : CustomPlugin(
         {
             playerDatabase!!.playersTable.database.disconnect()
         }
+        scope.coroutineContext.cancelChildren()
     }
 
     private fun checkVotifier(): Boolean
@@ -339,6 +346,7 @@ class CV : CustomPlugin(
         VotesCommand(this).register()
         VoteTopCommand(this).register()
         ResetVotesCommand(this).register()
+        MigrateVotesCommand(this).register()
     }
 
     private fun startTasks()

@@ -40,6 +40,10 @@ class PlayerTable(private val plugin: CV, val uuid: UUID) : Voter
         return players?.getName(uuid) ?: PMessage.PLAYER_NAME_UNKNOWN.toString()
     }
 
+    override suspend fun setName(name: String): Boolean {
+        return players?.setName(uuid, name) ?: false
+    }
+
     override suspend fun getVotes(): Int {
         return players?.getVotes(uuid) ?: 0
     }
@@ -98,6 +102,11 @@ class PlayerTable(private val plugin: CV, val uuid: UUID) : Voter
     override suspend fun getStreakDaily(): Int
     {
         return players?.getStreak(uuid) ?: 0
+    }
+
+    override suspend fun setStreakDaily(n: Int): Boolean
+    {
+        return players?.setStreak(uuid, n) ?: false
     }
 
     override suspend fun setVotes(n: Int, update: Boolean)

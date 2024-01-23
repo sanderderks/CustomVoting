@@ -16,6 +16,7 @@ interface Voter
 {
     suspend fun getUuid(): UUID
     suspend fun getName(): String
+    suspend fun setName(name: String): Boolean
     suspend fun getVotes(): Int
     suspend fun getVotesMonthly(): Int
     suspend fun getVotesWeekly(): Int
@@ -32,6 +33,7 @@ interface Voter
     suspend fun getPower(): Boolean
     suspend fun setPower(power: Boolean): Boolean
     suspend fun getStreakDaily(): Int
+    suspend fun setStreakDaily(n: Int): Boolean
     suspend fun addStreak(): Boolean
     suspend fun clearStreak(): Boolean
 

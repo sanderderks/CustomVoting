@@ -41,6 +41,9 @@ commands:
   votereset:
     description: reset player votes
     permission: customvoting.reset
+  migratevotes:
+    description: migrate playerdata
+    permission: customvoting.migrate
 
 permissions:
   customvoting.*:
@@ -57,6 +60,7 @@ permissions:
       customvoting.reload: true
       customvoting.settings: true
       customvoting.crate: true
+      customvoting.migrate: true
   customvoting.vote:
     default: true
   customvoting.votes.*:
@@ -90,4 +94,6 @@ permissions:
   customvoting.reset:
     default: op
   customvoting.crate:
+    default: op
+  customvoting.migrate:
     default: op
