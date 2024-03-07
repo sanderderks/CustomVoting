@@ -37,6 +37,9 @@ jobs:
       actions: read
       contents: read
 
+      # custom added
+      packages: read
+
     strategy:
       fail-fast: false
       matrix:
