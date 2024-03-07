@@ -141,6 +141,10 @@
             <id>everything</id>
             <url>https://repo.citizensnpcs.co/</url>
         </repository>
+        <repository>
+            <id>github</id>
+            <url>https://maven.pkg.github.com/sanderderks/PluginCore</url>
+        </repository>
     </repositories>
 
     <dependencies>
