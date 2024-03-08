@@ -2,6 +2,7 @@ package me.sd_master92.customvoting.gui.pages.overviews
 
 import me.sd_master92.core.inventory.GUI
 import me.sd_master92.customvoting.CV
+import me.sd_master92.customvoting.capitalize
 import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.gui.buttons.switches.WorldEnabledSwitch
@@ -40,17 +41,21 @@ class WorldOverviewPage(private val plugin: CV, backPage: GUI?) :
     {
         for (world in Bukkit.getWorlds())
         {
-            var name = world.name
+            val name = world.name
+            val label: String
             val overworld = PMessage.DISABLED_WORLD_NAME_OVERWORLD.toString()
             val nether = PMessage.DISABLED_WORLD_NAME_NETHER.toString()
             val end = PMessage.DISABLED_WORLD_NAME_END.toString()
-            when (name)
+
+            label = when (name)
             {
-                overworld -> name = name.replace(overworld, PMessage.DISABLED_WORLD_ITEM_NAME_OVERWORLD.toString())
-                nether    -> name = name.replace(nether, PMessage.DISABLED_WORLD_ITEM_NAME_NETHER.toString())
-                end       -> name = name.replace(end, PMessage.DISABLED_WORLD_ITEM_NAME_END.toString())
+                overworld -> PMessage.DISABLED_WORLD_ITEM_NAME_OVERWORLD.toString()
+                nether    -> PMessage.DISABLED_WORLD_ITEM_NAME_NETHER.toString()
+                end       -> PMessage.DISABLED_WORLD_ITEM_NAME_END.toString()
+                else      -> name.capitalize()
             }
-            addItem(WorldEnabledSwitch(plugin, name))
+
+            addItem(WorldEnabledSwitch(plugin, name, label))
         }
     }
 }
