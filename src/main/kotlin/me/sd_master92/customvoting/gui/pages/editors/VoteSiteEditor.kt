@@ -23,7 +23,7 @@ class VoteSiteEditor(private val plugin: CV, private val back: GUI) :
         plugin,
         null,
         PMessage.VOTE_SITES_INVENTORY_NAME_EDITOR.toString(),
-        { 27 },
+        { 54 },
         true,
         false
     )
