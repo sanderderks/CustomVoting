@@ -9,7 +9,8 @@ import org.bukkit.inventory.ItemStack
 class WorldEnabledMessageSwitch(private val plugin: CV) : AbstractWoolStatusSwitch(
     plugin,
     Setting.DISABLED_MESSAGE_DISABLED_WORLD,
-    PMessage.DISABLED_WORLD_ITEM_NAME_MESSAGE
+    PMessage.DISABLED_WORLD_ITEM_NAME_MESSAGE,
+    true
 )
 {
     override fun newInstance(): ItemStack
