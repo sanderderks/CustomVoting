@@ -31,6 +31,7 @@ enum class Setting(val path: String, private val defaultValue: Any? = null)
     ALLOW_CRATE_CLOSE("allow_crate_close", false),
     VOTE_COMMAND_OVERRIDE("vote_command_override", false),
     VOTE_STREAK_CONSECUTIVE("vote_streak_consecutive", true),
+    VOTE_DELAY("vote_delay", 0),
 
     DISABLED_BROADCASTS("disabled_broadcasts"),
     DISABLED_BROADCAST_VOTE("$DISABLED_BROADCASTS.vote", false),
@@ -87,7 +88,7 @@ enum class Setting(val path: String, private val defaultValue: Any? = null)
         private fun migrate(plugin: CV)
         {
             val keyMigrations = mapOf(
-                Pair("$DISABLED_BROADCASTS.vote_streak", DISABLED_BROADCAST_MILESTONE.path),
+                Pair("disabled_broadcasts.vote_streak", DISABLED_BROADCAST_MILESTONE.path),
                 Pair("monthly_period", "monthly_votes"),
                 Pair("suffix_support", PREFIX_SUPPORT.path)
             )
