@@ -306,8 +306,11 @@ class CustomVote(
 
     init
     {
-        plugin.launch {
-            forwardVote()
-        }
+        val delay = plugin.config.getNumber(Setting.VOTE_DELAY.path)
+        TaskTimer.delay(plugin, delay * 20L) {
+            plugin.launch {
+                forwardVote()
+            }
+        }.run()
     }
 }
