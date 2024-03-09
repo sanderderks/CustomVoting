@@ -78,7 +78,7 @@ class CrateMenu(private val plugin: CV, private val player: Player, private val 
         val reward = if (rewards?.isNotEmpty() == true) rewards.random() else null
         val none = SimpleItem(
             Material.BARRIER,
-            PMessage.CRATE_ITEM_NAME_NO_PRICE.toString()
+            PMessage.CRATE_ITEM_NAME_NO_PRIZE.toString()
         )
 
         clear()
