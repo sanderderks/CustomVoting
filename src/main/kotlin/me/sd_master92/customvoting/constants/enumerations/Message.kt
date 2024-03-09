@@ -10,7 +10,9 @@ enum class Message(private val path: String, private val defaultValue: Any?)
     VOTE_RESET("vote_reset", "&d&lAll votes have been reset!"),
     DISABLED_WORLD("disabled_world", "&cPlease go to another world to receive your rewards."),
     CRATE_KEY_RECEIVED("crate_key_received", "&aYou received a crate key!"),
-    VOTE_BROADCAST("vote_broadcast", "&d%PLAYER% &7just voted at &d%SERVICE%&7!"),
+    VOTE_BROADCAST("vote_broadcast", null),
+    VOTE_BROADCAST_SINGLE("$VOTE_BROADCAST.single", "&d%PLAYER% &7just voted at &d%SERVICE%&7!"),
+    VOTE_BROADCAST_MULTIPLE("$VOTE_BROADCAST.multiple", "&d%PLAYER% &7just voted on multiple sites!"),
     VOTE_LUCKY("lucky_vote", "&aYou received a &dLucky Reward&a!"),
     VOTE_COMMAND_OVERRIDE(
         "vote_command_override", listOf(
@@ -118,7 +120,8 @@ enum class Message(private val path: String, private val defaultValue: Any?)
         {
             val keyMigrations = mutableMapOf(
                 Pair("vote_streak", MILESTONE.path),
-                Pair("$MILESTONE.streak_reached", MILESTONE_REACHED.path)
+                Pair("milestone.streak_reached", MILESTONE_REACHED.path),
+                Pair("vote_broadcast", VOTE_BROADCAST_SINGLE.path)
             )
 
             if (plugin.messages.isList("vote_command"))

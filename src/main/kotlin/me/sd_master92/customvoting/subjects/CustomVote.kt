@@ -20,7 +20,8 @@ import java.util.*
 class CustomVote(
     private val plugin: CV,
     vote: Vote,
-    private var registered: Boolean = false
+    private var queued: Boolean = false,
+    private val silent: Boolean = false
 ) : Vote(vote)
 {
     private var previousLast: Long = 0
@@ -42,7 +43,10 @@ class CustomVote(
             register(true)
         } else
         {
-            broadcast(player)
+            if (!silent)
+            {
+                broadcast(player)
+            }
             val voter = Voter.get(plugin, player)
             previousLast = voter.getLast()
             votes = voter.getVotes()
@@ -59,7 +63,7 @@ class CustomVote(
 
     private suspend fun register(queue: Boolean = false)
     {
-        if(!registered)
+        if (!queued)
         {
             val voter = Voter.getByName(plugin, username)
             if (voter != null)
@@ -94,7 +98,7 @@ class CustomVote(
             val placeholders = HashMap<String, String>()
             placeholders["%PLAYER%"] = username
             placeholders["%SERVICE%"] = serviceName
-            plugin.broadcastText(Message.VOTE_BROADCAST, placeholders)
+            plugin.broadcastText(Message.VOTE_BROADCAST_SINGLE, placeholders)
         }
     }
 
@@ -291,11 +295,12 @@ class CustomVote(
             plugin: CV,
             name: String,
             service: String,
-            queued: Boolean = false
+            queued: Boolean = false,
+            silent: Boolean = false
         )
         {
             val vote = Vote(service, name, "0.0.0.0", Date().time.toString())
-            CustomVote(plugin, vote, queued)
+            CustomVote(plugin, vote, queued, silent)
         }
     }
 
