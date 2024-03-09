@@ -44,6 +44,9 @@ commands:
   migratevotes:
     description: migrate playerdata
     permission: customvoting.migrate
+  givecratekey:
+    description: give crate key
+    permission: customvoting.givekey
 
 permissions:
   customvoting.*:
@@ -61,6 +64,7 @@ permissions:
       customvoting.settings: true
       customvoting.crate: true
       customvoting.migrate: true
+      customvoting.givekey: true
   customvoting.vote:
     default: true
   customvoting.votes.*:
@@ -96,4 +100,6 @@ permissions:
   customvoting.crate:
     default: op
   customvoting.migrate:
+    default: op
+  customvoting.givekey:
     default: op
