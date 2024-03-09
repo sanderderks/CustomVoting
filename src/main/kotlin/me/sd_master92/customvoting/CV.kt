@@ -1,9 +1,7 @@
 package me.sd_master92.customvoting
 
 import com.github.shynixn.mccoroutine.bukkit.launch
-import com.github.shynixn.mccoroutine.bukkit.scope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import me.sd_master92.core.database.CustomDatabase
@@ -73,7 +71,6 @@ class CV : CustomPlugin(
         {
             playerDatabase!!.playersTable.database.disconnect()
         }
-        scope.coroutineContext.cancelChildren()
     }
 
     private fun checkVotifier(): Boolean
@@ -104,6 +101,7 @@ class CV : CustomPlugin(
         {
             when
             {
+                contains("1.21") -> 21
                 contains("1.20") -> 20
                 contains("1.19") -> 19
                 contains("1.18") -> 18
@@ -347,6 +345,7 @@ class CV : CustomPlugin(
         VoteTopCommand(this).register()
         ResetVotesCommand(this).register()
         MigrateVotesCommand(this).register()
+        GiveCrateKeyCommand(this).register()
     }
 
     private fun startTasks()

@@ -13,6 +13,21 @@ class CrateKeyItem(plugin: CV, number: Int) :
         true
     )
 {
+    companion object
+    {
+        fun exists(plugin: CV, number: Int): Boolean
+        {
+            return try
+            {
+                plugin.data.getConfigurationSection(Data.VOTE_CRATES.path)?.getKeys(false)
+                    ?.any { it.toInt() == number } ?: false
+            } catch (e: Exception)
+            {
+                false
+            }
+        }
+    }
+
     init
     {
         val name = plugin.data.getString(Data.VOTE_CRATES.path + ".$number.name") ?: ""
