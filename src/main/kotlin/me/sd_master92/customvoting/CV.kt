@@ -347,6 +347,7 @@ class CV : CustomPlugin(
         VoteTopCommand(this).register()
         ResetVotesCommand(this).register()
         MigrateVotesCommand(this).register()
+        GiveCrateKeyCommand(this).register()
     }
 
     private fun startTasks()

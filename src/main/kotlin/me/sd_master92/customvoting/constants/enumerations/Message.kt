@@ -9,6 +9,7 @@ enum class Message(private val path: String, private val defaultValue: Any?)
     INVALID_PLAYER("invalid_player", "&cThat player does not exist."),
     VOTE_RESET("vote_reset", "&d&lAll votes have been reset!"),
     DISABLED_WORLD("disabled_world", "&cPlease go to another world to receive your rewards."),
+    CRATE_KEY_RECEIVED("crate_key_received", "&aYou received a crate key!"),
     VOTE_BROADCAST("vote_broadcast", "&d%PLAYER% &7just voted at &d%SERVICE%&7!"),
     VOTE_LUCKY("lucky_vote", "&aYou received a &dLucky Reward&a!"),
     VOTE_COMMAND_OVERRIDE(
