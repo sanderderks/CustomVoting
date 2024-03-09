@@ -101,6 +101,7 @@ class CV : CustomPlugin(
         {
             when
             {
+                contains("1.21") -> 21
                 contains("1.20") -> 20
                 contains("1.19") -> 19
                 contains("1.18") -> 18
