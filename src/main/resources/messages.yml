@@ -6,10 +6,16 @@ invalid_player: '&cThat player does not exist.'
 
 vote_reset: '&d&lAll votes have been reset!'
 
-# %PLAYER% name of player who voted
-# %SERVICE% vote website
-vote_broadcast: '&d%PLAYER% &7just voted at &d%SERVICE%&7!'
+vote_broadcast:
+  # %PLAYER% name of player who voted
+  # %SERVICE% vote website
+  single: '&d%PLAYER% &7just voted at &d%SERVICE%&7!'
+  # %PLAYER% name of player who voted
+  # %AMOUNT% amount of votes
+  multiple: '&d%PLAYER% &7just voted on multiple sites!'
+
 lucky_vote: '&aYou received a &dLucky Reward&a!'
+crate_key_received: '&aYou received a crate key!'
 disabled_world: '&cPlease go to another world to receive your rewards.'
 
 vote_command:
@@ -144,5 +150,3 @@ milestone:
 # %STREAK% streak reached
 streak:
   streak_reached: '&b%PLAYER% &dreached vote streak #&b%STREAK%&d!'
-
-vote_links_title: 'Vote for us!'

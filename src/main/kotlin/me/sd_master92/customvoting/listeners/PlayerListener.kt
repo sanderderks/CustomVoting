@@ -83,12 +83,26 @@ class PlayerListener(private val plugin: CV) : Listener
         if (queue.isNotEmpty())
         {
             plugin.infoLog(PMessage.QUEUE_MESSAGE_FORWARD_XY.with(queue.size.toString(), player.name))
+
+            val executeSilently = queue.size > 1
             val iterator = queue.iterator()
+
+            if (executeSilently)
+            {
+                TaskTimer.delay(plugin, 200)
+                {
+                    plugin.broadcastText(
+                        Message.VOTE_BROADCAST_MULTIPLE,
+                        mapOf(Pair("%PLAYER%", player.name), Pair("%AMOUNT%", "${queue.size}"))
+                    )
+                }.run()
+            }
+
             TaskTimer.repeat(plugin, 20, 200)
             {
                 if (iterator.hasNext())
                 {
-                    CustomVote.create(plugin, player.name, iterator.next().site.toString(), true)
+                    CustomVote.create(plugin, player.name, iterator.next().site.toString(), true, executeSilently)
                 } else
                 {
                     it.cancel()
@@ -186,7 +200,7 @@ class PlayerListener(private val plugin: CV) : Listener
     fun onBlockPlace(event: BlockPlaceEvent)
     {
         val item = event.itemInHand
-        if(event.blockPlaced.type == Material.ENDER_CHEST)
+        if (event.blockPlaced.type == Material.ENDER_CHEST)
         {
             val key = item.itemMeta?.displayName?.split("#")?.reversed()?.get(0)
             if (!key.isNullOrEmpty() && item.itemMeta!!.displayName == (VotePartyItem(key).itemMeta?.displayName))
@@ -195,9 +209,9 @@ class PlayerListener(private val plugin: CV) : Listener
                 if (player.hasPermission("customvoting.voteparty"))
                 {
                     val chest = VotePartyChest.getByKey(plugin, key)
-                    if(chest != null)
+                    if (chest != null)
                     {
-                        if(chest.loc == null)
+                        if (chest.loc == null)
                         {
                             chest.loc = event.block.location
                             player.sendMessage(PMessage.VOTE_PARTY_MESSAGE_CHEST_LOCATION_SET_X.with(key))
