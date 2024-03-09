@@ -1,9 +1,7 @@
 package me.sd_master92.customvoting
 
 import com.github.shynixn.mccoroutine.bukkit.launch
-import com.github.shynixn.mccoroutine.bukkit.scope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import me.sd_master92.core.database.CustomDatabase
@@ -73,7 +71,6 @@ class CV : CustomPlugin(
         {
             playerDatabase!!.playersTable.database.disconnect()
         }
-        scope.coroutineContext.cancelChildren()
     }
 
     private fun checkVotifier(): Boolean
