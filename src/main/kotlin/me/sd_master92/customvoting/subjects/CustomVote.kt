@@ -15,6 +15,7 @@ import me.sd_master92.customvoting.subjects.voteparty.VoteParty
 import me.sd_master92.customvoting.subjects.voteparty.VotePartyChest
 import org.bukkit.entity.Player
 import java.text.DecimalFormat
+import java.time.LocalDate
 import java.util.*
 
 class CustomVote(
@@ -137,17 +138,20 @@ class CustomVote(
 
     private suspend fun giveRewards(player: Player, power: Boolean)
     {
-        giveItems(player, power)
+        val dayOfWeek = LocalDate.now().getDayOfWeek()
+        val doubleRewards = dayOfWeek.isDoubleRewards(plugin, power)
+
+        giveItems(player, power, doubleRewards)
         executeCommands(player, power)
         var rewardMessage = ""
-        val money = giveMoney(player, power)
+        val money = giveMoney(player, power, doubleRewards)
         if (CV.ECONOMY != null && money > 0)
         {
             val placeholders = HashMap<String, String>()
             placeholders["%MONEY%"] = DecimalFormat("#.##").format(money)
             rewardMessage += Message.VOTE_REWARD_MONEY.getMessage(plugin, placeholders)
         }
-        val xp = giveExperience(player, power)
+        val xp = giveExperience(player, power, doubleRewards)
         if (xp > 0)
         {
             val placeholders = HashMap<String, String>()
@@ -168,34 +172,58 @@ class CustomVote(
                 player.sendActionBar(Message.VOTE_REWARD_PREFIX.getMessage(plugin) + message)
             }.run()
         }
+
+        if (doubleRewards)
+        {
+            val placeholders = HashMap<String, String>()
+            placeholders["%PLAYER%"] = username
+            placeholders["%DAY%"] = dayOfWeek.getDisplayName(plugin).lowercase()
+            plugin.broadcastText(Message.DOUBLE_REWARDS_RECEIVED, placeholders)
+        }
     }
 
-    private fun giveItems(player: Player, power: Boolean)
+    private fun giveItems(player: Player, power: Boolean, doubleRewards: Boolean)
     {
         val path = Data.ITEM_REWARDS.path.appendWhenTrue(power, Data.POWER_REWARDS)
         val typePath = Setting.ITEM_REWARD_TYPE.path.appendWhenTrue(power, Setting.POWER_REWARDS)
         val random = plugin.config.getNumber(typePath) != ItemRewardType.ALL_ITEMS.ordinal
         val items = plugin.data.getItems(path)
         player.addToInventoryOrDrop(items, random)
+        if (doubleRewards)
+        {
+            player.addToInventoryOrDrop(items, random)
+        }
     }
 
-    private fun giveMoney(player: Player, power: Boolean): Double
+    private fun giveMoney(player: Player, power: Boolean, doubleRewards: Boolean): Double
     {
         val economy = CV.ECONOMY
         if (economy != null && economy.hasAccount(player))
         {
             val path = Setting.VOTE_REWARD_MONEY.path.appendWhenTrue(power, Setting.POWER_REWARDS)
-            val amount = plugin.config.getDouble(path)
+            var amount = plugin.config.getDouble(path)
+
+            if (doubleRewards)
+            {
+                amount *= 2
+            }
+
             economy.depositPlayer(player, amount)
             return amount
         }
         return 0.0
     }
 
-    private fun giveExperience(player: Player, power: Boolean): Int
+    private fun giveExperience(player: Player, power: Boolean, doubleRewards: Boolean): Int
     {
         val path = Setting.VOTE_REWARD_EXPERIENCE.path.appendWhenTrue(power, Setting.POWER_REWARDS)
-        val amount = plugin.config.getNumber(path)
+        var amount = plugin.config.getNumber(path)
+
+        if (doubleRewards)
+        {
+            amount *= 2
+        }
+
         player.level += amount
         return amount
     }

@@ -150,3 +150,7 @@ milestone:
 # %STREAK% streak reached
 streak:
   streak_reached: '&b%PLAYER% &dreached vote streak #&b%STREAK%&d!'
+
+# %PLAYER% name of the player
+# %DAY_OF_WEEK% e.g. 'monday'
+double_rewards: '&b%PLAYER% &dreceived double rewards because today is a special day!'

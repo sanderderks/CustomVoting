@@ -3,11 +3,13 @@ package me.sd_master92.customvoting.gui.pages.settings
 import me.sd_master92.core.inventory.GUI
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.PMessage
+import me.sd_master92.customvoting.constants.enumerations.Setting
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.gui.buttons.carousel.VoteRewardExperienceCarousel
 import me.sd_master92.customvoting.gui.buttons.carousel.VoteRewardItemsTypeCarousel
 import me.sd_master92.customvoting.gui.buttons.inputfields.VoteRewardCommandsInput
 import me.sd_master92.customvoting.gui.buttons.inputfields.VoteRewardMoneyInput
+import me.sd_master92.customvoting.gui.buttons.shortcuts.DoubleRewardShortcut
 import me.sd_master92.customvoting.gui.buttons.shortcuts.PermGroupOverviewShortcut
 import me.sd_master92.customvoting.gui.buttons.shortcuts.PermUserOverviewShortcut
 import me.sd_master92.customvoting.gui.buttons.shortcuts.VoteRewardItemsShortcut
@@ -49,6 +51,13 @@ class RewardSettingsPage(private val plugin: CV, backPage: GUI?, private val pow
     {
         addItem(VoteRewardItemsShortcut(plugin, this, power))
         addItem(VoteRewardItemsTypeCarousel(plugin, power))
+        addItem(
+            DoubleRewardShortcut(
+                plugin,
+                this,
+                if (power) Setting.DOUBLE_REWARDS_POWER else Setting.DOUBLE_REWARDS_REGULAR
+            )
+        )
         addItem(VoteRewardMoneyInput(plugin, this, power))
         addItem(VoteRewardExperienceCarousel(plugin, power))
         addItem(VoteRewardCommandsInput(plugin, this, power))
