@@ -81,6 +81,8 @@ enum class Message(private val path: String, private val defaultValue: Any?)
     STREAK("streak", null),
     STREAK_REACHED("$STREAK.streak_reached", "&b%PLAYER% &dreached vote streak #&b%STREAK%&d!"),
 
+    DOUBLE_REWARDS_RECEIVED("double_rewards", "&b%PLAYER% &dreceived double rewards because today is a special day!"),
+
     VOTE_REMINDER(
         "vote_reminder",
         listOf("&bYou haven't voted for our server yet today.", "&dUse /vote for nice rewards!")

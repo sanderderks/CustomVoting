@@ -45,6 +45,10 @@ enum class Setting(val path: String, private val defaultValue: Any? = null)
     DISABLED_MESSAGE_DISABLED_WORLD("$DISABLED_BROADCASTS.disabled_world", false),
     DISABLED_MESSAGE_VOTE_REMINDER("$DISABLED_BROADCASTS.vote_reminder", false),
 
+    DOUBLE_REWARDS("double_rewards", null),
+    DOUBLE_REWARDS_REGULAR("$DOUBLE_REWARDS.regular", null),
+    DOUBLE_REWARDS_POWER("$DOUBLE_REWARDS.power", null),
+    
     FIRST_VOTE_BROADCAST_ONLY("first_vote_broadcast_only", false),
     DISABLED_WORLDS("disabled_worlds"),
     ENABLED_PERM_GROUPS("enabled_op_groups"),
