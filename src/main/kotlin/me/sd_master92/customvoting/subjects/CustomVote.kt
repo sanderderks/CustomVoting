@@ -142,7 +142,7 @@ class CustomVote(
         val doubleRewards = dayOfWeek.isDoubleRewards(plugin, power)
 
         giveItems(player, power, doubleRewards)
-        executeCommands(player, power)
+        executeCommands(player, Data.VOTE_COMMANDS.path.appendWhenTrue(power, Data.POWER_REWARDS))
         var rewardMessage = ""
         val money = giveMoney(player, power, doubleRewards)
         if (CV.ECONOMY != null && money > 0)
@@ -238,13 +238,13 @@ class CustomVote(
                 player.addToInventoryOrDrop(luckyRewards, true)
                 player.sendMessage(Message.VOTE_LUCKY.getMessage(plugin))
             }
+            executeCommands(player, Data.LUCKY_COMMANDS.path)
         }
     }
 
-    private fun executeCommands(player: Player, power: Boolean)
+    private fun executeCommands(player: Player, dataPath: String)
     {
-        val path = Data.VOTE_COMMANDS.path.appendWhenTrue(power, Data.POWER_REWARDS)
-        val commands = plugin.data.getStringList(path)
+        val commands = plugin.data.getStringList(dataPath)
         for (command in commands)
         {
             plugin.runCommand(command.replace("%PLAYER%", player.name).withPlaceholders(player))

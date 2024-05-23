@@ -8,6 +8,7 @@ enum class Data(val path: String)
     VOTE_PARTY_CHESTS("vote_party"),
     ITEM_REWARDS("rewards"),
     LUCKY_REWARDS("lucky_rewards"),
+    LUCKY_COMMANDS("lucky_commands"),
     CURRENT_VOTES("current_votes"),
     VOTE_HISTORY("history"),
     VOTE_TOP_SIGNS("vote_top"),

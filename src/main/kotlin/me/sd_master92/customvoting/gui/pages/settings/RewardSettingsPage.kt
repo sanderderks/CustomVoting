@@ -1,13 +1,15 @@
 package me.sd_master92.customvoting.gui.pages.settings
 
+import me.sd_master92.core.appendWhenTrue
 import me.sd_master92.core.inventory.GUI
 import me.sd_master92.customvoting.CV
+import me.sd_master92.customvoting.constants.enumerations.Data
 import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.Setting
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.gui.buttons.carousel.VoteRewardExperienceCarousel
 import me.sd_master92.customvoting.gui.buttons.carousel.VoteRewardItemsTypeCarousel
-import me.sd_master92.customvoting.gui.buttons.inputfields.VoteRewardCommandsInput
+import me.sd_master92.customvoting.gui.buttons.inputfields.CommandsInput
 import me.sd_master92.customvoting.gui.buttons.inputfields.VoteRewardMoneyInput
 import me.sd_master92.customvoting.gui.buttons.shortcuts.DoubleRewardShortcut
 import me.sd_master92.customvoting.gui.buttons.shortcuts.PermGroupOverviewShortcut
@@ -60,7 +62,7 @@ class RewardSettingsPage(private val plugin: CV, backPage: GUI?, private val pow
         )
         addItem(VoteRewardMoneyInput(plugin, this, power))
         addItem(VoteRewardExperienceCarousel(plugin, power))
-        addItem(VoteRewardCommandsInput(plugin, this, power))
+        addItem(CommandsInput(plugin, this, Data.VOTE_COMMANDS.path.appendWhenTrue(power, Data.POWER_REWARDS)))
         if (power)
         {
             if (CV.PERMISSION != null)

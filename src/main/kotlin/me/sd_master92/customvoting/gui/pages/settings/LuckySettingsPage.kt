@@ -2,9 +2,11 @@ package me.sd_master92.customvoting.gui.pages.settings
 
 import me.sd_master92.core.inventory.GUI
 import me.sd_master92.customvoting.CV
+import me.sd_master92.customvoting.constants.enumerations.Data
 import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.gui.buttons.carousel.LuckyChanceCarousel
+import me.sd_master92.customvoting.gui.buttons.inputfields.CommandsInput
 import me.sd_master92.customvoting.gui.buttons.shortcuts.LuckyRewardItemsShortcut
 import me.sd_master92.customvoting.gui.buttons.switches.LuckyVoteEnabledSwitch
 import org.bukkit.entity.Player
@@ -42,5 +44,6 @@ class LuckySettingsPage(private val plugin: CV, backPage: GUI?) :
         addItem(LuckyVoteEnabledSwitch(plugin))
         addItem(LuckyRewardItemsShortcut(plugin, this))
         addItem(LuckyChanceCarousel(plugin))
+        addItem(CommandsInput(plugin, this, Data.LUCKY_COMMANDS.path))
     }
 }
