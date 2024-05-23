@@ -129,4 +129,6 @@ milestone:
 streak:
   streak_reached: '&b%PLAYER% &dheeft reeks #&b%STREAK%&d gehaald!'
 
-vote_links_title: 'Stem op ons!'
+# %PLAYER% name of the player
+# %DAY_OF_WEEK% e.g. 'monday'
+double_rewards: '&b%PLAYER% &dkreeg dubbele prijzen omdat vandaag een speciale dag is!'

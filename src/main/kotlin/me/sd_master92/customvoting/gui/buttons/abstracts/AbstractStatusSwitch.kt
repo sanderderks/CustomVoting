@@ -13,17 +13,25 @@ import org.bukkit.inventory.ItemStack
 abstract class AbstractStatusSwitch(
     private val plugin: CV,
     mat: Material,
-    private val setting: Setting,
-    name: PMessage,
+    private val path: String,
+    name: String,
     reverse: Boolean = false
-) : StatusItem(mat, name.toString(), plugin.config, setting.path, reverse)
+) : StatusItem(mat, name, plugin.config, path, reverse)
 {
+    constructor(
+        plugin: CV,
+        mat: Material,
+        setting: Setting,
+        name: PMessage,
+        reverse: Boolean = false
+    ) : this(plugin, mat, setting.path, name.toString(), reverse)
+
     abstract fun newInstance(): ItemStack
 
     override fun onClick(event: InventoryClickEvent, player: Player)
     {
         SoundType.CHANGE.play(plugin, player)
-        plugin.config.set(setting.path, !plugin.config.getBoolean(setting.path))
+        plugin.config.set(path, !plugin.config.getBoolean(path))
         plugin.config.saveConfig()
         event.currentItem = newInstance()
     }

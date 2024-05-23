@@ -4,10 +4,7 @@ import kotlinx.coroutines.runBlocking
 import me.clip.placeholderapi.PlaceholderAPI
 import me.sd_master92.core.file.PlayerFile
 import me.sd_master92.core.plugin.CustomPlugin
-import me.sd_master92.customvoting.constants.enumerations.Message
-import me.sd_master92.customvoting.constants.enumerations.PMessage
-import me.sd_master92.customvoting.constants.enumerations.Setting
-import me.sd_master92.customvoting.constants.enumerations.VoteSortType
+import me.sd_master92.customvoting.constants.enumerations.*
 import me.sd_master92.customvoting.constants.interfaces.Voter
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
@@ -20,6 +17,8 @@ import org.bukkit.inventory.meta.PotionMeta
 import org.bukkit.inventory.meta.SkullMeta
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
+import java.time.DayOfWeek
+import java.time.format.TextStyle
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.math.ceil
@@ -169,7 +168,7 @@ fun OfflinePlayer?.getSkull(): ItemStack
     if (this != null)
     {
         val skullMeta = skull.itemMeta as SkullMeta
-        if(this.hasPlayedBefore())
+        if (this.hasPlayedBefore())
         {
             skullMeta.owningPlayer = this
         }
@@ -301,11 +300,11 @@ fun LivingEntity.getEntityHealthString(): String
 fun Location.splashPotion(mat: Material, type: PotionEffectType)
 {
     val potion = ItemStack(mat)
-            .apply {
-                val potionMeta = itemMeta as PotionMeta
-                potionMeta.addCustomEffect(PotionEffect(type, 0, 0), true)
-                itemMeta = potionMeta
-            }
+        .apply {
+            val potionMeta = itemMeta as PotionMeta
+            potionMeta.addCustomEffect(PotionEffect(type, 0, 0), true)
+            itemMeta = potionMeta
+        }
 
     val thrownPotion = world!!.spawn(this, ThrownPotion::class.java)
     thrownPotion.item = potion
@@ -316,6 +315,18 @@ fun Location.splashPotion(mat: Material, type: PotionEffectType)
 fun String.trimPrefixColor(): String
 {
     return replaceFirst(Regex("^§."), "")
+}
+
+fun DayOfWeek.isDoubleRewards(plugin: CV, power: Boolean): Boolean
+{
+    var setting = if (power) Setting.DOUBLE_REWARDS_POWER.path else Setting.DOUBLE_REWARDS_REGULAR.path
+    setting += ".${this.toString().lowercase()}"
+    return plugin.config.getBoolean(setting)
+}
+
+fun DayOfWeek.getDisplayName(plugin: CV): String
+{
+    return getDisplayName(TextStyle.FULL, Language.get(plugin).locale)
 }
 
 suspend fun Voter.getVotesPlaceholders(plugin: CV): MutableMap<String, String>
@@ -360,7 +371,8 @@ suspend fun Voter.getVotesPlaceholders(plugin: CV): MutableMap<String, String>
     return placeholders
 }
 
-suspend fun MutableList<Voter>.sortWithAsync(compare: suspend (x: Voter, y: Voter) -> Int) {
+suspend fun MutableList<Voter>.sortWithAsync(compare: suspend (x: Voter, y: Voter) -> Int)
+{
     sortWith { x: Voter, y: Voter ->
         runBlocking {
             compare(x, y)
