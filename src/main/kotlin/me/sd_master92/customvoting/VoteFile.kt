@@ -38,6 +38,7 @@ class VoteFile : Voter
 
     private suspend fun register()
     {
+        ALL[getUuid()] = this
         if (getVotes() == 0)
         {
             setVotes(0, false)
