@@ -48,9 +48,11 @@ enum class Setting(val path: String, private val defaultValue: Any? = null)
     DOUBLE_REWARDS("double_rewards", null),
     DOUBLE_REWARDS_REGULAR("$DOUBLE_REWARDS.regular", null),
     DOUBLE_REWARDS_POWER("$DOUBLE_REWARDS.power", null),
-    
+
     FIRST_VOTE_BROADCAST_ONLY("first_vote_broadcast_only", false),
-    DISABLED_WORLDS("disabled_worlds"),
+    WORLD_EXCLUSION("excluded_worlds", null),
+    WORLD_EXCLUSION_LIST("$WORLD_EXCLUSION.list"),
+    WORLD_EXCLUSION_TYPE("$WORLD_EXCLUSION.type"),
     ENABLED_PERM_GROUPS("enabled_op_groups"),
 
     UUID_STORAGE("uuid_storage", true),
@@ -94,7 +96,8 @@ enum class Setting(val path: String, private val defaultValue: Any? = null)
             val keyMigrations = mapOf(
                 Pair("disabled_broadcasts.vote_streak", DISABLED_BROADCAST_MILESTONE.path),
                 Pair("monthly_period", "monthly_votes"),
-                Pair("suffix_support", PREFIX_SUPPORT.path)
+                Pair("suffix_support", PREFIX_SUPPORT.path),
+                Pair("disabled_worlds", WORLD_EXCLUSION_LIST.path)
             )
 
             plugin.config.keyMigrations(keyMigrations)

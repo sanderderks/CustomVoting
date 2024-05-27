@@ -5,18 +5,19 @@ import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.capitalize
 import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.SoundType
+import me.sd_master92.customvoting.constants.enumerations.WorldExclusionType
 import me.sd_master92.customvoting.gui.buttons.switches.WorldEnabledSwitch
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 
-class WorldOverviewPage(private val plugin: CV, backPage: GUI?) :
-    GUI(plugin, backPage, PMessage.DISABLED_WORLD_OVERVIEW_INVENTORY_NAME.toString(), { 27 })
+class WorldOverviewPage(private val plugin: CV, backPage: GUI?, private val worldExclusionType: WorldExclusionType) :
+    GUI(plugin, backPage, PMessage.DISABLED_WORLD_OVERVIEW_INVENTORY_NAME_X.with(worldExclusionType.label()), { 27 })
 {
     override fun newInstance(): GUI
     {
-        return WorldOverviewPage(plugin, backPage)
+        return WorldOverviewPage(plugin, backPage, worldExclusionType)
     }
 
     override fun onBack(event: InventoryClickEvent, player: Player)
@@ -54,8 +55,7 @@ class WorldOverviewPage(private val plugin: CV, backPage: GUI?) :
                 end       -> PMessage.DISABLED_WORLD_ITEM_NAME_END.toString()
                 else      -> name.capitalize()
             }
-
-            addItem(WorldEnabledSwitch(plugin, name, label))
+            addItem(WorldEnabledSwitch(plugin, name, label, worldExclusionType))
         }
     }
 }
