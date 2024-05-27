@@ -35,30 +35,36 @@ class CustomVote(
         {
             plugin.infoLog(PMessage.QUEUE_MESSAGE_ADD.toString())
             register(true)
-        } else if (plugin.config.getStringList(Setting.DISABLED_WORLDS.path).contains(player.world.name))
-        {
-            if (!plugin.config.getBoolean(Setting.DISABLED_MESSAGE_DISABLED_WORLD.path))
-            {
-                player.sendText(plugin, Message.DISABLED_WORLD)
-            }
-            register(true)
         } else
         {
-            if (!silent)
+            val worldExclusionType = WorldExclusionType.getCurrentValue(plugin)
+            val isWorldSelected =
+                plugin.config.getStringList(Setting.WORLD_EXCLUSION_LIST.path).contains(player.world.name)
+            if (worldExclusionType == WorldExclusionType.BLACKLIST && isWorldSelected || worldExclusionType == WorldExclusionType.WHITELIST && !isWorldSelected)
             {
-                broadcast(player)
-            }
-            val voter = Voter.get(plugin, player)
-            previousLast = voter.getLast()
-            votes = voter.getVotes()
-            voter.addVote()
-            ParticleHelper.shootFirework(plugin, player.location)
-            giveRewards(player, player.hasPowerRewards(plugin))
-            if (plugin.config.getBoolean(Setting.VOTE_PARTY_ENABLED.path))
+                if (!plugin.config.getBoolean(Setting.DISABLED_MESSAGE_DISABLED_WORLD.path))
+                {
+                    player.sendText(plugin, Message.DISABLED_WORLD)
+                }
+                register(true)
+            } else
             {
-                subtractVotesUntilVoteParty()
+                if (!silent)
+                {
+                    broadcast(player)
+                }
+                val voter = Voter.get(plugin, player)
+                previousLast = voter.getLast()
+                votes = voter.getVotes()
+                voter.addVote()
+                ParticleHelper.shootFirework(plugin, player.location)
+                giveRewards(player, player.hasPowerRewards(plugin))
+                if (plugin.config.getBoolean(Setting.VOTE_PARTY_ENABLED.path))
+                {
+                    subtractVotesUntilVoteParty()
+                }
+                register()
             }
-            register()
         }
     }
 
