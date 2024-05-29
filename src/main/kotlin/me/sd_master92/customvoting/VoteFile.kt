@@ -1,7 +1,7 @@
 package me.sd_master92.customvoting
 
-import com.github.shynixn.mccoroutine.bukkit.launch
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import me.sd_master92.core.file.PlayerFile
 import me.sd_master92.customvoting.constants.enumerations.Data
@@ -22,7 +22,7 @@ class VoteFile : Voter
     {
         playerFile = PlayerFile.getByUuid(plugin, uuid)
         this.plugin = plugin
-        plugin.launch {
+        runBlocking {
             register()
         }
     }
@@ -31,14 +31,13 @@ class VoteFile : Voter
     {
         playerFile = player.getPlayerFile(plugin)
         this.plugin = plugin
-        plugin.launch {
+        runBlocking {
             register()
         }
     }
 
     private suspend fun register()
     {
-        ALL[getUuid()] = this
         if (getVotes() == 0)
         {
             setVotes(0, false)
@@ -67,38 +66,17 @@ class VoteFile : Voter
 
     override suspend fun getVotesMonthly(): Int
     {
-        return if (getLast().monthDifferenceToday() > 0)
-        {
-            clearMonthlyVotes()
-            0
-        } else
-        {
-            playerFile.getNumber(VOTES_MONTHLY)
-        }
+        return playerFile.getNumber(VOTES_MONTHLY)
     }
 
     override suspend fun getVotesWeekly(): Int
     {
-        return if (getLast().weekDifferenceToday() > 0)
-        {
-            clearWeeklyVotes()
-            0
-        } else
-        {
-            playerFile.getNumber(VOTES_WEEKLY)
-        }
+        return playerFile.getNumber(VOTES_WEEKLY)
     }
 
     override suspend fun getVotesDaily(): Int
     {
-        return if (getLast().dayDifferenceToday() > 0)
-        {
-            clearDailyVotes()
-            0
-        } else
-        {
-            playerFile.getNumber(VOTES_DAILY)
-        }
+        return playerFile.getNumber(VOTES_DAILY)
     }
 
     override suspend fun getLast(): Long
@@ -254,7 +232,7 @@ class VoteFile : Voter
             PlayerFile.init(plugin)
             ALL = withContext(Dispatchers.IO) {
                 PlayerFile.getAll().values.map { playerFile -> VoteFile(playerFile.uuid, plugin) }
-                        .associateBy { file -> file.getUuid() }.toMutableMap()
+                    .associateBy { file -> file.getUuid() }.toMutableMap()
             }
             migrateAll()
         }
@@ -290,17 +268,31 @@ class VoteFile : Voter
 
         private fun getByUuid(plugin: CV, player: Player): VoteFile
         {
-            return ALL.getOrDefault(player.uniqueId, VoteFile(player, plugin))
+            return ALL.getOrElse(player.uniqueId) {
+                val voter = VoteFile(player, plugin)
+                ALL[player.uniqueId] = voter
+                return voter
+            }
         }
 
         fun getByUuid(plugin: CV, uniqueId: UUID): VoteFile
         {
-            return ALL.getOrDefault(uniqueId, VoteFile(uniqueId, plugin))
+            return ALL.getOrElse(uniqueId) {
+                val voter = VoteFile(uniqueId, plugin)
+                ALL[uniqueId] = voter
+                return voter
+            }
         }
 
         private suspend fun getByName(plugin: CV, player: Player): VoteFile
         {
-            return ALL.values.firstOrNull { file -> file.getName() == player.name } ?: VoteFile(player, plugin)
+            var voter = ALL.values.firstOrNull { file -> file.getName() == player.name }
+            if (voter == null)
+            {
+                voter = VoteFile(player, plugin)
+                ALL[player.uniqueId] = voter
+            }
+            return voter
         }
 
         private fun migrateAll()
