@@ -1,6 +1,7 @@
 package me.sd_master92.customvoting.database
 
 import com.github.shynixn.mccoroutine.bukkit.launch
+import kotlinx.coroutines.runBlocking
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.Setting
@@ -9,8 +10,6 @@ import me.sd_master92.customvoting.constants.interfaces.Voter
 import me.sd_master92.customvoting.constants.models.VoteHistory
 import me.sd_master92.customvoting.constants.models.VoteSiteUUID
 import me.sd_master92.customvoting.dayDifferenceToday
-import me.sd_master92.customvoting.monthDifferenceToday
-import me.sd_master92.customvoting.weekDifferenceToday
 import org.bukkit.entity.Player
 import java.util.*
 
@@ -36,53 +35,35 @@ class PlayerTable(private val plugin: CV, val uuid: UUID) : Voter
         return uuid
     }
 
-    override suspend fun getName(): String {
+    override suspend fun getName(): String
+    {
         return players?.getName(uuid) ?: PMessage.PLAYER_NAME_UNKNOWN.toString()
     }
 
-    override suspend fun setName(name: String): Boolean {
+    override suspend fun setName(name: String): Boolean
+    {
         return players?.setName(uuid, name) ?: false
     }
 
-    override suspend fun getVotes(): Int {
+    override suspend fun getVotes(): Int
+    {
         return players?.getVotes(uuid) ?: 0
     }
 
     override suspend fun getVotesMonthly(): Int
     {
-        return if (getLast().monthDifferenceToday() > 0)
-        {
-            clearMonthlyVotes()
-            0
-        } else
-        {
-            players?.getMonthlyVotes(uuid) ?: 0
-        }
+        return players?.getMonthlyVotes(uuid) ?: 0
     }
 
     override suspend fun getVotesWeekly(): Int
-        {
-            return if (getLast().weekDifferenceToday() > 0)
-            {
-                clearWeeklyVotes()
-                0
-            } else
-            {
-                players?.getWeeklyVotes(uuid) ?: 0
-            }
-        }
+    {
+        return players?.getWeeklyVotes(uuid) ?: 0
+    }
 
     override suspend fun getVotesDaily(): Int
-        {
-            return if (getLast().dayDifferenceToday() > 0)
-            {
-                clearDailyVotes()
-                0
-            } else
-            {
-                players?.getDailyVotes(uuid) ?: 0
-            }
-        }
+    {
+        return players?.getDailyVotes(uuid) ?: 0
+    }
 
     override suspend fun getPower(): Boolean
     {
@@ -224,18 +205,28 @@ class PlayerTable(private val plugin: CV, val uuid: UUID) : Voter
 
         private fun getByUuid(plugin: CV, player: Player): PlayerTable
         {
-            return ALL.getOrDefault(player.uniqueId, PlayerTable(plugin, player))
+            return ALL.getOrElse(player.uniqueId) {
+                val voter = PlayerTable(plugin, player)
+                ALL[player.uniqueId] = voter
+                return voter
+            }
         }
 
         private suspend fun getByName(plugin: CV, player: Player): PlayerTable
         {
-            return ALL.values.firstOrNull { file -> file.getName() == player.name } ?: PlayerTable(plugin, player)
+            var voter = ALL.values.firstOrNull { file -> file.getName() == player.name }
+            if (voter == null)
+            {
+                voter = PlayerTable(plugin, player)
+                ALL[player.uniqueId] = voter
+            }
+            return voter
         }
     }
 
     init
     {
-        plugin.launch {
+        runBlocking {
             register()
         }
     }

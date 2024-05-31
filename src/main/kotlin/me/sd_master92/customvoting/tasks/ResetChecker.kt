@@ -1,10 +1,14 @@
 package me.sd_master92.customvoting.tasks
 
 import com.github.shynixn.mccoroutine.bukkit.launch
+import me.sd_master92.core.errorLog
 import me.sd_master92.core.tasks.TaskTimer
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.Setting
 import me.sd_master92.customvoting.constants.interfaces.Voter
+import me.sd_master92.customvoting.dayDifferenceToday
+import me.sd_master92.customvoting.monthDifferenceToday
+import me.sd_master92.customvoting.weekDifferenceToday
 import java.util.*
 
 class ResetChecker(private val plugin: CV)
@@ -48,6 +52,7 @@ class ResetChecker(private val plugin: CV)
                             voter.clearMonthlyVotes()
                         }
                     }
+                    plugin.errorLog("monthly votes reset, because a new month has started")
                 }
 
                 if (lastResetWeek < 0)
@@ -61,6 +66,7 @@ class ResetChecker(private val plugin: CV)
                             voter.clearWeeklyVotes()
                         }
                     }
+                    plugin.errorLog("weekly votes reset, because a new week has started")
                 }
 
                 if (lastResetDay < 0)
@@ -71,6 +77,25 @@ class ResetChecker(private val plugin: CV)
                     lastResetDay = currentDay
                     performActionForVoters { voter ->
                         plugin.launch {
+                            voter.clearDailyVotes()
+                        }
+                    }
+                    plugin.errorLog("daily votes reset, because a new day has started")
+                }
+
+                performActionForVoters { voter ->
+                    plugin.launch {
+                        val lastVote = voter.getLast()
+                        if (voter.getVotesMonthly() > 0 && lastVote.monthDifferenceToday() > 0)
+                        {
+                            voter.clearMonthlyVotes()
+                        }
+                        if (voter.getVotesWeekly() > 0 && lastVote.weekDifferenceToday() > 0)
+                        {
+                            voter.clearWeeklyVotes()
+                        }
+                        if (voter.getVotesDaily() > 0 && lastVote.dayDifferenceToday() > 0)
+                        {
                             voter.clearDailyVotes()
                         }
                     }

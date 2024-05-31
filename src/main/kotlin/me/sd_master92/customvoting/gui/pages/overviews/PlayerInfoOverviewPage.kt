@@ -15,7 +15,12 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 import java.util.*
 
-class PlayerInfoOverviewPage(private val plugin: CV, backPage: GUI?, private val page: Int = 0, private val voters: List<Voter>) :
+class PlayerInfoOverviewPage(
+    private val plugin: CV,
+    backPage: GUI?,
+    private val page: Int = 0,
+    private val voters: List<Voter>
+) :
     GUIWithPagination<Voter>(
         plugin,
         backPage,
@@ -70,8 +75,10 @@ class PlayerInfoOverviewPage(private val plugin: CV, backPage: GUI?, private val
             val skull = player.getSkull()
             val meta = skull.itemMeta
             val votes = voter.getVotes()
-            val lastVote = if (votes > 0) java.text.SimpleDateFormat(PMessage.GENERAL_FORMAT_DATE.toString())
-                    .format(Date(voter.getLast())) else PMessage.PLAYER_INFO_VALUE_NEVER.toString()
+            val last = voter.getLast()
+            val lastVote =
+                if (votes > 0 && last > 0) java.text.SimpleDateFormat(PMessage.GENERAL_FORMAT_DATE.toString())
+                    .format(Date(last)) else PMessage.PLAYER_INFO_VALUE_NEVER.toString()
             meta!!.lore = listOf(
                 PMessage.PLAYER_INFO_ITEM_LORE_VOTES_X.with("" + votes),
                 PMessage.PLAYER_INFO_ITEM_LORE_VOTES_MONTHLY_X.with("" + voter.getVotesMonthly()),

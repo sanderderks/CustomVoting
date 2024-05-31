@@ -26,7 +26,7 @@ class CustomVote(
 ) : Vote(vote)
 {
     private var previousLast: Long = 0
-    private var votes = 0
+    private var previousVotes = 0
 
     private suspend fun forwardVote()
     {
@@ -47,40 +47,42 @@ class CustomVote(
                     player.sendText(plugin, Message.DISABLED_WORLD)
                 }
                 register(true)
-            } else
+            } else if (register())
             {
                 if (!silent)
                 {
                     broadcast(player)
                 }
-                val voter = Voter.get(plugin, player)
-                previousLast = voter.getLast()
-                votes = voter.getVotes()
-                voter.addVote()
                 ParticleHelper.shootFirework(plugin, player.location)
                 giveRewards(player, player.hasPowerRewards(plugin))
                 if (plugin.config.getBoolean(Setting.VOTE_PARTY_ENABLED.path))
                 {
                     subtractVotesUntilVoteParty()
                 }
-                register()
             }
         }
     }
 
-    private suspend fun register(queue: Boolean = false)
+    private suspend fun register(queue: Boolean = false): Boolean
     {
         if (!queued)
         {
             val voter = Voter.getByName(plugin, username)
             if (voter != null)
             {
+                previousLast = voter.getLast()
+                previousVotes = voter.getVotes()
+
                 voter.addHistory(VoteSiteUUID(serviceName), queue)
+                voter.addVote()
+                return true
             } else
             {
                 plugin.errorLog(PMessage.PLAYER_ERROR_NOT_EXIST_X.with(username))
+                return false
             }
         }
+        return true
     }
 
     private suspend fun broadcast(player: Player)
@@ -293,7 +295,7 @@ class CustomVote(
         val streak = voter.getStreakDaily()
         if (plugin.data.contains(Data.STREAKS.path + ".$streak"))
         {
-            if (previousLast.dayDifferenceToday() == 1 || votes == 0)
+            if (previousLast.dayDifferenceToday() == 1 || previousVotes == 0)
             {
                 if (!plugin.config.getBoolean(Setting.DISABLED_BROADCAST_STREAK.path))
                 {
