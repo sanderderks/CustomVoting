@@ -227,23 +227,20 @@ fun Location.spawnArmorStand(): ArmorStand
     return stand
 }
 
-fun Long.dayDifferenceToday(): Int
+fun Long.dayDifference(calendar: Calendar = Calendar.getInstance()): Int
 {
-    val calendar = Calendar.getInstance()
     calendar.time = Date(this)
     return Calendar.getInstance()[Calendar.DAY_OF_YEAR] - calendar[Calendar.DAY_OF_YEAR]
 }
 
-fun Long.weekDifferenceToday(): Int
+fun Long.weekDifference(calendar: Calendar = Calendar.getInstance()): Int
 {
-    val calendar = Calendar.getInstance()
     calendar.time = Date(this)
     return Calendar.getInstance()[Calendar.WEEK_OF_YEAR] - calendar[Calendar.WEEK_OF_YEAR]
 }
 
-fun Long.monthDifferenceToday(): Int
+fun Long.monthDifference(calendar: Calendar = Calendar.getInstance()): Int
 {
-    val calendar = Calendar.getInstance()
     calendar.time = Date(this)
     return Calendar.getInstance()[Calendar.MONTH] - calendar[Calendar.MONTH]
 }

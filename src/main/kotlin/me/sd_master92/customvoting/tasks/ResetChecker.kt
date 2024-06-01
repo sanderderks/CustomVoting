@@ -6,9 +6,9 @@ import me.sd_master92.core.tasks.TaskTimer
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.Setting
 import me.sd_master92.customvoting.constants.interfaces.Voter
-import me.sd_master92.customvoting.dayDifferenceToday
-import me.sd_master92.customvoting.monthDifferenceToday
-import me.sd_master92.customvoting.weekDifferenceToday
+import me.sd_master92.customvoting.dayDifference
+import me.sd_master92.customvoting.monthDifference
+import me.sd_master92.customvoting.weekDifference
 import java.util.*
 
 class ResetChecker(private val plugin: CV)
@@ -86,15 +86,15 @@ class ResetChecker(private val plugin: CV)
                 performActionForVoters { voter ->
                     plugin.launch {
                         val lastVote = voter.getLast()
-                        if (voter.getVotesMonthly() > 0 && lastVote.monthDifferenceToday() > 0)
+                        if (voter.getVotesMonthly() > 0 && lastVote.monthDifference() > 0)
                         {
                             voter.clearMonthlyVotes()
                         }
-                        if (voter.getVotesWeekly() > 0 && lastVote.weekDifferenceToday() > 0)
+                        if (voter.getVotesWeekly() > 0 && lastVote.weekDifference() > 0)
                         {
                             voter.clearWeeklyVotes()
                         }
-                        if (voter.getVotesDaily() > 0 && lastVote.dayDifferenceToday() > 0)
+                        if (voter.getVotesDaily() > 0 && lastVote.dayDifference() > 0)
                         {
                             voter.clearDailyVotes()
                         }

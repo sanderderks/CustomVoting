@@ -200,7 +200,7 @@ class VoteFile : Voter
 
     override suspend fun addStreak(): Boolean
     {
-        val diff = getLast().dayDifferenceToday()
+        val diff = getLast().dayDifference()
         if (!plugin.config.getBoolean(Setting.VOTE_STREAK_CONSECUTIVE.path) || diff == 1 || getVotes() == 0)
         {
             return playerFile.addNumber(STREAK_DAILY, 1)

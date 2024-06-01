@@ -257,31 +257,80 @@ class VoteSiteEditor(private val plugin: CV, private val back: GUI) :
                 voteSite.url = ChatColor.translateAlternateColorCodes('&', input)
 
                 SoundType.SUCCESS.play(plugin, player)
-                enterInterval(player, voteSite)
+                enterIntervalSetting(player, voteSite)
                 cancel()
             }
 
             override fun onCancel()
             {
                 SoundType.SUCCESS.play(plugin, player)
-                enterInterval(player, voteSite)
+                enterIntervalSetting(player, voteSite)
             }
         }
     }
 
-    private fun enterInterval(player: Player, voteSite: VoteSite)
+    private fun enterIntervalSetting(player: Player, voteSite: VoteSite)
     {
         player.sendMessage(
             arrayOf(
-                PMessage.VOTE_SITES_MESSAGE_INTERVAL.toString(),
+                PMessage.VOTE_SITES_MESSAGE_TIME_SETTING.toString(),
                 PMessage.GENERAL_MESSAGE_CANCEL_CONTINUE_X.with("skip")
             )
         )
-        object : PlayerNumberInput(plugin, player, 1, 1000)
+        object : PlayerStringInput(plugin, player)
+        {
+            override fun onInputReceived(input: String)
+            {
+                when (input)
+                {
+                    "interval" ->
+                    {
+                        SoundType.SUCCESS.play(plugin, player)
+                        enterInterval(player, voteSite, true)
+                        cancel()
+                    }
+
+                    "time"     ->
+                    {
+                        SoundType.SUCCESS.play(plugin, player)
+                        enterInterval(player, voteSite, false)
+                        cancel()
+                    }
+
+                    else       ->
+                    {
+                        player.sendMessage(PMessage.VOTE_SITES_MESSAGE_TIME_SETTING.toString())
+                    }
+                }
+            }
+
+            override fun onCancel()
+            {
+                SoundType.SUCCESS.play(plugin, player)
+                VoteSiteEditor(plugin, back).open(player)
+            }
+        }
+    }
+
+    private fun enterInterval(player: Player, voteSite: VoteSite, isInterval: Boolean)
+    {
+        player.sendMessage(
+            arrayOf(
+                PMessage.VOTE_SITES_MESSAGE_TIME.toString(),
+                PMessage.GENERAL_MESSAGE_CANCEL_CONTINUE_X.with("skip")
+            )
+        )
+        object : PlayerNumberInput(plugin, player, 1, if (isInterval) 1000 else 24)
         {
             override fun onNumberReceived(input: Int)
             {
-                voteSite.interval = input
+                if (isInterval)
+                {
+                    voteSite.interval = input.toString()
+                } else
+                {
+                    voteSite.interval = "$input:00${if (input < 12) "AM" else "PM"}"
+                }
 
                 SoundType.SUCCESS.play(plugin, player)
                 VoteSiteEditor(plugin, back).open(player)
