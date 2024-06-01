@@ -1,11 +1,17 @@
 package me.sd_master92.customvoting.constants.interfaces
 
-import me.sd_master92.customvoting.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import me.sd_master92.customvoting.CV
+import me.sd_master92.customvoting.VoteFile
 import me.sd_master92.customvoting.constants.enumerations.Setting
 import me.sd_master92.customvoting.constants.enumerations.VoteSortType
 import me.sd_master92.customvoting.constants.models.VoteHistory
 import me.sd_master92.customvoting.constants.models.VoteSiteUUID
+import me.sd_master92.customvoting.constants.models.VoterSortData
 import me.sd_master92.customvoting.database.PlayerTable
+import me.sd_master92.customvoting.getPlayerNameWithPrefix
+import me.sd_master92.customvoting.getPlayerNameWithoutPrefix
 import me.sd_master92.customvoting.subjects.VoteTopSign
 import me.sd_master92.customvoting.subjects.stands.VoteTopStand
 import me.sd_master92.customvoting.tasks.PlaceholderChecker
@@ -55,21 +61,7 @@ interface Voter
                 val topVoters = type.getAll()
                 val sortType = VoteSortType.valueOf(plugin.config.getNumber(Setting.VOTES_SORT_TYPE.path))
 
-                topVoters.sortWithAsync { x: Voter, y: Voter ->
-                    var compare = when (sortType)
-                    {
-                        VoteSortType.ALL     -> y.getVotes().compareTo(x.getVotes())
-                        VoteSortType.MONTHLY -> y.getVotesMonthly().compareTo(x.getVotesMonthly())
-                        VoteSortType.WEEKLY  -> y.getVotesWeekly().compareTo(x.getVotesWeekly())
-                        VoteSortType.DAILY   -> y.getVotesDaily().compareTo(x.getVotesDaily())
-                    }
-                    if (compare == 0)
-                    {
-                        compare = x.getLast().compareTo(y.getLast())
-                    }
-                    compare
-                }
-                TOP_VOTERS = topVoters
+                TOP_VOTERS = getSortedTopVoters(topVoters, sortType)
 
                 VoteTopSign.updateAll(plugin)
                 VoteTopStand.updateAll(plugin)
@@ -77,6 +69,22 @@ interface Voter
             }
             return TOP_VOTERS
         }
+
+        private suspend fun getSortedTopVoters(voters: List<Voter>, sortType: VoteSortType): List<Voter> =
+            withContext(Dispatchers.IO) {
+                voters.map { voter ->
+                    val votes = when (sortType)
+                    {
+                        VoteSortType.ALL     -> voter.getVotes()
+                        VoteSortType.MONTHLY -> voter.getVotesMonthly()
+                        VoteSortType.WEEKLY  -> voter.getVotesWeekly()
+                        VoteSortType.DAILY   -> voter.getVotesDaily()
+                    }
+                    Pair(voter, VoterSortData(votes, voter.getLast()))
+                }
+                    .sortedWith(compareByDescending<Pair<Voter, VoterSortData>> { it.second.votes }.thenBy { it.second.last })
+                    .map { it.first }
+            }
 
         suspend fun getTopVoter(plugin: CV, top: Int): Voter?
         {

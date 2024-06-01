@@ -16,7 +16,12 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 
-class PermUserOverviewPage(private val plugin: CV, backPage: GUI?, private val page: Int = 0, private val voters: List<Voter>) :
+class PermUserOverviewPage(
+    private val plugin: CV,
+    backPage: GUI?,
+    private val page: Int = 0,
+    private val voters: List<Voter>
+) :
     GUIWithPagination<Voter>(
         plugin,
         backPage,
@@ -26,7 +31,8 @@ class PermUserOverviewPage(private val plugin: CV, backPage: GUI?, private val p
         page,
         PMessage.PERM_USER_OVERVIEW_INVENTORY_NAME.toString(),
         PMessage.GENERAL_ITEM_NAME_NEXT.toString(),
-        PMessage.GENERAL_ITEM_NAME_PREVIOUS.toString()
+        PMessage.GENERAL_ITEM_NAME_PREVIOUS.toString(),
+        sortedByKey = false
     )
 {
     override fun newInstance(page: Int): GUI

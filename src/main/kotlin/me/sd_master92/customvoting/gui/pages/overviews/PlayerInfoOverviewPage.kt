@@ -30,7 +30,8 @@ class PlayerInfoOverviewPage(
         page,
         PMessage.PLAYER_INFO_INVENTORY_NAME.toString(),
         PMessage.GENERAL_ITEM_NAME_NEXT.toString(),
-        PMessage.GENERAL_ITEM_NAME_PREVIOUS.toString()
+        PMessage.GENERAL_ITEM_NAME_PREVIOUS.toString(),
+        sortedByKey = false
     )
 {
     override fun newInstance(page: Int): GUI

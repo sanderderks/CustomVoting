@@ -1,6 +1,5 @@
 package me.sd_master92.customvoting
 
-import kotlinx.coroutines.runBlocking
 import me.clip.placeholderapi.PlaceholderAPI
 import me.sd_master92.core.file.PlayerFile
 import me.sd_master92.core.plugin.CustomPlugin
@@ -368,11 +367,3 @@ suspend fun Voter.getVotesPlaceholders(plugin: CV): MutableMap<String, String>
     return placeholders
 }
 
-suspend fun MutableList<Voter>.sortWithAsync(compare: suspend (x: Voter, y: Voter) -> Int)
-{
-    sortWith { x: Voter, y: Voter ->
-        runBlocking {
-            compare(x, y)
-        }
-    }
-}
