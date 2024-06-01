@@ -9,7 +9,7 @@ import me.sd_master92.customvoting.constants.interfaces.TopVoter
 import me.sd_master92.customvoting.constants.interfaces.Voter
 import me.sd_master92.customvoting.constants.models.VoteHistory
 import me.sd_master92.customvoting.constants.models.VoteSiteUUID
-import me.sd_master92.customvoting.dayDifferenceToday
+import me.sd_master92.customvoting.dayDifference
 import org.bukkit.entity.Player
 import java.util.*
 
@@ -136,7 +136,7 @@ class PlayerTable(private val plugin: CV, val uuid: UUID) : Voter
 
     override suspend fun addStreak(): Boolean
     {
-        val diff = getLast().dayDifferenceToday()
+        val diff = getLast().dayDifference()
         if (!plugin.config.getBoolean(Setting.VOTE_STREAK_CONSECUTIVE.path) || diff == 1 || getVotes() == 0)
         {
             return players?.setStreak(uuid, getStreakDaily() + 1) ?: false

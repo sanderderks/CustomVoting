@@ -295,7 +295,7 @@ class CustomVote(
         val streak = voter.getStreakDaily()
         if (plugin.data.contains(Data.STREAKS.path + ".$streak"))
         {
-            if (previousLast.dayDifferenceToday() == 1 || previousVotes == 0)
+            if (previousLast.dayDifference() == 1 || previousVotes == 0)
             {
                 if (!plugin.config.getBoolean(Setting.DISABLED_BROADCAST_STREAK.path))
                 {
