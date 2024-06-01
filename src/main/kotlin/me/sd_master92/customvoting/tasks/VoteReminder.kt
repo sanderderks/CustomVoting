@@ -28,7 +28,7 @@ class VoteReminder(private val plugin: CV)
 
                         for (vote in voter.getHistory())
                         {
-                            if(history[vote.site] != null)
+                            if (history[vote.site] != null)
                             {
                                 val lastVoteTime = history[vote.site] ?: 0
                                 if (vote.time > lastVoteTime)
@@ -40,12 +40,12 @@ class VoteReminder(private val plugin: CV)
 
                         val currentTime = System.currentTimeMillis()
                         val firstSiteToVoteAgain = history.entries
-                                .filter { (site, lastVoteTime) ->
-                                    val siteInterval = VoteSite.get(plugin, site)?.interval ?: 24
-                                    currentTime - lastVoteTime >= (siteInterval * 60 * 60 * 1000)
-                                }
-                                .minByOrNull { (_, lastVoteTime) -> lastVoteTime }
-                                ?.key
+                            .filter { (site, lastVoteTime) ->
+                                currentTime >= (VoteSite.get(plugin, site)?.getNextVoteTime(lastVoteTime)
+                                    ?: currentTime)
+                            }
+                            .minByOrNull { (_, lastVoteTime) -> lastVoteTime }
+                            ?.key
 
                         if (firstSiteToVoteAgain != null)
                         {

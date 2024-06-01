@@ -30,17 +30,17 @@ class VoteInfoMenu(
         VoteSite.getAllActive(plugin),
         { VoteSite.getAllActive(plugin).indexOf(it) },
         { _, site, _ ->
-                val siteItem = site.getGUIItem(false)
-                val last = site.getLastByDate(voter)
-                val timeDifference =
-                    if (last != null) last + (site.interval * 60 * 60 * 1000) - System.currentTimeMillis() else 0L
-                siteItem.setLore(
-                    ";" + PMessage.GRAY + "Next vote: " + PMessage.RED + timeDifference.toTimeString()
-                )
-                siteItem
+            val siteItem = site.getGUIItem(false)
+            val last = site.getLastByDate(voter)
+            val timeDifference =
+                if (last != null) site.getNextVoteTime(last) - System.currentTimeMillis() else 0L
+            siteItem.setLore(
+                ";" + PMessage.GRAY + "Next vote: " + PMessage.RED + timeDifference.toTimeString()
+            )
+            siteItem
         },
         page,
-        if(name != null) PMessage.VOTE_INFO_INVENTORY_NAME_OTHERS_X.with(name) else PMessage.VOTE_INFO_INVENTORY_NAME.toString(),
+        if (name != null) PMessage.VOTE_INFO_INVENTORY_NAME_OTHERS_X.with(name) else PMessage.VOTE_INFO_INVENTORY_NAME.toString(),
         PMessage.GENERAL_ITEM_NAME_NEXT.toString(),
         PMessage.GENERAL_ITEM_NAME_PREVIOUS.toString(),
         differentStartIndex = 18
@@ -108,8 +108,8 @@ class VoteInfoMenu(
                 if (milestonePath != null)
                 {
                     val nextMilestone = milestonePath.getKeys(false).map { it.toInt() }
-                            .filter { it > voter.getVotes() }
-                            .minOrNull()
+                        .filter { it > voter.getVotes() }
+                        .minOrNull()
 
                     if (nextMilestone != null)
                     {

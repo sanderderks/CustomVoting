@@ -16,6 +16,7 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.ItemStack
+import java.util.*
 
 class VoteSite private constructor(
     private val plugin: CV,
@@ -67,12 +68,40 @@ class VoteSite private constructor(
         {
             plugin.data.setNumber("$path.slot", value)
         }
-    var interval: Int
-        get() = plugin.data.getInt("$path.interval", 24)
+    var interval: String
+        get() = plugin.data.getString("$path.interval", "24") as String
         set(value)
         {
-            plugin.data.setNumber("$path.interval", value)
+            plugin.data.set("$path.interval", value)
+            plugin.data.saveConfig()
         }
+
+    fun getNextVoteTime(previousDate: Long): Long
+    {
+        try
+        {
+            val interval = interval
+            if (interval.contains(":"))
+            {
+                val calendar = Calendar.getInstance()
+                val time = interval.split(":")[0].toInt()
+                calendar.set(Calendar.HOUR_OF_DAY, time)
+                calendar.set(Calendar.MINUTE, 0)
+                calendar.set(Calendar.SECOND, 0)
+                calendar.set(Calendar.MILLISECOND, 0)
+                return calendar.timeInMillis
+            } else
+            {
+                val calendar = Calendar.getInstance()
+                calendar.timeInMillis = previousDate
+                calendar.add(Calendar.HOUR, interval.toInt())
+                return calendar.timeInMillis
+            }
+        } catch (e: Exception)
+        {
+            return Date().time
+        }
+    }
 
     fun getGUIItem(editor: Boolean): SimpleItem
     {
@@ -84,15 +113,15 @@ class VoteSite private constructor(
                     if (editor) ";;" +
                             PMessage.GRAY + PMessage.GENERAL_UNIT_URL + ": " + PMessage.GREEN + (url
                         ?: PMessage.GENERAL_VALUE_NONE.toString().lowercase()) + ";" +
-                            PMessage.GRAY + PMessage.VOTE_SITES_UNIT_INTERVAL.toString()
-                        .capitalize() + ": " + PMessage.GREEN + interval + "h"
+                            PMessage.GRAY + getIntervalUnit().toString()
+                        .capitalize() + ": " + PMessage.GREEN + intervalToString()
                     else "",
             item.itemMeta?.hasEnchants() ?: false
         )
         {
             override fun onClick(event: InventoryClickEvent, player: Player)
             {
-                if(!editor)
+                if (!editor)
                 {
                     TaskTimer.delay(plugin)
                     {
@@ -126,6 +155,16 @@ class VoteSite private constructor(
         return (voter.getHistory().filter {
             it.site == uniqueId
         }.maxByOrNull { it.time }?.time)
+    }
+
+    fun getIntervalUnit(): PMessage
+    {
+        return if (interval.contains(":")) PMessage.VOTE_SITES_UNIT_TIME_OF_DAY else PMessage.VOTE_SITES_UNIT_INTERVAL
+    }
+
+    fun intervalToString(): String
+    {
+        return if (interval.contains(":")) interval else "${interval}h"
     }
 
     companion object
