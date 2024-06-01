@@ -120,6 +120,9 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <apiVersion>2.0</apiVersion>
+                </configuration>
             </plugin>
         </plugins>
     </build>
