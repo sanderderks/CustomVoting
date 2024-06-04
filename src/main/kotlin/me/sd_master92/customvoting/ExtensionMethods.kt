@@ -228,19 +228,19 @@ fun Location.spawnArmorStand(): ArmorStand
 
 fun Long.dayDifference(calendar: Calendar = Calendar.getInstance()): Int
 {
-    calendar.time = Date(this)
+    calendar.timeInMillis = this
     return Calendar.getInstance()[Calendar.DAY_OF_YEAR] - calendar[Calendar.DAY_OF_YEAR]
 }
 
 fun Long.weekDifference(calendar: Calendar = Calendar.getInstance()): Int
 {
-    calendar.time = Date(this)
+    calendar.timeInMillis = this
     return Calendar.getInstance()[Calendar.WEEK_OF_YEAR] - calendar[Calendar.WEEK_OF_YEAR]
 }
 
 fun Long.monthDifference(calendar: Calendar = Calendar.getInstance()): Int
 {
-    calendar.time = Date(this)
+    calendar.timeInMillis = this
     return Calendar.getInstance()[Calendar.MONTH] - calendar[Calendar.MONTH]
 }
 

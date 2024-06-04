@@ -28,7 +28,7 @@ interface Voter
     suspend fun getVotesWeekly(): Int
     suspend fun getVotesDaily(): Int
     suspend fun setVotes(n: Int, update: Boolean)
-    suspend fun addVote(): Boolean
+    suspend fun addVote(site: VoteSiteUUID, queued: Boolean): Boolean
     suspend fun getLast(): Long
     suspend fun getHistory(): List<VoteHistory>
     suspend fun addHistory(site: VoteSiteUUID, queued: Boolean): Boolean
@@ -40,6 +40,10 @@ interface Voter
     suspend fun setPower(power: Boolean): Boolean
     suspend fun getStreakDaily(): Int
     suspend fun setStreakDaily(n: Int): Boolean
+
+    /**
+     * Depends on the previous vote timestamp and the previous amount of votes
+     */
     suspend fun addStreak(): Boolean
     suspend fun clearStreak(): Boolean
 

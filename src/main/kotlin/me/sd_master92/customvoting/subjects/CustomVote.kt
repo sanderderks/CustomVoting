@@ -72,9 +72,8 @@ class CustomVote(
             {
                 previousLast = voter.getLast()
                 previousVotes = voter.getVotes()
-
-                voter.addHistory(VoteSiteUUID(serviceName), queue)
-                voter.addVote()
+                
+                voter.addVote(VoteSiteUUID(serviceName), queue)
                 return true
             } else
             {

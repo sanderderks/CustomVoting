@@ -160,10 +160,11 @@ class VoteFile : Voter
         playerFile.setNumber(VOTES_DAILY, 0)
     }
 
-    override suspend fun addVote(): Boolean
+    override suspend fun addVote(site: VoteSiteUUID, queued: Boolean): Boolean
     {
         val beforeVotes = getVotes()
         addStreak()
+        addHistory(site, queued)
         playerFile.addNumber(VOTES)
         playerFile.addNumber(VOTES_MONTHLY)
         playerFile.addNumber(VOTES_WEEKLY)

@@ -105,10 +105,11 @@ class PlayerTable(private val plugin: CV, val uuid: UUID) : Voter
         }
     }
 
-    override suspend fun addVote(): Boolean
+    override suspend fun addVote(site: VoteSiteUUID, queued: Boolean): Boolean
     {
         val votesBefore = getVotes()
         addStreak()
+        addHistory(site, queued)
         players?.setVotes(uuid, getVotes() + 1)
         players?.setMonthlyVotes(uuid, getVotesMonthly() + 1)
         players?.setWeeklyVotes(uuid, getVotesWeekly() + 1)
