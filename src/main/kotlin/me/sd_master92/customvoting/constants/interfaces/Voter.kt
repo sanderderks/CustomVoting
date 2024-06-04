@@ -45,7 +45,7 @@ interface Voter
 
     companion object
     {
-        private var TOP_VOTERS: List<Voter> = listOf()
+        private var TOP_VOTERS: MutableList<Voter> = mutableListOf()
 
         suspend fun init(plugin: CV)
         {
@@ -70,7 +70,7 @@ interface Voter
             return TOP_VOTERS
         }
 
-        private suspend fun getSortedTopVoters(voters: List<Voter>, sortType: VoteSortType): List<Voter> =
+        private suspend fun getSortedTopVoters(voters: List<Voter>, sortType: VoteSortType): MutableList<Voter> =
             withContext(Dispatchers.IO) {
                 voters.map { voter ->
                     val votes = when (sortType)
@@ -84,6 +84,7 @@ interface Voter
                 }
                     .sortedWith(compareByDescending<Pair<Voter, VoterSortData>> { it.second.votes }.thenBy { it.second.last })
                     .map { it.first }
+                    .toMutableList()
             }
 
         suspend fun getTopVoter(plugin: CV, top: Int): Voter?
@@ -99,13 +100,19 @@ interface Voter
 
         suspend fun get(plugin: CV, player: Player): Voter
         {
-            return if (plugin.hasDatabaseConnection())
+            val voter = if (plugin.hasDatabaseConnection())
             {
                 PlayerTable.get(plugin, player)
             } else
             {
                 VoteFile.get(plugin, player)
             }
+
+            if (TOP_VOTERS.find { it.getUuid() == player.uniqueId } == null)
+            {
+                TOP_VOTERS.add(voter)
+            }
+            return voter
         }
 
         suspend fun getByName(plugin: CV, name: String): Voter?
