@@ -215,7 +215,8 @@ class PlayerTable(private val plugin: CV, val uuid: UUID) : Voter
 
         private suspend fun getByName(plugin: CV, player: Player): PlayerTable
         {
-            var voter = ALL.values.firstOrNull { file -> file.getName() == player.name }
+            val ignoreCase = plugin.config.getBoolean(Setting.IGNORE_PLAYERNAME_CASING.path)
+            var voter = ALL.values.firstOrNull { file -> file.getName().equals(player.name, ignoreCase) }
             if (voter == null)
             {
                 voter = PlayerTable(plugin, player)
