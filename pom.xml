@@ -6,7 +6,7 @@
 
     <groupId>me.sd_master92</groupId>
     <artifactId>CustomVoting</artifactId>
-    <version>10.8.5</version>
+    <version>10.8.6</version>
 
     <name>CustomVoting</name>
     <description>Voting on its best. Totally customizable!</description>
@@ -15,7 +15,7 @@
         <author>sd_master92</author>
         <mainClass>me.sd_master92.customvoting.CV</mainClass>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <kotlin.version>2.0.0</kotlin.version>
+        <kotlin.version>2.0.21</kotlin.version>
     </properties>
 
     <build>
@@ -169,7 +169,7 @@
         <dependency>
             <groupId>me.sd_master92</groupId>
             <artifactId>plugincore</artifactId>
-            <version>2.0.4</version>
+            <version>2.0.6</version>
         </dependency>
         <dependency>
             <groupId>org.bstats</groupId>

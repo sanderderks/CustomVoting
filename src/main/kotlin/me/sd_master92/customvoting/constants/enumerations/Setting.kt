@@ -57,6 +57,7 @@ enum class Setting(val path: String, private val defaultValue: Any? = null)
 
     UUID_STORAGE("uuid_storage", true),
     PREFIX_SUPPORT("prefix_support"),
+    IGNORE_PLAYERNAME_CASING("ignore_playername_casing", false),
 
     USE_DATABASE("use_database", false),
 
