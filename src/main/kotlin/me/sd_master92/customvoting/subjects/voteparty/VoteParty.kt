@@ -15,7 +15,8 @@ class VoteParty(private val plugin: CV)
 {
     var votePartyType = VotePartyType.valueOf(plugin.config.getNumber(Setting.VOTE_PARTY_TYPE.path))
         private set
-    private val chests = if(votePartyType.requiresLocation) VotePartyChest.getAllWithLocation(plugin) else VotePartyChest.getAll(plugin)
+    private val chests =
+        if (votePartyType.requiresLocation) VotePartyChest.getAllWithLocation(plugin) else VotePartyChest.getAll(plugin)
     private val random = Random()
 
     fun start(): Boolean
@@ -86,6 +87,7 @@ class VoteParty(private val plugin: CV)
 
                             VotePartyType.LOCKED_CRATES  ->
                             {
+                                lockedCrates()
                             }
 
                             else                         ->
@@ -157,7 +159,7 @@ class VoteParty(private val plugin: CV)
                     {
                         val chest = chests[random.nextInt(chests.size)]
                         val players = ArrayList(Bukkit.getOnlinePlayers())
-                        if(players.isNotEmpty())
+                        if (players.isNotEmpty())
                         {
                             val player = players[random.nextInt(players.size)]
                             player.addToInventoryOrDrop(chest.popRandomItem())
@@ -232,6 +234,23 @@ class VoteParty(private val plugin: CV)
                 chest.scare(chest.loc!!, chest.dropLoc!!)
                 chests.remove(chest)
             }
+        }
+    }
+
+    private fun lockedCrates()
+    {
+        if (chests.isNotEmpty())
+        {
+            val chest = chests[random.nextInt(chests.size)]
+            chest.convertToCrate(chest.loc!!)
+            chests.remove(chest)
+            TaskTimer.delay(plugin, 20L * random.nextInt(3, 15))
+            {
+                if (IS_ACTIVE)
+                {
+                    lockedCrates()
+                }
+            }.run()
         }
     }
 

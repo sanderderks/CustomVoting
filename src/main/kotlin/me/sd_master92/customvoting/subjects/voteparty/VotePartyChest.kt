@@ -20,12 +20,15 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
+import org.bukkit.util.Vector
 import java.util.*
 import kotlin.collections.set
+
 
 class VotePartyChest private constructor(private val plugin: CV, val key: String)
 {
     private val path = Data.VOTE_PARTY_CHESTS.path + ".$key"
+    private val random = Random()
     val items = plugin.data.getItems(path).toMutableList()
     var loc: Location?
         get() = plugin.data.getLocation(path)?.clone()
@@ -47,7 +50,6 @@ class VotePartyChest private constructor(private val plugin: CV, val key: String
             plugin.data.set("$path.is_opened", value)
             plugin.data.saveConfig()
         }
-    private val random = Random()
 
     fun isEmpty(): Boolean
     {
@@ -64,7 +66,7 @@ class VotePartyChest private constructor(private val plugin: CV, val key: String
         if (plugin.data.deleteItems(path))
         {
             loc?.let {
-                if(it.block.type == Material.ENDER_CHEST)
+                if (it.block.type == Material.ENDER_CHEST)
                 {
                     it.block.type = Material.AIR
                 }
@@ -113,11 +115,12 @@ class VotePartyChest private constructor(private val plugin: CV, val key: String
             SoundType.SCARY_4.play(plugin, vex.location)
             loc.block.type = if (random.nextInt(2) == 1) Material.JACK_O_LANTERN else Material.CARVED_PUMPKIN
             loc.block.getRelative(BlockFace.UP).type = Material.FIRE
-        }.run().then(TaskTimer.delay(plugin, 20 * 2)
-        {
-            vex.remove()
-            explode(loc, dropLoc)
-        })
+        }.run().then(
+            TaskTimer.delay(plugin, 20 * 2)
+            {
+                vex.remove()
+                explode(loc, dropLoc)
+            })
     }
 
     fun convertToPig(loc: Location)
@@ -144,6 +147,17 @@ class VotePartyChest private constructor(private val plugin: CV, val key: String
                 SoundType.NOTIFY.play(plugin, pig.location)
             }
         }.run()
+    }
+
+    fun convertToCrate(loc: Location)
+    {
+        hide(loc)
+        EntityListener.FALLING_LOCKED_CRATE = this
+        val fallingBlock = loc.world!!.spawnFallingBlock(
+            loc,
+            Material.OBSIDIAN.createBlockData()
+        )
+        fallingBlock.velocity = Vector(0.0, -0.1, 0.0)
     }
 
     fun popRandomItem(): ItemStack
@@ -173,7 +187,7 @@ class VotePartyChest private constructor(private val plugin: CV, val key: String
     {
         fun create(plugin: CV, player: Player, key: String? = null): VotePartyChest?
         {
-            val number = if(key != null)
+            val number = if (key != null)
             {
                 key
             } else

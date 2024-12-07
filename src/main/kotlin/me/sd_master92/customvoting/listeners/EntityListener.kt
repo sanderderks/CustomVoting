@@ -11,17 +11,20 @@ import me.sd_master92.customvoting.splashPotion
 import me.sd_master92.customvoting.subjects.voteparty.VoteParty
 import me.sd_master92.customvoting.subjects.voteparty.VotePartyChest
 import org.bukkit.Difficulty
+import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.entity.*
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+import org.bukkit.event.entity.EntityChangeBlockEvent
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.event.entity.EntityTargetLivingEntityEvent
 import org.bukkit.event.player.PlayerInteractAtEntityEvent
 import org.bukkit.potion.PotionEffectType
 import java.util.*
+
 
 class EntityListener(private val plugin: CV) : Listener
 {
@@ -66,6 +69,32 @@ class EntityListener(private val plugin: CV) : Listener
                 VoteParty.stop(plugin)
             }
         }
+    }
+
+    @EventHandler
+    fun onEntityChangeBlock(event: EntityChangeBlockEvent)
+    {
+        val entity = event.entity
+        if (entity is FallingBlock
+            && event.block.type == Material.AIR
+            && event.to == Material.OBSIDIAN
+            && FALLING_LOCKED_CRATE != null
+        )
+        {
+            turnFallingBlockIntoCrate(entity.location)
+        }
+    }
+
+    private fun turnFallingBlockIntoCrate(loc: Location)
+    {
+        val block = loc.block
+        val blockLoc = block.location
+        val chest = FALLING_LOCKED_CRATE!!
+        chest.show(blockLoc)
+        blockLoc.world!!.spawnParticle(Particle.EXPLOSION_NORMAL, blockLoc, 3)
+        SoundType.EXPLODE.play(plugin, blockLoc)
+        PlayerListener.LOCKED_CRATES[blockLoc] = chest
+        FALLING_LOCKED_CRATE = null
     }
 
     @EventHandler
@@ -217,5 +246,6 @@ class EntityListener(private val plugin: CV) : Listener
     {
         val CANCEL_EVENT = mutableListOf<UUID>()
         val PIG_HUNT = mutableMapOf<UUID, VotePartyChest>()
+        var FALLING_LOCKED_CRATE: VotePartyChest? = null
     }
 }
