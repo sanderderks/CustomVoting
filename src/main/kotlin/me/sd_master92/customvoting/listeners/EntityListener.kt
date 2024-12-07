@@ -17,10 +17,7 @@ import org.bukkit.Particle
 import org.bukkit.entity.*
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
-import org.bukkit.event.entity.EntityChangeBlockEvent
-import org.bukkit.event.entity.EntityDamageByEntityEvent
-import org.bukkit.event.entity.EntityDeathEvent
-import org.bukkit.event.entity.EntityTargetLivingEntityEvent
+import org.bukkit.event.entity.*
 import org.bukkit.event.player.PlayerInteractAtEntityEvent
 import org.bukkit.potion.PotionEffectType
 import java.util.*
@@ -81,7 +78,22 @@ class EntityListener(private val plugin: CV) : Listener
             && FALLING_LOCKED_CRATE != null
         )
         {
+            event.isCancelled = true
             turnFallingBlockIntoCrate(entity.location)
+        }
+    }
+
+    @EventHandler
+    fun onEntitySpawn(event: EntityDropItemEvent)
+    {
+        val entity = event.entity
+        if (entity is FallingBlock
+            && event.itemDrop.itemStack.type == Material.OBSIDIAN
+            && FALLING_LOCKED_CRATE != null
+        )
+        {
+            event.isCancelled = true
+            turnFallingBlockIntoCrate(entity.location.add(0.0, 1.0, 0.0))
         }
     }
 
