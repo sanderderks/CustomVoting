@@ -20,12 +20,15 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
+import org.bukkit.util.Vector
 import java.util.*
 import kotlin.collections.set
+
 
 class VotePartyChest private constructor(private val plugin: CV, val key: String)
 {
     private val path = Data.VOTE_PARTY_CHESTS.path + ".$key"
+    private val random = Random()
     val items = plugin.data.getItems(path).toMutableList()
     var loc: Location?
         get() = plugin.data.getLocation(path)?.clone()
@@ -40,6 +43,8 @@ class VotePartyChest private constructor(private val plugin: CV, val key: String
         get() = if (loc != null) Location(loc!!.world, loc!!.x + 0.5, loc!!.y - 1, loc!!.z + 0.5) else null
     val fireworkLoc
         get() = if (loc != null) Location(loc!!.world, loc!!.x + 0.5, loc!!.y + 1, loc!!.z + 0.5) else null
+    var lockedCrateLoc: Location? = null
+    var runningPig: Pig? = null
     var isOpened
         get() = plugin.data.getBoolean("$path.is_opened")
         set(value)
@@ -47,7 +52,6 @@ class VotePartyChest private constructor(private val plugin: CV, val key: String
             plugin.data.set("$path.is_opened", value)
             plugin.data.saveConfig()
         }
-    private val random = Random()
 
     fun isEmpty(): Boolean
     {
@@ -64,7 +68,7 @@ class VotePartyChest private constructor(private val plugin: CV, val key: String
         if (plugin.data.deleteItems(path))
         {
             loc?.let {
-                if(it.block.type == Material.ENDER_CHEST)
+                if (it.block.type == Material.ENDER_CHEST)
                 {
                     it.block.type = Material.AIR
                 }
@@ -90,6 +94,14 @@ class VotePartyChest private constructor(private val plugin: CV, val key: String
         loc.block.type = Material.AIR
     }
 
+    fun stop()
+    {
+        runningPig?.remove()
+        lockedCrateLoc?.let {
+            it.block.type = Material.AIR
+        }
+    }
+
     fun explode(loc: Location, dropLoc: Location)
     {
         loc.world!!.strikeLightningEffect(loc)
@@ -113,11 +125,12 @@ class VotePartyChest private constructor(private val plugin: CV, val key: String
             SoundType.SCARY_4.play(plugin, vex.location)
             loc.block.type = if (random.nextInt(2) == 1) Material.JACK_O_LANTERN else Material.CARVED_PUMPKIN
             loc.block.getRelative(BlockFace.UP).type = Material.FIRE
-        }.run().then(TaskTimer.delay(plugin, 20 * 2)
-        {
-            vex.remove()
-            explode(loc, dropLoc)
-        })
+        }.run().then(
+            TaskTimer.delay(plugin, 20 * 2)
+            {
+                vex.remove()
+                explode(loc, dropLoc)
+            })
     }
 
     fun convertToPig(loc: Location)
@@ -130,6 +143,7 @@ class VotePartyChest private constructor(private val plugin: CV, val key: String
         pig.isInvulnerable = true
         pig.isCustomNameVisible = true
         pig.addPotionEffect(PotionEffect(PotionEffectType.SPEED, 20 * 120, 2))
+        runningPig = pig
         EntityListener.PIG_HUNT[pig.uniqueId] = this
         TaskTimer.repeat(plugin, 20, 0, 5)
         {
@@ -144,6 +158,17 @@ class VotePartyChest private constructor(private val plugin: CV, val key: String
                 SoundType.NOTIFY.play(plugin, pig.location)
             }
         }.run()
+    }
+
+    fun convertToCrate(loc: Location)
+    {
+        hide(loc)
+        EntityListener.FALLING_LOCKED_CRATE = this
+        val fallingBlock = loc.world!!.spawnFallingBlock(
+            loc,
+            Material.OBSIDIAN.createBlockData()
+        )
+        fallingBlock.velocity = Vector(0.0, -0.1, 0.0)
     }
 
     fun popRandomItem(): ItemStack
@@ -173,7 +198,7 @@ class VotePartyChest private constructor(private val plugin: CV, val key: String
     {
         fun create(plugin: CV, player: Player, key: String? = null): VotePartyChest?
         {
-            val number = if(key != null)
+            val number = if (key != null)
             {
                 key
             } else
@@ -230,9 +255,8 @@ class VotePartyChest private constructor(private val plugin: CV, val key: String
             for (chest in getAll(plugin))
             {
                 chest.isOpened = false
-                if (chest.loc != null)
-                {
-                    chest.show(chest.loc!!)
+                chest.loc?.let {
+                    chest.show(it)
                 }
             }
         }
