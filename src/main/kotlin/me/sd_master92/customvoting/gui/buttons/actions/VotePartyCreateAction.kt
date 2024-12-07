@@ -23,7 +23,6 @@ class VotePartyCreateAction(private val plugin: CV, private val currentPage: GUI
         SoundType.SUCCESS.play(plugin, player)
         if (key != null)
         {
-            player.closeInventory()
             player.inventory.addItem(VotePartyItem(key))
             player.sendMessage(PMessage.VOTE_PARTY_MESSAGE_CHEST_RECEIVED.toString())
         } else

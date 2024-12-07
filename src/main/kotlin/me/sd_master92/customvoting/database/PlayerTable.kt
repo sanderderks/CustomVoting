@@ -2,6 +2,7 @@ package me.sd_master92.customvoting.database
 
 import com.github.shynixn.mccoroutine.bukkit.launch
 import kotlinx.coroutines.runBlocking
+import me.sd_master92.core.infoLog
 import me.sd_master92.customvoting.CV
 import me.sd_master92.customvoting.constants.enumerations.PMessage
 import me.sd_master92.customvoting.constants.enumerations.Setting
@@ -43,6 +44,17 @@ class PlayerTable(private val plugin: CV, val uuid: UUID) : Voter
     override suspend fun setName(name: String): Boolean
     {
         return players?.setName(uuid, name) ?: false
+    }
+
+    override suspend fun setNameIfChanged(name: String): Boolean
+    {
+        val originalName = getName()
+        if (originalName != name)
+        {
+            plugin.infoLog("changing name of ${getUuid()} from $originalName to $name")
+            return setName(name)
+        }
+        return true
     }
 
     override suspend fun getVotes(): Int
@@ -206,11 +218,15 @@ class PlayerTable(private val plugin: CV, val uuid: UUID) : Voter
 
         private fun getByUuid(plugin: CV, player: Player): PlayerTable
         {
-            return ALL.getOrElse(player.uniqueId) {
+            val playerTable = ALL.getOrElse(player.uniqueId) {
                 val voter = PlayerTable(plugin, player)
                 ALL[player.uniqueId] = voter
                 return voter
             }
+            runBlocking {
+                playerTable.setNameIfChanged(player.name)
+            }
+            return playerTable
         }
 
         private suspend fun getByName(plugin: CV, player: Player): PlayerTable
