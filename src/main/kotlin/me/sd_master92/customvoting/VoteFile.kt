@@ -4,6 +4,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import me.sd_master92.core.file.PlayerFile
+import me.sd_master92.core.infoLog
 import me.sd_master92.customvoting.constants.enumerations.Data
 import me.sd_master92.customvoting.constants.enumerations.Setting
 import me.sd_master92.customvoting.constants.interfaces.TopVoter
@@ -18,9 +19,9 @@ class VoteFile : Voter
     private val plugin: CV
     private val playerFile: PlayerFile
 
-    private constructor(uuid: UUID, plugin: CV)
+    private constructor(uuid: UUID, plugin: CV, name: String? = null)
     {
-        playerFile = PlayerFile.getByUuid(plugin, uuid)
+        playerFile = PlayerFile.getByUuid(plugin, uuid, name)
         this.plugin = plugin
         runBlocking {
             register()
@@ -57,6 +58,17 @@ class VoteFile : Voter
     override suspend fun setName(name: String): Boolean
     {
         return playerFile.setName(name)
+    }
+
+    override suspend fun setNameIfChanged(name: String): Boolean
+    {
+        val originalName = getName()
+        if (originalName != name)
+        {
+            plugin.infoLog("changing name of ${getUuid()} from $originalName to $name")
+            return setName(name)
+        }
+        return true
     }
 
     override suspend fun getVotes(): Int
@@ -269,17 +281,21 @@ class VoteFile : Voter
 
         private fun getByUuid(plugin: CV, player: Player): VoteFile
         {
-            return ALL.getOrElse(player.uniqueId) {
+            val voteFile = ALL.getOrElse(player.uniqueId) {
                 val voter = VoteFile(player, plugin)
                 ALL[player.uniqueId] = voter
                 return voter
             }
+            runBlocking {
+                voteFile.setNameIfChanged(player.name)
+            }
+            return voteFile
         }
 
-        fun getByUuid(plugin: CV, uniqueId: UUID): VoteFile
+        fun getByUuid(plugin: CV, uniqueId: UUID, name: String? = null): VoteFile
         {
             return ALL.getOrElse(uniqueId) {
-                val voter = VoteFile(uniqueId, plugin)
+                val voter = VoteFile(uniqueId, plugin, name)
                 ALL[uniqueId] = voter
                 return voter
             }
