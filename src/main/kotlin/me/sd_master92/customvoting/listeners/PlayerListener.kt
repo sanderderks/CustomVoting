@@ -6,7 +6,10 @@ import me.sd_master92.core.infoLog
 import me.sd_master92.core.inventory.ConfirmGUI
 import me.sd_master92.core.tasks.TaskTimer
 import me.sd_master92.customvoting.CV
-import me.sd_master92.customvoting.constants.enumerations.*
+import me.sd_master92.customvoting.constants.enumerations.Message
+import me.sd_master92.customvoting.constants.enumerations.PMessage
+import me.sd_master92.customvoting.constants.enumerations.Setting
+import me.sd_master92.customvoting.constants.enumerations.SoundType
 import me.sd_master92.customvoting.constants.interfaces.Voter
 import me.sd_master92.customvoting.gui.items.VotePartyItem
 import me.sd_master92.customvoting.gui.pages.editors.VotePartyRewardItemsEditor
@@ -247,38 +250,39 @@ class PlayerListener(private val plugin: CV) : Listener
 
         if (clicked.type == Material.ENDER_CHEST)
         {
-            val votePartyChest = VotePartyChest.getByLocation(plugin, clicked.location)
-            if (votePartyChest != null)
+            if (clicked.location in LOCKED_CRATES)
             {
-                event.isCancelled = true
-
-                if (VoteParty.IS_ACTIVE && VoteParty.getCurrent()?.votePartyType == VotePartyType.LOCKED_CRATES && !votePartyChest.isOpened)
+                val votePartyChest = LOCKED_CRATES[clicked.location]!!
+                LOCKED_CRATES.remove(clicked.location)
+                if (!votePartyChest.isOpened)
                 {
                     votePartyChest.isOpened = true
-                    votePartyChest.hide(votePartyChest.loc!!)
+                    votePartyChest.hide(clicked.location)
                     SoundType.OPEN.play(plugin, player)
                     VotePartyCrate(plugin, votePartyChest).open(player)
 
                     plugin.broadcastText(Message.VOTE_PARTY_CHEST_CLAIMED, mapOf(Pair("%PLAYER%", player.name)))
                     ParticleHelper.shootFirework(plugin, player.location)
 
-                    if (VotePartyChest.getAll(plugin).none { chest -> !chest.isOpened })
+                    if (VotePartyChest.getAll(plugin).all { chest -> chest.isOpened })
                     {
                         VoteParty.stop(plugin)
                     }
                     return
+                }
+            }
+            VotePartyChest.getByLocation(plugin, clicked.location)?.let { votePartyChest ->
+                event.isCancelled = true
+
+                if (player.hasPermission("customvoting.voteparty"))
+                {
+                    SoundType.OPEN.play(plugin, player)
+                    VotePartyRewardItemsEditor(plugin, null, votePartyChest.key).open(player)
                 } else
                 {
-                    if (player.hasPermission("customvoting.voteparty"))
-                    {
-                        SoundType.OPEN.play(plugin, player)
-                        VotePartyRewardItemsEditor(plugin, null, votePartyChest.key).open(player)
-                    } else
-                    {
-                        player.sendMessage(PMessage.ACTION_ERROR_OPEN_CHEST_NO_PERMISSION.toString())
-                    }
-                    return
+                    player.sendMessage(PMessage.ACTION_ERROR_OPEN_CHEST_NO_PERMISSION.toString())
                 }
+                return
             }
         }
 
@@ -372,5 +376,10 @@ class PlayerListener(private val plugin: CV) : Listener
             event.isCancelled = true
             player.sendMessage(PMessage.ACTION_ERROR_INTERACT_NEED_CRATE.toString())
         }
+    }
+
+    companion object
+    {
+        val LOCKED_CRATES = mutableMapOf<Location, VotePartyChest>()
     }
 }
