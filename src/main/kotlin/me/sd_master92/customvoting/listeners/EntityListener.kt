@@ -72,9 +72,11 @@ class EntityListener(private val plugin: CV) : Listener
     fun onEntityChangeBlock(event: EntityChangeBlockEvent)
     {
         val entity = event.entity
+        val blockTypeFrom = event.block.type
+        val blockTypeTo = event.to
         if (entity is FallingBlock
-            && event.block.type == Material.AIR
-            && event.to == Material.OBSIDIAN
+            && (listOf(Material.AIR, Material.FIRE, Material.WATER, Material.LAVA).contains(blockTypeFrom))
+            && blockTypeTo == Material.OBSIDIAN
             && FALLING_LOCKED_CRATE != null
         )
         {
@@ -102,6 +104,7 @@ class EntityListener(private val plugin: CV) : Listener
         val block = loc.block
         val blockLoc = block.location
         val chest = FALLING_LOCKED_CRATE!!
+        chest.lockedCrateLoc = loc
         chest.show(blockLoc)
         blockLoc.world!!.spawnParticle(Particle.EXPLOSION_NORMAL, blockLoc, 3)
         SoundType.EXPLODE.play(plugin, blockLoc)

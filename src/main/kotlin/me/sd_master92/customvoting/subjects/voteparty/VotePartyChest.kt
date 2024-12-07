@@ -43,6 +43,8 @@ class VotePartyChest private constructor(private val plugin: CV, val key: String
         get() = if (loc != null) Location(loc!!.world, loc!!.x + 0.5, loc!!.y - 1, loc!!.z + 0.5) else null
     val fireworkLoc
         get() = if (loc != null) Location(loc!!.world, loc!!.x + 0.5, loc!!.y + 1, loc!!.z + 0.5) else null
+    var lockedCrateLoc: Location? = null
+    var runningPig: Pig? = null
     var isOpened
         get() = plugin.data.getBoolean("$path.is_opened")
         set(value)
@@ -92,6 +94,14 @@ class VotePartyChest private constructor(private val plugin: CV, val key: String
         loc.block.type = Material.AIR
     }
 
+    fun stop()
+    {
+        runningPig?.remove()
+        lockedCrateLoc?.let {
+            it.block.type = Material.AIR
+        }
+    }
+
     fun explode(loc: Location, dropLoc: Location)
     {
         loc.world!!.strikeLightningEffect(loc)
@@ -133,6 +143,7 @@ class VotePartyChest private constructor(private val plugin: CV, val key: String
         pig.isInvulnerable = true
         pig.isCustomNameVisible = true
         pig.addPotionEffect(PotionEffect(PotionEffectType.SPEED, 20 * 120, 2))
+        runningPig = pig
         EntityListener.PIG_HUNT[pig.uniqueId] = this
         TaskTimer.repeat(plugin, 20, 0, 5)
         {
@@ -244,9 +255,8 @@ class VotePartyChest private constructor(private val plugin: CV, val key: String
             for (chest in getAll(plugin))
             {
                 chest.isOpened = false
-                if (chest.loc != null)
-                {
-                    chest.show(chest.loc!!)
+                chest.loc?.let {
+                    chest.show(it)
                 }
             }
         }
