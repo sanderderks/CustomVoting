@@ -23,6 +23,7 @@ interface Voter
     suspend fun getUuid(): UUID
     suspend fun getName(): String
     suspend fun setName(name: String): Boolean
+    suspend fun setNameIfChanged(name: String): Boolean
     suspend fun getVotes(): Int
     suspend fun getVotesMonthly(): Int
     suspend fun getVotesWeekly(): Int
