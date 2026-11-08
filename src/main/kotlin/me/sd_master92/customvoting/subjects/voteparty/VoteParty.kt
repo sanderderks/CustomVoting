@@ -246,7 +246,7 @@ class VoteParty(private val plugin: CV)
             activeChests.add(chest)
             chests.remove(chest)
             chest.convertToCrate(chest.loc!!)
-            TaskTimer.delay(plugin, 20L * random.nextInt(3, 15))
+            TaskTimer.delay(plugin, 20L * (random.nextInt(13) + 3))
             {
                 if (IS_ACTIVE)
                 {

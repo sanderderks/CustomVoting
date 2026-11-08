@@ -36,7 +36,7 @@ enum class VotePartyType(private val label_: PMessage, val requiresLocation: Boo
     {
         fun random(): VotePartyType
         {
-            return entries[Random().nextInt(1, entries.size)]
+            return entries[Random().nextInt(entries.size)]
         }
 
         override fun valueOf(key: Int): VotePartyType

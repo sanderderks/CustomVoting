@@ -97,21 +97,18 @@ class CV : CustomPlugin(
         infoLog("")
         infoLog("| checking Minecraft version")
         infoLog("|")
-        MC_VERSION = with(Bukkit.getBukkitVersion().split("-")[0])
-        {
-            when
-            {
-                contains("1.22") -> 22
-                contains("1.21") -> 21
-                contains("1.20") -> 20
-                contains("1.19") -> 19
-                contains("1.18") -> 18
-                contains("1.17") -> 17
-                contains("1.16") -> 16
-                contains("1.15") -> 15
-                contains("1.14") -> 14
-                else             -> 0
+        MC_VERSION = try {
+            val versionString = Bukkit.getBukkitVersion().split("-")[0]
+            val versionDouble = versionString.toDouble()
+            if (versionDouble < 1.14) {
+                0
+            } else if (versionDouble < 26) {
+                versionString.substring(2).toInt()
+            } else {
+                26
             }
+        } catch (_: Exception) {
+            0
         }
         if (MC_VERSION == 0)
         {
