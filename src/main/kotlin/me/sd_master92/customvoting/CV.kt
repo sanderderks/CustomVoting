@@ -98,14 +98,13 @@ class CV : CustomPlugin(
         infoLog("| checking Minecraft version")
         infoLog("|")
         MC_VERSION = try {
-            val versionString = Bukkit.getBukkitVersion().split("-")[0]
-            val versionDouble = versionString.toDouble()
-            if (versionDouble < 1.14) {
-                0
-            } else if (versionDouble < 26) {
-                versionString.substring(2).toInt()
-            } else {
-                26
+            // getBukkitVersion() returns formats like: "1.20.4-R0.1-SNAPSHOT" or "26.3.build.246-stable"
+            val parts = Bukkit.getBukkitVersion().split("-")[0].split(".")
+            val major = parts[0].toInt()
+            when {
+                major >= 26 -> major // Modern format (e.g., 26.3 -> 26)
+                major == 1 && parts.size > 1 -> parts[1].toInt() // Legacy format (e.g., 1.20.4 -> 20)
+                else -> 0
             }
         } catch (_: Exception) {
             0
